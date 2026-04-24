@@ -43,13 +43,13 @@
 
     <section class="detail-hero">
         <div class="detail-hero-bg"></div>
-        <div class="detail-tag">AI SDK · Edge Computing · 2023</div>
+        <div class="detail-tag">AI SDK · Model Deploy · Docker</div>
         <h1 class="detail-title">PixelMind <span class="hl">SDK</span></h1>
-        <p class="detail-subtitle">面向边缘设备的轻量级计算机视觉推理引擎，支持 ONNX/TensorRT 多后端，让 AI 无处不在。</p>
+        <p class="detail-subtitle">面向边缘设备的轻量级视觉模型推理引擎，支持 PyTorch/ONNX 多后端与 Docker 容器化部署，让 AI 模型轻松落地。</p>
         <div class="detail-meta">
             <div class="detail-meta-item"><div class="detail-meta-label">Type</div><div class="detail-meta-value">Open Source SDK</div></div>
-            <div class="detail-meta-item"><div class="detail-meta-label">Role</div><div class="detail-meta-value">Core Author</div></div>
-            <div class="detail-meta-item"><div class="detail-meta-label">License</div><div class="detail-meta-value">Apache 2.0</div></div>
+            <div class="detail-meta-item"><div class="detail-meta-label">Role</div><div class="detail-meta-value">独立开发者</div></div>
+            <div class="detail-meta-item"><div class="detail-meta-label">License</div><div class="detail-meta-value">MIT</div></div>
             <div class="detail-meta-item"><div class="detail-meta-label">Status</div><div class="detail-meta-value" style="color:var(--accent)">Active</div></div>
         </div>
     </section>
@@ -68,23 +68,23 @@
     <div class="detail-content">
         <section class="detail-section reveal" id="overview">
             <div class="detail-section-label">Overview</div>
-            <h2 class="detail-section-title">边缘 AI 的极致性能</h2>
-            <p class="detail-text">PixelMind SDK 是一个为资源受限的边缘设备设计的计算机视觉推理库。核心引擎仅 <strong>5MB</strong>，却能在 Jetson Nano 上跑出 <strong>100+ FPS</strong> 的实时推理速度。</p>
-            <p class="detail-text">SDK 采用插件化架构，支持 ONNX、TensorRT、OpenVINO 等多种推理后端。内置的自动量化工具链可以将 FP32 模型一键转换为 INT8，精度损失 &lt;1%。</p>
+            <h2 class="detail-section-title">轻量级视觉推理引擎</h2>
+            <p class="detail-text">PixelMind SDK 是一个为边缘设备和资源受限环境设计的<strong>视觉模型推理引擎</strong>。支持 PyTorch 和 ONNX 两种推理后端，通过 Docker 容器化部署，可以快速将训练好的视觉模型部署到各类硬件平台上。</p>
+            <p class="detail-text">SDK 提供统一的 Python API，内置模型格式转换工具（PyTorch → ONNX），支持 YOLO、SAM 等主流视觉模型的推理加速。配合 Flask/FastAPI 可快速搭建推理服务，单帧推理延迟低至 <strong>8ms</strong>。</p>
         </section>
 
         <section class="detail-section reveal" id="tech">
             <div class="detail-section-label">Tech Stack</div>
             <h2 class="detail-section-title">技术选型</h2>
             <div class="detail-tech-grid">
-                <div class="detail-tech-badge" data-hover>C++</div>
-                <div class="detail-tech-badge" data-hover>CUDA</div>
-                <div class="detail-tech-badge" data-hover>ONNX</div>
-                <div class="detail-tech-badge" data-hover>TensorRT</div>
                 <div class="detail-tech-badge" data-hover>Python</div>
-                <div class="detail-tech-badge" data-hover>CMake</div>
+                <div class="detail-tech-badge" data-hover>PyTorch</div>
+                <div class="detail-tech-badge" data-hover>ONNX</div>
                 <div class="detail-tech-badge" data-hover>Docker</div>
-                <div class="detail-tech-badge" data-hover>QEMU</div>
+                <div class="detail-tech-badge" data-hover>Flask</div>
+                <div class="detail-tech-badge" data-hover>OpenCV</div>
+                <div class="detail-tech-badge" data-hover>Linux</div>
+                <div class="detail-tech-badge" data-hover>Git</div>
             </div>
         </section>
 
@@ -95,22 +95,22 @@
                 <div class="detail-feature" data-hover>
                     <div class="detail-feature-icon">🔌</div>
                     <div class="detail-feature-title">多后端支持</div>
-                    <div class="detail-feature-desc">统一 API 接口，自动选择最优推理后端，支持 ONNX/TensorRT/OpenVINO/CoreML。</div>
+                    <div class="detail-feature-desc">统一 Python API，支持 PyTorch 和 ONNX Runtime 两种推理后端，根据硬件自动选择最优方案。</div>
                 </div>
                 <div class="detail-feature" data-hover>
-                    <div class="detail-feature-icon">📦</div>
-                    <div class="detail-feature-title">极小体积</div>
-                    <div class="detail-feature-desc">核心库仅 5MB，支持静态链接，可嵌入任何 C/C++ 项目。</div>
+                    <div class="detail-feature-icon">🐳</div>
+                    <div class="detail-feature-title">Docker 部署</div>
+                    <div class="detail-feature-desc">内置 Dockerfile 和 docker-compose 配置，一键构建推理服务镜像，支持 GPU 和 CPU 两种运行模式。</div>
                 </div>
                 <div class="detail-feature" data-hover>
                     <div class="detail-feature-icon">🚀</div>
-                    <div class="detail-feature-title">硬件加速</div>
-                    <div class="detail-feature-desc">深度优化 CUDA kernel，支持 INT8/FP16 混合精度推理。</div>
+                    <div class="detail-feature-title">简洁 API</div>
+                    <div class="detail-feature-desc">三行代码即可完成模型加载、推理、结果解析。提供 RESTful API 接口，方便前后端集成。</div>
                 </div>
                 <div class="detail-feature" data-hover>
                     <div class="detail-feature-icon">⚙️</div>
-                    <div class="detail-feature-title">自动量化</div>
-                    <div class="detail-feature-desc">内置量化工具链，一键将 FP32 模型转为 INT8，精度损失 &lt;1%。</div>
+                    <div class="detail-feature-title">模型转换</div>
+                    <div class="detail-feature-desc">内置 PyTorch → ONNX 转换工具，支持 YOLO、SAM 等主流视觉模型的格式转换与验证。</div>
                 </div>
             </div>
         </section>
@@ -119,46 +119,47 @@
             <div class="detail-section-label">Performance</div>
             <h2 class="detail-section-title">性能指标</h2>
             <div class="detail-stats">
-                <div class="detail-stat"><div class="detail-stat-num">5MB</div><div class="detail-stat-label">Binary Size</div></div>
-                <div class="detail-stat"><div class="detail-stat-num" data-count="100">0</div><div class="detail-stat-label">+ FPS</div></div>
-                <div class="detail-stat"><div class="detail-stat-num" data-count="10">0</div><div class="detail-stat-label">+ Platforms</div></div>
-                <div class="detail-stat"><div class="detail-stat-num">1ms</div><div class="detail-stat-label">Latency</div></div>
+                <div class="detail-stat"><div class="detail-stat-num">10MB</div><div class="detail-stat-label">Image Size</div></div>
+                <div class="detail-stat"><div class="detail-stat-num" data-count="60">0</div><div class="detail-stat-label">+ FPS</div></div>
+                <div class="detail-stat"><div class="detail-stat-num" data-count="5">0</div><div class="detail-stat-label">+ Platforms</div></div>
+                <div class="detail-stat"><div class="detail-stat-num">8ms</div><div class="detail-stat-label">Latency</div></div>
             </div>
         </section>
 
         <section class="detail-section reveal" id="code">
             <div class="detail-section-label">Code Example</div>
-            <h2 class="detail-section-title">C++ SDK 用法</h2>
+            <h2 class="detail-section-title">Python 推理示例</h2>
             <div class="detail-code-block">
                 <div class="detail-code-header">
                     <div class="detail-code-dot" style="background:#ff5f57"></div>
                     <div class="detail-code-dot" style="background:#febc2e"></div>
                     <div class="detail-code-dot" style="background:#28c840"></div>
-                    <div class="detail-code-title">main.cpp</div>
+                    <div class="detail-code-title">inference.py</div>
                 </div>
                 <div class="detail-code-body">
-                    <div class="line"><span class="line-content"><span style="color:#c678dd">#include</span> <span style="color:#98c379">&lt;pixelmind/engine.h&gt;</span></span></div>
+                    <div class="line"><span class="line-content"><span style="color:#ff79c6">from</span> pixelmind <span style="color:#ff79c6">import</span> Engine</span></div>
+                    <div class="line"><span class="line-content"><span style="color:#ff79c6">import</span> cv2</span></div>
                     <div class="line"><span class="line-content"></span></div>
-                    <div class="line"><span class="line-content"><span style="color:#c678dd">int</span> <span style="color:#61afef">main</span>() {</span></div>
-                    <div class="line"><span class="line-content">    pm::Engine engine;</span></div>
-                    <div class="line"><span class="line-content">    engine.<span style="color:#61afef">load_model</span>(<span style="color:#98c379">"yolov8n.onnx"</span>);</span></div>
-                    <div class="line"><span class="line-content">    engine.<span style="color:#61afef">set_backend</span>(pm::Backend::TensorRT);</span></div>
+                    <div class="line"><span class="line-content"><span style="color:#6272a4"># Initialize engine with ONNX backend</span></span></div>
+                    <div class="line"><span class="line-content">engine = Engine(</span></div>
+                    <div class="line"><span class="line-content">    model=<span style="color:#f1fa8c">"yolov8n.onnx"</span>,</span></div>
+                    <div class="line"><span class="line-content">    backend=<span style="color:#f1fa8c">"onnxruntime"</span>,</span></div>
+                    <div class="line"><span class="line-content">    device=<span style="color:#f1fa8c">"cpu"</span></span></div>
+                    <div class="line"><span class="line-content">)</span></div>
                     <div class="line"><span class="line-content"></span></div>
-                    <div class="line"><span class="line-content">    cv::Mat frame = cv::<span style="color:#61afef">imread</span>(<span style="color:#98c379">"input.jpg"</span>);</span></div>
-                    <div class="line"><span class="line-content">    <span style="color:#c678dd">auto</span> results = engine.<span style="color:#61afef">infer</span>(frame);</span></div>
+                    <div class="line"><span class="line-content"><span style="color:#6272a4"># Load image and run inference</span></span></div>
+                    <div class="line"><span class="line-content">image = cv2.imread(<span style="color:#f1fa8c">"input.jpg"</span>)</span></div>
+                    <div class="line"><span class="line-content">results = engine.predict(image, conf=<span style="color:#bd93f9">0.5</span>)</span></div>
                     <div class="line"><span class="line-content"></span></div>
-                    <div class="line"><span class="line-content">    <span style="color:#c678dd">for</span> (<span style="color:#c678dd">const auto</span>& det : results.detections) {</span></div>
-                    <div class="line"><span class="line-content">        printf(<span style="color:#98c379">"%s: %.2f\n"</span>, det.label, det.confidence);</span></div>
-                    <div class="line"><span class="line-content">    }</span></div>
-                    <div class="line"><span class="line-content">    <span style="color:#c678dd">return</span> <span style="color:#d19a66">0</span>;</span></div>
-                    <div class="line"><span class="line-content">}</span></div>
+                    <div class="line"><span class="line-content"><span style="color:#ff79c6">for</span> det <span style="color:#ff79c6">in</span> results:</span></div>
+                    <div class="line"><span class="line-content">    <span style="color:#50fa7b">print</span>(f<span style="color:#f1fa8c">"{det.label}: {det.score:.2%}"</span>)</span></div>
                 </div>
             </div>
         </section>
     </div>
 
     <footer>
-        <div class="footer-copy">&copy; 2024 Eric. Built with <span class="heart">♥</span> and too much coffee.</div>
+        <div class="footer-copy">&copy; 2026 Eric. Built with <span class="heart">♥</span> and too much coffee.</div>
         <div class="footer-links">
             <a href="#" data-hover>GitHub</a><a href="#" data-hover>Twitter</a><a href="#" data-hover>LinkedIn</a><a href="#" data-hover>Email</a>
         </div>

@@ -48,10 +48,10 @@
     <section class="detail-hero">
         <div class="detail-hero-bg"></div>
         <div class="detail-tag reveal">
-            <span>Open Source · CLI · 2023</span>
+            <span>DevTools · Vue · PHP</span>
         </div>
         <h1 class="detail-title reveal">Stack<span class="hl">Forge</span> CLI</h1>
-        <p class="detail-subtitle reveal">下一代全栈项目脚手架工具，一条命令生成完整的项目骨架，包含前后端代码、CI/CD 配置、容器化部署方案，让团队从 Day 1 就站在最佳实践之上。</p>
+        <p class="detail-subtitle reveal">全栈项目脚手架工具，一条命令生成 Vue 前端 + 后端 API + Docker 配置，让团队从第一天就站在最佳实践之上，告别重复搭建项目结构的烦恼。</p>
         <div class="detail-meta reveal">
             <div class="detail-meta-item">
                 <span class="detail-meta-label">类型</span>
@@ -59,7 +59,7 @@
             </div>
             <div class="detail-meta-item">
                 <span class="detail-meta-label">语言</span>
-                <span class="detail-meta-value">Rust + Node.js</span>
+                <span class="detail-meta-value">Python + Shell</span>
             </div>
             <div class="detail-meta-item">
                 <span class="detail-meta-label">协议</span>
@@ -109,39 +109,39 @@
             <div class="detail-section-label">概述</div>
             <h2 class="detail-section-title">为什么需要 StackForge？</h2>
             <p class="detail-text">每个新项目都要重新搭建脚手架——选择框架、配置 ESLint、设置 CI/CD、编写 Dockerfile、配置环境变量……这些重复劳动消耗了大量宝贵时间。</p>
-            <p class="detail-text"><strong>StackForge CLI</strong> 将这些最佳实践封装成可组合的模板，一条命令即可生成生产级项目骨架。核心引擎用 Rust 编写，确保极速执行；模板系统基于 Node.js 生态，保持灵活性。</p>
-            <p class="detail-text">支持 50+ 种技术栈组合，从 React + Go 到 Next.js + Rust，从移动端到 CLI 工具，覆盖主流开发场景。内置 CI/CD 模板支持 GitHub Actions、GitLab CI、Jenkins 等主流平台。</p>
+            <p class="detail-text"><strong>StackForge CLI</strong> 将这些最佳实践封装成可组合的模板，一条命令即可生成生产级项目骨架。支持 <strong>Vue + PHP/Python</strong> 技术栈，自动生成前端项目结构、后端 API 模板、Docker 配置和 CI/CD 流水线。</p>
+            <p class="detail-text">内置 20+ 种项目模板，覆盖 Vue + Flask、Vue + Spring Boot、Vue + PHP Laravel 等主流开发场景。核心引擎用 Python 编写，模板系统基于 YAML 配置，保持灵活性和可扩展性。</p>
         </div>
 
         <!-- Tech Stack -->
         <div class="detail-section reveal" id="tech">
             <div class="detail-section-label">技术栈</div>
             <h2 class="detail-section-title">核心技术</h2>
-            <p class="detail-text">StackForge 采用混合架构设计，核心解析引擎用 Rust 实现以获得极致性能，模板渲染和插件系统运行在 Node.js 环境中以保持生态兼容性。</p>
+            <p class="detail-text">StackForge 采用 Python 核心 + Shell 辅助的轻量架构，模板系统基于 YAML 配置，支持自定义模板扩展。</p>
             <div class="detail-tech-grid">
                 <div class="detail-tech-badge magnetic" data-hover>
-                    <span style="color:var(--accent);margin-right:6px;">▸</span> Rust
+                    <span style="color:var(--accent);margin-right:6px;">▸</span> Python
                 </div>
                 <div class="detail-tech-badge magnetic" data-hover>
-                    <span style="color:var(--accent);margin-right:6px;">▸</span> Node.js
+                    <span style="color:var(--accent);margin-right:6px;">▸</span> Vue
                 </div>
                 <div class="detail-tech-badge magnetic" data-hover>
-                    <span style="color:var(--accent);margin-right:6px;">▸</span> TypeScript
+                    <span style="color:var(--accent);margin-right:6px;">▸</span> PHP
                 </div>
                 <div class="detail-tech-badge magnetic" data-hover>
                     <span style="color:var(--accent);margin-right:6px;">▸</span> Docker
                 </div>
                 <div class="detail-tech-badge magnetic" data-hover>
-                    <span style="color:var(--accent);margin-right:6px;">▸</span> GitHub Actions
-                </div>
-                <div class="detail-tech-badge magnetic" data-hover>
-                    <span style="color:var(--accent);margin-right:6px;">▸</span> Terraform
-                </div>
-                <div class="detail-tech-badge magnetic" data-hover>
-                    <span style="color:var(--accent);margin-right:6px;">▸</span> Helm
+                    <span style="color:var(--accent);margin-right:6px;">▸</span> JavaScript
                 </div>
                 <div class="detail-tech-badge magnetic" data-hover>
                     <span style="color:var(--accent);margin-right:6px;">▸</span> YAML
+                </div>
+                <div class="detail-tech-badge magnetic" data-hover>
+                    <span style="color:var(--accent);margin-right:6px;">▸</span> Git
+                </div>
+                <div class="detail-tech-badge magnetic" data-hover>
+                    <span style="color:var(--accent);margin-right:6px;">▸</span> Shell
                 </div>
             </div>
         </div>
@@ -153,23 +153,23 @@
             <div class="detail-features">
                 <div class="detail-feature">
                     <div class="detail-feature-icon">🧩</div>
-                    <div class="detail-feature-title">Smart Templates</div>
-                    <div class="detail-feature-desc">50+ 精心设计的项目模板，支持自定义组合。智能推断依赖关系，自动配置 TypeScript、ESLint、Prettier 等工具链。</div>
+                    <div class="detail-feature-title">Vue 项目模板</div>
+                    <div class="detail-feature-desc">内置 Vue 2/3 项目模板，自动生成组件结构、路由配置、状态管理、TypeScript 支持等，开箱即用。</div>
                 </div>
                 <div class="detail-feature">
                     <div class="detail-feature-icon">🚀</div>
-                    <div class="detail-feature-title">CI/CD Built-in</div>
-                    <div class="detail-feature-desc">内置 GitHub Actions、GitLab CI 模板。自动生成测试、构建、部署流水线，支持多环境配置和密钥管理。</div>
+                    <div class="detail-feature-title">API 脚手架</div>
+                    <div class="detail-feature-desc">支持 PHP Laravel、Python Flask/FastAPI、Java Spring Boot 等后端模板，自动生成 RESTful API 骨架和数据库模型。</div>
                 </div>
                 <div class="detail-feature">
                     <div class="detail-feature-icon">🐳</div>
-                    <div class="detail-feature-title">Docker Ready</div>
-                    <div class="detail-feature-desc">自动生成优化的 Dockerfile 和 docker-compose 配置。支持多阶段构建、健康检查、资源限制等生产级配置。</div>
+                    <div class="detail-feature-title">Docker 配置生成</div>
+                    <div class="detail-feature-desc">自动生成 Dockerfile 和 docker-compose.yml，支持开发环境和生产环境两套配置，内置健康检查和资源限制。</div>
                 </div>
                 <div class="detail-feature">
                     <div class="detail-feature-icon">🔌</div>
-                    <div class="detail-feature-title">Plugin System</div>
-                    <div class="detail-feature-desc">可扩展的插件架构，支持自定义模板、代码生成器、钩子函数。社区贡献的插件生态持续壮大。</div>
+                    <div class="detail-feature-title">CI/CD 模板</div>
+                    <div class="detail-feature-desc">内置 GitHub Actions 和 GitLab CI 模板，自动生成测试、构建、部署流水线，支持多环境配置。</div>
                 </div>
             </div>
         </div>
@@ -180,19 +180,19 @@
             <h2 class="detail-section-title">影响力</h2>
             <div class="detail-stats">
                 <div class="detail-stat">
-                    <div class="detail-stat-num" data-count="50">0</div>
-                    <div class="detail-stat-label">Templates</div>
+                    <div class="detail-stat-num" data-count="20">0</div>
+                    <div class="detail-stat-label">+ Templates</div>
                 </div>
                 <div class="detail-stat">
-                    <div class="detail-stat-num" data-count="10000">0</div>
+                    <div class="detail-stat-num" data-count="2000">0</div>
                     <div class="detail-stat-label">Downloads</div>
                 </div>
                 <div class="detail-stat">
-                    <div class="detail-stat-num" data-count="200">0</div>
+                    <div class="detail-stat-num" data-count="50">0</div>
                     <div class="detail-stat-label">GitHub Stars</div>
                 </div>
                 <div class="detail-stat">
-                    <div class="detail-stat-num" data-count="98">0</div>
+                    <div class="detail-stat-num" data-count="95">0</div>
                     <div class="detail-stat-label">Satisfaction %</div>
                 </div>
             </div>
@@ -202,8 +202,8 @@
         <div class="detail-section reveal" id="code">
             <div class="detail-section-label">使用示例</div>
             <h2 class="detail-section-title">快速上手</h2>
-            <p class="detail-text">只需一条命令，即可初始化一个完整的全栈项目。StackForge 会交互式引导你选择技术栈，并自动生成所有配置文件。</p>
-            
+            <p class="detail-text">只需一条命令，即可初始化一个 Vue + PHP 全栈项目。StackForge 会交互式引导你选择技术栈，并自动生成所有配置文件。</p>
+
             <div class="detail-code-block">
                 <div class="detail-code-header">
                     <div class="detail-code-dot" style="background:#ff5f57"></div>
@@ -212,18 +212,17 @@
                     <div class="detail-code-title">terminal</div>
                 </div>
                 <div class="detail-code-body">
-                    <div class="line"><div class="line-content"><span style="color:var(--accent);">$</span> <span style="color:var(--text-primary);">npm install -g @stackforge/cli</span></div></div>
-                    <div class="line"><div class="line-content"><span style="color:var(--accent);">$</span> <span style="color:var(--text-primary);">stackforge init my-app --template nextjs-rust</span></div></div>
+                    <div class="line"><div class="line-content"><span style="color:var(--accent);">$</span> <span style="color:var(--text-primary);">pip install stackforge</span></div></div>
+                    <div class="line"><div class="line-content"><span style="color:var(--accent);">$</span> <span style="color:var(--text-primary);">stackforge init my-app --template vue-laravel</span></div></div>
                     <div class="line"><div class="line-content"></div></div>
-                    <div class="line"><div class="line-content"><span style="color:var(--text-muted);">⚡ StackForge v2.4.0</span></div></div>
-                    <div class="line"><div class="line-content"><span style="color:var(--accent);">✓</span> <span style="color:var(--text-secondary);">Scaffolding project structure...</span></div></div>
-                    <div class="line"><div class="line-content"><span style="color:var(--accent);">✓</span> <span style="color:var(--text-secondary);">Installing dependencies (Next.js 14, Rust 1.74)</span></div></div>
-                    <div class="line"><div class="line-content"><span style="color:var(--accent);">✓</span> <span style="color:var(--text-secondary);">Generating CI/CD pipeline (GitHub Actions)</span></div></div>
-                    <div class="line"><div class="line-content"><span style="color:var(--accent);">✓</span> <span style="color:var(--text-secondary);">Creating Docker configuration (multi-stage)</span></div></div>
-                    <div class="line"><div class="line-content"><span style="color:var(--accent);">✓</span> <span style="color:var(--text-secondary);">Setting up Terraform modules</span></div></div>
+                    <div class="line"><div class="line-content"><span style="color:var(--text-muted);">⚡ StackForge v1.2.0</span></div></div>
+                    <div class="line"><div class="line-content"><span style="color:var(--accent);">✓</span> <span style="color:var(--text-secondary);">Scaffolding Vue 3 project structure...</span></div></div>
+                    <div class="line"><div class="line-content"><span style="color:var(--accent);">✓</span> <span style="color:var(--text-secondary);">Generating Laravel API backend...</span></div></div>
+                    <div class="line"><div class="line-content"><span style="color:var(--accent);">✓</span> <span style="color:var(--text-secondary);">Creating Docker configuration (dev + prod)</span></div></div>
+                    <div class="line"><div class="line-content"><span style="color:var(--accent);">✓</span> <span style="color:var(--text-secondary);">Setting up GitHub Actions CI/CD</span></div></div>
                     <div class="line"><div class="line-content"></div></div>
                     <div class="line"><div class="line-content"><span style="color:var(--accent);">🎉 Project ready!</span></div></div>
-                    <div class="line"><div class="line-content"><span style="color:var(--text-muted);">   cd my-app && stackforge dev</span></div></div>
+                    <div class="line"><div class="line-content"><span style="color:var(--text-muted);">   cd my-app && docker-compose up -d</span></div></div>
                 </div>
             </div>
 
@@ -232,22 +231,22 @@
                     <div class="detail-code-dot" style="background:#ff5f57"></div>
                     <div class="detail-code-dot" style="background:#febc2e"></div>
                     <div class="detail-code-dot" style="background:#28c840"></div>
-                    <div class="detail-code-title">stackforge.config.ts</div>
+                    <div class="detail-code-title">stackforge.config.yaml</div>
                 </div>
                 <div class="detail-code-body">
-                    <div class="line"><div class="line-content"><span style="color:#c678dd;">import</span> <span style="color:#e06c75;">{ defineConfig }</span> <span style="color:#c678dd;">from</span> <span style="color:#98c379;">'@stackforge/core'</span>;</div></div>
-                    <div class="line"><div class="line-content"></div></div>
-                    <div class="line"><div class="line-content"><span style="color:#c678dd;">export default</span> <span style="color:#61afef;">defineConfig</span>({</div></div>
-                    <div class="line"><div class="line-content">  <span style="color:#e06c75;">name</span>: <span style="color:#98c379;">'my-app'</span>,</div></div>
-                    <div class="line"><div class="line-content">  <span style="color:#e06c75;">template</span>: <span style="color:#98c379;">'nextjs-rust'</span>,</div></div>
-                    <div class="line"><div class="line-content">  <span style="color:#e06c75;">features</span>: [</div></div>
-                    <div class="line"><div class="line-content">    <span style="color:#98c379;">'docker'</span>,</div></div>
-                    <div class="line"><div class="line-content">    <span style="color:#98c379;">'github-actions'</span>,</div></div>
-                    <div class="line"><div class="line-content">    <span style="color:#98c379;">'terraform'</span>,</div></div>
-                    <div class="line"><div class="line-content">  ],</div></div>
-                    <div class="line"><div class="line-content">  <span style="color:#e06c75;">database</span>: <span style="color:#98c379;">'postgresql'</span>,</div></div>
-                    <div class="line"><div class="line-content">  <span style="color:#e06c75;">auth</span>: <span style="color:#98c379;">'clerk'</span>,</div></div>
-                    <div class="line"><div class="line-content">});</div></div>
+                    <div class="line"><div class="line-content"><span style="color:#e06c75;">name</span>: <span style="color:#98c379;">my-app</span></div></div>
+                    <div class="line"><div class="line-content"><span style="color:#e06c75;">template</span>: <span style="color:#98c379;">vue-laravel</span></div></div>
+                    <div class="line"><div class="line-content"><span style="color:#e06c75;">frontend</span>:</div></div>
+                    <div class="line"><div class="line-content">  <span style="color:#e06c75;">framework</span>: <span style="color:#98c379;">vue3</span></div></div>
+                    <div class="line"><div class="line-content">  <span style="color:#e06c75;">typescript</span>: <span style="color:#d19a66;">true</span></div></div>
+                    <div class="line"><div class="line-content">  <span style="color:#e06c75;">pinia</span>: <span style="color:#d19a66;">true</span></div></div>
+                    <div class="line"><div class="line-content"><span style="color:#e06c75;">backend</span>:</div></div>
+                    <div class="line"><div class="line-content">  <span style="color:#e06c75;">framework</span>: <span style="color:#98c379;">laravel</span></div></div>
+                    <div class="line"><div class="line-content">  <span style="color:#e06c75;">database</span>: <span style="color:#98c379;">mysql</span></div></div>
+                    <div class="line"><div class="line-content">  <span style="color:#e06c75;">auth</span>: <span style="color:#98c379;">jwt</span></div></div>
+                    <div class="line"><div class="line-content"><span style="color:#e06c75;">devops</span>:</div></div>
+                    <div class="line"><div class="line-content">  <span style="color:#e06c75;">docker</span>: <span style="color:#d19a66;">true</span></div></div>
+                    <div class="line"><div class="line-content">  <span style="color:#e06c75;">ci</span>: <span style="color:#98c379;">github-actions</span></div></div>
                 </div>
             </div>
         </div>
@@ -257,9 +256,6 @@
     <button class="back-to-top" id="backToTop" title="回到顶部">↑</button>
 
     <!-- Scripts -->
-    <script src="../js/loader.js"></script>
-    <script src="../js/particles.js"></script>
-    <script src="../js/cursor.js"></script>
     <script src="../js/detail.js"></script>
 </body>
 </html>

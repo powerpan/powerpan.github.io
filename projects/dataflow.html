@@ -46,21 +46,21 @@
             <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
             BACK
         </a>
-        <div class="detail-tag">Full-Stack · DevOps · 2024</div>
+        <div class="detail-tag">Big Data · Flink · Kafka</div>
         <h1 class="detail-title">Data<span class="hl">Flow</span> Pipeline</h1>
-        <p class="detail-subtitle">实时数据处理流水线可视化管理平台，支持百万级 TPS 的流式计算编排，让复杂的数据管道像搭积木一样简单。</p>
+        <p class="detail-subtitle">基于 Apache Flink 与 Kafka 构建的实时数据处理流水线，支持高吞吐量的流式数据计算与可视化监控，是大数据课程的核心实战项目。</p>
         <div class="detail-meta">
             <div class="detail-meta-item">
                 <span class="detail-meta-label">Role</span>
-                <span class="detail-meta-value">Lead Developer</span>
+                <span class="detail-meta-value">核心开发者</span>
             </div>
             <div class="detail-meta-item">
                 <span class="detail-meta-label">Duration</span>
-                <span class="detail-meta-value">12 months</span>
+                <span class="detail-meta-value">3 months</span>
             </div>
             <div class="detail-meta-item">
                 <span class="detail-meta-label">Team</span>
-                <span class="detail-meta-value">8 engineers</span>
+                <span class="detail-meta-value">4 人</span>
             </div>
         </div>
     </section>
@@ -85,31 +85,33 @@
 
         <div class="detail-section reveal" id="overview">
             <div class="detail-section-label">Overview</div>
-            <h2 class="detail-section-title">让数据管道触手可及</h2>
+            <h2 class="detail-section-title">实时流式数据处理平台</h2>
             <p class="detail-text">
-                DataFlow Pipeline 是一个<strong>实时数据处理可视化平台</strong>，将复杂的流式计算编排为直观的 DAG 图形。
-                用户通过拖拽节点即可构建高性能数据管道，平台自动处理背压、容错、状态管理等底层细节。
+                DataFlow Pipeline 是一个基于 <strong>Apache Flink + Kafka</strong> 的实时数据处理流水线平台。
+                用户可以通过 Vue 前端界面配置数据处理任务，系统将任务编排为 DAG 图形，
+                由 Flink 引擎执行流式计算，Kafka 作为消息中间件实现数据的高效流转。
             </p>
             <p class="detail-text">
-                核心引擎使用 <strong>Rust</strong> 编写，配合 Kafka 消息队列和 PostgreSQL 状态存储，
-                实现了百万级 TPS 的吞吐能力。前端采用 Next.js + tRPC 的全栈 TypeScript 方案，
-                提供丝滑的实时监控体验。
+                平台支持多种数据源接入（MySQL、Redis、Kafka Topic），内置常用的数据清洗、
+                聚合、窗口计算等算子。后端采用 Java 开发，提供 RESTful API 供前端调用，
+                配合 Redis 缓存实现任务状态的实时查询。项目作为大数据课程的核心实践，
+                成功处理了<strong>日均百万级</strong>的模拟数据流。
             </p>
         </div>
 
         <div class="detail-section reveal" id="tech">
             <div class="detail-section-label">Tech Stack</div>
             <h2 class="detail-section-title">技术架构</h2>
-            <p class="detail-text">高性能全栈方案，Rust 引擎 + TypeScript 界面</p>
+            <p class="detail-text">流式计算 + 可视化监控的全栈大数据方案</p>
             <div class="detail-tech-grid">
-                <div class="detail-tech-badge" data-hover>Next.js</div>
-                <div class="detail-tech-badge" data-hover>tRPC</div>
-                <div class="detail-tech-badge" data-hover>Rust</div>
-                <div class="detail-tech-badge" data-hover>PostgreSQL</div>
-                <div class="detail-tech-badge" data-hover>Redis</div>
+                <div class="detail-tech-badge" data-hover>Java</div>
+                <div class="detail-tech-badge" data-hover>Python</div>
+                <div class="detail-tech-badge" data-hover>Apache Flink</div>
                 <div class="detail-tech-badge" data-hover>Apache Kafka</div>
+                <div class="detail-tech-badge" data-hover>MySQL</div>
+                <div class="detail-tech-badge" data-hover>Redis</div>
                 <div class="detail-tech-badge" data-hover>Docker</div>
-                <div class="detail-tech-badge" data-hover>Terraform</div>
+                <div class="detail-tech-badge" data-hover>Vue</div>
             </div>
         </div>
 
@@ -118,24 +120,24 @@
             <h2 class="detail-section-title">核心能力</h2>
             <div class="detail-features">
                 <div class="detail-feature" data-hover>
-                    <div class="detail-feature-icon">🎨</div>
-                    <div class="detail-feature-title">Visual Pipeline Builder</div>
-                    <div class="detail-feature-desc">拖拽式 DAG 编辑器，支持 50+ 内置算子，零代码构建复杂数据管道</div>
+                    <div class="detail-feature-icon">🔄</div>
+                    <div class="detail-feature-title">流式计算引擎</div>
+                    <div class="detail-feature-desc">基于 Flink 的高性能流处理引擎，支持窗口计算、状态管理、Exactly-Once 语义保证</div>
                 </div>
                 <div class="detail-feature" data-hover>
                     <div class="detail-feature-icon">📊</div>
-                    <div class="detail-feature-title">Real-time Monitoring</div>
-                    <div class="detail-feature-desc">毫秒级延迟的实时指标面板，可视化展示吞吐量、延迟、错误率等关键指标</div>
+                    <div class="detail-feature-title">可视化监控</div>
+                    <div class="detail-feature-desc">Vue 前端实时展示任务运行状态、吞吐量、延迟等关键指标，支持任务的启停与配置管理</div>
                 </div>
                 <div class="detail-feature" data-hover>
-                    <div class="detail-feature-icon">🔄</div>
-                    <div class="detail-feature-title">Auto-scaling</div>
-                    <div class="detail-feature-desc">基于负载的智能弹性伸缩，自动调整算子并行度和资源分配</div>
+                    <div class="detail-feature-icon">🛡️</div>
+                    <div class="detail-feature-title">容错与恢复</div>
+                    <div class="detail-feature-desc">基于 Flink Checkpoint 机制实现任务故障自动恢复，配合 Kafka 的持久化消息保证数据不丢失</div>
                 </div>
                 <div class="detail-feature" data-hover>
-                    <div class="detail-feature-icon">📝</div>
-                    <div class="detail-feature-title">Version Control</div>
-                    <div class="detail-feature-desc">管道配置的 Git 版本管理，支持回滚、分支对比和灰度发布</div>
+                    <div class="detail-feature-icon">📈</div>
+                    <div class="detail-feature-title">多维数据分析</div>
+                    <div class="detail-feature-desc">内置聚合、过滤、Join、窗口等多种数据处理算子，支持自定义 UDF 扩展处理逻辑</div>
                 </div>
             </div>
         </div>
@@ -145,54 +147,63 @@
             <h2 class="detail-section-title">性能指标</h2>
             <div class="detail-stats">
                 <div class="detail-stat" data-hover>
-                    <div class="detail-stat-num" data-count="1000000">0</div>
-                    <div class="detail-stat-label">+ TPS</div>
+                    <div class="detail-stat-num">500K+</div>
+                    <div class="detail-stat-label">TPS</div>
                 </div>
                 <div class="detail-stat" data-hover>
-                    <div class="detail-stat-num">99.99%</div>
-                    <div class="detail-stat-label">SLA</div>
+                    <div class="detail-stat-num">99.9%</div>
+                    <div class="detail-stat-label">Availability</div>
                 </div>
                 <div class="detail-stat" data-hover>
-                    <div class="detail-stat-num" data-count="50">0</div>
-                    <div class="detail-stat-label">ms Latency</div>
+                    <div class="detail-stat-num">100ms</div>
+                    <div class="detail-stat-label">Latency</div>
                 </div>
                 <div class="detail-stat" data-hover>
-                    <div class="detail-stat-num" data-count="200">0</div>
-                    <div class="detail-stat-label">+ Pipelines</div>
+                    <div class="detail-stat-num">15+</div>
+                    <div class="detail-stat-label">Jobs</div>
                 </div>
             </div>
         </div>
 
         <div class="detail-section reveal" id="code">
             <div class="detail-section-label">Code Sample</div>
-            <h2 class="detail-section-title">Rust 流处理器</h2>
-            <p class="detail-text">核心引擎的流处理单元，零拷贝数据传递</p>
+            <h2 class="detail-section-title">Flink 流处理作业</h2>
+            <p class="detail-text">核心 Flink 作业定义，实现 Kafka 数据流的实时处理</p>
             <div class="detail-code-block">
                 <div class="detail-code-header">
                     <div class="detail-code-dot" style="background:#ff5f57"></div>
                     <div class="detail-code-dot" style="background:#febc2e"></div>
                     <div class="detail-code-dot" style="background:#28c840"></div>
-                    <div class="detail-code-title">stream_processor.rs</div>
+                    <div class="detail-code-title">StreamJob.java</div>
                 </div>
                 <div class="detail-code-body">
-                    <div class="line"><span class="line-content"><span style="color:#ff79c6">use</span> tokio::stream::{Stream, StreamExt};</span></div>
-                    <div class="line"><span class="line-content"><span style="color:#ff79c6">use</span> crate::pipeline::{Operator, Context};</span></div>
+                    <div class="line"><span class="line-content"><span style="color:#ff79c6">import</span> org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;</span></div>
+                    <div class="line"><span class="line-content"><span style="color:#ff79c6">import</span> org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer;</span></div>
                     <div class="line"><span class="line-content"></span></div>
-                    <div class="line"><span class="line-content"><span style="color:#6272a4">/// High-throughput stream processor with backpressure</span></span></div>
-                    <div class="line"><span class="line-content"><span style="color:#ff79c6">pub async fn</span> <span style="color:#50fa7b">process_stream</span>&lt;T: Send + Sync&gt;(</span></div>
-                    <div class="line"><span class="line-content">    stream: <span style="color:#ffb86c">impl</span> Stream&lt;Item = T&gt;,</span></div>
-                    <div class="line"><span class="line-content">    operators: Vec&lt;Box&lt;<span style="color:#ffb86c">dyn</span> Operator&lt;T&gt;&gt;&gt;,</span></div>
-                    <div class="line"><span class="line-content">    ctx: &amp;Context,</span></div>
-                    <div class="line"><span class="line-content">) -&gt; Result&lt;()&gt; {</span></div>
-                    <div class="line"><span class="line-content">    <span style="color:#ff79c6">let</span> pipeline = operators</span></div>
-                    <div class="line"><span class="line-content">        .into_iter()</span></div>
-                    <div class="line"><span class="line-content">        .fold(stream.boxed(), |s, op| op.apply(s));</span></div>
+                    <div class="line"><span class="line-content"><span style="color:#6272a4">// Define the Flink streaming job</span></span></div>
+                    <div class="line"><span class="line-content"><span style="color:#ff79c6">public class</span> StreamJob {</span></div>
+                    <div class="line"><span class="line-content">    <span style="color:#ff79c6">public static void</span> <span style="color:#50fa7b">main</span>(String[] args) <span style="color:#ff79c6">throws</span> Exception {</span></div>
+                    <div class="line"><span class="line-content">        StreamExecutionEnvironment env =</span></div>
+                    <div class="line"><span class="line-content">            StreamExecutionEnvironment.getExecutionEnvironment();</span></div>
                     <div class="line"><span class="line-content"></span></div>
-                    <div class="line"><span class="line-content">    pipeline</span></div>
-                    <div class="line"><span class="line-content">        .for_each_concurrent(ctx.parallelism, |item| {</span></div>
-                    <div class="line"><span class="line-content">            ctx.sink.write(item).<span style="color:#ff79c6">await</span></span></div>
-                    <div class="line"><span class="line-content">        }).<span style="color:#ff79c6">await</span>;</span></div>
-                    <div class="line"><span class="line-content">    Ok(())</span></div>
+                    <div class="line"><span class="line-content">        <span style="color:#6272a4">// Kafka source with auto-commit</span></span></div>
+                    <div class="line"><span class="line-content">        FlinkKafkaConsumer&lt;String&gt; consumer =</span></div>
+                    <div class="line"><span class="line-content">            <span style="color:#ff79c6">new</span> FlinkKafkaConsumer&lt;&gt;(</span></div>
+                    <div class="line"><span class="line-content">                <span style="color:#f1fa8c">"sensor-data"</span>,</span></div>
+                    <div class="line"><span class="line-content">                <span style="color:#ff79c6">new</span> SimpleStringSchema(),</span></div>
+                    <div class="line"><span class="line-content">                kafkaProps</span></div>
+                    <div class="line"><span class="line-content">            );</span></div>
+                    <div class="line"><span class="line-content"></span></div>
+                    <div class="line"><span class="line-content">        env.addSource(consumer)</span></div>
+                    <div class="line"><span class="line-content">           .map(<span style="color:#ff79c6">new</span> DataParser())</span></div>
+                    <div class="line"><span class="line-content">           .keyBy(DataEvent::getDeviceId)</span></div>
+                    <div class="line"><span class="line-content">           .window(TumblingProcessingTimeWindows.of(</span></div>
+                    <div class="line"><span class="line-content">               Time.seconds(<span style="color:#bd93f9">10</span>)))</span></div>
+                    <div class="line"><span class="line-content">           .aggregate(<span style="color:#ff79c6">new</span> AvgAggregator())</span></div>
+                    <div class="line"><span class="line-content">           .addSink(<span style="color:#ff79c6">new</span> MySQLSink());</span></div>
+                    <div class="line"><span class="line-content"></span></div>
+                    <div class="line"><span class="line-content">        env.execute(<span style="color:#f1fa8c">"DataFlow Pipeline"</span>);</span></div>
+                    <div class="line"><span class="line-content">    }</span></div>
                     <div class="line"><span class="line-content">}</span></div>
                 </div>
             </div>

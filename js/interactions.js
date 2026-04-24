@@ -51,9 +51,9 @@
         ======================================== */
         const marqueeTrack = document.getElementById('marqueeTrack');
         const marqueeItems = [
-            'React', 'Next.js', 'TypeScript', 'Node.js', 'Python',
-            'PyTorch', 'OpenCV', 'PostgreSQL', 'Docker', 'Kubernetes',
-            'GraphQL', 'Rust', 'WebGL', 'Three.js', 'TensorRT',
+            'Vue', 'C++', 'Python', 'Java', 'JavaScript',
+            'PyTorch', 'YOLO', 'SAM', 'MySQL', 'Redis',
+            'Docker', 'Flink', 'Kafka', 'RESTful API', 'MyBatis-Plus',
         ];
         const sep = '<span class="marquee-sep">◆</span>';
         let marqueeHTML = '';
@@ -114,13 +114,15 @@
                 `{`,
                 `  <span class="term-key">"name"</span>: <span class="term-str">"Eric"</span>,`,
                 `  <span class="term-key">"role"</span>: <span class="term-str">"Full-Stack & AI Vision Dev"</span>,`,
-                `  <span class="term-key">"location"</span>: <span class="term-str">"Shanghai, CN"</span>,`,
-                `  <span class="term-key">"languages"</span>: <span class="term-bracket">[</span><span class="term-str">"TypeScript"</span>, <span class="term-str">"Python"</span>, <span class="term-str">"Rust"</span>, <span class="term-str">"Go"</span><span class="term-bracket">]</span>,`,
-                `  <span class="term-key">"frameworks"</span>: <span class="term-bracket">[</span><span class="term-str">"React"</span>, <span class="term-str">"Next.js"</span>, <span class="term-str">"FastAPI"</span>, <span class="term-str">"PyTorch"</span><span class="term-bracket">]</span>,`,
+                `  <span class="term-key">"location"</span>: <span class="term-str">"Guangzhou, CN"</span>,`,
+                `  <span class="term-key">"university"</span>: <span class="term-str">"SCUT · Software Engineering"</span>,`,
+                `  <span class="term-key">"languages"</span>: <span class="term-bracket">[</span><span class="term-str">"C++"</span>, <span class="term-str">"Python"</span>, <span class="term-str">"Java"</span>, <span class="term-str">"JavaScript"</span><span class="term-bracket">]</span>,`,
+                `  <span class="term-key">"frameworks"</span>: <span class="term-bracket">[</span><span class="term-str">"Vue"</span>, <span class="term-str">"PyTorch"</span>, <span class="term-str">"FastAPI"</span>, <span class="term-str">"Spring Boot"</span><span class="term-bracket">]</span>,`,
+                `  <span class="term-key">"ai"</span>: <span class="term-bracket">[</span><span class="term-str">"YOLO"</span>, <span class="term-str">"SAM"</span>, <span class="term-str">"LLM"</span>, <span class="term-str">"Stable Diffusion"</span><span class="term-bracket">]</span>,`,
                 `  <span class="term-key">"passions"</span>: <span class="term-bracket">[</span>`,
                 `    <span class="term-str">"computer vision"</span>,`,
-                `    <span class="term-str">"distributed systems"</span>,`,
-                `    <span class="term-str">"open source"</span>`,
+                `    <span class="term-str">"full-stack dev"</span>,`,
+                `    <span class="term-str">"AI applications"</span>`,
                 `  <span class="term-bracket">]</span>,`,
                 `  <span class="term-key">"coffee_per_day"</span>: <span class="term-str">"∞"</span>`,
                 `}`,
@@ -152,9 +154,9 @@
         ======================================== */
         const orbitContainer = document.getElementById('orbitContainer');
         const orbitRings = [
-            { radius: 100, speed: 0.008, items: ['React', 'Next.js', 'Vue', 'TypeScript'] },
-            { radius: 170, speed: -0.005, items: ['Node.js', 'Python', 'Go', 'Rust', 'PostgreSQL'] },
-            { radius: 240, speed: 0.003, items: ['PyTorch', 'OpenCV', 'TensorRT', 'CUDA'] },
+            { radius: 100, speed: 0.008, items: ['Vue', 'HTML/CSS', 'JavaScript', 'WXML'] },
+            { radius: 170, speed: -0.005, items: ['Python', 'C++', 'Java', 'PHP', 'MySQL'] },
+            { radius: 240, speed: 0.003, items: ['PyTorch', 'YOLO', 'SAM', 'Flink', 'Docker'] },
         ];
 
         const orbitElements = [];
