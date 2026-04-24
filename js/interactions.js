@@ -85,6 +85,9 @@
         const scrambleChars = 'アイウエオカキクケコ0123456789ABCDEF<>/{}';
         marqueeTrack.querySelectorAll('.marquee-item').forEach(item => {
             const original = item.textContent;
+            // Lock width to prevent layout shift during scramble
+            item.style.minWidth = item.offsetWidth + 'px';
+            item.style.textAlign = 'center';
             item.addEventListener('mouseenter', () => {
                 let iterations = 0;
                 const iv = setInterval(() => {
