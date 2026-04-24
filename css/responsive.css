@@ -132,8 +132,8 @@
     .featured-code-section { padding: 80px 24px; }
     .featured-code-wrap { grid-template-columns: 1fr; gap: 32px; }
     .featured-code-text { order: 1; }
-    .code-window { order: 2; }
-    .code-window-body { padding: 16px; font-size: 0.65rem; }
+    .code-window { order: 2; overflow: visible; }
+    .code-window-body { padding: 16px; font-size: 0.65rem; overflow-x: auto; }
 
     /* GitHub */
     .github-section { padding: 80px 24px; }
