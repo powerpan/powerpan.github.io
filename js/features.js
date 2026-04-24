@@ -13,37 +13,93 @@
         });
 
         /* ========================================
-           SKILLS BAR ANIMATION
+           SKILLS BAR ANIMATION + COUNTER
         ======================================== */
         const skillBars = document.querySelectorAll('.skill-bar-fill');
         const skillObs = new IntersectionObserver(entries => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    const width = entry.target.dataset.width;
+                    const bar = entry.target;
+                    const width = parseInt(bar.dataset.width);
+                    const pctEl = bar.closest('.skill-bar-item').querySelector('.skill-bar-pct');
+
                     setTimeout(() => {
-                        entry.target.style.width = width + '%';
+                        bar.style.width = width + '%';
                     }, 200);
-                    skillObs.unobserve(entry.target);
+
+                    // Animate counter from 0 to target
+                    if (pctEl) {
+                        const duration = 1200;
+                        const start = performance.now();
+                        const animate = now => {
+                            const elapsed = now - start;
+                            const progress = Math.min(elapsed / duration, 1);
+                            const eased = 1 - Math.pow(1 - progress, 3);
+                            pctEl.textContent = Math.round(eased * width) + '%';
+                            if (progress < 1) requestAnimationFrame(animate);
+                        };
+                        setTimeout(() => requestAnimationFrame(animate), 200);
+                    }
+
+                    skillObs.unobserve(bar);
                 }
             });
         }, { threshold: 0.3 });
         skillBars.forEach(bar => skillObs.observe(bar));
 
         /* ========================================
-           CODE LINES ANIMATION
+           CODE TYPING ANIMATION
         ======================================== */
         const codeWindow = document.getElementById('codeWindow');
         if (codeWindow) {
             const codeObs = new IntersectionObserver(entries => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
-                        const lines = codeWindow.querySelectorAll('.code-line');
-                        lines.forEach((line, i) => {
-                            setTimeout(() => {
-                                line.classList.add('visible');
-                            }, i * 80);
-                        });
                         codeObs.unobserve(entry.target);
+                        const lines = codeWindow.querySelectorAll('.code-line');
+                        const body = codeWindow.querySelector('.code-window-body');
+
+                        // Create blinking cursor
+                        const cursor = document.createElement('span');
+                        cursor.className = 'code-typing-cursor';
+                        cursor.textContent = '▌';
+
+                        // Hide all lines initially
+                        lines.forEach(l => { l.style.opacity = '0'; });
+
+                        let lineIdx = 0;
+                        function typeLine() {
+                            if (lineIdx >= lines.length) {
+                                cursor.remove();
+                                return;
+                            }
+                            const line = lines[lineIdx];
+                            const html = line.innerHTML;
+                            const text = line.textContent;
+                            line.style.opacity = '1';
+                            line.innerHTML = '';
+                            line.appendChild(cursor);
+
+                            let charIdx = 0;
+                            function typeChar() {
+                                if (charIdx < text.length) {
+                                    // Rebuild with syntax highlighting up to current char
+                                    const partial = html.substring(0, charIdx + 1);
+                                    // Simple: just set textContent for speed, then restore full HTML at end
+                                    line.textContent = text.substring(0, charIdx + 1);
+                                    line.appendChild(cursor);
+                                    charIdx++;
+                                    setTimeout(typeChar, 12 + Math.random() * 8);
+                                } else {
+                                    // Restore full syntax-highlighted HTML
+                                    line.innerHTML = html;
+                                    lineIdx++;
+                                    setTimeout(typeLine, line.textContent.trim() === '' ? 80 : 120);
+                                }
+                            }
+                            typeChar();
+                        }
+                        typeLine();
                     }
                 });
             }, { threshold: 0.3 });

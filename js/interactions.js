@@ -3,6 +3,23 @@
 ======================================== */
 
         /* ========================================
+           HERO PARALLAX — mousemove shifts grid
+        ======================================== */
+        const heroSection = document.getElementById('hero');
+        const heroGrid = document.querySelector('.hero-grid-bg');
+        if (heroSection && heroGrid) {
+            heroSection.addEventListener('mousemove', e => {
+                const rect = heroSection.getBoundingClientRect();
+                const x = (e.clientX - rect.left) / rect.width - 0.5;
+                const y = (e.clientY - rect.top) / rect.height - 0.5;
+                heroGrid.style.transform = `translate(${x * -20}px, ${y * -20}px) scale(1.1)`;
+            });
+            heroSection.addEventListener('mouseleave', () => {
+                heroGrid.style.transform = 'translate(0, 0) scale(1)';
+            });
+        }
+
+        /* ========================================
            TYPING EFFECT (Hero) — i18n aware
         ======================================== */
         const typingEl = document.getElementById('typingText');

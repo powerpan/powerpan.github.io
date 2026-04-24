@@ -241,11 +241,16 @@
         .code-line {
             white-space: pre;
             opacity: 0;
-            transform: translateX(-8px);
-            transition: opacity 0.4s ease, transform 0.4s ease;
+            transition: opacity 0.3s ease;
         }
-        .code-line.visible {
-            opacity: 1; transform: translateX(0);
+        .code-typing-cursor {
+            color: var(--accent);
+            animation: cursorBlink 0.7s step-end infinite;
+            font-weight: 400;
+        }
+        @keyframes cursorBlink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
         }
         .code-line::before {
             counter-increment: line;
