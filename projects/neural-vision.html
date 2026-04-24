@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeuralVision Pro — Eric's Project</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/detail.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body>
+
+    <!-- ============ SCROLL PROGRESS ============ -->
+    <div class="detail-scroll-progress" id="detailScrollProgress"></div>
+
+    <!-- ============ CURSOR ============ -->
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor-dot" id="cursorDot"></div>
+
+    <!-- ============ PARTICLE CANVAS ============ -->
+    <canvas id="particleCanvas"></canvas>
+
+    <!-- ============ NAV ============ -->
+    <nav id="nav">
+        <a href="../index.html" class="nav-logo magnetic" data-hover>ERIC<span class="dot">.</span></a>
+        <ul class="nav-center">
+            <li><a href="../index.html#about" data-hover>// 关于</a></li>
+            <li><a href="../index.html#projects" data-hover>// 项目</a></li>
+            <li><a href="../index.html#blog" data-hover>// 博客</a></li>
+            <li><a href="../index.html#contact" data-hover>// 联系</a></li>
+        </ul>
+        <div class="nav-status">
+            <span class="status-dot"></span>
+            Open to work
+        </div>
+    </nav>
+
+    <!-- ============ TABLE OF CONTENTS ============ -->
+    <div class="detail-toc" id="detailToc">
+        <div class="detail-toc-item" data-target="overview" data-label="Overview"></div>
+        <div class="detail-toc-item" data-target="tech" data-label="Tech Stack"></div>
+        <div class="detail-toc-item" data-target="features" data-label="Features"></div>
+        <div class="detail-toc-item" data-target="stats" data-label="Stats"></div>
+        <div class="detail-toc-item" data-target="code" data-label="Code"></div>
+    </div>
+
+    <!-- ============ HERO ============ -->
+    <section class="detail-hero">
+        <div class="detail-hero-bg"></div>
+        <a href="../index.html#projects" class="detail-back magnetic" data-hover>
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
+                <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+            BACK
+        </a>
+        <div class="detail-tag">AI Vision · Full-Stack · 2024</div>
+        <h1 class="detail-title">Neural<span class="hl">Vision</span> Pro</h1>
+        <p class="detail-subtitle">基于 Transformer 的实时目标检测与分割平台，支持多路视频流并发推理，为工业质检、自动驾驶、安防监控提供企业级视觉智能解决方案。</p>
+        <div class="detail-meta">
+            <div class="detail-meta-item">
+                <span class="detail-meta-label">Role</span>
+                <span class="detail-meta-value">Tech Lead</span>
+            </div>
+            <div class="detail-meta-item">
+                <span class="detail-meta-label">Duration</span>
+                <span class="detail-meta-value">8 months</span>
+            </div>
+            <div class="detail-meta-item">
+                <span class="detail-meta-label">Team</span>
+                <span class="detail-meta-value">6 engineers</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ PROJECT IMAGE ============ -->
+    <div class="detail-image-section reveal">
+        <div class="detail-image-wrap">
+            <div class="detail-image">
+                <div class="detail-image-gradient" style="background: linear-gradient(135deg, #1a0a2e, #0a1a0a, #0a0a1a);">
+                    <div class="detail-image-placeholder">NeuralVision Pro</div>
+                </div>
+            </div>
+            <div class="detail-image-overlay"></div>
+            <div class="detail-image-dots">
+                <div class="detail-image-dot" style="background:#ff5f57"></div>
+                <div class="detail-image-dot" style="background:#febc2e"></div>
+                <div class="detail-image-dot" style="background:#28c840"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============ CONTENT ============ -->
+    <div class="detail-content">
+
+        <!-- Overview -->
+        <div class="detail-section reveal" id="overview">
+            <div class="detail-section-label">Overview</div>
+            <h2 class="detail-section-title">重新定义实时视觉推理</h2>
+            <p class="detail-text">
+                NeuralVision Pro 是一个<strong>企业级视觉智能平台</strong>，将前沿的 Transformer 架构与工程优化深度结合，
+                实现了亚 10ms 的推理延迟。平台支持目标检测、语义分割、实例分割三大核心任务，
+                可同时处理 <strong>16 路高清视频流</strong>的并发推理。
+            </p>
+            <p class="detail-text">
+                通过创新的模型蒸馏和量化技术，我们将 DETR 系列模型的推理速度提升了 <strong>8 倍</strong>，
+                同时保持了 95% 以上的精度。平台采用微服务架构，支持 Kubernetes 弹性伸缩，
+                日均处理超过 <strong>1000 万张</strong>图像。
+            </p>
+        </div>
+
+        <!-- Tech Stack -->
+        <div class="detail-section reveal" id="tech">
+            <div class="detail-section-label">Tech Stack</div>
+            <h2 class="detail-section-title">技术架构</h2>
+            <p class="detail-text">从模型训练到边缘部署，全链路技术选型</p>
+            <div class="detail-tech-grid">
+                <div class="detail-tech-badge" data-hover>PyTorch</div>
+                <div class="detail-tech-badge" data-hover>TensorRT</div>
+                <div class="detail-tech-badge" data-hover>ONNX Runtime</div>
+                <div class="detail-tech-badge" data-hover>FastAPI</div>
+                <div class="detail-tech-badge" data-hover>React</div>
+                <div class="detail-tech-badge" data-hover>PostgreSQL</div>
+                <div class="detail-tech-badge" data-hover>Docker</div>
+                <div class="detail-tech-badge" data-hover>Kubernetes</div>
+            </div>
+        </div>
+
+        <!-- Features -->
+        <div class="detail-section reveal" id="features">
+            <div class="detail-section-label">Key Features</div>
+            <h2 class="detail-section-title">核心能力</h2>
+            <div class="detail-features">
+                <div class="detail-feature" data-hover>
+                    <div class="detail-feature-icon">⚡</div>
+                    <div class="detail-feature-title">Real-time Inference</div>
+                    <div class="detail-feature-desc">基于 TensorRT 的深度优化，单帧推理延迟低至 8ms，支持实时视频流处理</div>
+                </div>
+                <div class="detail-feature" data-hover>
+                    <div class="detail-feature-icon">🔄</div>
+                    <div class="detail-feature-title">Multi-stream Support</div>
+                    <div class="detail-feature-desc">独创的流调度器，支持 16 路高清视频流并发推理，GPU 利用率提升至 95%</div>
+                </div>
+                <div class="detail-feature" data-hover>
+                    <div class="detail-feature-icon">📈</div>
+                    <div class="detail-feature-title">Auto-scaling</div>
+                    <div class="detail-feature-desc">基于 Kubernetes HPA 的智能伸缩策略，根据负载自动调整推理节点数量</div>
+                </div>
+                <div class="detail-feature" data-hover>
+                    <div class="detail-feature-icon">🧠</div>
+                    <div class="detail-feature-title">Model Zoo</div>
+                    <div class="detail-feature-desc">内置 50+ 预训练模型，覆盖检测、分割、分类等主流视觉任务</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="detail-section reveal" id="stats">
+            <div class="detail-section-label">Performance</div>
+            <h2 class="detail-section-title">性能指标</h2>
+            <div class="detail-stats">
+                <div class="detail-stat" data-hover>
+                    <div class="detail-stat-num" data-count="10">0</div>
+                    <div class="detail-stat-label">ms Inference</div>
+                </div>
+                <div class="detail-stat" data-hover>
+                    <div class="detail-stat-num" data-count="99">0</div>
+                    <div class="detail-stat-label">% Uptime</div>
+                </div>
+                <div class="detail-stat" data-hover>
+                    <div class="detail-stat-num" data-count="50">0</div>
+                    <div class="detail-stat-label">+ Models</div>
+                </div>
+                <div class="detail-stat" data-hover>
+                    <div class="detail-stat-num" data-count="10000000">0</div>
+                    <div class="detail-stat-label">Daily Images</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Code -->
+        <div class="detail-section reveal" id="code">
+            <div class="detail-section-label">API Example</div>
+            <h2 class="detail-section-title">快速集成</h2>
+            <p class="detail-text">三行代码即可接入 NeuralVision 推理服务</p>
+            <div class="detail-code-block">
+                <div class="detail-code-header">
+                    <div class="detail-code-dot" style="background:#ff5f57"></div>
+                    <div class="detail-code-dot" style="background:#febc2e"></div>
+                    <div class="detail-code-dot" style="background:#28c840"></div>
+                    <div class="detail-code-title">example.py</div>
+                </div>
+                <div class="detail-code-body">
+                    <div class="line"><span class="line-content"><span style="color:#ff79c6">from</span> neuralvision <span style="color:#ff79c6">import</span> Detector</span></div>
+                    <div class="line"><span class="line-content"></span></div>
+                    <div class="line"><span class="line-content"><span style="color:#6272a4"># Initialize detector with pre-trained model</span></span></div>
+                    <div class="line"><span class="line-content">detector = Detector(</span></div>
+                    <div class="line"><span class="line-content">    model=<span style="color:#f1fa8c">"yolov8-transformer"</span>,</span></div>
+                    <div class="line"><span class="line-content">    device=<span style="color:#f1fa8c">"cuda:0"</span>,</span></div>
+                    <div class="line"><span class="line-content">    precision=<span style="color:#f1fa8c">"fp16"</span></span></div>
+                    <div class="line"><span class="line-content">)</span></div>
+                    <div class="line"><span class="line-content"></span></div>
+                    <div class="line"><span class="line-content"><span style="color:#6272a4"># Run inference on video stream</span></span></div>
+                    <div class="line"><span class="line-content">results = detector.predict(</span></div>
+                    <div class="line"><span class="line-content">    source=<span style="color:#f1fa8c">"rtsp://camera.local/stream"</span>,</span></div>
+                    <div class="line"><span class="line-content">    conf_threshold=<span style="color:#bd93f9">0.85</span>,</span></div>
+                    <div class="line"><span class="line-content">    classes=[<span style="color:#bd93f9">0</span>, <span style="color:#bd93f9">1</span>, <span style="color:#bd93f9">2</span>]  <span style="color:#6272a4"># person, car, bike</span></span></div>
+                    <div class="line"><span class="line-content">)</span></div>
+                    <div class="line"><span class="line-content"></span></div>
+                    <div class="line"><span class="line-content"><span style="color:#ff79c6">for</span> detection <span style="color:#ff79c6">in</span> results:</span></div>
+                    <div class="line"><span class="line-content">    <span style="color:#50fa7b">print</span>(f<span style="color:#f1fa8c">"{detection.label}: {detection.confidence:.2%}"</span>)</span></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ============ BACK TO TOP ============ -->
+    <button class="back-to-top" id="backToTop" title="回到顶部">↑</button>
+
+    <!-- Scripts -->
+    <script src="../js/detail.js"></script>
+</body>
+</html>

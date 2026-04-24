@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>设计可扩展的实时图像处理流水线 — Eric</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/detail.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body>
+    <!-- ============ SCROLL PROGRESS ============ -->
+    <div class="detail-scroll-progress" id="detailScrollProgress"></div>
+
+    <!-- ============ CURSOR ============ -->
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor-dot" id="cursorDot"></div>
+
+    <!-- ============ PARTICLE CANVAS ============ -->
+    <canvas id="particleCanvas"></canvas>
+
+    <!-- ============ NAV ============ -->
+    <nav id="nav">
+        <a href="../index.html" class="nav-logo magnetic" data-hover>ERIC<span class="dot">.</span></a>
+        <ul class="nav-center">
+            <li><a href="../index.html#about" data-hover>// 关于</a></li>
+            <li><a href="../index.html#projects" data-hover>// 项目</a></li>
+            <li><a href="../index.html#blog" data-hover>// 博客</a></li>
+            <li><a href="../index.html#contact" data-hover>// 联系</a></li>
+        </ul>
+        <div class="nav-status">
+            <span class="status-dot"></span>
+            Open to work
+        </div>
+    </nav>
+
+    <!-- ============ ARTICLE HERO ============ -->
+    <section class="blog-article-hero">
+        <div class="detail-hero-bg"></div>
+        <a href="../index.html#blog" class="detail-back" data-hover>
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round">
+                <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+            返回博客
+        </a>
+        <div class="blog-article-tag reveal">System</div>
+        <h1 class="blog-article-title reveal reveal-d1">设计一个可扩展的实时图像处理流水线：从架构到 Kubernetes 部署</h1>
+        <div class="blog-article-meta reveal reveal-d2">
+            <span>📅 2024.06.05</span>
+            <span>⏱️ 11 min</span>
+            <span>👤 Eric Pan</span>
+        </div>
+    </section>
+
+    <!-- ============ ARTICLE BODY ============ -->
+    <article class="blog-article-body">
+
+        <!-- Section 1: 架构概述 -->
+        <section class="detail-section reveal" id="architecture">
+            <h2>架构概述</h2>
+            <p>在构建实时图像处理系统时，传统的请求-响应模式往往无法满足高吞吐量和低延迟的双重需求。我们需要一种事件驱动的流水线架构，将图像处理拆分为多个独立的阶段，每个阶段可以独立扩展和优化。</p>
+            <p>核心设计原则：<strong>解耦、可扩展、容错</strong>。每个处理阶段都是一个独立的服务，通过消息队列进行通信，支持水平扩展和故障隔离。</p>
+            <blockquote>流水线的价值不在于单个环节的高效，而在于整体的协调与平衡。一个瓶颈节点会拖慢整条链路。</blockquote>
+        </section>
+
+        <!-- Section 2: 流水线阶段 -->
+        <section class="detail-section reveal" id="stages">
+            <h2>流水线阶段设计</h2>
+            <p>我们将图像处理拆分为 5 个核心阶段，每个阶段对应一个独立的微服务：</p>
+            <ul>
+                <li><strong>Ingest</strong> — 接收原始图像，进行格式校验和元数据提取，支持 HTTP / gRPC / WebSocket 多种接入方式</li>
+                <li><strong>Preprocess</strong> — 图像缩放、色彩空间转换、归一化、数据增强，输出统一格式的 tensor</li>
+                <li><strong>Inference</strong> — 模型推理，支持批量处理和动态 batching，可加载多种模型（分类、检测、分割）</li>
+                <li><strong>Postprocess</strong> — 结果解析、NMS、置信度过滤、坐标映射回原图</li>
+                <li><strong>Export</strong> — 结果持久化到数据库、回调通知、Webhook 推送、消息队列广播</li>
+            </ul>
+            <p>每个阶段通过 Apache Kafka 进行连接，支持背压（backpressure）机制，避免下游过载。Kafka 的分区特性使得我们可以按图像 ID 进行分区，保证同一张图像的处理顺序。</p>
+        </section>
+
+        <!-- Section 3: Kafka 流处理 -->
+        <section class="detail-section reveal" id="kafka">
+            <h2>Kafka 流式架构</h2>
+            <p>Kafka 作为流水线的核心消息中间件，承担了数据流转、背压控制和故障恢复三大职责。我们设计了以下 Topic 结构：</p>
+            <ul>
+                <li><strong>image.ingest</strong> — 原始图像元数据，3 个分区，7 天保留</li>
+                <li><strong>image.preprocessed</strong> — 预处理后的 tensor 数据，6 个分区</li>
+                <li><strong>image.inference.result</strong> — 推理结果，12 个分区</li>
+                <li><strong>image.export</strong> — 最终处理结果，6 个分区</li>
+            </ul>
+            <p>关键设计决策：</p>
+            <ul>
+                <li><strong>消息大小</strong> — 图像数据不直接放入 Kafka，而是存储在 S3/MinIO 中，Kafka 消息只包含引用指针</li>
+                <li><strong>消费者组</strong> — 每个阶段使用独立的消费者组，支持独立扩缩容</li>
+                <li><strong>Dead Letter Queue</strong> — 处理失败的消息自动转入 DLQ，避免阻塞正常流水线</li>
+            </ul>
+            <blockquote>经验教训：Kafka 消息体越小，吞吐量越高。将大块数据（如图像）放入对象存储，Kafka 只传递元数据和指针，是一个经过验证的最佳实践。</blockquote>
+        </section>
+
+        <!-- Section 4: Worker 实现 -->
+        <section class="detail-section reveal" id="worker">
+            <h2>Worker 并发模型</h2>
+            <p>每个流水线阶段的 Worker 采用 Go 语言实现，利用 goroutine 实现高并发处理。核心采用 Worker Pool 模式，通过 channel 进行任务分发和结果收集。</p>
+            <p>Worker Pool 的设计要点：</p>
+            <ul>
+                <li><strong>固定大小池</strong> — 避免 goroutine 无限增长导致 OOM，pool 大小根据 CPU 核数和 GPU 显存动态调整</li>
+                <li><strong>优雅关闭</strong> — 通过 context 传播取消信号，确保在滚动更新时不丢失正在处理的任务</li>
+                <li><strong>健康检查</strong> — 每个 Worker 暴露 /health 端点，Kubernetes 通过探针检测存活状态</li>
+                <li><strong>指标采集</strong> — 使用 Prometheus client 记录处理延迟、吞吐量和错误率</li>
+            </ul>
+        </section>
+
+        <!-- Section 5: Kubernetes 部署 -->
+        <section class="detail-section reveal" id="k8s">
+            <h2>Kubernetes 部署配置</h2>
+            <p>每个流水线阶段作为一个独立的 Kubernetes Deployment 运行，通过 HPA（Horizontal Pod Autoscaler）根据队列深度自动扩缩容。以下是 Inference Worker 的部署配置：</p>
+            <div class="detail-code-block">
+                <div class="detail-code-header">
+                    <div class="detail-code-dot" style="background:#ff5f57"></div>
+                    <div class="detail-code-dot" style="background:#febc2e"></div>
+                    <div class="detail-code-dot" style="background:#28c840"></div>
+                    <div class="detail-code-title">k8s/inference-worker.yaml</div>
+                </div>
+                <div class="detail-code-body">
+                    <div class="line"><span class="line-content"><span style="color:#ff79c6">apiVersion</span>: apps/v1</span></div>
+                    <div class="line"><span class="line-content"><span style="color:#ff79c6">kind</span>: Deployment</span></div>
+                    <div class="line"><span class="line-content"><span style="color:#ff79c6">metadata</span>:</span></div>
+                    <div class="line"><span class="line-content">  <span style="color:#ff79c6">name</span>: inference-worker</span></div>
+                    <div class="line"><span class="line-content">  <span style="color:#ff79c6">namespace</span>: image-pipeline</span></div>
+                    <div class="line"><span class="line-content"><span style="color:#ff79c6">spec</span>:</span></div>
+                    <div class="line"><span class="line-content">  <span style="color:#ff79c6">replicas</span>: <span style="color:#bd93f9">3</span></span></div>
+                    <div class="line"><span class="line-content">  <span style="color:#ff79c6">selector</span>:</span></div>
+                    <div class="line"><span class="line-content">    <span style="color:#ff79c6">matchLabels</span>:</span></div>
+                    <div class="line"><span class="line-content">      <span style="color:#ff79c6">app</span>: inference-worker</span></div>
+                    <div class="line"><span class="line-content">  <span style="color:#ff79c6">template</span>:</span></div>
+                    <div class="line"><span class="line-content">    <span style="color:#ff79c6">spec</span>:</span></div>
+                    <div class="line"><span class="line-content">      <span style="color:#ff79c6">containers</span>:</span></div>
+                    <div class="line"><span class="line-content">      - <span style="color:#ff79c6">name</span>: worker</span></div>
+                    <div class="line"><span class="line-content">        <span style="color:#ff79c6">image</span>: registry/inference-worker:v2.4.0</span></div>
+                    <div class="line"><span class="line-content">        <span style="color:#ff79c6">resources</span>:</span></div>
+                    <div class="line"><span class="line-content">          <span style="color:#ff79c6">requests</span>:</span></div>
+                    <div class="line"><span class="line-content">            <span style="color:#ff79c6">memory</span>: <span style="color:#98c379">"4Gi"</span></span></div>
+                    <div class="line"><span class="line-content">            <span style="color:#ff79c6">nvidia.com/gpu</span>: <span style="color:#98c379">"1"</span></span></div>
+                    <div class="line"><span class="line-content">          <span style="color:#ff79c6">limits</span>:</span></div>
+                    <div class="line"><span class="line-content">            <span style="color:#ff79c6">memory</span>: <span style="color:#98c379">"8Gi"</span></span></div>
+                    <div class="line"><span class="line-content">            <span style="color:#ff79c6">nvidia.com/gpu</span>: <span style="color:#98c379">"1"</span></span></div>
+                    <div class="line"><span class="line-content">        <span style="color:#ff79c6">livenessProbe</span>:</span></div>
+                    <div class="line"><span class="line-content">          <span style="color:#ff79c6">httpGet</span>:</span></div>
+                    <div class="line"><span class="line-content">            <span style="color:#ff79c6">path</span>: /health</span></div>
+                    <div class="line"><span class="line-content">            <span style="color:#ff79c6">port</span>: <span style="color:#bd93f9">8080</span></span></div>
+                    <div class="line"><span class="line-content">          <span style="color:#ff79c6">initialDelaySeconds</span>: <span style="color:#bd93f9">30</span></span></div>
+                    <div class="line"><span class="line-content">          <span style="color:#ff79c6">periodSeconds</span>: <span style="color:#bd93f9">10</span></span></div>
+                </div>
+            </div>
+            <p>关键配置：<code>minReplicas: 2</code>，<code>maxReplicas: 20</code>，<code>targetQueueLength: 100</code>。当队列深度超过阈值时，HPA 会在 30 秒内完成扩容。GPU 节点使用 NVIDIA Device Plugin 和 node affinity 调度到专用 GPU 节点池。</p>
+        </section>
+
+        <!-- Section 6: 监控 -->
+        <section class="detail-section reveal" id="monitoring">
+            <h2>监控与可观测性</h2>
+            <p>我们采用三大支柱的可观测性方案，确保流水线的每个环节都透明可控：</p>
+            <ul>
+                <li><strong>Metrics</strong> — Prometheus 采集每个阶段的吞吐量、延迟 P99、错误率等关键指标，Grafana Dashboard 实时展示</li>
+                <li><strong>Logging</strong> — 结构化日志通过 Fluentd 收集到 Elasticsearch，支持实时查询和告警规则</li>
+                <li><strong>Tracing</strong> — OpenTelemetry 实现端到端链路追踪，从图像摄入到结果导出全链路可视化</li>
+            </ul>
+            <p>关键告警规则：</p>
+            <ul>
+                <li>Kafka Consumer Lag 超过 1000 时触发 P1 告警</li>
+                <li>推理延迟 P99 超过 500ms 时触发自动扩容</li>
+                <li>Dead Letter Queue 消息数量持续增长时通知开发团队</li>
+                <li>GPU 利用率低于 30% 时触发缩容，节省资源成本</li>
+            </ul>
+        </section>
+
+        <!-- Section 7: 扩展策略 -->
+        <section class="detail-section reveal" id="scaling">
+            <h2>扩展策略</h2>
+            <p>在生产环境中，我们采用了分层扩展的策略，确保系统在不同负载下都能高效运行：</p>
+            <ul>
+                <li><strong>水平扩展</strong> — 每个阶段独立 HPA，根据各自负载自动扩缩，互不影响</li>
+                <li><strong>垂直扩展</strong> — GPU 密集型阶段使用 node affinity 调度到专用节点，预留 GPU 资源</li>
+                <li><strong>地理扩展</strong> — 多区域部署，就近接入，减少网络延迟，Kafka MirrorMaker 实现跨区域数据同步</li>
+                <li><strong>弹性伸缩</strong> — 预热 + 快速扩容策略，应对突发流量，结合 KEDA 实现基于 Kafka lag 的精确扩缩</li>
+            </ul>
+            <p>最终系统在生产环境中稳定运行，日均处理 <strong>1000 万+</strong> 张图像，P99 延迟控制在 <strong>200ms</strong> 以内，可用性达到 <strong>99.99%</strong>。系统在大促期间成功应对了 5 倍流量峰值，自动扩容在 2 分钟内完成。</p>
+        </section>
+
+        <!-- Section 8: 总结 -->
+        <section class="detail-section reveal" id="conclusion">
+            <h2>总结与经验</h2>
+            <p>构建实时图像处理流水线是一个系统工程，涉及架构设计、消息中间件选型、容器编排和监控告警等多个层面。以下是我们的核心经验：</p>
+            <ul>
+                <li><strong>先解耦后优化</strong> — 初期优先保证架构的可扩展性，后期再针对瓶颈环节做深度优化</li>
+                <li><strong>数据与控制分离</strong> — 大数据走对象存储，控制流走消息队列，避免 Kafka 成为瓶颈</li>
+                <li><strong>可观测性先行</strong> — 在上线之前就部署好完整的监控体系，否则出了问题无法定位</li>
+                <li><strong>容错设计</strong> — 每个环节都要假设下游会失败，通过 DLQ、重试、熔断保证系统韧性</li>
+            </ul>
+            <p>这套架构已经稳定运行超过一年，经历了多次业务高峰和基础设施变更的考验。如果你正在构建类似的系统，希望这些经验能为你提供参考。</p>
+        </section>
+    </article>
+
+    <!-- ============ TABLE OF CONTENTS ============ -->
+    <div class="detail-toc">
+        <div class="detail-toc-item" data-target="architecture" data-label="架构概述"></div>
+        <div class="detail-toc-item" data-target="stages" data-label="流水线阶段"></div>
+        <div class="detail-toc-item" data-target="kafka" data-label="Kafka 架构"></div>
+        <div class="detail-toc-item" data-target="worker" data-label="Worker 模型"></div>
+        <div class="detail-toc-item" data-target="k8s" data-label="K8s 部署"></div>
+        <div class="detail-toc-item" data-target="monitoring" data-label="监控"></div>
+        <div class="detail-toc-item" data-target="scaling" data-label="扩展策略"></div>
+        <div class="detail-toc-item" data-target="conclusion" data-label="总结"></div>
+    </div>
+
+    <!-- ============ BACK TO TOP ============ -->
+    <button class="back-to-top" id="backToTop" title="回到顶部">↑</button>
+
+    <script src="../js/detail.js"></script>
+</body>
+</html>

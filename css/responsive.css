@@ -1,0 +1,35 @@
+/* ========================================
+   RESPONSIVE
+======================================== */
+        @media (max-width: 900px) {
+            nav { padding: 16px 24px; }
+            .nav-center, .nav-status, .lang-toggle { display: none; }
+            .hero { padding: 0 24px; }
+            .hero-grid-bg { display: none; }
+            .about {
+                grid-template-columns: 1fr;
+                padding: 80px 24px; gap: 48px;
+            }
+            .stats { grid-template-columns: repeat(2, 1fr); }
+            .orbit-container { width: 320px; height: 320px; }
+            .orbit-item { font-size: 0.58rem; padding: 4px 8px; }
+            .projects, .blog { padding: 80px 24px; }
+            .projects-grid { grid-template-columns: 1fr; }
+            .projects-header, .blog-header { flex-direction: column; align-items: flex-start; gap: 8px; }
+            .blog-item { grid-template-columns: 70px 1fr; gap: 16px; }
+            .blog-item-meta { display: none; }
+            .cta { padding: 120px 24px; }
+            footer { padding: 32px 24px; flex-direction: column; gap: 16px; }
+            .cursor, .cursor-dot, .cursor-trail { display: none !important; }
+            body { cursor: auto !important; }
+            .tech-section { padding: 80px 24px 100px; }
+            .timeline-item { flex-direction: column; gap: 16px; }
+            .timeline-left { width: 100%; text-align: left; }
+            .timeline-center { display: none; }
+            .skills-grid { grid-template-columns: 1fr; }
+            .featured-code-wrap { grid-template-columns: 1fr; }
+            .gh-grid { grid-template-columns: repeat(10, 1fr); }
+            .testimonials-grid { grid-template-columns: 1fr; }
+            .contact-form-wrap { grid-template-columns: 1fr; }
+            .cmdk-modal { width: 95vw !important; }
+        }

@@ -1,0 +1,61 @@
+/* ========================================
+   BASE — Variables, Reset, Noise
+======================================== */
+        /* ========================================
+           CSS CUSTOM PROPERTIES
+        ======================================== */
+        @property --border-angle {
+            syntax: '<angle>';
+            initial-value: 0deg;
+            inherits: false;
+        }
+
+        :root {
+            --bg: #050508;
+            --bg-elevated: #0a0a10;
+            --bg-surface: #101018;
+            --accent: #00ff88;
+            --accent-rgb: 0, 255, 136;
+            --accent-dim: rgba(0, 255, 136, 0.12);
+            --accent-secondary: #a855f7;
+            --accent-secondary-rgb: 168, 85, 247;
+            --pink: #ff3366;
+            --text-primary: #e8e4dc;
+            --text-secondary: #9a948c;
+            --text-muted: #5a5550;
+            --text-dim: #252220;
+            --font-display: 'Syne', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+
+        /* ========================================
+           RESET & BASE
+        ======================================== */
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            background: var(--bg);
+            color: var(--text-primary);
+            font-family: var(--font-mono);
+            overflow-x: hidden;
+            cursor: none;
+        }
+        ::selection { background: var(--accent); color: var(--bg); }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: var(--text-dim); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+        a { text-decoration: none; color: inherit; }
+        img { display: block; max-width: 100%; }
+
+        /* ========================================
+           NOISE OVERLAY
+        ======================================== */
+        body::after {
+            content: '';
+            position: fixed; inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.35'/%3E%3C/svg%3E");
+            opacity: 0.025;
+            pointer-events: none;
+            z-index: 9998;
+        }

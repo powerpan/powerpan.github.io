@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>构建高性能全栈应用：Turborepo + tRPC + Next.js — Eric</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/detail.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body>
+    <!-- ============ SCROLL PROGRESS ============ -->
+    <div class="detail-scroll-progress" id="detailScrollProgress"></div>
+
+    <!-- ============ CURSOR ============ -->
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor-dot" id="cursorDot"></div>
+
+    <!-- ============ PARTICLE CANVAS ============ -->
+    <canvas id="particleCanvas"></canvas>
+
+    <!-- ============ NAV ============ -->
+    <nav id="nav">
+        <a href="../index.html" class="nav-logo magnetic" data-hover>ERIC<span class="dot">.</span></a>
+        <ul class="nav-center">
+            <li><a href="../index.html#about" data-hover>// 关于</a></li>
+            <li><a href="../index.html#projects" data-hover>// 项目</a></li>
+            <li><a href="../index.html#blog" data-hover>// 博客</a></li>
+            <li><a href="../index.html#contact" data-hover>// 联系</a></li>
+        </ul>
+        <div class="nav-status">
+            <span class="status-dot"></span>
+            Open to work
+        </div>
+    </nav>
+
+    <!-- ============ ARTICLE HERO ============ -->
+    <section class="blog-article-hero">
+        <div class="detail-hero-bg"></div>
+        <a href="../index.html#blog" class="detail-back" data-hover>
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round">
+                <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+            返回博客
+        </a>
+        <div class="blog-article-tag reveal">Full-Stack</div>
+        <h1 class="blog-article-title reveal reveal-d1">构建高性能全栈应用：Turborepo + tRPC + Next.js 的 Monorepo 实践</h1>
+        <div class="blog-article-meta reveal reveal-d2">
+            <span>📅 2024.10.20</span>
+            <span>⏱️ 9 min</span>
+            <span>👤 Eric Pan</span>
+        </div>
+    </section>
+
+    <!-- ============ ARTICLE BODY ============ -->
+    <article class="blog-article-body">
+
+        <!-- Section 1: 引言 -->
+        <section class="detail-section reveal" id="intro">
+            <h2>为什么要用 Monorepo</h2>
+            <p>在构建复杂的全栈应用时，前后端代码通常分散在不同的仓库中，导致类型定义不同步、部署流程割裂、代码复用困难等问题。Monorepo 架构将所有相关代码放在同一个仓库中，通过 Turborepo 的智能缓存和并行构建解决多包管理的性能问题，再配合 tRPC 实现端到端的类型安全 API 调用。</p>
+            <p>本文将分享我们在一个 SaaS 产品中落地 Turborepo + tRPC + Next.js 的完整实践，包括项目结构设计、包间依赖管理、CI/CD 优化等关键环节。</p>
+            <blockquote>Monorepo 不是银弹，但对于需要频繁跨前后端修改的团队来说，它带来的开发体验提升是显著的。</blockquote>
+        </section>
+
+        <!-- Section 2: Monorepo 架构 -->
+        <section class="detail-section reveal" id="architecture">
+            <h2>Monorepo 项目结构</h2>
+            <p>我们采用 Turborepo 作为 Monorepo 的编排引擎，项目结构如下：</p>
+            <ul>
+                <li><strong>apps/web</strong> — Next.js 14 前端应用，使用 App Router</li>
+                <li><strong>apps/api</strong> — tRPC 服务端，集成 Prisma ORM</li>
+                <li><strong>apps/admin</strong> — 管理后台，共享 web 的组件和 tRPC 客户端</li>
+                <li><strong>packages/ui</strong> — 共享 UI 组件库（基于 Radix UI + Tailwind）</li>
+                <li><strong>packages/db</strong> — Prisma schema 和数据库客户端</li>
+                <li><strong>packages/shared</strong> — 共享工具函数和类型定义</li>
+            </ul>
+            <p>Turborepo 的核心优势在于其增量构建和远程缓存能力。在我们的项目中，<code>turbo build</code> 的缓存命中率达到了 <strong>87%</strong>，CI 构建时间从 12 分钟缩短到 3 分钟。</p>
+        </section>
+
+        <!-- Section 3: tRPC 集成 -->
+        <section class="detail-section reveal" id="trpc">
+            <h2>tRPC 类型安全 API</h2>
+            <p>tRPC 最大的魅力在于它消除了 API 层的类型鸿沟。前端调用后端 API 时，IDE 会自动补全路由名称、输入参数和返回类型——不需要任何代码生成步骤。</p>
+            <p>我们采用了分层 Router 设计，将业务逻辑按领域拆分：</p>
+            <ul>
+                <li><strong>userRouter</strong> — 用户注册、登录、Profile 管理</li>
+                <li><strong>projectRouter</strong> — 项目的 CRUD、权限管理</li>
+                <li><strong>billingRouter</strong> — 订阅管理、账单查询、Stripe 集成</li>
+                <li><strong>analyticsRouter</strong> — 数据统计、报表生成</li>
+            </ul>
+            <p>通过 <code>mergeRouters</code> 将它们合并为一个统一的 AppRouter，前端只需要一个 hooks 集合就能调用所有 API。</p>
+        </section>
+
+        <!-- Section 4: tRPC Router 代码 -->
+        <section class="detail-section reveal" id="code">
+            <h2>tRPC Router 定义</h2>
+            <p>以下是项目 Router 的核心实现，展示了输入校验、中间件鉴权和数据库操作的完整流程：</p>
+            <div class="detail-code-block">
+                <div class="detail-code-header">
+                    <div class="detail-code-dot" style="background:#ff5f57"></div>
+                    <div class="detail-code-dot" style="background:#febc2e"></div>
+                    <div class="detail-code-dot" style="background:#28c840"></div>
+                    <div class="detail-code-title">server/routers/project.ts</div>
+                </div>
+                <div class="detail-code-body">
+                    <div class="line"><span class="line-content"><span style="color:#c678dd">import</span> { z } <span style="color:#c678dd">from</span> <span style="color:#98c379">'zod'</span>;</span></div>
+                    <div class="line"><span class="line-content"><span style="color:#c678dd">import</span> { router, protectedProcedure } <span style="color:#c678dd">from</span> <span style="color:#98c379">'../trpc'</span>;</span></div>
+                    <div class="line"><span class="line-content"></span></div>
+                    <div class="line"><span class="line-content"><span style="color:#c678dd">export const</span> projectRouter = <span style="color:#61afef">router</span>({</span></div>
+                    <div class="line"><span class="line-content">  <span style="color:#61afef">list</span>: protectedProcedure</span></div>
+                    <div class="line"><span class="line-content">    .<span style="color:#61afef">input</span>(z.object({</span></div>
+                    <div class="line"><span class="line-content">      page: z.number().<span style="color:#61afef">min</span>(<span style="color:#d19a66">1</span>).<span style="color:#61afef">default</span>(<span style="color:#d19a66">1</span>),</span></div>
+                    <div class="line"><span class="line-content">      limit: z.number().<span style="color:#61afef">min</span>(<span style="color:#d19a66">1</span>).<span style="color:#61afef">max</span>(<span style="color:#d19a66">100</span>).<span style="color:#61afef">default</span>(<span style="color:#d19a66">20</span>),</span></div>
+                    <div class="line"><span class="line-content">    }))</span></div>
+                    <div class="line"><span class="line-content">    .<span style="color:#61afef">query</span>(<span style="color:#c678dd">async</span> ({ ctx, input }) =&gt; {</span></div>
+                    <div class="line"><span class="line-content">      <span style="color:#c678dd">const</span> projects = <span style="color:#c678dd">await</span> ctx.db.project</span></div>
+                    <div class="line"><span class="line-content">        .<span style="color:#61afef">findMany</span>({</span></div>
+                    <div class="line"><span class="line-content">          where: { ownerId: ctx.user.id },</span></div>
+                    <div class="line"><span class="line-content">          take: input.limit,</span></div>
+                    <div class="line"><span class="line-content">          skip: (input.page - <span style="color:#d19a66">1</span>) * input.limit,</span></div>
+                    <div class="line"><span class="line-content">          orderBy: { createdAt: <span style="color:#98c379">'desc'</span> },</span></div>
+                    <div class="line"><span class="line-content">        });</span></div>
+                    <div class="line"><span class="line-content">      <span style="color:#c678dd">return</span> { projects, page: input.page };</span></div>
+                    <div class="line"><span class="line-content">    }),</span></div>
+                    <div class="line"><span class="line-content"></span></div>
+                    <div class="line"><span class="line-content">  <span style="color:#61afef">create</span>: protectedProcedure</span></div>
+                    <div class="line"><span class="line-content">    .<span style="color:#61afef">input</span>(z.object({</span></div>
+                    <div class="line"><span class="line-content">      name: z.string().<span style="color:#61afef">min</span>(<span style="color:#d19a66">1</span>).<span style="color:#61afef">max</span>(<span style="color:#d19a66">100</span>),</span></div>
+                    <div class="line"><span class="line-content">      description: z.string().<span style="color:#61afef">optional</span>(),</span></div>
+                    <div class="line"><span class="line-content">    }))</span></div>
+                    <div class="line"><span class="line-content">    .<span style="color:#61afef">mutation</span>(<span style="color:#c678dd">async</span> ({ ctx, input }) =&gt; {</span></div>
+                    <div class="line"><span class="line-content">      <span style="color:#c678dd">return</span> ctx.db.project.<span style="color:#61afef">create</span>({</span></div>
+                    <div class="line"><span class="line-content">        data: { ...input, ownerId: ctx.user.id },</span></div>
+                    <div class="line"><span class="line-content">      });</span></div>
+                    <div class="line"><span class="line-content">    }),</span></div>
+                    <div class="line"><span class="line-content">});</span></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 5: Turborepo 缓存 -->
+        <section class="detail-section reveal" id="caching">
+            <h2>Turborepo 缓存策略</h2>
+            <p>Turborepo 的缓存机制是其核心竞争力。它通过对每个 task 的输入（源文件 + 依赖 + 环境变量）计算哈希值，决定是否可以复用上次的构建产物。</p>
+            <ul>
+                <li><strong>本地缓存</strong> — 默认启用，构建产物存储在 node_modules/.cache/turbo 中，开发者本地构建提速 3-5 倍</li>
+                <li><strong>远程缓存</strong> — 通过 Vercel Remote Cache 或自建 Turborepo Remote Cache Server 实现团队共享缓存</li>
+                <li><strong>Task 依赖拓扑</strong> — 通过 turbo.json 的 dependsOn 配置，确保上游包先于下游包构建</li>
+                <li><strong>环境变量过滤</strong> — 使用 globalEnv 和 env 字段精确控制缓存失效条件，避免不必要的重建</li>
+            </ul>
+            <p>配置示例中，我们将 <code>build</code> task 声明为依赖上游的 <code>^build</code>，确保 packages/ui 先编译完成后再构建 apps/web。同时，<code>dev</code> task 设置 <code>cache: false</code>，避免开发模式的热更新被缓存拦截。</p>
+        </section>
+
+        <!-- Section 6: 部署策略 -->
+        <section class="detail-section reveal" id="deployment">
+            <h2>部署策略</h2>
+            <p>Monorepo 的部署需要精心设计，避免一次 commit 触发所有应用的重新部署。我们采用了以下策略：</p>
+            <ul>
+                <li><strong>变更检测</strong> — 利用 Turbo 的 <code>--filter</code> 语法，只构建和部署受影响的应用</li>
+                <li><strong>独立部署</strong> — web 和 admin 部署到 Vercel，api 部署到 AWS ECS，各自独立发布</li>
+                <li><strong>数据库迁移</strong> — Prisma migrate 作为独立的 CI 步骤，在 API 部署前自动执行</li>
+                <li><strong>灰度发布</strong> — 通过 Vercel Preview 和 ECS Blue/Green 实现渐进式发布</li>
+            </ul>
+            <blockquote>实践中最大的教训是：Monorepo 的 CI/CD 设计需要与代码结构同步演进，初期可以简单粗暴，但随着团队规模增长，必须投入时间优化构建流水线。</blockquote>
+        </section>
+
+        <!-- Section 7: 性能对比 -->
+        <section class="detail-section reveal" id="performance">
+            <h2>性能对比数据</h2>
+            <p>以下是我们在 50 人开发团队中实测的数据对比：</p>
+            <ul>
+                <li><strong>全量构建时间</strong> — 从 12 分钟（多仓库）降低到 3 分钟（Turborepo 缓存命中）</li>
+                <li><strong>CI 运行时间</strong> — 从平均 8 分钟降低到 2.5 分钟</li>
+                <li><strong>API 类型错误</strong> — 前后端类型不一致的 bug 从每月 15+ 降低到接近零</li>
+                <li><strong>新功能开发效率</strong> — 涉及前后端改动的需求，开发周期平均缩短 30%</li>
+            </ul>
+            <p>tRPC 的端到端类型安全不仅减少了 bug，更重要的是提升了开发者的信心。重构 API 时，编译器会精确告诉你哪些前端代码需要更新，而不是等到运行时才发现问题。</p>
+        </section>
+
+        <!-- Section 8: 总结 -->
+        <section class="detail-section reveal" id="conclusion">
+            <h2>总结</h2>
+            <p>Turborepo + tRPC + Next.js 的组合为全栈 TypeScript 开发提供了一个高度集成且开发体验优秀的方案。关键优势在于：</p>
+            <ul>
+                <li>统一的代码仓库简化了跨前后端的协作和代码复用</li>
+                <li>智能缓存大幅缩短了构建和 CI 时间</li>
+                <li>端到端类型安全消除了 API 层的大量潜在错误</li>
+                <li>模块化的包结构使得团队可以并行开发互不干扰</li>
+            </ul>
+            <p>当然，这套方案也有其局限性——它要求整个技术栈统一为 TypeScript，对于使用多语言后端的团队可能不太适合。但对于全栈 JS/TS 团队来说，这可能是目前开发体验最好的架构选择。</p>
+        </section>
+    </article>
+
+    <!-- ============ TABLE OF CONTENTS ============ -->
+    <div class="detail-toc">
+        <div class="detail-toc-item" data-target="intro" data-label="引言"></div>
+        <div class="detail-toc-item" data-target="architecture" data-label="项目结构"></div>
+        <div class="detail-toc-item" data-target="trpc" data-label="tRPC 集成"></div>
+        <div class="detail-toc-item" data-target="code" data-label="Router 代码"></div>
+        <div class="detail-toc-item" data-target="caching" data-label="缓存策略"></div>
+        <div class="detail-toc-item" data-target="deployment" data-label="部署策略"></div>
+        <div class="detail-toc-item" data-target="performance" data-label="性能对比"></div>
+        <div class="detail-toc-item" data-target="conclusion" data-label="总结"></div>
+    </div>
+
+    <!-- ============ BACK TO TOP ============ -->
+    <button class="back-to-top" id="backToTop" title="回到顶部">↑</button>
+
+    <script src="../js/detail.js"></script>
+</body>
+</html>

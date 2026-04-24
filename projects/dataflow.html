@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DataFlow Pipeline — Eric's Project</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/detail.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body>
+
+    <div class="detail-scroll-progress" id="detailScrollProgress"></div>
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor-dot" id="cursorDot"></div>
+    <canvas id="particleCanvas"></canvas>
+
+    <nav id="nav">
+        <a href="../index.html" class="nav-logo magnetic" data-hover>ERIC<span class="dot">.</span></a>
+        <ul class="nav-center">
+            <li><a href="../index.html#about" data-hover>// 关于</a></li>
+            <li><a href="../index.html#projects" data-hover>// 项目</a></li>
+            <li><a href="../index.html#blog" data-hover>// 博客</a></li>
+            <li><a href="../index.html#contact" data-hover>// 联系</a></li>
+        </ul>
+        <div class="nav-status">
+            <span class="status-dot"></span>
+            Open to work
+        </div>
+    </nav>
+
+    <div class="detail-toc" id="detailToc">
+        <div class="detail-toc-item" data-target="overview" data-label="Overview"></div>
+        <div class="detail-toc-item" data-target="tech" data-label="Tech Stack"></div>
+        <div class="detail-toc-item" data-target="features" data-label="Features"></div>
+        <div class="detail-toc-item" data-target="stats" data-label="Stats"></div>
+        <div class="detail-toc-item" data-target="code" data-label="Code"></div>
+    </div>
+
+    <section class="detail-hero">
+        <div class="detail-hero-bg"></div>
+        <a href="../index.html#projects" class="detail-back magnetic" data-hover>
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            BACK
+        </a>
+        <div class="detail-tag">Full-Stack · DevOps · 2024</div>
+        <h1 class="detail-title">Data<span class="hl">Flow</span> Pipeline</h1>
+        <p class="detail-subtitle">实时数据处理流水线可视化管理平台，支持百万级 TPS 的流式计算编排，让复杂的数据管道像搭积木一样简单。</p>
+        <div class="detail-meta">
+            <div class="detail-meta-item">
+                <span class="detail-meta-label">Role</span>
+                <span class="detail-meta-value">Lead Developer</span>
+            </div>
+            <div class="detail-meta-item">
+                <span class="detail-meta-label">Duration</span>
+                <span class="detail-meta-value">12 months</span>
+            </div>
+            <div class="detail-meta-item">
+                <span class="detail-meta-label">Team</span>
+                <span class="detail-meta-value">8 engineers</span>
+            </div>
+        </div>
+    </section>
+
+    <div class="detail-image-section reveal">
+        <div class="detail-image-wrap">
+            <div class="detail-image">
+                <div class="detail-image-gradient" style="background: linear-gradient(135deg, #0a1a2e, #0a0a1a, #1a0a1a);">
+                    <div class="detail-image-placeholder">DataFlow Pipeline</div>
+                </div>
+            </div>
+            <div class="detail-image-overlay"></div>
+            <div class="detail-image-dots">
+                <div class="detail-image-dot" style="background:#ff5f57"></div>
+                <div class="detail-image-dot" style="background:#febc2e"></div>
+                <div class="detail-image-dot" style="background:#28c840"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="detail-content">
+
+        <div class="detail-section reveal" id="overview">
+            <div class="detail-section-label">Overview</div>
+            <h2 class="detail-section-title">让数据管道触手可及</h2>
+            <p class="detail-text">
+                DataFlow Pipeline 是一个<strong>实时数据处理可视化平台</strong>，将复杂的流式计算编排为直观的 DAG 图形。
+                用户通过拖拽节点即可构建高性能数据管道，平台自动处理背压、容错、状态管理等底层细节。
+            </p>
+            <p class="detail-text">
+                核心引擎使用 <strong>Rust</strong> 编写，配合 Kafka 消息队列和 PostgreSQL 状态存储，
+                实现了百万级 TPS 的吞吐能力。前端采用 Next.js + tRPC 的全栈 TypeScript 方案，
+                提供丝滑的实时监控体验。
+            </p>
+        </div>
+
+        <div class="detail-section reveal" id="tech">
+            <div class="detail-section-label">Tech Stack</div>
+            <h2 class="detail-section-title">技术架构</h2>
+            <p class="detail-text">高性能全栈方案，Rust 引擎 + TypeScript 界面</p>
+            <div class="detail-tech-grid">
+                <div class="detail-tech-badge" data-hover>Next.js</div>
+                <div class="detail-tech-badge" data-hover>tRPC</div>
+                <div class="detail-tech-badge" data-hover>Rust</div>
+                <div class="detail-tech-badge" data-hover>PostgreSQL</div>
+                <div class="detail-tech-badge" data-hover>Redis</div>
+                <div class="detail-tech-badge" data-hover>Apache Kafka</div>
+                <div class="detail-tech-badge" data-hover>Docker</div>
+                <div class="detail-tech-badge" data-hover>Terraform</div>
+            </div>
+        </div>
+
+        <div class="detail-section reveal" id="features">
+            <div class="detail-section-label">Key Features</div>
+            <h2 class="detail-section-title">核心能力</h2>
+            <div class="detail-features">
+                <div class="detail-feature" data-hover>
+                    <div class="detail-feature-icon">🎨</div>
+                    <div class="detail-feature-title">Visual Pipeline Builder</div>
+                    <div class="detail-feature-desc">拖拽式 DAG 编辑器，支持 50+ 内置算子，零代码构建复杂数据管道</div>
+                </div>
+                <div class="detail-feature" data-hover>
+                    <div class="detail-feature-icon">📊</div>
+                    <div class="detail-feature-title">Real-time Monitoring</div>
+                    <div class="detail-feature-desc">毫秒级延迟的实时指标面板，可视化展示吞吐量、延迟、错误率等关键指标</div>
+                </div>
+                <div class="detail-feature" data-hover>
+                    <div class="detail-feature-icon">🔄</div>
+                    <div class="detail-feature-title">Auto-scaling</div>
+                    <div class="detail-feature-desc">基于负载的智能弹性伸缩，自动调整算子并行度和资源分配</div>
+                </div>
+                <div class="detail-feature" data-hover>
+                    <div class="detail-feature-icon">📝</div>
+                    <div class="detail-feature-title">Version Control</div>
+                    <div class="detail-feature-desc">管道配置的 Git 版本管理，支持回滚、分支对比和灰度发布</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="detail-section reveal" id="stats">
+            <div class="detail-section-label">Performance</div>
+            <h2 class="detail-section-title">性能指标</h2>
+            <div class="detail-stats">
+                <div class="detail-stat" data-hover>
+                    <div class="detail-stat-num" data-count="1000000">0</div>
+                    <div class="detail-stat-label">+ TPS</div>
+                </div>
+                <div class="detail-stat" data-hover>
+                    <div class="detail-stat-num">99.99%</div>
+                    <div class="detail-stat-label">SLA</div>
+                </div>
+                <div class="detail-stat" data-hover>
+                    <div class="detail-stat-num" data-count="50">0</div>
+                    <div class="detail-stat-label">ms Latency</div>
+                </div>
+                <div class="detail-stat" data-hover>
+                    <div class="detail-stat-num" data-count="200">0</div>
+                    <div class="detail-stat-label">+ Pipelines</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="detail-section reveal" id="code">
+            <div class="detail-section-label">Code Sample</div>
+            <h2 class="detail-section-title">Rust 流处理器</h2>
+            <p class="detail-text">核心引擎的流处理单元，零拷贝数据传递</p>
+            <div class="detail-code-block">
+                <div class="detail-code-header">
+                    <div class="detail-code-dot" style="background:#ff5f57"></div>
+                    <div class="detail-code-dot" style="background:#febc2e"></div>
+                    <div class="detail-code-dot" style="background:#28c840"></div>
+                    <div class="detail-code-title">stream_processor.rs</div>
+                </div>
+                <div class="detail-code-body">
+                    <div class="line"><span class="line-content"><span style="color:#ff79c6">use</span> tokio::stream::{Stream, StreamExt};</span></div>
+                    <div class="line"><span class="line-content"><span style="color:#ff79c6">use</span> crate::pipeline::{Operator, Context};</span></div>
+                    <div class="line"><span class="line-content"></span></div>
+                    <div class="line"><span class="line-content"><span style="color:#6272a4">/// High-throughput stream processor with backpressure</span></span></div>
+                    <div class="line"><span class="line-content"><span style="color:#ff79c6">pub async fn</span> <span style="color:#50fa7b">process_stream</span>&lt;T: Send + Sync&gt;(</span></div>
+                    <div class="line"><span class="line-content">    stream: <span style="color:#ffb86c">impl</span> Stream&lt;Item = T&gt;,</span></div>
+                    <div class="line"><span class="line-content">    operators: Vec&lt;Box&lt;<span style="color:#ffb86c">dyn</span> Operator&lt;T&gt;&gt;&gt;,</span></div>
+                    <div class="line"><span class="line-content">    ctx: &amp;Context,</span></div>
+                    <div class="line"><span class="line-content">) -&gt; Result&lt;()&gt; {</span></div>
+                    <div class="line"><span class="line-content">    <span style="color:#ff79c6">let</span> pipeline = operators</span></div>
+                    <div class="line"><span class="line-content">        .into_iter()</span></div>
+                    <div class="line"><span class="line-content">        .fold(stream.boxed(), |s, op| op.apply(s));</span></div>
+                    <div class="line"><span class="line-content"></span></div>
+                    <div class="line"><span class="line-content">    pipeline</span></div>
+                    <div class="line"><span class="line-content">        .for_each_concurrent(ctx.parallelism, |item| {</span></div>
+                    <div class="line"><span class="line-content">            ctx.sink.write(item).<span style="color:#ff79c6">await</span></span></div>
+                    <div class="line"><span class="line-content">        }).<span style="color:#ff79c6">await</span>;</span></div>
+                    <div class="line"><span class="line-content">    Ok(())</span></div>
+                    <div class="line"><span class="line-content">}</span></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <button class="back-to-top" id="backToTop" title="回到顶部">↑</button>
+    <script src="../js/detail.js"></script>
+</body>
+</html>

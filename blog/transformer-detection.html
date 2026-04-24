@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>基于 Transformer 的实时目标检测 — Eric</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/detail.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body>
+    <!-- ============ SCROLL PROGRESS ============ -->
+    <div class="detail-scroll-progress" id="detailScrollProgress"></div>
+
+    <!-- ============ CURSOR ============ -->
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor-dot" id="cursorDot"></div>
+
+    <!-- ============ PARTICLE CANVAS ============ -->
+    <canvas id="particleCanvas"></canvas>
+
+    <!-- ============ NAV ============ -->
+    <nav id="nav">
+        <a href="../index.html" class="nav-logo magnetic" data-hover>ERIC<span class="dot">.</span></a>
+        <ul class="nav-center">
+            <li><a href="../index.html#about" data-hover>// 关于</a></li>
+            <li><a href="../index.html#projects" data-hover>// 项目</a></li>
+            <li><a href="../index.html#blog" data-hover>// 博客</a></li>
+            <li><a href="../index.html#contact" data-hover>// 联系</a></li>
+        </ul>
+        <div class="nav-status">
+            <span class="status-dot"></span>
+            Open to work
+        </div>
+    </nav>
+
+    <!-- ============ ARTICLE HERO ============ -->
+    <section class="blog-article-hero">
+        <div class="detail-hero-bg"></div>
+        <a href="../index.html#blog" class="detail-back" data-hover>
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round">
+                <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+            返回博客
+        </a>
+        <div class="blog-article-tag reveal">AI/CV</div>
+        <h1 class="blog-article-title reveal reveal-d1">基于 Transformer 的实时目标检测：从 DETR 到工程落地的完整路径</h1>
+        <div class="blog-article-meta reveal reveal-d2">
+            <span>📅 2024.12.15</span>
+            <span>⏱️ 12 min</span>
+            <span>👤 Eric Pan</span>
+        </div>
+    </section>
+
+    <!-- ============ ARTICLE BODY ============ -->
+    <article class="blog-article-body">
+
+        <!-- Section 1: 引言 -->
+        <section class="detail-section reveal" id="intro">
+            <h2>引言</h2>
+            <p>目标检测是计算机视觉中最核心的任务之一。从 R-CNN 系列到 YOLO 系列，两阶段和单阶段检测器在过去十年中不断演进。然而，2020 年 DETR 的出现彻底改变了游戏规则——它首次将 Transformer 架构引入目标检测，用端到端的方式取代了传统的 anchor-based 方法。</p>
+            <p>本文将从 DETR 的核心思想出发，逐步介绍其演进路线，并分享我在工程实践中遇到的挑战与解决方案。</p>
+            <blockquote>DETR 的核心贡献在于将目标检测从 "启发式设计" 转变为 "端到端学习"，这是范式层面的变革。</blockquote>
+        </section>
+
+        <!-- Section 2: DETR 架构 -->
+        <section class="detail-section reveal" id="architecture">
+            <h2>DETR 架构解析</h2>
+            <p>DETR（Detection Transformer）的核心思想是将目标检测建模为一个集合预测问题。它使用 Transformer 的 encoder-decoder 结构，通过匈牙利匹配算法直接预测固定数量的 bounding box，完全消除了 anchor 和 NMS 后处理。</p>
+            <p>整体架构由三个核心组件构成：</p>
+            <ul>
+                <li><strong>CNN Backbone</strong> — 使用 ResNet 提取多尺度特征图，将输入图像编码为高维语义表示</li>
+                <li><strong>Transformer Encoder</strong> — 通过自注意力机制建立特征图内部的全局依赖关系，捕获长距离上下文</li>
+                <li><strong>Transformer Decoder</strong> — 使用可学习的 object queries 与 encoder 输出进行交叉注意力，直接输出预测结果</li>
+            </ul>
+            <p>然而，原始 DETR 存在两个主要问题：训练收敛慢（需要 500 个 epoch）和对小目标检测效果差。Deformable DETR 通过引入 deformable attention 机制，将注意力集中在关键点上，将收敛速度提升了 10 倍，同时显著提升了小目标检测性能。</p>
+        </section>
+
+        <!-- Section 3: Attention 机制 -->
+        <section class="detail-section reveal" id="attention">
+            <h2>注意力机制的工程优化</h2>
+            <p>Transformer 的核心计算瓶颈在于注意力机制。标准的自注意力复杂度为 O(n²)，对于高分辨率特征图来说计算开销巨大。在工程实践中，我们采用了以下优化策略：</p>
+            <ul>
+                <li><strong>Deformable Attention</strong> — 只关注少量关键采样点，将复杂度从 O(n²) 降低到 O(n)，同时保持检测精度</li>
+                <li><strong>Multi-Scale Attention</strong> — 在不同分辨率的特征图之间进行注意力计算，兼顾大目标和小目标的检测</li>
+                <li><strong>Linear Attention</strong> — 使用核近似方法将 softmax 注意力替换为线性注意力，在特定场景下可进一步提速</li>
+                <li><strong>Flash Attention</strong> — 通过 IO-aware 的分块计算策略，减少 GPU HBM 访问次数，提升实际运行效率</li>
+            </ul>
+            <blockquote>关键洞察：deformable attention 将全局注意力的 O(n²) 复杂度降低到 O(n)，使得实时推理成为可能。在实际部署中，我们观察到检测精度仅下降 0.3 mAP，但推理速度提升了 4 倍。</blockquote>
+        </section>
+
+        <!-- Section 4: 模型优化 -->
+        <section class="detail-section reveal" id="optimization">
+            <h2>模型优化：TensorRT 与 ONNX</h2>
+            <p>将 DETR 模型从 PyTorch 移植到生产环境需要经过多个优化阶段。以下是我们的完整优化流水线：</p>
+            <ul>
+                <li><strong>ONNX 导出</strong> — 使用 torch.onnx.export 将模型导出为 ONNX 格式，注意需要处理动态 axis 和自定义算子</li>
+                <li><strong>图优化</strong> — 使用 ONNX Simplifier 进行常量折叠、冗余节点消除和算子融合</li>
+                <li><strong>TensorRT 量化</strong> — 采用 INT8 量化策略，使用校准数据集确保量化精度损失在可接受范围内</li>
+                <li><strong>CUDA 图优化</strong> — 使用 CUDA Graph 捕获推理计算图，消除 kernel launch 开销</li>
+            </ul>
+            <p>优化后的模型在 NVIDIA T4 GPU 上实现了 <strong>12ms</strong> 的端到端推理延迟（输入分辨率 640x640），相比原始 PyTorch 模型提速 <strong>3.75 倍</strong>。</p>
+        </section>
+
+        <!-- Section 5: 代码实现 -->
+        <section class="detail-section reveal" id="code">
+            <h2>PyTorch 推理代码</h2>
+            <p>以下是完整的推理流水线代码，包括模型加载、预处理、推理和后处理：</p>
+            <div class="detail-code-block">
+                <div class="detail-code-header">
+                    <div class="detail-code-dot" style="background:#ff5f57"></div>
+                    <div class="detail-code-dot" style="background:#febc2e"></div>
+                    <div class="detail-code-dot" style="background:#28c840"></div>
+                    <div class="detail-code-title">inference.py</div>
+                </div>
+                <div class="detail-code-body">
+                    <div class="line"><span class="line-content"><span style="color:#ff79c6">import</span> torch</span></div>
+                    <div class="line"><span class="line-content"><span style="color:#ff79c6">import</span> torchvision.transforms <span style="color:#ff79c6">as</span> T</span></div>
+                    <div class="line"><span class="line-content"><span style="color:#ff79c6">from</span> models <span style="color:#ff79c6">import</span> DeformableDETR</span></div>
+                    <div class="line"><span class="line-content"></span></div>
+                    <div class="line"><span class="line-content"><span style="color:#6272a4"># ---- 模型初始化 ----</span></span></div>
+                    <div class="line"><span class="line-content">model = DeformableDETR(num_classes=<span style="color:#bd93f9">80</span>, num_queries=<span style="color:#bd93f9">300</span>)</span></div>
+                    <div class="line"><span class="line-content">model.<span style="color:#50fa7b">load_state_dict</span>(torch.<span style="color:#50fa7b">load</span>(<span style="color:#f1fa8c">'checkpoints/detr_v2.pth'</span>))</span></div>
+                    <div class="line"><span class="line-content">model.<span style="color:#50fa7b">eval</span>().<span style="color:#50fa7b">cuda</span>()</span></div>
+                    <div class="line"><span class="line-content"></span></div>
+                    <div class="line"><span class="line-content"><span style="color:#6272a4"># ---- 预处理 ----</span></span></div>
+                    <div class="line"><span class="line-content">transform = T.Compose([</span></div>
+                    <div class="line"><span class="line-content">    T.Resize((<span style="color:#bd93f9">640</span>, <span style="color:#bd93f9">640</span>)),</span></div>
+                    <div class="line"><span class="line-content">    T.ToTensor(),</span></div>
+                    <div class="line"><span class="line-content">    T.Normalize([<span style="color:#bd93f9">0.485</span>, <span style="color:#bd93f9">0.456</span>, <span style="color:#bd93f9">0.406</span>],</span></div>
+                    <div class="line"><span class="line-content">                [<span style="color:#bd93f9">0.229</span>, <span style="color:#bd93f9">0.224</span>, <span style="color:#bd93f9">0.225</span>])</span></div>
+                    <div class="line"><span class="line-content">])</span></div>
+                    <div class="line"><span class="line-content"></span></div>
+                    <div class="line"><span class="line-content"><span style="color:#6272a4"># ---- 推理 ----</span></span></div>
+                    <div class="line"><span class="line-content"><span style="color:#ff79c6">with</span> torch.<span style="color:#50fa7b">no_grad</span>(), torch.<span style="color:#50fa7b">cuda</span>.amp.autocast():</span></div>
+                    <div class="line"><span class="line-content">    image = transform(raw_image).<span style="color:#50fa7b">unsqueeze</span>(<span style="color:#bd93f9">0</span>).<span style="color:#50fa7b">cuda</span>()</span></div>
+                    <div class="line"><span class="line-content">    outputs = model(image)</span></div>
+                    <div class="line"><span class="line-content">    probs = outputs[<span style="color:#f1fa8c">'pred_logits'</span>].softmax(-<span style="color:#bd93f9">1</span>)</span></div>
+                    <div class="line"><span class="line-content">    boxes = outputs[<span style="color:#f1fa8c">'pred_boxes'</span>]</span></div>
+                    <div class="line"><span class="line-content">    <span style="color:#6272a4"># 过滤低置信度预测</span></span></div>
+                    <div class="line"><span class="line-content">    keep = probs.max(-<span style="color:#bd93f9">1</span>).values > <span style="color:#bd93f9">0.7</span></span></div>
+                    <div class="line"><span class="line-content">    results = boxes[keep], probs[keep]</span></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 6: Benchmark -->
+        <section class="detail-section reveal" id="benchmark">
+            <h2>基准测试结果</h2>
+            <p>我们在 COCO 2017 验证集上进行了全面的基准测试，对比了不同模型和部署方案的性能表现：</p>
+            <ul>
+                <li><strong>原始 DETR (ResNet-50)</strong> — 42.0 mAP, 45ms latency (V100)</li>
+                <li><strong>Deformable DETR (ResNet-50)</strong> — 46.2 mAP, 28ms latency (V100)</li>
+                <li><strong>Deformable DETR + TensorRT FP16</strong> — 46.0 mAP, 15ms latency (T4)</li>
+                <li><strong>Deformable DETR + TensorRT INT8</strong> — 45.5 mAP, 12ms latency (T4)</li>
+                <li><strong>YOLOv8-L (baseline)</strong> — 52.9 mAP, 8ms latency (T4)</li>
+            </ul>
+            <p>虽然在纯延迟指标上 DETR 系列仍然略逊于 YOLO，但在需要精确空间推理和复杂场景理解的任务中（如遮挡处理、密集目标），DETR 的表现明显更优。</p>
+            <blockquote>选型建议：对于精度优先且目标密集的工业场景，推荐 Deformable DETR + TensorRT 方案；对于延迟敏感的实时视频流，YOLO 仍然是更务实的选择。</blockquote>
+        </section>
+
+        <!-- Section 7: 工程部署 -->
+        <section class="detail-section reveal" id="deployment">
+            <h2>工程部署实践</h2>
+            <p>将 DETR 系列模型部署到生产环境面临几个关键挑战：</p>
+            <ul>
+                <li><strong>动态 Batch</strong> — 不同视频流的帧率和分辨率不同，需要支持动态 batch size，我们通过 TensorRT 的 dynamic shape 机制解决</li>
+                <li><strong>模型热更新</strong> — 设计了 A/B 测试框架，支持在线切换检测模型而不中断服务</li>
+                <li><strong>多流并发</strong> — 使用 CUDA Stream 实现多路视频流的并行推理，充分利用 GPU 计算资源</li>
+                <li><strong>监控告警</strong> — 集成 Prometheus + Grafana 监控推理延迟、GPU 利用率和检测精度漂移</li>
+            </ul>
+            <p>最终，我们通过 TensorRT INT8 量化 + CUDA Graph 优化，将推理延迟从 45ms 降低到 12ms，满足了实时视频流处理的需求。系统日均处理超过 500 万帧图像，GPU 利用率稳定在 75% 以上。</p>
+        </section>
+
+        <!-- Section 8: 总结 -->
+        <section class="detail-section reveal" id="conclusion">
+            <h2>总结与展望</h2>
+            <p>Transformer 在目标检测领域的应用才刚刚开始。从 DETR 到 Deformable DETR，再到最新的 DINO 和 Co-DETR，这个领域正在快速演进。未来几个值得关注的方向：</p>
+            <ul>
+                <li><strong>Vision-Language 融合</strong> — 结合 CLIP 等视觉语言模型，实现开放词汇目标检测</li>
+                <li><strong>自监督预训练</strong> — 减少对标注数据的依赖，降低模型训练成本</li>
+                <li><strong>端侧部署</strong> — 通过知识蒸馏和模型压缩，将 DETR 推向边缘设备</li>
+            </ul>
+            <p>对于工程团队来说，关键是要在模型精度和推理效率之间找到平衡点。通过精心的架构设计和工程优化，Transformer-based 检测器完全可以在生产环境中实现实时性能。</p>
+        </section>
+    </article>
+
+    <!-- ============ TABLE OF CONTENTS ============ -->
+    <div class="detail-toc">
+        <div class="detail-toc-item" data-target="intro" data-label="引言"></div>
+        <div class="detail-toc-item" data-target="architecture" data-label="DETR 架构"></div>
+        <div class="detail-toc-item" data-target="attention" data-label="注意力机制"></div>
+        <div class="detail-toc-item" data-target="optimization" data-label="模型优化"></div>
+        <div class="detail-toc-item" data-target="code" data-label="代码实现"></div>
+        <div class="detail-toc-item" data-target="benchmark" data-label="基准测试"></div>
+        <div class="detail-toc-item" data-target="deployment" data-label="工程部署"></div>
+        <div class="detail-toc-item" data-target="conclusion" data-label="总结"></div>
+    </div>
+
+    <!-- ============ BACK TO TOP ============ -->
+    <button class="back-to-top" id="backToTop" title="回到顶部">↑</button>
+
+    <script src="../js/detail.js"></script>
+</body>
+</html>
