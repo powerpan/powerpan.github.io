@@ -125,9 +125,9 @@ const I18N = {
     // Next Chapter
     next_label: '// 下一站',
     next_title: 'System <span class="outline">Upgrade</span>',
-    next_subtitle: '系统升级中 — 下一阶段即将上线',
+    next_subtitle: '已获 HKUST Offer — Fall 2026 入学',
     next_badge_current: '已完成',
-    next_badge_future: '即将开始',
+    next_badge_future: 'OFFER 已拿',
     next_current_title: '华南理工大学',
     next_current_sub: '软件工程 · 本科',
     next_current_desc: '全栈开发 & AI 视觉模型应用',
@@ -137,10 +137,10 @@ const I18N = {
     next_progress_label: '系统升级进度',
     next_m1: '✓ 本科在读',
     next_m2: '✓ 项目实战',
-    next_m3: '◉ 申请季',
-    next_m4: '○ HKUST MSc',
-    next_stat_year: '目标入学年',
-    next_stat_school: '目标院校',
+    next_m3: '✓ 已获 Offer',
+    next_m4: '◉ Fall 2026 入学',
+    next_stat_year: '入学年份',
+    next_stat_school: '录取院校',
     next_stat_field: '研究方向',
 
     // Contact
@@ -300,9 +300,9 @@ const I18N = {
     // Next Chapter
     next_label: '// NEXT CHAPTER',
     next_title: 'System <span class="outline">Upgrade</span>',
-    next_subtitle: 'System upgrading — next level incoming',
+    next_subtitle: 'HKUST Offer Received — Starting Fall 2026',
     next_badge_current: 'COMPLETED',
-    next_badge_future: 'INCOMING',
+    next_badge_future: 'OFFER SECURED',
     next_current_title: 'South China Univ. of Tech.',
     next_current_sub: 'Software Engineering · BSc',
     next_current_desc: 'Full-Stack Dev & AI Vision Applications',
@@ -312,10 +312,10 @@ const I18N = {
     next_progress_label: 'SYSTEM UPGRADE',
     next_m1: '✓ BSc in Progress',
     next_m2: '✓ Project Experience',
-    next_m3: '◉ Application Season',
-    next_m4: '○ HKUST MSc',
-    next_stat_year: 'Target Year',
-    next_stat_school: 'Target School',
+    next_m3: '✓ Offer Secured',
+    next_m4: '◉ Fall 2026 Enrollment',
+    next_stat_year: 'Enrollment Year',
+    next_stat_school: 'Admitted To',
     next_stat_field: 'Research Focus',
 
     // Contact

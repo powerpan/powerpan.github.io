@@ -216,7 +216,7 @@
                     if (entry.isIntersecting) {
                         nextProgressFill.classList.add('animated');
                         let current = 0;
-                        const target = 75;
+                        const target = 85;
                         const duration = 2000;
                         const step = target / (duration / 16);
                         const counter = setInterval(() => {
