@@ -12,11 +12,11 @@
         .hero-grid-bg {
             position: absolute; inset: -20px;
             background-image:
-                linear-gradient(rgba(var(--accent-rgb), 0.025) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(var(--accent-rgb), 0.025) 1px, transparent 1px);
+                linear-gradient(rgba(var(--accent-rgb), 0.07) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(var(--accent-rgb), 0.07) 1px, transparent 1px);
             background-size: 60px 60px;
-            mask-image: radial-gradient(ellipse at center, black 10%, transparent 65%);
-            -webkit-mask-image: radial-gradient(ellipse at center, black 10%, transparent 65%);
+            mask-image: radial-gradient(ellipse at center, black 20%, transparent 70%);
+            -webkit-mask-image: radial-gradient(ellipse at center, black 20%, transparent 70%);
             transition: transform 0.3s ease-out;
             will-change: transform;
         }
