@@ -90,8 +90,8 @@ const I18N = {
 
     // Featured Code
     code_label: '// FEATURED CODE',
-    code_heading: '写代码不只是工作，<br>更是一种<span class="hl">表达</span>',
-    code_text: '这是我最近在做的一个视觉检测流水线的核心模块，基于 Python + PyTorch 实现了多模型级联推理，将检测精度和推理速度做到了较好的平衡。',
+    code_heading: '好的代码，是写给机器的<span class="hl">诗</span>',
+    code_text: '这段代码来自一个视觉检测流水线的核心模块——用 Python + PyTorch 构建多模型级联推理，在精度与速度之间寻找最优解。每一层抽象、每一次权衡，都是对"如何让机器更好地理解世界"这个问题的回答。',
 
     // Blog
     blog_label: '// BLOG',
@@ -144,8 +144,8 @@ const I18N = {
     next_stat_field: '研究方向',
 
     // Contact
-    contact_heading: '最好的程序<br>都从一次<span class="hl">对话</span>开始',
-    contact_subtitle: '无论是碰撞灵感还是攻克难题，我都期待与你交流',
+    contact_heading: '有想法？<br>让我们一起<span class="hl">实现它</span>',
+    contact_subtitle: '无论是项目合作还是技术交流，随时欢迎联系',
     contact_name: '你的名字',
     contact_email: '你的邮箱',
     contact_subject: '主题',
@@ -265,8 +265,8 @@ const I18N = {
 
     // Featured Code
     code_label: '// FEATURED CODE',
-    code_heading: 'Code is not just work,<br>it\'s a form of <span class="hl">expression</span>',
-    code_text: 'A core module of a visual detection pipeline I\'ve been working on — multi-model cascade inference built with Python + PyTorch, balancing detection accuracy and inference speed.',
+    code_heading: 'Good code is <span class="hl">poetry</span> written for machines',
+    code_text: 'This snippet comes from the core of a visual inspection pipeline — multi-model cascade inference built with Python + PyTorch, finding the optimal balance between precision and speed. Every abstraction, every trade-off, is an answer to the question: how can machines better understand the world?',
 
     // Blog
     blog_label: '// BLOG',
@@ -319,8 +319,8 @@ const I18N = {
     next_stat_field: 'Research Focus',
 
     // Contact
-    contact_heading: 'Every great program<br>starts with a <span class="hl">conversation</span>',
-    contact_subtitle: 'Whether it\'s sparking ideas or solving tough problems — I\'d love to hear from you',
+    contact_heading: 'Got an idea?<br>Let\'s <span class="hl">build it</span> together',
+    contact_subtitle: 'Whether it\'s project collaboration or tech discussion, feel free to reach out',
     contact_name: 'Your name',
     contact_email: 'Your email',
     contact_subject: 'Subject',
