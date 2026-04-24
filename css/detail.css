@@ -747,6 +747,33 @@
 }
 .detail-footer-links a:hover { color: var(--accent); }
 
+/* ====== BACK TO TOP ====== */
+.back-to-top {
+    position: fixed;
+    bottom: 32px; right: 32px;
+    width: 46px; height: 46px;
+    border-radius: 50%;
+    background: var(--bg-elevated, #0a0e14);
+    border: 1px solid rgba(255,255,255,0.08);
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    display: flex; align-items: center; justify-content: center;
+    cursor: none;
+    z-index: 9998;
+    opacity: 0; pointer-events: none;
+    transform: translateY(12px);
+    transition: all 0.35s ease;
+}
+.back-to-top.visible {
+    opacity: 1; pointer-events: auto;
+    transform: translateY(0);
+}
+.back-to-top:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    box-shadow: 0 0 16px rgba(var(--accent-rgb, 0,255,136), 0.2);
+}
+
 /* ====== RESPONSIVE ====== */
 @media (max-width: 768px) {
     .detail-hero {
