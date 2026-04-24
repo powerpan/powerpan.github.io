@@ -33,4 +33,22 @@ async function runLoader() {
 }
 
 function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
-runLoader();
+
+let loaderSkipped = false;
+const loaderSkipBtn = document.getElementById('loaderSkip');
+
+function dismissLoader() {
+    if (loaderEl.classList.contains('done')) return;
+    loaderEl.classList.add('done');
+}
+
+if (loaderSkipBtn) {
+    loaderSkipBtn.addEventListener('click', () => {
+        loaderSkipped = true;
+        dismissLoader();
+    });
+}
+
+runLoader().then(() => {
+    if (!loaderSkipped) dismissLoader();
+});

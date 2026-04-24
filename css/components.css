@@ -79,6 +79,41 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
+        /* Loader Skip Button */
+        .loader-skip {
+            position: absolute;
+            bottom: 40px; right: 40px;
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.12);
+            color: var(--text-muted);
+            font-family: var(--font-mono);
+            font-size: 0.72rem;
+            letter-spacing: 0.12em;
+            padding: 10px 24px;
+            cursor: none;
+            z-index: 100002;
+            transition: all 0.3s ease;
+            opacity: 0;
+            animation: skipFadeIn 0.5s ease 1s forwards;
+        }
+        .loader-skip:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            box-shadow: 0 0 20px rgba(var(--accent-rgb), 0.15);
+            background: rgba(var(--accent-rgb), 0.05);
+        }
+        .loader-skip-arrow {
+            display: inline-block;
+            transition: transform 0.3s ease;
+        }
+        .loader-skip:hover .loader-skip-arrow {
+            transform: translateX(4px);
+        }
+        @keyframes skipFadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         /* ========================================
            CUSTOM CURSOR
         ======================================== */
