@@ -32,4 +32,23 @@
             .testimonials-grid { grid-template-columns: 1fr; }
             .contact-form-wrap { grid-template-columns: 1fr; }
             .cmdk-modal { width: 95vw !important; }
+            .next-card-inner { flex-direction: column; padding: 32px 24px; }
+            .next-card-arrow {
+                width: 100%; height: 60px;
+                flex-direction: row;
+            }
+            .arrow-beam { width: auto; height: 2px; flex: 1; }
+            .arrow-beam::after {
+                width: 20px; height: 2px;
+                animation: beamTravelH 2s linear infinite;
+            }
+            @keyframes beamTravelH {
+                0% { left: -20px; top: 0; opacity: 0; }
+                20% { opacity: 1; }
+                80% { opacity: 1; }
+                100% { left: calc(100% + 20px); top: 0; opacity: 0; }
+            }
+            .next-card-progress { padding: 0 24px 28px; }
+            .next-floating-stats { flex-direction: column; align-items: center; gap: 16px; }
+            .next-float-stat { width: 100%; max-width: 280px; }
         }

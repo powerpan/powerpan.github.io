@@ -704,3 +704,354 @@
             max-width: 800px; margin: 0 auto;
             background: linear-gradient(90deg, transparent, rgba(var(--accent-rgb), 0.15), transparent);
         }
+
+        /* ========================================
+           NEXT CHAPTER — System Upgrade
+        ======================================== */
+        .next-chapter {
+            position: relative; z-index: 1;
+            padding: 120px 48px;
+            overflow: hidden;
+        }
+        .next-chapter-bg-text {
+            position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: var(--font-display);
+            font-size: clamp(4rem, 13vw, 14rem);
+            font-weight: 800;
+            color: transparent;
+            -webkit-text-stroke: 1px var(--text-dim);
+            white-space: nowrap;
+            pointer-events: none; user-select: none;
+            letter-spacing: -0.03em;
+            opacity: 0.4;
+        }
+        .next-chapter-grid-bg {
+            position: absolute; inset: 0;
+            background-image:
+                linear-gradient(rgba(var(--accent-rgb), 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(var(--accent-rgb), 0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+            mask-image: radial-gradient(ellipse 60% 50% at 50% 50%, black 20%, transparent 70%);
+            -webkit-mask-image: radial-gradient(ellipse 60% 50% at 50% 50%, black 20%, transparent 70%);
+            pointer-events: none;
+        }
+        .next-subtitle {
+            font-size: 0.82rem; color: var(--text-secondary);
+            text-align: center; margin-bottom: 60px;
+            position: relative;
+            font-family: var(--font-mono);
+        }
+
+        /* --- Holographic Card --- */
+        .next-chapter-card {
+            position: relative;
+            max-width: 960px; margin: 0 auto 48px;
+            border-radius: 20px;
+            padding: 2px;
+            background: linear-gradient(135deg,
+                rgba(var(--accent-rgb), 0.4),
+                rgba(168, 85, 247, 0.4),
+                rgba(255, 51, 102, 0.3),
+                rgba(var(--accent-rgb), 0.4));
+            background-size: 300% 300%;
+            animation: holoShift 6s ease-in-out infinite;
+        }
+        @keyframes holoShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        .next-card-holo-border {
+            position: absolute; inset: -1px;
+            border-radius: 20px;
+            background: linear-gradient(135deg,
+                rgba(var(--accent-rgb), 0.15),
+                rgba(168, 85, 247, 0.15),
+                rgba(255, 51, 102, 0.1),
+                rgba(var(--accent-rgb), 0.15));
+            background-size: 300% 300%;
+            animation: holoShift 6s ease-in-out infinite;
+            filter: blur(12px);
+            z-index: -1;
+        }
+        .next-card-inner {
+            background: var(--bg-elevated, #0a0e14);
+            border-radius: 19px;
+            padding: 48px;
+            display: flex;
+            align-items: stretch;
+            gap: 0;
+            position: relative;
+            overflow: hidden;
+        }
+        .next-card-inner::before {
+            content: '';
+            position: absolute; inset: 0;
+            background: radial-gradient(ellipse 80% 60% at 50% 0%,
+                rgba(var(--accent-rgb), 0.04), transparent 60%);
+            pointer-events: none;
+        }
+
+        /* --- Status Blocks --- */
+        .next-card-status {
+            flex: 1;
+            display: flex; flex-direction: column;
+            align-items: center; text-align: center;
+            padding: 12px 20px;
+            position: relative;
+        }
+        .next-status-badge {
+            display: inline-flex; align-items: center; gap: 6px;
+            font-family: var(--font-mono);
+            font-size: 0.62rem; font-weight: 700;
+            letter-spacing: 0.15em; text-transform: uppercase;
+            padding: 4px 14px;
+            border-radius: 100px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        .next-status-badge.completed {
+            color: var(--accent);
+            background: rgba(var(--accent-rgb), 0.1);
+            border: 1px solid rgba(var(--accent-rgb), 0.25);
+        }
+        .next-status-badge.incoming {
+            color: #a855f7;
+            background: rgba(168, 85, 247, 0.1);
+            border: 1px solid rgba(168, 85, 247, 0.25);
+            animation: badgeGlow 2s ease-in-out infinite;
+        }
+        @keyframes badgeGlow {
+            0%, 100% { box-shadow: 0 0 8px rgba(168, 85, 247, 0.15); }
+            50% { box-shadow: 0 0 20px rgba(168, 85, 247, 0.3); }
+        }
+        .badge-pulse {
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            background: currentColor;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.4); }
+        }
+        .next-status-icon {
+            font-size: 2.4rem;
+            margin-bottom: 16px;
+            filter: drop-shadow(0 0 12px rgba(var(--accent-rgb), 0.3));
+        }
+        .next-status-future .next-status-icon {
+            filter: drop-shadow(0 0 12px rgba(168, 85, 247, 0.4));
+            animation: floatIcon 3s ease-in-out infinite;
+        }
+        @keyframes floatIcon {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-6px); }
+        }
+        .next-status-title {
+            font-family: var(--font-display);
+            font-size: 1.5rem; font-weight: 700;
+            margin-bottom: 6px;
+            letter-spacing: -0.02em;
+        }
+        .next-status-sub {
+            font-family: var(--font-mono);
+            font-size: 0.72rem; color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+        .next-status-desc {
+            font-size: 0.75rem; color: var(--text-muted);
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+        .next-status-tags {
+            display: flex; flex-wrap: wrap; gap: 6px;
+            justify-content: center;
+        }
+        .next-status-tags span {
+            font-family: var(--font-mono);
+            font-size: 0.58rem;
+            padding: 3px 10px;
+            border-radius: 100px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.06);
+            color: var(--text-muted);
+            transition: all 0.3s ease;
+        }
+        .next-card-status:hover .next-status-tags span {
+            border-color: rgba(var(--accent-rgb), 0.2);
+            color: var(--text-secondary);
+        }
+
+        /* --- Arrow / Beam --- */
+        .next-card-arrow {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 80px;
+            flex-shrink: 0;
+            position: relative;
+        }
+        .arrow-beam {
+            width: 2px; flex: 1;
+            background: linear-gradient(to bottom,
+                transparent,
+                rgba(var(--accent-rgb), 0.5),
+                rgba(168, 85, 247, 0.5),
+                transparent);
+            position: relative;
+        }
+        .arrow-beam::after {
+            content: '';
+            position: absolute;
+            width: 2px; height: 20px;
+            background: var(--accent);
+            border-radius: 2px;
+            left: 0;
+            animation: beamTravel 2s linear infinite;
+            box-shadow: 0 0 8px rgba(var(--accent-rgb), 0.6);
+        }
+        @keyframes beamTravel {
+            0% { top: -20px; opacity: 0; }
+            20% { opacity: 1; }
+            80% { opacity: 1; }
+            100% { top: calc(100% + 20px); opacity: 0; }
+        }
+        .arrow-node {
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            background: rgba(var(--accent-rgb), 0.1);
+            border: 1.5px solid rgba(var(--accent-rgb), 0.4);
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+            position: relative;
+            z-index: 2;
+            animation: nodeGlow 3s ease-in-out infinite;
+        }
+        @keyframes nodeGlow {
+            0%, 100% { box-shadow: 0 0 12px rgba(var(--accent-rgb), 0.2), inset 0 0 8px rgba(var(--accent-rgb), 0.1); }
+            50% { box-shadow: 0 0 24px rgba(var(--accent-rgb), 0.4), inset 0 0 12px rgba(var(--accent-rgb), 0.2); }
+        }
+        .arrow-icon {
+            font-size: 0.7rem; color: var(--accent);
+        }
+        .arrow-particles {
+            position: absolute; inset: 0;
+            pointer-events: none;
+        }
+
+        /* --- Progress Bar --- */
+        .next-card-progress {
+            padding: 0 48px 36px;
+            background: var(--bg-elevated, #0a0e14);
+            border-radius: 0 0 19px 19px;
+        }
+        .progress-header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 10px;
+        }
+        .progress-label {
+            font-family: var(--font-mono);
+            font-size: 0.62rem; font-weight: 700;
+            letter-spacing: 0.15em;
+            color: var(--text-muted);
+        }
+        .progress-pct {
+            font-family: var(--font-mono);
+            font-size: 0.72rem; font-weight: 700;
+            color: var(--accent);
+        }
+        .progress-track {
+            height: 4px;
+            background: rgba(255,255,255,0.06);
+            border-radius: 4px;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 16px;
+        }
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            border-radius: 4px;
+            background: linear-gradient(90deg, var(--accent), #a855f7);
+            transition: width 2s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+        }
+        .progress-fill.animated {
+            width: 75%;
+        }
+        .progress-glow {
+            position: absolute;
+            top: -4px; right: -2px;
+            width: 12px; height: 12px;
+            border-radius: 50%;
+            background: var(--accent);
+            filter: blur(6px);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        .progress-fill.animated ~ .progress-glow {
+            opacity: 0.6;
+            animation: glowPulse 2s ease-in-out infinite;
+        }
+        @keyframes glowPulse {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 0.8; }
+        }
+        .progress-milestones {
+            display: flex; justify-content: space-between;
+            gap: 8px;
+        }
+        .milestone {
+            font-family: var(--font-mono);
+            font-size: 0.6rem;
+            color: var(--text-dim);
+            transition: color 0.3s ease;
+        }
+        .milestone.done { color: var(--accent); }
+        .milestone.active {
+            color: #a855f7;
+            animation: milestonePulse 2s ease-in-out infinite;
+        }
+        @keyframes milestonePulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        /* --- Floating Stats --- */
+        .next-floating-stats {
+            display: flex;
+            justify-content: center;
+            gap: 48px;
+            position: relative;
+        }
+        .next-float-stat {
+            text-align: center;
+            padding: 20px 28px;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 14px;
+            transition: all 0.3s ease;
+        }
+        .next-float-stat:hover {
+            border-color: rgba(var(--accent-rgb), 0.2);
+            background: rgba(var(--accent-rgb), 0.03);
+            transform: translateY(-4px);
+        }
+        .float-stat-num {
+            font-family: var(--font-display);
+            font-size: 1.6rem; font-weight: 800;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, var(--accent), #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 4px;
+        }
+        .float-stat-label {
+            font-family: var(--font-mono);
+            font-size: 0.62rem;
+            color: var(--text-muted);
+            letter-spacing: 0.05em;
+        }
