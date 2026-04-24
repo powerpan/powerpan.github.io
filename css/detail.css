@@ -763,6 +763,10 @@
     opacity: 0; pointer-events: none;
     transform: translateY(12px);
     transition: all 0.35s ease;
+    /* Reset button defaults to prevent layout overflow */
+    padding: 0; margin: 0;
+    outline: none; -webkit-appearance: none;
+    appearance: none; min-width: 0;
 }
 .back-to-top.visible {
     opacity: 1; pointer-events: auto;
