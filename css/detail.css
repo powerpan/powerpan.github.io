@@ -759,7 +759,7 @@
     font-size: 1.1rem;
     display: flex; align-items: center; justify-content: center;
     cursor: none;
-    z-index: 9998;
+    z-index: 10001;
     opacity: 0; pointer-events: none;
     transform: translateY(12px);
     transition: all 0.35s ease;
