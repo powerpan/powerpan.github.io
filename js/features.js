@@ -191,17 +191,56 @@
            CONTACT FORM
         ======================================== */
         const contactForm = document.getElementById('contactForm');
+        const formStatus = document.getElementById('formStatus');
+        const WORKER_URL = 'https://contact-form.2779975738.workers.dev';
+
         if (contactForm) {
-            contactForm.addEventListener('submit', e => {
+            contactForm.addEventListener('submit', async e => {
                 e.preventDefault();
-                const btn = contactForm.querySelector('.form-submit span');
-                const originalText = btn.textContent;
-                btn.textContent = '✓ 已发送！';
-                btn.parentElement.style.background = 'var(--accent)';
-                setTimeout(() => {
-                    btn.textContent = originalText;
-                    contactForm.reset();
-                }, 2000);
+                const btn = contactForm.querySelector('.form-submit');
+                const btnText = btn.querySelector('span');
+                const originalText = btnText.textContent;
+
+                btn.disabled = true;
+                btnText.textContent = '⏳ 发送中...';
+                formStatus.textContent = '';
+                formStatus.className = 'form-status';
+
+                try {
+                    const formData = new FormData(contactForm);
+                    const data = Object.fromEntries(formData);
+
+                    const res = await fetch(WORKER_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(data),
+                    });
+
+                    if (res.ok) {
+                        btnText.textContent = '✓ 已发送！';
+                        btn.style.background = 'var(--accent)';
+                        formStatus.textContent = '消息已发送，我会尽快回复你 ✉️';
+                        formStatus.className = 'form-status success';
+                        contactForm.reset();
+                        setTimeout(() => {
+                            btnText.textContent = originalText;
+                            btn.style.background = '';
+                        }, 3000);
+                    } else {
+                        throw new Error('Server error');
+                    }
+                } catch (err) {
+                    btnText.textContent = '✗ 发送失败';
+                    btn.style.background = 'var(--pink)';
+                    formStatus.textContent = '发送出错，请稍后再试，或直接发邮件给我';
+                    formStatus.className = 'form-status error';
+                    setTimeout(() => {
+                        btnText.textContent = originalText;
+                        btn.style.background = '';
+                    }, 3000);
+                } finally {
+                    btn.disabled = false;
+                }
             });
         }
 

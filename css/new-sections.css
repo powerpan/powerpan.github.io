@@ -522,6 +522,17 @@
             position: relative; z-index: 1;
         }
         .form-submit:hover { transform: scale(1.02); }
+        .form-submit:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+        .form-status {
+            grid-column: 1 / -1;
+            text-align: center;
+            font-size: 0.85rem;
+            min-height: 1.2em;
+            transition: all 0.3s ease;
+        }
+        .form-status.success { color: var(--accent); }
+        .form-status.error { color: var(--pink); }
 
         /* ========================================
            COMMAND PALETTE
