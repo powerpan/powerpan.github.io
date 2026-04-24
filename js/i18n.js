@@ -144,8 +144,8 @@ const I18N = {
     next_stat_field: '研究方向',
 
     // Contact
-    contact_heading: '有想法？<br>让我们一起<span class="hl">实现它</span>',
-    contact_subtitle: '无论是项目合作还是技术交流，随时欢迎联系',
+    contact_heading: '最好的程序<br>都从一次<span class="hl">对话</span>开始',
+    contact_subtitle: '无论是碰撞灵感还是攻克难题，我都期待与你交流',
     contact_name: '你的名字',
     contact_email: '你的邮箱',
     contact_subject: '主题',
@@ -319,8 +319,8 @@ const I18N = {
     next_stat_field: 'Research Focus',
 
     // Contact
-    contact_heading: 'Got an idea?<br>Let\'s <span class="hl">build it</span> together',
-    contact_subtitle: 'Whether it\'s project collaboration or tech discussion, feel free to reach out',
+    contact_heading: 'Every great program<br>starts with a <span class="hl">conversation</span>',
+    contact_subtitle: 'Whether it\'s sparking ideas or solving tough problems — I\'d love to hear from you',
     contact_name: 'Your name',
     contact_email: 'Your email',
     contact_subject: 'Subject',
