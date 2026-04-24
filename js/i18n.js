@@ -153,7 +153,7 @@ const I18N = {
     contact_submit: '发送消息 →',
 
     // Footer
-    footer_copy: '&copy; 2026 Eric. Built with kk\'s <span class="heart">♥</span> love.',
+    footer_copy: '&copy; 2026 Eric. Built with kk\'s <span class="heart">♥</span> love and too much coffee.',
 
     // Command Palette
     cmdk_placeholder: '输入命令或搜索...',
@@ -328,7 +328,7 @@ const I18N = {
     contact_submit: 'Send Message →',
 
     // Footer
-    footer_copy: '&copy; 2026 Eric. Built with kk\'s <span class="heart">♥</span> love.',
+    footer_copy: '&copy; 2026 Eric. Built with kk\'s <span class="heart">♥</span> love and too much coffee.',
 
     // Command Palette
     cmdk_placeholder: 'Type a command or search...',
