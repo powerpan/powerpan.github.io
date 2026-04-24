@@ -182,7 +182,7 @@
         80% { opacity: 1; }
         100% { left: calc(100% + 16px); top: 0; opacity: 0; }
     }
-    .next-card-progress { padding: 0 20px 24px; }
+    .next-card-progress { padding: 16px 20px 24px; }
     .next-milestones { gap: 12px; }
     .next-milestone { font-size: 0.65rem; padding: 8px 12px; }
     .next-milestone .icon { font-size: 0.85rem; }

@@ -769,7 +769,8 @@
         }
         .next-card-inner {
             background: var(--bg-elevated, #0a0e14);
-            border-radius: 19px;
+            /* 仅上圆角：与下方 .next-card-progress 共成一块面板，避免底圆角与进度区顶边视觉「叠在一起」 */
+            border-radius: 19px 19px 0 0;
             padding: 48px;
             display: flex;
             align-items: stretch;
@@ -936,9 +937,10 @@
 
         /* --- Progress Bar --- */
         .next-card-progress {
-            padding: 0 48px 36px;
+            padding: 20px 48px 36px;
             background: var(--bg-elevated, #0a0e14);
             border-radius: 0 0 19px 19px;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
         }
         .progress-header {
             display: flex; justify-content: space-between; align-items: center;
