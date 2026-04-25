@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>如何客观看待现今女权主义 — Eric</title>
+    <meta name="description" content="从理性与共情出发，探讨当代女权主义的多面性、常见误解与性别平等的真正含义。">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/detail.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body>
+    <div class="detail-scroll-progress" id="detailScrollProgress"></div>
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor-dot" id="cursorDot"></div>
+    <canvas id="particleCanvas"></canvas>
+
+    <nav id="nav">
+        <a href="../index.html" class="nav-logo magnetic" data-hover>ERIC<span class="dot">.</span></a>
+        <ul class="nav-center">
+            <li><a href="../index.html#about" data-hover data-i18n="nav_about">// 关于</a></li>
+            <li><a href="../index.html#projects" data-hover data-i18n="nav_projects">// 项目</a></li>
+            <li><a href="../index.html#blog" data-hover data-i18n="nav_blog">// 博客</a></li>
+            <li><a href="../index.html#contact" data-hover data-i18n="nav_contact">// 联系</a></li>
+        </ul>
+        <div class="nav-status"><span class="status-dot"></span>Open to work</div>
+        <button class="nav-hamburger" id="navHamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+    </nav>
+    <div class="mobile-nav" id="mobileNav">
+        <ul class="mobile-nav-links">
+            <li><a href="../index.html#about" data-i18n="nav_about">// 关于</a></li>
+            <li><a href="../index.html#projects" data-i18n="nav_projects">// 项目</a></li>
+            <li><a href="../index.html#blog" data-i18n="nav_blog">// 博客</a></li>
+            <li><a href="../index.html#contact" data-i18n="nav_contact">// 联系</a></li>
+        </ul>
+    </div>
+
+    <section class="blog-article-hero">
+        <div class="detail-hero-bg"></div>
+        <a href="../index.html#blog" class="detail-back" data-hover>
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            返回博客
+        </a>
+        <div class="blog-article-tag reveal">Society</div>
+        <h1 class="blog-article-title reveal reveal-d1" data-i18n-html="bfem_title">如何客观看待现今女权主义</h1>
+        <div class="blog-article-meta reveal reveal-d2">
+            <span>📅 2026.04</span>
+            <span>⏱️ 10 min</span>
+            <span>👤 Eric Pan</span>
+        </div>
+    </section>
+
+    <article class="blog-article-body">
+        <section class="detail-section reveal" id="intro">
+            <h2 data-i18n="bfem_s1">写在前面</h2>
+            <p data-i18n="bfem_p1">女权主义大概是当下互联网上最容易引发争吵的话题之一。无论是在微博、知乎还是 B 站，只要沾上「女权」两个字，评论区几乎必然沦为战场。支持者和反对者各执一词，情绪往往跑在理性前面。</p>
+            <p data-i18n="bfem_p2">作为一个学理工科的男生，我承认这个话题写起来是有压力的。但我认为，越是容易引发情绪对立的话题，越需要有人愿意冷静下来，尝试把事情讲清楚。这篇文章不是要站队，而是想从一个尽量客观的角度，梳理一下「女权主义」到底是什么、不是什么，以及我们这一代人可以怎么看待它。</p>
+        </section>
+
+        <section class="detail-section reveal" id="what-is">
+            <h2 data-i18n="bfem_s2">女权主义到底在说什么？</h2>
+            <p data-i18n-html="bfem_p3">从学术定义来说，女权主义（Feminism）的核心主张是<strong>追求性别之间的平等权利与机会</strong>。它不是「女性优于男性」，也不是「女性要统治世界」，而是希望消除基于性别的歧视和不平等。</p>
+            <p data-i18n="bfem_p4">女权主义的发展经历了几个阶段：</p>
+            <ul>
+                <li data-i18n-html="bfem_f1"><strong>第一波（19 世纪末—20 世纪初）</strong>— 争取投票权、受教育权、财产权等基本法律权利</li>
+                <li data-i18n-html="bfem_f2"><strong>第二波（1960s—1980s）</strong>— 关注职场平等、生育权利、家庭暴力等社会议题</li>
+                <li data-i18n-html="bfem_f3"><strong>第三波（1990s—2000s）</strong>— 强调多元性，关注不同种族、阶层、性取向女性的交叉性议题</li>
+                <li data-i18n-html="bfem_f4"><strong>第四波（2010s 至今）</strong>— 以互联网为阵地，关注网络骚扰、MeToo、日常性别歧视等</li>
+            </ul>
+            <p data-i18n="bfem_p5">每一波女权运动都在推动社会向更公平的方向前进。今天很多我们习以为常的东西——女性可以投票、可以上大学、可以工作——都是女权运动争取来的成果。</p>
+        </section>
+
+        <section class="detail-section reveal" id="misunderstand">
+            <h2 data-i18n="bfem_s3">常见的误解与偏见</h2>
+            <p data-i18n="bfem_p6">围绕女权主义的很多争论，其实源于对概念本身的误解。以下是几个常见的误区：</p>
+            <p data-i18n-html="bfem_p7"><strong>误解一：「女权 = 仇男」</strong></p>
+            <p data-i18n="bfem_p8">女权主义批判的是父权制（patriarchy）这个社会结构，而不是男性个体。事实上，父权制同样在伤害男性——它要求男性「必须坚强」「不能哭」「必须赚钱养家」，这些刻板印象也是性别不平等的产物。真正的女权主义追求的是让所有人都不被性别标签所束缚。</p>
+            <p data-i18n-html="bfem_p9"><strong>误解二：「中国女性已经很平等了，不需要女权」</strong></p>
+            <p data-i18n="bfem_p10">从法律层面看，中国女性确实拥有了很多权利。但法律平等不等于事实平等。职场中的「隐性天花板」、家庭中不成比例的家务分配、生育对女性职业发展的不对称影响、网络空间中的性别骚扰——这些问题依然真实存在。</p>
+            <p data-i18n-html="bfem_p11"><strong>误解三：「激进言论 = 女权主义的全部」</strong></p>
+            <p data-i18n="bfem_p12">互联网放大了最极端的声音。你在社交媒体上看到的那些「男人没一个好东西」式的言论，不代表女权主义的主流。就像不能因为几个极端球迷的行为就否定整个足球运动一样，用最激进的个案来定义整个女权主义是不公平的。</p>
+        </section>
+
+        <section class="detail-section reveal" id="tech">
+            <h2 data-i18n="bfem_s4">技术人的视角</h2>
+            <p data-i18n="bfem_p13">作为学计算机的人，我特别想从技术的角度谈谈性别平等：</p>
+            <ul>
+                <li data-i18n-html="bfem_f5"><strong>算法偏见</strong> — 很多 AI 系统存在性别偏见。比如招聘 AI 会歧视女性简历，语言模型会将「护士」与女性关联、「工程师」与男性关联。这不是技术问题，是数据和设计的问题</li>
+                <li data-i18n-html="bfem_f6"><strong>行业性别比</strong> — 计算机科学领域的女性比例长期偏低。这不意味着女性「不适合」编程，而是从教育引导到职场文化都存在需要改善的环节</li>
+                <li data-i18n-html="bfem_f7"><strong>开源社区</strong> — 研究表明，女性在开源社区的贡献被接受率更高，但她们面临的骚扰和敌意也更多。营造包容的社区环境对所有人都有利</li>
+            </ul>
+            <p data-i18n="bfem_p14">技术应该是消除偏见的工具，而不是放大偏见的放大器。作为开发者，我们有责任在产品设计中考虑性别平等。</p>
+        </section>
+
+        <section class="detail-section reveal" id="conclusion">
+            <h2 data-i18n="bfem_s5">我们这一代该怎么做？</h2>
+            <p data-i18n="bfem_p15">我认为，面对女权主义这个话题，我们这一代人最需要的是两种能力：<strong>共情力</strong>和<strong>辨别力</strong>。</p>
+            <p data-i18n-html="bfem_p16"><strong>共情力</strong>是能够站在对方的立场去理解为什么 ta 会这么想。当一个女性说「我害怕走夜路」时，不要急着说「男性也害怕」，而是先理解她所描述的那种不安全感是真实存在的。</p>
+            <p data-i18n-html="bfem_p17"><strong>辨别力</strong>是能够区分「合理的诉求」和「极端的言论」。不要因为几个极端案例就否定整个运动的意义，也不要因为「政治正确」就放弃独立思考。</p>
+            <blockquote data-i18n="bfem_p18">性别平等不是零和博弈。女性获得更多权利，不意味着男性失去什么。就像给近视的人配眼镜，不会让视力正常的人变瞎一样。</blockquote>
+            <p data-i18n="bfem_p19">最后，我想说：客观看待女权主义，不等于「和稀泥」或「两边都对」。有些事情是有对错之分的——性别歧视是不对的，职场骚扰是不对的，用暴力和仇恨来表达诉求也是不对的。在这些基本的是非之上，我们完全可以保持理性、保持善意、保持对话。</p>
+        </section>
+    </article>
+
+    <div class="detail-toc" id="detailToc">
+        <div class="detail-toc-item" data-target="intro" data-label="写在前面"></div>
+        <div class="detail-toc-item" data-target="what-is" data-label="什么是女权"></div>
+        <div class="detail-toc-item" data-target="misunderstand" data-label="常见误解"></div>
+        <div class="detail-toc-item" data-target="tech" data-label="技术人视角"></div>
+        <div class="detail-toc-item" data-target="conclusion" data-label="我们该怎么做"></div>
+    </div>
+
+    <footer class="detail-footer">
+        <div class="detail-footer-copy">&copy; 2026 Eric. Built with <span class="heart">♥</span> and too much coffee.</div>
+        <div class="detail-footer-links">
+            <a href="../index.html">← Back to Home</a>
+            <a href="https://github.com/powerpan" target="_blank">GitHub</a>
+        </div>
+    </footer>
+    <button class="back-to-top" id="backToTop" title="回到顶部">↑</button>
+    <script src="../js/i18n.js"></script>
+    <script src="../js/detail.js"><\/script>
+</body>
+</html>

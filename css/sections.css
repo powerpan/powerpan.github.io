@@ -392,6 +392,12 @@
         .project-card:nth-child(4) .project-card-bg {
             background: linear-gradient(135deg, #1a1208 0%, #2d2010 40%, #1a1408 100%);
         }
+        .project-card:nth-child(5) .project-card-bg {
+            background: linear-gradient(135deg, #0a1a2e 0%, #102a4a 40%, #0d1e38 100%);
+        }
+        .project-card:nth-child(6) .project-card-bg {
+            background: linear-gradient(135deg, #1a0a18 0%, #301028 40%, #200d20 100%);
+        }
 
         .project-card-overlay {
             position: absolute; inset: 0;
