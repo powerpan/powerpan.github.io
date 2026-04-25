@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>上下文腐烂：大模型为什么会「越聊越笨」 — Eric</title>
+    <meta name="description" content="Context Rot 的两种机制——注意力稀释与上下文中毒，以及行业正在给出的不同答案。">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/detail.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body>
+    <div class="detail-scroll-progress" id="detailScrollProgress"></div>
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor-dot" id="cursorDot"></div>
+    <canvas id="particleCanvas"></canvas>
+
+    <nav id="nav">
+        <a href="../index.html" class="nav-logo magnetic" data-hover>ERIC<span class="dot">.</span></a>
+        <ul class="nav-center">
+            <li><a href="../index.html#about" data-hover data-i18n="nav_about">// 关于</a></li>
+            <li><a href="../index.html#projects" data-hover data-i18n="nav_projects">// 项目</a></li>
+            <li><a href="../index.html#blog" data-hover data-i18n="nav_blog">// 博客</a></li>
+            <li><a href="../index.html#contact" data-hover data-i18n="nav_contact">// 联系</a></li>
+        </ul>
+        <div class="nav-status"><span class="status-dot"></span>Open to work</div>
+        <button class="nav-hamburger" id="navHamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+    </nav>
+    <div class="mobile-nav" id="mobileNav">
+        <ul class="mobile-nav-links">
+            <li><a href="../index.html#about" data-i18n="nav_about">// 关于</a></li>
+            <li><a href="../index.html#projects" data-i18n="nav_projects">// 项目</a></li>
+            <li><a href="../index.html#blog" data-i18n="nav_blog">// 博客</a></li>
+            <li><a href="../index.html#contact" data-i18n="nav_contact">// 联系</a></li>
+            <li><button class="mobile-lang-btn" id="mobileLangBtn" onclick="toggleLang()" data-i18n="nav_lang">中 / EN</button></li>
+        </ul>
+    </div>
+
+    <section class="blog-article-hero">
+        <div class="detail-hero-bg"></div>
+        <a href="../index.html#blog" class="detail-back" data-hover>
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            返回博客
+        </a>
+        <div class="blog-article-tag reveal">Industry</div>
+        <h1 class="blog-article-title reveal reveal-d1" data-i18n-html="bcrot_title">上下文腐烂：大模型为什么会「越聊越笨」</h1>
+        <div class="blog-article-meta reveal reveal-d2">
+            <span>📅 2026.04</span>
+            <span>⏱️ 10 min</span>
+            <span>👤 Eric Pan</span>
+        </div>
+    </section>
+
+    <article class="blog-article-body">
+        <section class="detail-section reveal" id="intro">
+            <h2 data-i18n="bcrot_s1">一个让人抓狂的现象</h2>
+            <p data-i18n="bcrot_p1">用 AI coding 工具写过复杂功能的人大概都经历过这种场景：对话刚开始时，模型表现得像个天才，思路清晰、代码干净。但随着对话越来越长，它开始反复犯同一个错误，甚至把你之前纠正过的 bug 又原封不动地写回来。</p>
+            <p data-i18n="bcrot_p2">你明确告诉它「不要用这个 API」，它礼貌地道歉，然后在下一次生成中继续用。你把整个上下文复制到新对话里，它反而能给出正确的方案。这不是模型退化了——而是上下文本身在腐烂。</p>
+            <p data-i18n-html="bcrot_p3">最近这个话题在 AI 工程圈子里讨论得很热，有人把它叫做 <strong>Context Rot（上下文腐烂）</strong>。我仔细研究了一下，发现它其实包含两种完全不同的机制，而行业对这两种机制的应对策略也截然不同。</p>
+        </section>
+
+        <section class="detail-section reveal" id="distraction">
+            <h2 data-i18n="bcrot_s2">第一种腐烂：注意力稀释</h2>
+            <p data-i18n="bcrot_p4">第一种机制相对容易理解。大模型的上下文窗口虽然在不断拉长——从 4K 到 128K 再到百万级——但「能装下」和「能用好」是两回事。</p>
+            <p data-i18n="bcrot_p5">Transformer 的注意力机制在处理长序列时，信号会被稀释。就像你在一场两小时的会议里，前面 30 分钟讨论的关键决策，到了第 90 分钟可能已经被大量后续讨论淹没了。模型也一样：早期的重要信息在海量 token 的冲刷下，逐渐失去了它在注意力权重中的「存在感」。</p>
+            <p data-i18n="bcrot_p6">这不是 bug，而是注意力机制的数学本质决定的。模型在处理每个 token 时，需要「回头看」所有之前的 token，当这个「之前」变得很长时，每个 token 分到的注意力就变少了。性能下降的曲线往往在远没达到上下文上限时就已经开始了。</p>
+            <p data-i18n-html="bcrot_p7"><strong>好消息是，这个问题有明确的工程解法。</strong>Anthropic 在其技术栈中引入了 progressive disclosure（渐进式披露）策略，通过压缩上下文、摘要生成、上下文折叠（Context Folding）等技术来缩短有效上下文长度。效果非常显著——据公开数据，能减少 84% 的 token 消耗，同时提升 39% 的 agentic search 性能。Claude 的 /compact 指令也是这个思路的产物。</p>
+        </section>
+
+        <section class="detail-section reveal" id="poisoning">
+            <h2 data-i18n="bcrot_s3">第二种腐烂：上下文中毒</h2>
+            <p data-i18n="bcrot_p8">第二种机制更隐蔽，也更棘手。</p>
+            <p data-i18n="bcrot_p9">它发生的场景是这样的：上下文并不长，可能只有一两万 token，远没到注意力稀释的程度。但问题出在，对话早期出现了一个错误的判断——比如模型对某个 API 的行为做出了错误假设，或者对需求的理解跑偏了——而这个错误判断被后续的多轮对话反复引用和强化。</p>
+            <p data-i18n="bcrot_p10">模型在错误的基础上持续推理，就像在地基歪了的楼上面继续加盖。每一层看起来都是「合理的」，但整栋楼已经偏离了正确的方向。更可怕的是，当你试图纠正某个具体错误时，模型会从那些「中毒」的早期上下文中找到「证据」来为错误辩护。</p>
+            <p data-i18n-html="bcrot_p11"><strong>这就是为什么你让 AI 改一个 bug，它越改越乱。</strong>不是因为模型不够聪明，而是因为它在用错误的前提来理解你的纠正指令。它不是在「修复」，而是在「用错误的方式解释你的修复」。</p>
+            <p data-i18n-html="bcrot_p12">目前对上下文中毒，业界基本没有好的技术解法。最有效的方法说出来有点令人沮丧：<strong>清空重开</strong>。开一个新对话，把干净的需求重新描述一遍。因为新对话里没有那些「毒性」上下文，模型反而能给出正确的方案。</p>
+        </section>
+
+        <section class="detail-section reveal" id="deep-diff">
+            <h2 data-i18n="bcrot_s4">两种腐烂的本质差异</h2>
+            <p data-i18n="bcrot_p13">表面上看，两种腐烂都会导致模型「变笨」，但它们的根源完全不同：</p>
+            <ul>
+                <li data-i18n-html="bcrot_f1"><strong>注意力稀释是数学局限</strong>——它是注意力机制在长序列上的固有缺陷，可以通过工程手段（压缩、摘要、分段处理）来缓解。这是一个「量」的问题，本质上可优化</li>
+                <li data-i18n-html="bcrot_f2"><strong>上下文中毒是认知缺陷</strong>——它需要模型具备「元认知」能力，即意识到自己的前提假设是错的，并主动推翻已经建立的推理链。但当前的 Transformer 架构基本不具备这种能力</li>
+            </ul>
+            <p data-i18n="bcrot_p14">打个比方：注意力稀释像是一个人在嘈杂的环境中听不清你说话——你可以让他戴上降噪耳机（压缩技术）来解决。上下文中毒则像是一个人固执地相信了一个错误的事实，并且基于这个错误事实做了大量推导——你很难在不让他「忘记」所有推导的情况下纠正那个最初的错误。</p>
+            <p data-i18n="bcrot_p15">人类也有这个问题，但人类有一个关键优势：我们能意识到「等等，我之前的假设可能是错的」。这种元认知能力，是当前大模型最欠缺的东西。</p>
+        </section>
+
+        <section class="detail-section reveal" id="sub-agent">
+            <h2 data-i18n="bcrot_s5">子智能体之争：行业的两极回答</h2>
+            <p data-i18n-html="bcrot_p16">为了应对上下文中毒，大厂普遍采用了一种架构策略：<strong>sub-agent（子智能体）</strong>。核心思路是把一个大任务切片，每片交给一个全新的、干净的子智能体处理。子智能体跑完只把结果带回来，过程中的上下文全部丢弃。</p>
+            <p data-i18n="bcrot_p17">这本质上就是工程化的「清空重开」——既然单个对话的上下文会腐烂，那就不要让任何一个对话活得足够久。每个子智能体处理的任务足够小、上下文足够短，两种腐烂都来不及发生。</p>
+            <p data-i18n="bcrot_p18">但这个策略在行业里引发了不小的争议。</p>
+            <p data-i18n-html="bcrot_p19"><strong>Anthropic 的立场很明确：多智能体系统是未来。</strong>他们声称其多智能体系统的性能比单智能体提升了 90%，在复杂任务上优势明显。从工程角度看这很合理——用干净的上下文处理切片任务，既避免了注意力稀释，也绕开了上下文中毒。</p>
+            <p data-i18n-html="bcrot_p20"><strong>但 Cognition（Devin 的团队）唱了反调。</strong>他们公开发文说「别造多智能体系统」，认为子智能体不是在解决问题，而是在制造新的问题——任务切片的粒度怎么定？子智能体之间的信息如何同步？全局一致性怎么保证？每一个新引入的智能体边界，都是一个新的潜在故障点。</p>
+            <p data-i18n="bcrot_p21">我觉得双方都有道理。子智能体确实是对抗上下文中毒的有效手段，但它不是银弹。它把一个「上下文管理」问题转化成了一个「分布式协调」问题——而后者在计算机科学里，从来都不是一个好对付的课题。</p>
+        </section>
+
+        <section class="detail-section reveal" id="takeaway">
+            <h2 data-i18n="bcrot_s6">写在最后</h2>
+            <p data-i18n-html="bcrot_p22">Context Rot 这个概念之所以值得关注，是因为它揭示了一个很多人还没意识到的事实：<strong>上下文窗口的大小不等于有效利用的长度</strong>。128K 的窗口不意味着你可以把 128K 的内容一股脑塞进去然后期待模型全部理解。</p>
+            <p data-i18n="bcrot_p23">作为日常使用 AI 工具的开发者，我的应对策略很简单：</p>
+            <ul>
+                <li data-i18n-html="bcrot_f3"><strong>定期 compact</strong>——对话超过一定长度后主动压缩，别等到模型开始变笨</li>
+                <li data-i18n-html="bcrot_f4"><strong>错误假设立即重开</strong>——一旦发现模型在错误的前提下推理，不要试图在当前对话里纠正，直接开新对话</li>
+                <li data-i18n-html="bcrot_f5"><strong>关键上下文前置</strong>——把最重要的约束和需求放在 prompt 的开头或结尾，利用注意力机制的 U 型分布</li>
+            </ul>
+            <p data-i18n="bcrot_p24">上下文腐烂不是模型的退化，而是我们对模型能力边界的又一次认知校准。与其抱怨「AI 越来越笨」，不如理解它为什么会这样，然后用正确的方式使用它。</p>
+            <p data-i18n="bcrot_p25">毕竟，工具不会变笨——只是我们还没学会怎么正确地和它对话。</p>
+        </section>
+    </article>
+
+    <div class="detail-toc" id="detailToc">
+        <div class="detail-toc-item" data-target="intro" data-label="引子"></div>
+        <div class="detail-toc-item" data-target="distraction" data-label="注意力稀释"></div>
+        <div class="detail-toc-item" data-target="poisoning" data-label="上下文中毒"></div>
+        <div class="detail-toc-item" data-target="deep-diff" data-label="本质差异"></div>
+        <div class="detail-toc-item" data-target="sub-agent" data-label="子智能体之争"></div>
+        <div class="detail-toc-item" data-target="takeaway" data-label="写在最后"></div>
+    </div>
+
+    <footer class="detail-footer">
+        <div class="detail-footer-copy">&copy; 2026 Eric. Built with <span class="heart">♥</span> and too much coffee.</div>
+        <div class="detail-footer-links">
+            <a href="../index.html">← Back to Home</a>
+            <a href="https://github.com/powerpan" target="_blank">GitHub</a>
+        </div>
+    </footer>
+    <button class="back-to-top" id="backToTop" title="回到顶部">↑</button>
+    <script src="../js/i18n.js"></script>
+    <script src="../js/detail.js"><\/script>
+</body>
+</html>
