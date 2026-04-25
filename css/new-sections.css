@@ -264,7 +264,7 @@
         .code-kw { color: var(--accent-secondary); }
         .code-fn { color: var(--accent); }
         .code-str { color: #fbbf24; }
-        .code-cm { color: var(--text-dim); font-style: italic; }
+        .code-cm { color: var(--text-secondary); font-style: italic; }
         .code-num { color: var(--pink); }
         .code-type { color: #38bdf8; }
         .code-op { color: var(--text-muted); }
