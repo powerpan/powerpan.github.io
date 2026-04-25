@@ -89,12 +89,12 @@
                                     line.textContent = text.substring(0, charIdx + 1);
                                     line.appendChild(cursor);
                                     charIdx++;
-                                    setTimeout(typeChar, 12 + Math.random() * 8);
+                                    setTimeout(typeChar, 8 + Math.random() * 5);
                                 } else {
                                     // Restore full syntax-highlighted HTML
                                     line.innerHTML = html;
                                     lineIdx++;
-                                    setTimeout(typeLine, line.textContent.trim() === '' ? 80 : 120);
+                                    setTimeout(typeLine, line.textContent.trim() === '' ? 55 : 80);
                                 }
                             }
                             typeChar();
