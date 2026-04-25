@@ -321,6 +321,12 @@
         const nowPlaying = document.getElementById('nowPlaying');
         const npIcon = document.getElementById('npIcon');
         const npBars = document.getElementById('npBars');
+        const mobileBgmBtn = document.getElementById('mobileBgmBtn');
+        const mobileBgmState = document.getElementById('mobileBgmState');
+        const syncBgmUI = (playing) => {
+            if (mobileBgmBtn) mobileBgmBtn.classList.toggle('playing', playing);
+            if (mobileBgmState) mobileBgmState.textContent = playing ? '⏸' : '▶';
+        };
         if (bgm && nowPlaying) {
             let userInteracted = false;
             const tryPlay = () => {
@@ -329,6 +335,7 @@
                     bgm.play().then(() => {
                         npIcon.textContent = '⏸';
                         npBars.classList.add('playing');
+                        syncBgmUI(true);
                     }).catch(() => {});
                     document.removeEventListener('click', tryPlay);
                     document.removeEventListener('keydown', tryPlay);
@@ -343,11 +350,13 @@
                     bgm.play().then(() => {
                         npIcon.textContent = '⏸';
                         npBars.classList.add('playing');
+                        syncBgmUI(true);
                     }).catch(() => {});
                 } else {
                     bgm.pause();
                     npIcon.textContent = '▶';
                     npBars.classList.remove('playing');
+                    syncBgmUI(false);
                 }
             });
         }

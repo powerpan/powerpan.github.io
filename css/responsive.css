@@ -73,6 +73,49 @@
     border-color: rgba(0,255,136,0.2);
     background: rgba(0,255,136,0.05);
 }
+.mobile-nav-close {
+    position: absolute; top: 20px; right: 20px;
+    width: 40px; height: 40px;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(0,255,136,0.12);
+    border-radius: 8px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 10;
+}
+.mobile-nav-close svg { width: 18px; height: 18px; }
+.mobile-nav-close:hover {
+    color: var(--accent);
+    border-color: rgba(0,255,136,0.3);
+    background: rgba(0,255,136,0.06);
+    box-shadow: 0 0 12px rgba(0,255,136,0.1);
+}
+.mobile-nav-bgm {
+    font-family: var(--font-mono);
+    font-size: 0.75rem; font-weight: 500;
+    color: var(--text-secondary);
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 100px;
+    padding: 8px 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    letter-spacing: 0.1em;
+    display: inline-flex; align-items: center; gap: 6px;
+}
+.mobile-nav-bgm:hover {
+    color: var(--accent);
+    border-color: rgba(0,255,136,0.2);
+    background: rgba(0,255,136,0.05);
+}
+.mobile-nav-bgm.playing {
+    color: var(--accent);
+    border-color: rgba(0,255,136,0.25);
+    background: rgba(0,255,136,0.06);
+}
+.mobile-bgm-state { font-size: 0.65rem; }
 
 /* ========================================
    TABLET (max-width: 900px)

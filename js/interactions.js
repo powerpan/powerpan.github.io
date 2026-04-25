@@ -335,10 +335,16 @@
         document.head.appendChild(styleSheet);
 
         /* ========================================
-           MOBILE NAV (Hamburger)
+           MOBILE NAV (Hamburger + Close)
         ======================================== */
         const hamburger = document.getElementById('navHamburger');
         const mobileNav = document.getElementById('mobileNav');
+        const mobileNavClose = document.getElementById('mobileNavClose');
+        const closeMobileNav = () => {
+            hamburger && hamburger.classList.remove('active');
+            mobileNav && mobileNav.classList.remove('open');
+            document.body.style.overflow = '';
+        };
         if (hamburger && mobileNav) {
             hamburger.addEventListener('click', () => {
                 hamburger.classList.toggle('active');
@@ -346,10 +352,37 @@
                 document.body.style.overflow = mobileNav.classList.contains('open') ? 'hidden' : '';
             });
             mobileNav.querySelectorAll('a').forEach(link => {
-                link.addEventListener('click', () => {
-                    hamburger.classList.remove('active');
-                    mobileNav.classList.remove('open');
-                    document.body.style.overflow = '';
-                });
+                link.addEventListener('click', closeMobileNav);
+            });
+        }
+        if (mobileNavClose) {
+            mobileNavClose.addEventListener('click', closeMobileNav);
+        }
+
+        /* ========================================
+           MOBILE BGM TOGGLE
+        ======================================== */
+        const mobileBgmBtn = document.getElementById('mobileBgmBtn');
+        const mobileBgmState = document.getElementById('mobileBgmState');
+        if (mobileBgmBtn) {
+            mobileBgmBtn.addEventListener('click', () => {
+                const bgm = document.getElementById('bgm');
+                const npIcon = document.getElementById('npIcon');
+                const npBars = document.getElementById('npBars');
+                if (!bgm) return;
+                if (bgm.paused) {
+                    bgm.play().then(() => {
+                        mobileBgmBtn.classList.add('playing');
+                        if (mobileBgmState) mobileBgmState.textContent = '⏸';
+                        if (npIcon) npIcon.textContent = '⏸';
+                        if (npBars) npBars.classList.add('playing');
+                    }).catch(() => {});
+                } else {
+                    bgm.pause();
+                    mobileBgmBtn.classList.remove('playing');
+                    if (mobileBgmState) mobileBgmState.textContent = '▶';
+                    if (npIcon) npIcon.textContent = '▶';
+                    if (npBars) npBars.classList.remove('playing');
+                }
             });
         }

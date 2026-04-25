@@ -225,10 +225,16 @@
     document.head.appendChild(styleSheet);
 
     /* ========================================
-       MOBILE NAV (Hamburger)
+       MOBILE NAV (Hamburger + Close)
     ======================================== */
     const hamburger = document.getElementById('navHamburger');
     const mobileNav = document.getElementById('mobileNav');
+    const mobileNavClose = document.getElementById('mobileNavClose');
+    const closeMobileNav = () => {
+        hamburger && hamburger.classList.remove('active');
+        mobileNav && mobileNav.classList.remove('open');
+        document.body.style.overflow = '';
+    };
     if (hamburger && mobileNav) {
         hamburger.addEventListener('click', () => {
             hamburger.classList.toggle('active');
@@ -236,12 +242,11 @@
             document.body.style.overflow = mobileNav.classList.contains('open') ? 'hidden' : '';
         });
         mobileNav.querySelectorAll('a').forEach(link => {
-            link.addEventListener('click', () => {
-                hamburger.classList.remove('active');
-                mobileNav.classList.remove('open');
-                document.body.style.overflow = '';
-            });
+            link.addEventListener('click', closeMobileNav);
         });
+    }
+    if (mobileNavClose) {
+        mobileNavClose.addEventListener('click', closeMobileNav);
     }
 
     /* ========================================
