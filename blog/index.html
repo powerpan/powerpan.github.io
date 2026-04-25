@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>全部文章 — Eric</title>
+    <meta name="description" content="Eric 的技术博客，关于计算机视觉、大数据、AI 部署等。">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/detail.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+    <style>
+        /* ===== Blog Listing Page ===== */
+        .blog-listing {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 140px 24px 80px;
+        }
+        .blog-listing-header {
+            margin-bottom: 48px;
+        }
+        .blog-listing-header h1 {
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(2rem, 5vw, 3.2rem);
+            font-weight: 800;
+            color: var(--accent);
+            margin-bottom: 12px;
+        }
+        .blog-listing-header p {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--text-dim);
+        }
+        .blog-listing-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        .blog-list-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 24px 28px;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 0;
+            text-decoration: none;
+            color: var(--text);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .blog-list-card:first-child {
+            border-radius: 19px 19px 0 0;
+        }
+        .blog-list-card:last-child {
+            border-radius: 0 0 19px 19px;
+        }
+        .blog-list-card::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 0; bottom: 0;
+            width: 3px;
+            background: var(--accent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .blog-list-card:hover {
+            background: rgba(0,255,136,0.04);
+            border-color: rgba(0,255,136,0.15);
+            transform: translateX(4px);
+        }
+        .blog-list-card:hover::before {
+            opacity: 1;
+        }
+        .blog-list-card:hover .blog-list-arrow {
+            transform: translateX(4px);
+            color: var(--accent);
+        }
+        .blog-list-left {
+            flex: 1;
+            min-width: 0;
+        }
+        .blog-list-num {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            margin-bottom: 6px;
+            letter-spacing: 0.05em;
+        }
+        .blog-list-title {
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(1rem, 2.5vw, 1.3rem);
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 8px;
+            transition: color 0.3s ease;
+        }
+        .blog-list-card:hover .blog-list-title {
+            color: var(--accent);
+        }
+        .blog-list-desc {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.78rem;
+            color: var(--text-dim);
+            line-height: 1.6;
+            margin-bottom: 10px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .blog-list-meta {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            color: var(--text-dim);
+        }
+        .blog-list-tag {
+            padding: 2px 8px;
+            border-radius: 4px;
+            background: rgba(0,255,136,0.08);
+            color: var(--accent);
+            font-size: 0.68rem;
+        }
+        .blog-list-date {
+            color: var(--text-dim);
+        }
+        .blog-list-readtime {
+            color: var(--text-dim);
+        }
+        .blog-list-right {
+            margin-left: 24px;
+            flex-shrink: 0;
+        }
+        .blog-list-arrow {
+            font-size: 1.2rem;
+            color: var(--text-dim);
+            transition: all 0.3s ease;
+        }
+        /* Back link */
+        .blog-listing-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            text-decoration: none;
+            margin-bottom: 32px;
+            transition: color 0.3s ease;
+        }
+        .blog-listing-back:hover {
+            color: var(--accent);
+        }
+
+        @media (max-width: 768px) {
+            .blog-listing { padding: 120px 16px 60px; }
+            .blog-list-card { padding: 18px 16px; }
+            .blog-list-right { margin-left: 12px; }
+            .blog-list-desc { -webkit-line-clamp: 1; }
+        }
+    </style>
+</head>
+<body>
+    <!-- ============ SCROLL PROGRESS ============ -->
+    <div class="detail-scroll-progress" id="detailScrollProgress"></div>
+
+    <!-- ============ CURSOR ============ -->
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor-dot" id="cursorDot"></div>
+
+    <!-- ============ PARTICLE CANVAS ============ -->
+    <canvas id="particleCanvas"></canvas>
+
+    <!-- ============ NAV ============ -->
+    <nav id="nav">
+        <a href="../index.html" class="nav-logo magnetic" data-hover>ERIC<span class="dot">.</span></a>
+        <ul class="nav-center">
+            <li><a href="../index.html#about" data-hover>// 关于</a></li>
+            <li><a href="../index.html#projects" data-hover>// 项目</a></li>
+            <li><a href="../index.html#blog" data-hover>// 博客</a></li>
+            <li><a href="../index.html#contact" data-hover>// 联系</a></li>
+        </ul>
+        <div class="nav-status">
+            <span class="status-dot"></span>
+            Open to work
+        </div>
+        <button class="nav-hamburger" id="navHamburger" aria-label="Menu">
+            <span></span><span></span><span></span>
+        </button>
+    </nav>
+    <div class="mobile-nav" id="mobileNav">
+        <ul class="mobile-nav-links">
+            <li><a href="../index.html#about">// 关于</a></li>
+            <li><a href="../index.html#projects" data-hover>// 项目</a></li>
+            <li><a href="../index.html#blog" data-hover>// 博客</a></li>
+            <li><a href="../index.html#contact" data-hover>// 联系</a></li>
+        </ul>
+    </div>
+
+    <!-- ============ BLOG LISTING ============ -->
+    <main class="blog-listing">
+        <a href="../index.html" class="blog-listing-back reveal">← 返回首页</a>
+
+        <div class="blog-listing-header reveal">
+            <h1>// 全部文章</h1>
+            <p>All Posts — 5 articles and counting</p>
+        </div>
+
+        <div class="blog-listing-grid">
+            <!-- 1 -->
+            <a href="transformer-detection.html" class="blog-list-card reveal" data-hover>
+                <div class="blog-list-left">
+                    <div class="blog-list-num">01</div>
+                    <div class="blog-list-title">从 DETR 到 YOLOv8：Transformer 在目标检测中的演进</div>
+                    <div class="blog-list-desc">深入解析 Transformer 架构如何革新目标检测范式，从 DETR 的端到端检测到 YOLOv8 的实时优化，覆盖注意力机制、训练策略与工程部署实践。</div>
+                    <div class="blog-list-meta">
+                        <span class="blog-list-tag">AI / CV</span>
+                        <span class="blog-list-date">2026.03.15</span>
+                        <span class="blog-list-readtime">12 min</span>
+                    </div>
+                </div>
+                <div class="blog-list-right">
+                    <span class="blog-list-arrow">→</span>
+                </div>
+            </a>
+            <!-- 2 -->
+            <a href="turborepo-trpc.html" class="blog-list-card reveal" data-hover>
+                <div class="blog-list-left">
+                    <div class="blog-list-num">02</div>
+                    <div class="blog-list-title">实时数据流架构：Flink + Kafka 构建毫秒级计算管道</div>
+                    <div class="blog-list-desc">从零搭建一套 Flink + Kafka 的实时流式计算系统，覆盖 Exactly-Once 语义、窗口聚合、状态管理与生产级容错设计。</div>
+                    <div class="blog-list-meta">
+                        <span class="blog-list-tag">Big Data</span>
+                        <span class="blog-list-date">2026.01.20</span>
+                        <span class="blog-list-readtime">10 min</span>
+                    </div>
+                </div>
+                <div class="blog-list-right">
+                    <span class="blog-list-arrow">→</span>
+                </div>
+            </a>
+            <!-- 3 -->
+            <a href="webgpu-dl.html" class="blog-list-card reveal" data-hover>
+                <div class="blog-list-left">
+                    <div class="blog-list-num">03</div>
+                    <div class="blog-list-title">WebGPU 浏览器端深度学习：从 WebNN 到实时推理</div>
+                    <div class="blog-list-desc">探索 WebGPU 在浏览器端运行深度学习模型的可能性，从 API 设计到 Shader 优化，实现浏览器内的实时推理引擎。</div>
+                    <div class="blog-list-meta">
+                        <span class="blog-list-tag">Web / AI</span>
+                        <span class="blog-list-date">2025.11.10</span>
+                        <span class="blog-list-readtime">15 min</span>
+                    </div>
+                </div>
+                <div class="blog-list-right">
+                    <span class="blog-list-arrow">→</span>
+                </div>
+            </a>
+            <!-- 4 -->
+            <a href="image-pipeline.html" class="blog-list-card reveal" data-hover>
+                <div class="blog-list-left">
+                    <div class="blog-list-num">04</div>
+                    <div class="blog-list-title">图像处理流水线设计：从像素到决策的全链路优化</div>
+                    <div class="blog-list-desc">设计一套高性能图像处理流水线，覆盖预处理、增强、推理、后处理全链路，实现工业级视觉检测系统的端到端优化。</div>
+                    <div class="blog-list-meta">
+                        <span class="blog-list-tag">System</span>
+                        <span class="blog-list-date">2025.09.05</span>
+                        <span class="blog-list-readtime">11 min</span>
+                    </div>
+                </div>
+                <div class="blog-list-right">
+                    <span class="blog-list-arrow">→</span>
+                </div>
+            </a>
+            <!-- 5 -->
+            <a href="sam2-inspection.html" class="blog-list-card reveal" data-hover>
+                <div class="blog-list-left">
+                    <div class="blog-list-num">05</div>
+                    <div class="blog-list-title">SAM2 工业质检实战：交互式分割在缺陷检测中的应用</div>
+                    <div class="blog-list-desc">将 SAM2 引入工业质检场景，实现交互式缺陷分割与标注，结合 YOLO 检测器构建半自动标注流水线。</div>
+                    <div class="blog-list-meta">
+                        <span class="blog-list-tag">AI / CV</span>
+                        <span class="blog-list-date">2025.07.18</span>
+                        <span class="blog-list-readtime">14 min</span>
+                    </div>
+                </div>
+                <div class="blog-list-right">
+                    <span class="blog-list-arrow">→</span>
+                </div>
+            </a>
+        </div>
+    </main>
+
+    <!-- ============ FOOTER ============ -->
+    <footer class="detail-footer">
+        <div class="detail-footer-copy">
+            &copy; 2026 Eric. Built with <span class="heart">♥</span> and too much coffee.
+        </div>
+        <div class="detail-footer-links">
+            <a href="../index.html">← Back to Home</a>
+            <a href="https://github.com/powerpan" target="_blank">GitHub</a>
+        </div>
+    </footer>
+
+    <!-- ============ BACK TO TOP ============ -->
+    <button class="back-to-top" id="backToTop" title="回到顶部">↑</button>
+
+    <script src="../js/detail.js"></script>
+</body>
+</html>

@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Content Editor — Eric</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/base.css">
+    <style>
+        /* ===== Editor Layout ===== */
+        *, *::before, *::after { box-sizing: border-box; }
+        body {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        .editor-wrap {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+        .editor-topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 0;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 24px;
+        }
+        .editor-topbar h1 {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+        .editor-topbar h1 span { color: var(--text-dim); font-weight: 400; font-size: 0.8rem; margin-left: 8px; }
+        .editor-topbar-actions { display: flex; gap: 10px; }
+        .editor-topbar-actions a {
+            font-size: 0.78rem;
+            color: var(--text-dim);
+            text-decoration: none;
+            padding: 6px 12px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+        .editor-topbar-actions a:hover { color: var(--accent); border-color: rgba(0,255,136,0.3); }
+
+        /* Mode Toggle */
+        .mode-toggle {
+            display: flex;
+            gap: 0;
+            background: rgba(10,14,20,0.8);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 24px;
+        }
+        .mode-btn {
+            flex: 1;
+            padding: 12px 20px;
+            background: transparent;
+            border: none;
+            color: var(--text-dim);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .mode-btn.active {
+            background: rgba(0,255,136,0.08);
+            color: var(--accent);
+        }
+        .mode-btn:hover:not(.active) { color: var(--text); }
+
+        /* Main Grid */
+        .editor-main {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            align-items: start;
+        }
+        @media (max-width: 900px) {
+            .editor-main { grid-template-columns: 1fr; }
+        }
+
+        /* Panels */
+        .editor-panel {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+        }
+        .panel-title {
+            font-family: 'Syne', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .panel-title::before {
+            content: '>';
+            color: var(--text-dim);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Form Fields */
+        .field {
+            margin-bottom: 16px;
+        }
+        .field label {
+            display: block;
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .field input, .field textarea, .field select {
+            width: 100%;
+            padding: 10px 14px;
+            background: rgba(5,5,8,0.8);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.82rem;
+            transition: border-color 0.3s;
+            outline: none;
+        }
+        .field input:focus, .field textarea:focus, .field select:focus {
+            border-color: rgba(0,255,136,0.4);
+        }
+        .field textarea {
+            min-height: 100px;
+            resize: vertical;
+            line-height: 1.7;
+        }
+        .field-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        .field select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2 4l4 4 4-4' fill='none' stroke='%235a6a7a' stroke-width='1.5'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            padding-right: 32px;
+        }
+
+        /* Sections Editor */
+        .sections-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+        .section-item {
+            background: rgba(5,5,8,0.6);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 14px;
+            position: relative;
+        }
+        .section-item .field { margin-bottom: 10px; }
+        .section-item .field:last-child { margin-bottom: 0; }
+        .section-remove {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            color: var(--text-dim);
+            cursor: pointer;
+            font-size: 0.9rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+        .section-remove:hover { color: var(--pink); background: rgba(255,51,102,0.1); }
+
+        .add-section-btn {
+            width: 100%;
+            padding: 10px;
+            background: rgba(0,255,136,0.04);
+            border: 1px dashed rgba(0,255,136,0.2);
+            border-radius: 8px;
+            color: var(--accent);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .add-section-btn:hover {
+            background: rgba(0,255,136,0.08);
+            border-color: rgba(0,255,136,0.4);
+        }
+
+        /* Stats Editor (projects only) */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+        .stat-input {
+            display: flex;
+            gap: 6px;
+        }
+        .stat-input input {
+            flex: 1;
+            padding: 8px 10px;
+            background: rgba(5,5,8,0.8);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.78rem;
+            outline: none;
+        }
+        .stat-input input:first-child { max-width: 60px; }
+        .stat-input input:focus { border-color: rgba(0,255,136,0.4); }
+
+        /* Action Buttons */
+        .action-bar {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.82rem;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s;
+        }
+        .btn-primary {
+            background: var(--accent);
+            color: #050508;
+            font-weight: 600;
+        }
+        .btn-primary:hover { background: #00e67a; transform: translateY(-1px); }
+        .btn-secondary {
+            background: rgba(168,85,247,0.12);
+            color: var(--purple);
+            border: 1px solid rgba(168,85,247,0.3);
+        }
+        .btn-secondary:hover { background: rgba(168,85,247,0.2); }
+        .btn-outline {
+            background: transparent;
+            color: var(--text-dim);
+            border: 1px solid var(--border);
+        }
+        .btn-outline:hover { color: var(--text); border-color: rgba(0,255,136,0.3); }
+
+        /* Preview */
+        .preview-frame {
+            background: #0a0e14;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+            min-height: 400px;
+        }
+        .preview-toolbar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 14px;
+            background: rgba(10,14,20,0.9);
+            border-bottom: 1px solid var(--border);
+        }
+        .preview-dot {
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            background: var(--text-dim);
+            opacity: 0.3;
+        }
+        .preview-dot:first-child { background: var(--pink); opacity: 0.6; }
+        .preview-dot:nth-child(2) { background: #ffbb33; opacity: 0.6; }
+        .preview-dot:nth-child(3) { background: var(--accent); opacity: 0.6; }
+        .preview-url {
+            flex: 1;
+            text-align: center;
+            font-size: 0.7rem;
+            color: var(--text-dim);
+        }
+        .preview-body {
+            padding: 24px;
+            font-size: 0.82rem;
+            line-height: 1.8;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+        .preview-body::-webkit-scrollbar { width: 4px; }
+        .preview-body::-webkit-scrollbar-track { background: transparent; }
+        .preview-body::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+        /* Existing Content */
+        .existing-list {
+            margin-top: 24px;
+        }
+        .existing-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            background: rgba(5,5,8,0.6);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            margin-bottom: 8px;
+            font-size: 0.8rem;
+        }
+        .existing-item-name {
+            color: var(--text);
+            font-weight: 500;
+        }
+        .existing-item-path {
+            color: var(--text-dim);
+            font-size: 0.72rem;
+        }
+        .existing-item-actions {
+            display: flex;
+            gap: 8px;
+        }
+        .existing-item-actions a, .existing-item-actions button {
+            font-size: 0.72rem;
+            color: var(--text-dim);
+            text-decoration: none;
+            padding: 4px 8px;
+            border-radius: 4px;
+            background: none;
+            border: 1px solid var(--border);
+            cursor: pointer;
+            font-family: 'JetBrains Mono', monospace;
+            transition: all 0.2s;
+        }
+        .existing-item-actions a:hover { color: var(--accent); border-color: rgba(0,255,136,0.3); }
+        .existing-item-actions button:hover { color: var(--pink); border-color: rgba(255,51,102,0.3); }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            padding: 12px 20px;
+            background: rgba(0,255,136,0.12);
+            border: 1px solid rgba(0,255,136,0.3);
+            border-radius: 8px;
+            color: var(--accent);
+            font-size: 0.82rem;
+            z-index: 10000;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.3s;
+            pointer-events: none;
+        }
+        .toast.show { opacity: 1; transform: translateY(0); }
+        .toast.error {
+            background: rgba(255,51,102,0.12);
+            border-color: rgba(255,51,102,0.3);
+            color: var(--pink);
+        }
+
+        /* Hidden sections */
+        .project-only { display: none; }
+        body.mode-project .project-only { display: block; }
+        body.mode-project .blog-only { display: none; }
+    </style>
+</head>
+<body class="mode-blog">
+    <div class="editor-wrap">
+        <!-- Top Bar -->
+        <div class="editor-topbar">
+            <h1>📝 Content Editor <span>v1.0</span></h1>
+            <div class="editor-topbar-actions">
+                <a href="../index.html">← 返回首页</a>
+            </div>
+        </div>
+
+        <!-- Mode Toggle -->
+        <div class="mode-toggle">
+            <button class="mode-btn active" data-mode="blog" onclick="switchMode('blog')">📄 博客文章</button>
+            <button class="mode-btn" data-mode="project" onclick="switchMode('project')">🚀 项目展示</button>
+        </div>
+
+        <div class="editor-main">
+            <!-- Left: Form -->
+            <div class="editor-panel">
+                <div class="panel-title">内容编辑</div>
+
+                <!-- Basic Info -->
+                <div class="field">
+                    <label>文件名 (slug)</label>
+                    <input type="text" id="slug" placeholder="my-new-post" oninput="updatePreview()">
+                </div>
+
+                <div class="field">
+                    <label>标题 (中文)</label>
+                    <input type="text" id="titleZh" placeholder="文章标题" oninput="updatePreview()">
+                </div>
+
+                <div class="field">
+                    <label>标题 (English)</label>
+                    <input type="text" id="titleEn" placeholder="Article Title" oninput="updatePreview()">
+                </div>
+
+                <div class="field-row">
+                    <div class="field">
+                        <label>日期</label>
+                        <input type="date" id="date" oninput="updatePreview()">
+                    </div>
+                    <div class="field">
+                        <label>阅读时间</label>
+                        <input type="text" id="readtime" placeholder="10 min" oninput="updatePreview()">
+                    </div>
+                </div>
+
+                <div class="field-row">
+                    <div class="field">
+                        <label>分类标签</label>
+                        <input type="text" id="category" placeholder="AI / CV" oninput="updatePreview()">
+                    </div>
+                    <div class="field blog-only">
+                        <label>难度</label>
+                        <select id="difficulty" onchange="updatePreview()">
+                            <option value="中级">中级</option>
+                            <option value="高级">高级</option>
+                            <option value="入门">入门</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label>描述 (用于列表页)</label>
+                    <textarea id="description" rows="2" placeholder="简短描述文章内容..." oninput="updatePreview()"></textarea>
+                </div>
+
+                <!-- Project Only: Stats -->
+                <div class="project-only">
+                    <div class="field">
+                        <label>项目统计 (数字 + 标签)</label>
+                        <div class="stats-grid">
+                            <div class="stat-input"><input placeholder="12" id="stat1num"><input placeholder="项目" id="stat1label"></div>
+                            <div class="stat-input"><input placeholder="4" id="stat2num"><input placeholder="年经验" id="stat2label"></div>
+                            <div class="stat-input"><input placeholder="6" id="stat3num"><input placeholder="开源仓库" id="stat3label"></div>
+                            <div class="stat-input"><input placeholder="480" id="stat4num"><input placeholder="GitHub Stars" id="stat4label"></div>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label>技术栈 (逗号分隔)</label>
+                        <input type="text" id="techStack" placeholder="YOLO, SAM, PyTorch, Docker" oninput="updatePreview()">
+                    </div>
+                </div>
+
+                <!-- Content Sections -->
+                <div class="field">
+                    <label>文章内容 (按章节)</label>
+                    <div class="sections-list" id="sectionsList">
+                        <div class="section-item" data-idx="0">
+                            <button class="section-remove" onclick="removeSection(this)" title="删除">✕</button>
+                            <div class="field">
+                                <label>章节 ID</label>
+                                <input type="text" class="sec-id" placeholder="intro" oninput="updatePreview()">
+                            </div>
+                            <div class="field">
+                                <label>章节标题</label>
+                                <input type="text" class="sec-title" placeholder="引言" oninput="updatePreview()">
+                            </div>
+                            <div class="field">
+                                <label>内容 (支持 HTML)</label>
+                                <textarea class="sec-content" rows="4" placeholder="<p>在这里写内容...</p>" oninput="updatePreview()"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="add-section-btn" onclick="addSection()">+ 添加章节</button>
+                </div>
+
+                <!-- Actions -->
+                <div class="action-bar">
+                    <button class="btn btn-primary" onclick="generateHTML()">🔧 生成 HTML</button>
+                    <button class="btn btn-secondary" onclick="downloadHTML()">📥 下载文件</button>
+                    <button class="btn btn-outline" onclick="copyToClipboard()">📋 复制代码</button>
+                    <button class="btn btn-outline" onclick="clearForm()">🗑️ 清空</button>
+                </div>
+            </div>
+
+            <!-- Right: Preview + Existing -->
+            <div>
+                <div class="editor-panel" style="margin-bottom: 24px;">
+                    <div class="panel-title">预览</div>
+                    <div class="preview-frame">
+                        <div class="preview-toolbar">
+                            <span class="preview-dot"></span>
+                            <span class="preview-dot"></span>
+                            <span class="preview-dot"></span>
+                            <span class="preview-url" id="previewUrl">preview://localhost</span>
+                        </div>
+                        <div class="preview-body" id="previewBody">
+                            <p style="color: var(--text-dim); text-align: center; padding: 40px 0;">
+                                填写左侧表单后，点击「生成 HTML」查看预览
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Existing Content -->
+                <div class="editor-panel existing-list">
+                    <div class="panel-title">已有内容</div>
+                    <div id="existingList">
+                        <div class="existing-item">
+                            <div>
+                                <div class="existing-item-name">从 DETR 到 YOLOv8</div>
+                                <div class="existing-item-path">blog/transformer-detection.html</div>
+                            </div>
+                            <div class="existing-item-actions">
+                                <a href="../blog/transformer-detection.html" target="_blank">查看</a>
+                            </div>
+                        </div>
+                        <div class="existing-item">
+                            <div>
+                                <div class="existing-item-name">Flink + Kafka 流式计算</div>
+                                <div class="existing-item-path">blog/turborepo-trpc.html</div>
+                            </div>
+                            <div class="existing-item-actions">
+                                <a href="../blog/turborepo-trpc.html" target="_blank">查看</a>
+                            </div>
+                        </div>
+                        <div class="existing-item">
+                            <div>
+                                <div class="existing-item-name">WebGPU 浏览器端深度学习</div>
+                                <div class="existing-item-path">blog/webgpu-dl.html</div>
+                            </div>
+                            <div class="existing-item-actions">
+                                <a href="../blog/webgpu-dl.html" target="_blank">查看</a>
+                            </div>
+                        </div>
+                        <div class="existing-item">
+                            <div>
+                                <div class="existing-item-name">图像处理流水线设计</div>
+                                <div class="existing-item-path">blog/image-pipeline.html</div>
+                            </div>
+                            <div class="existing-item-actions">
+                                <a href="../blog/image-pipeline.html" target="_blank">查看</a>
+                            </div>
+                        </div>
+                        <div class="existing-item">
+                            <div>
+                                <div class="existing-item-name">SAM2 工业质检实战</div>
+                                <div class="existing-item-path">blog/sam2-inspection.html</div>
+                            </div>
+                            <div class="existing-item-actions">
+                                <a href="../blog/sam2-inspection.html" target="_blank">查看</a>
+                            </div>
+                        </div>
+                        <hr style="border:none;border-top:1px solid var(--border);margin:12px 0;">
+                        <div class="existing-item">
+                            <div>
+                                <div class="existing-item-name">Neural Vision Guard</div>
+                                <div class="existing-item-path">projects/neural-vision.html</div>
+                            </div>
+                            <div class="existing-item-actions">
+                                <a href="../projects/neural-vision.html" target="_blank">查看</a>
+                            </div>
+                        </div>
+                        <div class="existing-item">
+                            <div>
+                                <div class="existing-item-name">DataFlow Engine</div>
+                                <div class="existing-item-path">projects/dataflow.html</div>
+                            </div>
+                            <div class="existing-item-actions">
+                                <a href="../projects/dataflow.html" target="_blank">查看</a>
+                            </div>
+                        </div>
+                        <div class="existing-item">
+                            <div>
+                                <div class="existing-item-name">PixelMind Engine</div>
+                                <div class="existing-item-path">projects/pixelmind.html</div>
+                            </div>
+                            <div class="existing-item-actions">
+                                <a href="../projects/pixelmind.html" target="_blank">查看</a>
+                            </div>
+                        </div>
+                        <div class="existing-item">
+                            <div>
+                                <div class="existing-item-name">StackForge</div>
+                                <div class="existing-item-path">projects/stackforge.html</div>
+                            </div>
+                            <div class="existing-item-actions">
+                                <a href="../projects/stackforge.html" target="_blank">查看</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+
+    <script>
+    let currentMode = 'blog';
+    let generatedHTML = '';
+
+    function switchMode(mode) {
+        currentMode = mode;
+        document.body.className = 'mode-' + mode;
+        document.querySelectorAll('.mode-btn').forEach(b => {
+            b.classList.toggle('active', b.dataset.mode === mode);
+        });
+        updatePreview();
+    }
+
+    function addSection() {
+        const list = document.getElementById('sectionsList');
+        const idx = list.children.length;
+        const div = document.createElement('div');
+        div.className = 'section-item';
+        div.dataset.idx = idx;
+        div.innerHTML = `
+            <button class="section-remove" onclick="removeSection(this)" title="删除">✕</button>
+            <div class="field">
+                <label>章节 ID</label>
+                <input type="text" class="sec-id" placeholder="section-${idx}" oninput="updatePreview()">
+            </div>
+            <div class="field">
+                <label>章节标题</label>
+                <input type="text" class="sec-title" placeholder="章节 ${idx + 1}" oninput="updatePreview()">
+            </div>
+            <div class="field">
+                <label>内容 (支持 HTML)</label>
+                <textarea class="sec-content" rows="4" placeholder="<p>在这里写内容...</p>" oninput="updatePreview()"></textarea>
+            </div>
+        `;
+        list.appendChild(div);
+    }
+
+    function removeSection(btn) {
+        const list = document.getElementById('sectionsList');
+        if (list.children.length > 1) {
+            btn.closest('.section-item').remove();
+            updatePreview();
+        } else {
+            showToast('至少保留一个章节', true);
+        }
+    }
+
+    function getFormData() {
+        const sections = [];
+        document.querySelectorAll('.section-item').forEach(item => {
+            sections.push({
+                id: item.querySelector('.sec-id').value,
+                title: item.querySelector('.sec-title').value,
+                content: item.querySelector('.sec-content').value
+            });
+        });
+        return {
+            mode: currentMode,
+            slug: document.getElementById('slug').value,
+            titleZh: document.getElementById('titleZh').value,
+            titleEn: document.getElementById('titleEn').value,
+            date: document.getElementById('date').value,
+            readtime: document.getElementById('readtime').value,
+            category: document.getElementById('category').value,
+            difficulty: document.getElementById('difficulty').value,
+            description: document.getElementById('description').value,
+            sections,
+            // project only
+            stats: [
+                { num: document.getElementById('stat1num')?.value, label: document.getElementById('stat1label')?.value },
+                { num: document.getElementById('stat2num')?.value, label: document.getElementById('stat2label')?.value },
+                { num: document.getElementById('stat3num')?.value, label: document.getElementById('stat3label')?.value },
+                { num: document.getElementById('stat4num')?.value, label: document.getElementById('stat4label')?.value },
+            ],
+            techStack: document.getElementById('techStack')?.value || ''
+        };
+    }
+
+    function formatDate(dateStr) {
+        if (!dateStr) return '2026.01.01';
+        return dateStr.replace(/-/g, '.');
+    }
+
+    function generateBlogHTML(d) {
+        const dateFormatted = formatDate(d.date);
+        const tocItems = d.sections.filter(s => s.id && s.title).map(s =>
+            `        <div class="detail-toc-item" data-target="${s.id}" data-label="${s.title}"></div>`
+        ).join('\n');
+
+        const contentSections = d.sections.map(s => {
+            const heading = s.title ? `\n            <h2 id="${s.id}">${s.title}</h2>` : '';
+            return `
+        <!-- ============ ${s.title || s.id} ============ -->
+        <section${s.id ? ` id="${s.id}"` : ''}>${heading}
+            <div class="detail-paragraph">
+                ${s.content || '<p>内容待填充...</p>'}
+            </div>
+        </section>`;
+        }).join('\n');
+
+        return `<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${d.titleZh || '新文章'} — Eric</title>
+    <meta name="description" content="${d.description}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/detail.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body>
+    <!-- ============ SCROLL PROGRESS ============ -->
+    <div class="detail-scroll-progress" id="detailScrollProgress"></div>
+
+    <!-- ============ CURSOR ============ -->
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor-dot" id="cursorDot"></div>
+
+    <!-- ============ PARTICLE CANVAS ============ -->
+    <canvas id="particleCanvas"></canvas>
+
+    <!-- ============ NAV ============ -->
+    <nav id="nav">
+        <a href="../index.html" class="nav-logo magnetic" data-hover>ERIC<span class="dot">.</span></a>
+        <ul class="nav-center">
+            <li><a href="../index.html#about" data-hover>// 关于</a></li>
+            <li><a href="../index.html#projects" data-hover>// 项目</a></li>
+            <li><a href="../index.html#blog" data-hover>// 博客</a></li>
+            <li><a href="../index.html#contact" data-hover>// 联系</a></li>
+        </ul>
+        <div class="nav-status">
+            <span class="status-dot"></span>
+            Open to work
+        </div>
+        <button class="nav-hamburger" id="navHamburger" aria-label="Menu">
+            <span></span><span></span><span></span>
+        </button>
+    </nav>
+    <div class="mobile-nav" id="mobileNav">
+        <ul class="mobile-nav-links">
+            <li><a href="../index.html#about">// 关于</a></li>
+            <li><a href="../index.html#projects">// 项目</a></li>
+            <li><a href="../index.html#blog">// 博客</a></li>
+            <li><a href="../index.html#contact">// 联系</a></li>
+        </ul>
+    </div>
+
+    <!-- ============ ARTICLE ============ -->
+    <main class="detail-content">
+        <header class="detail-header reveal">
+            <div class="detail-meta">
+                <span class="detail-tag">${d.category || 'Tech'}</span>
+                <span class="detail-date">${dateFormatted}</span>
+                <span class="detail-readtime">${d.readtime || '10 min'} read</span>
+            </div>
+            <h1 class="detail-title">${d.titleZh || '新文章'}</h1>
+            <p class="detail-subtitle">${d.titleEn || ''}</p>
+        </header>
+${contentSections}
+    </main>
+
+    <!-- ============ TABLE OF CONTENTS ============ -->
+    <div class="detail-toc">
+${tocItems}
+    </div>
+
+    <!-- ============ FOOTER ============ -->
+    <footer class="detail-footer">
+        <div class="detail-footer-copy">
+            &copy; 2026 Eric. Built with <span class="heart">♥</span> and too much coffee.
+        </div>
+        <div class="detail-footer-links">
+            <a href="../index.html">← Back to Home</a>
+            <a href="https://github.com/powerpan" target="_blank">GitHub</a>
+        </div>
+    </footer>
+
+    <!-- ============ BACK TO TOP ============ -->
+    <button class="back-to-top" id="backToTop" title="回到顶部">↑</button>
+
+    <script src="../js/detail.js"></script>
+</body>
+</html>`;
+    }
+
+    function generateProjectHTML(d) {
+        const dateFormatted = formatDate(d.date);
+        const statsHTML = d.stats.filter(s => s.num && s.label).map(s =>
+            `                <div class="detail-stat-card">
+                    <div class="detail-stat-num">${s.num}</div>
+                    <div class="detail-stat-label">${s.label}</div>
+                </div>`
+        ).join('\n');
+
+        const techTags = d.techStack.split(',').map(t => t.trim()).filter(Boolean).map(t =>
+            `            <span class="tech-tag">${t}</span>`
+        ).join('\n');
+
+        const tocItems = d.sections.filter(s => s.id && s.title).map(s =>
+            `        <div class="detail-toc-item" data-target="${s.id}" data-label="${s.title}"></div>`
+        ).join('\n');
+
+        const contentSections = d.sections.map(s => {
+            const heading = s.title ? `\n            <h2 id="${s.id}">${s.title}</h2>` : '';
+            return `
+        <!-- ============ ${s.title || s.id} ============ -->
+        <section${s.id ? ` id="${s.id}"` : ''}>${heading}
+            <div class="detail-paragraph">
+                ${s.content || '<p>内容待填充...</p>'}
+            </div>
+        </section>`;
+        }).join('\n');
+
+        return `<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${d.titleZh || '新项目'} — Eric</title>
+    <meta name="description" content="${d.description}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/detail.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body>
+    <!-- ============ SCROLL PROGRESS ============ -->
+    <div class="detail-scroll-progress" id="detailScrollProgress"></div>
+
+    <!-- ============ CURSOR ============ -->
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor-dot" id="cursorDot"></div>
+
+    <!-- ============ PARTICLE CANVAS ============ -->
+    <canvas id="particleCanvas"></canvas>
+
+    <!-- ============ NAV ============ -->
+    <nav id="nav">
+        <a href="../index.html" class="nav-logo magnetic" data-hover>ERIC<span class="dot">.</span></a>
+        <ul class="nav-center">
+            <li><a href="../index.html#about" data-hover>// 关于</a></li>
+            <li><a href="../index.html#projects" data-hover>// 项目</a></li>
+            <li><a href="../index.html#blog" data-hover>// 博客</a></li>
+            <li><a href="../index.html#contact" data-hover>// 联系</a></li>
+        </ul>
+        <div class="nav-status">
+            <span class="status-dot"></span>
+            Open to work
+        </div>
+        <button class="nav-hamburger" id="navHamburger" aria-label="Menu">
+            <span></span><span></span><span></span>
+        </button>
+    </nav>
+    <div class="mobile-nav" id="mobileNav">
+        <ul class="mobile-nav-links">
+            <li><a href="../index.html#about">// 关于</a></li>
+            <li><a href="../index.html#projects">// 项目</a></li>
+            <li><a href="../index.html#blog">// 博客</a></li>
+            <li><a href="../index.html#contact">// 联系</a></li>
+        </ul>
+    </div>
+
+    <!-- ============ PROJECT HERO ============ -->
+    <main class="detail-content">
+        <header class="detail-header reveal">
+            <div class="detail-meta">
+                <span class="detail-tag">${d.category || 'Project'}</span>
+                <span class="detail-date">${dateFormatted}</span>
+            </div>
+            <h1 class="detail-title">${d.titleZh || '新项目'}</h1>
+            <p class="detail-subtitle">${d.titleEn || ''}</p>
+        </header>
+
+        <div class="detail-stats reveal">
+${statsHTML}
+        </div>
+
+        <div class="detail-tech reveal">
+${techTags}
+        </div>
+${contentSections}
+    </main>
+
+    <!-- ============ TABLE OF CONTENTS ============ -->
+    <div class="detail-toc">
+${tocItems}
+    </div>
+
+    <!-- ============ FOOTER ============ -->
+    <footer class="detail-footer">
+        <div class="detail-footer-copy">
+            &copy; 2026 Eric. Built with <span class="heart">♥</span> and too much coffee.
+        </div>
+        <div class="detail-footer-links">
+            <a href="../index.html">← Back to Home</a>
+            <a href="https://github.com/powerpan" target="_blank">GitHub</a>
+        </div>
+    </footer>
+
+    <!-- ============ BACK TO TOP ============ -->
+    <button class="back-to-top" id="backToTop" title="回到顶部">↑</button>
+
+    <script src="../js/detail.js"></script>
+</body>
+</html>`;
+    }
+
+    function updatePreview() {
+        const d = getFormData();
+        document.getElementById('previewUrl').textContent =
+            `preview://${d.mode}/${d.slug || 'untitled'}.html`;
+
+        if (!d.titleZh && d.sections.every(s => !s.title)) {
+            document.getElementById('previewBody').innerHTML =
+                '<p style="color: var(--text-dim); text-align: center; padding: 40px 0;">填写左侧表单后，点击「生成 HTML」查看预览</p>';
+            return;
+        }
+
+        // Simple preview: show structure
+        let html = `<div style="font-family: 'Syne', sans-serif;">`;
+        html += `<div style="margin-bottom:4px;font-size:0.7rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.1em;">${d.category || d.mode} · ${formatDate(d.date)}</div>`;
+        html += `<h1 style="font-size:1.6rem;color:var(--accent);margin-bottom:8px;font-weight:700;">${d.titleZh || 'Untitled'}</h1>`;
+        if (d.titleEn) html += `<p style="font-size:0.85rem;color:var(--text-dim);margin-bottom:16px;">${d.titleEn}</p>`;
+        if (d.description) html += `<p style="font-size:0.82rem;color:var(--text);line-height:1.7;margin-bottom:20px;">${d.description}</p>`;
+        d.sections.forEach(s => {
+            if (s.title) html += `<h2 style="font-size:1.1rem;color:var(--purple);margin:16px 0 8px;font-weight:600;">${s.title}</h2>`;
+            if (s.content) html += `<div style="font-size:0.8rem;color:var(--text);line-height:1.7;margin-bottom:12px;">${s.content}</div>`;
+        });
+        html += `</div>`;
+        document.getElementById('previewBody').innerHTML = html;
+    }
+
+    function generateHTML() {
+        const d = getFormData();
+        if (!d.slug) { showToast('请填写文件名 (slug)', true); return; }
+        if (!d.titleZh) { showToast('请填写中文标题', true); return; }
+
+        generatedHTML = d.mode === 'blog' ? generateBlogHTML(d) : generateProjectHTML(d);
+        updatePreview();
+        showToast('✅ HTML 已生成！点击下载或复制');
+    }
+
+    function downloadHTML() {
+        if (!generatedHTML) { showToast('请先点击「生成 HTML」', true); return; }
+        const d = getFormData();
+        const filename = `${d.slug}.html`;
+        const blob = new Blob([generatedHTML], { type: 'text/html' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        a.click();
+        URL.revokeObjectURL(url);
+        showToast(`📥 已下载 ${filename}`);
+    }
+
+    function copyToClipboard() {
+        if (!generatedHTML) { showToast('请先点击「生成 HTML」', true); return; }
+        navigator.clipboard.writeText(generatedHTML).then(() => {
+            showToast('📋 HTML 代码已复制到剪贴板');
+        }).catch(() => {
+            showToast('复制失败，请手动复制', true);
+        });
+    }
+
+    function clearForm() {
+        if (!confirm('确定要清空所有内容吗？')) return;
+        document.querySelectorAll('input, textarea').forEach(el => el.value = '');
+        generatedHTML = '';
+        updatePreview();
+        showToast('🗑️ 已清空');
+    }
+
+    function showToast(msg, isError) {
+        const t = document.getElementById('toast');
+        t.textContent = msg;
+        t.className = 'toast show' + (isError ? ' error' : '');
+        setTimeout(() => t.className = 'toast', 2500);
+    }
+
+    // Set default date
+    document.getElementById('date').valueAsDate = new Date();
+    </script>
+</body>
+</html>
