@@ -638,7 +638,7 @@ const I18N = {
     // Listing pages
     blog_back: '← 返回首页',
     blog_list_title: '// 全部文章',
-    blog_list_sub: 'All Posts — 7 articles and counting',
+    blog_list_sub: 'All Posts — 11 articles and counting',
     proj_back: '← 返回首页',
     proj_list_title: '// 全部项目',
     proj_list_sub: 'All Projects — 6 projects and counting',
@@ -1554,7 +1554,7 @@ const I18N = {
     // Listing pages
     blog_back: '← Back to Home',
     blog_list_title: '// All Posts',
-    blog_list_sub: 'All Posts — 7 articles and counting',
+    blog_list_sub: 'All Posts — 11 articles and counting',
     proj_back: '← Back to Home',
     proj_list_title: '// All Projects',
     proj_list_sub: 'All Projects — 6 projects and counting',
