@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>全部项目 — Eric</title>
+    <meta name="description" content="Eric 的项目作品集，涵盖 AI 视觉、大数据、全栈开发等领域。">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/detail.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+    <style>
+        .project-listing {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 140px 24px 80px;
+        }
+        .project-listing-header {
+            margin-bottom: 48px;
+        }
+        .project-listing-header h1 {
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(2rem, 5vw, 3.2rem);
+            font-weight: 800;
+            color: var(--accent);
+            margin-bottom: 12px;
+        }
+        .project-listing-header p {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+        .project-listing-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        @media (max-width: 768px) {
+            .project-listing-grid { grid-template-columns: 1fr; }
+            .project-listing { padding: 120px 16px 60px; }
+        }
+        .project-list-card {
+            display: flex;
+            flex-direction: column;
+            padding: 28px;
+            background: var(--bg-elevated);
+            border: 1px solid rgba(0,255,136,0.08);
+            border-radius: 19px;
+            text-decoration: none;
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .project-list-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent), var(--accent-secondary));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .project-list-card:hover {
+            border-color: rgba(0,255,136,0.2);
+            transform: translateY(-4px);
+        }
+        .project-list-card:hover::before { opacity: 1; }
+        .project-list-card:hover .project-list-title { color: var(--accent); }
+        .project-list-card:hover .project-list-arrow { transform: translate(4px, -4px); color: var(--accent); }
+        .project-list-num {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+            letter-spacing: 0.05em;
+        }
+        .project-list-title {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            transition: color 0.3s ease;
+        }
+        .project-list-desc {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            flex: 1;
+            margin-bottom: 16px;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .project-list-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .project-list-tags {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .project-list-tag {
+            padding: 2px 8px;
+            border-radius: 4px;
+            background: rgba(0,255,136,0.08);
+            color: var(--accent);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+        }
+        .project-list-arrow {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            transition: all 0.3s ease;
+        }
+        .project-listing-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            margin-bottom: 32px;
+            transition: color 0.3s ease;
+        }
+        .project-listing-back:hover { color: var(--accent); }
+    </style>
+</head>
+<body>
+    <div class="detail-scroll-progress" id="detailScrollProgress"></div>
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor-dot" id="cursorDot"></div>
+    <canvas id="particleCanvas"></canvas>
+
+    <nav id="nav">
+        <a href="../index.html" class="nav-logo magnetic" data-hover>ERIC<span class="dot">.</span></a>
+        <ul class="nav-center">
+            <li><a href="../index.html#about" data-hover>// 关于</a></li>
+            <li><a href="../index.html#projects" data-hover>// 项目</a></li>
+            <li><a href="../index.html#blog" data-hover>// 博客</a></li>
+            <li><a href="../index.html#contact" data-hover>// 联系</a></li>
+        </ul>
+        <div class="nav-status"><span class="status-dot"></span>Open to work</div>
+        <button class="nav-hamburger" id="navHamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+    </nav>
+    <div class="mobile-nav" id="mobileNav">
+        <ul class="mobile-nav-links">
+            <li><a href="../index.html#about">// 关于</a></li>
+            <li><a href="../index.html#projects">// 项目</a></li>
+            <li><a href="../index.html#blog">// 博客</a></li>
+            <li><a href="../index.html#contact">// 联系</a></li>
+        </ul>
+    </div>
+
+    <main class="project-listing">
+        <a href="../index.html" class="project-listing-back reveal">← 返回首页</a>
+        <div class="project-listing-header reveal">
+            <h1>// 全部项目</h1>
+            <p>All Projects — 6 projects and counting</p>
+        </div>
+        <div class="project-listing-grid">
+            <!-- 1: YOLO26 Multimodal -->
+            <a href="yolo26-multimodal.html" class="project-list-card reveal" data-hover>
+                <div class="project-list-num">01</div>
+                <div class="project-list-title">YOLO26 Multimodal</div>
+                <div class="project-list-desc">基于 YOLO26 的多模态视觉检测系统，单模型同时输出检测、关键点、分割三类结果，可复用 backbone 与 neck 的多头架构设计。</div>
+                <div class="project-list-footer">
+                    <div class="project-list-tags">
+                        <span class="project-list-tag">YOLO26</span>
+                        <span class="project-list-tag">Multi-head</span>
+                        <span class="project-list-tag">PyTorch</span>
+                    </div>
+                    <span class="project-list-arrow">↗</span>
+                </div>
+            </a>
+            <!-- 2: Metro Gate -->
+            <a href="metro-gate.html" class="project-list-card reveal" data-hover>
+                <div class="project-list-num">02</div>
+                <div class="project-list-title">Metro Gate Detection</div>
+                <div class="project-list-desc">基于 YOLOv5 的地铁闸机翻越检测系统，部署至 RK3588 边缘设备，RKNN 推理加速，实时识别违规行为。</div>
+                <div class="project-list-footer">
+                    <div class="project-list-tags">
+                        <span class="project-list-tag">YOLOv5</span>
+                        <span class="project-list-tag">RK3588</span>
+                        <span class="project-list-tag">Edge AI</span>
+                    </div>
+                    <span class="project-list-arrow">↗</span>
+                </div>
+            </a>
+            <!-- 3: Neural Vision -->
+            <a href="neural-vision.html" class="project-list-card reveal" data-hover>
+                <div class="project-list-num">03</div>
+                <div class="project-list-title">NeuralVision Pro</div>
+                <div class="project-list-desc">基于 YOLO 与 SAM 的实时目标检测与分割系统，面向工业质检场景，支持多类缺陷的自动识别与像素级分割。</div>
+                <div class="project-list-footer">
+                    <div class="project-list-tags">
+                        <span class="project-list-tag">YOLO</span>
+                        <span class="project-list-tag">SAM</span>
+                        <span class="project-list-tag">PyTorch</span>
+                    </div>
+                    <span class="project-list-arrow">↗</span>
+                </div>
+            </a>
+            <!-- 4: DataFlow -->
+            <a href="dataflow.html" class="project-list-card reveal" data-hover>
+                <div class="project-list-num">04</div>
+                <div class="project-list-title">DataFlow Engine</div>
+                <div class="project-list-desc">基于 Flink + Kafka 的实时流式计算引擎，支持 Exactly-Once 语义与毫秒级窗口聚合，面向大数据场景。</div>
+                <div class="project-list-footer">
+                    <div class="project-list-tags">
+                        <span class="project-list-tag">Flink</span>
+                        <span class="project-list-tag">Kafka</span>
+                        <span class="project-list-tag">Java</span>
+                    </div>
+                    <span class="project-list-arrow">↗</span>
+                </div>
+            </a>
+            <!-- 5: PixelMind -->
+            <a href="pixelmind.html" class="project-list-card reveal" data-hover>
+                <div class="project-list-num">05</div>
+                <div class="project-list-title">PixelMind Engine</div>
+                <div class="project-list-desc">轻量级视觉模型推理引擎，支持模型量化与剪枝优化，面向边缘设备部署场景。</div>
+                <div class="project-list-footer">
+                    <div class="project-list-tags">
+                        <span class="project-list-tag">ONNX</span>
+                        <span class="project-list-tag">TensorRT</span>
+                        <span class="project-list-tag">C++</span>
+                    </div>
+                    <span class="project-list-arrow">↗</span>
+                </div>
+            </a>
+            <!-- 6: StackForge -->
+            <a href="stackforge.html" class="project-list-card reveal" data-hover>
+                <div class="project-list-num">06</div>
+                <div class="project-list-title">StackForge</div>
+                <div class="project-list-desc">基于 Vue + PHP 的全栈脚手架工具，一键生成前后端项目模板，集成权限管理与数据可视化。</div>
+                <div class="project-list-footer">
+                    <div class="project-list-tags">
+                        <span class="project-list-tag">Vue</span>
+                        <span class="project-list-tag">PHP</span>
+                        <span class="project-list-tag">Full-stack</span>
+                    </div>
+                    <span class="project-list-arrow">↗</span>
+                </div>
+            </a>
+        </div>
+    </main>
+
+    <footer class="detail-footer">
+        <div class="detail-footer-copy">&copy; 2026 Eric. Built with <span class="heart">♥</span> and too much coffee.</div>
+        <div class="detail-footer-links">
+            <a href="../index.html">← Back to Home</a>
+            <a href="https://github.com/powerpan" target="_blank">GitHub</a>
+        </div>
+    </footer>
+    <button class="back-to-top" id="backToTop" title="回到顶部">↑</button>
+    <script src="../js/detail.js"></script>
+</body>
+</html>

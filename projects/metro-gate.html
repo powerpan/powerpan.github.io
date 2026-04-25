@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Metro Gate Detection — Eric's Project</title>
+    <meta name="description" content="基于 YOLOv5 的地铁闸机翻越检测系统，部署至 RK3588 边缘设备实时推理。">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/detail.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body>
+    <div class="detail-scroll-progress" id="detailScrollProgress"></div>
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor-dot" id="cursorDot"></div>
+    <canvas id="particleCanvas"></canvas>
+
+    <nav id="nav">
+        <a href="../index.html" class="nav-logo magnetic" data-hover>ERIC<span class="dot">.</span></a>
+        <ul class="nav-center">
+            <li><a href="../index.html#about" data-hover>// 关于</a></li>
+            <li><a href="../index.html#projects" data-hover>// 项目</a></li>
+            <li><a href="../index.html#blog" data-hover>// 博客</a></li>
+            <li><a href="../index.html#contact" data-hover>// 联系</a></li>
+        </ul>
+        <div class="nav-status"><span class="status-dot"></span>Open to work</div>
+        <button class="nav-hamburger" id="navHamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+    </nav>
+    <div class="mobile-nav" id="mobileNav">
+        <ul class="mobile-nav-links">
+            <li><a href="../index.html#about">// 关于</a></li>
+            <li><a href="../index.html#projects">// 项目</a></li>
+            <li><a href="../index.html#blog">// 博客</a></li>
+            <li><a href="../index.html#contact">// 联系</a></li>
+        </ul>
+    </div>
+
+    <div class="detail-toc" id="detailToc">
+        <div class="detail-toc-item" data-target="overview" data-label="项目概述"></div>
+        <div class="detail-toc-item" data-target="challenge" data-label="场景挑战"></div>
+        <div class="detail-toc-item" data-target="model" data-label="模型设计"></div>
+        <div class="detail-toc-item" data-target="hardware" data-label="RK3588 硬件"></div>
+        <div class="detail-toc-item" data-target="deploy" data-label="部署流程"></div>
+        <div class="detail-toc-item" data-target="optimization" data-label="推理优化"></div>
+        <div class="detail-toc-item" data-target="code" data-label="代码实现"></div>
+        <div class="detail-toc-item" data-target="results" data-label="部署效果"></div>
+    </div>
+
+    <section class="detail-hero">
+        <div class="detail-hero-bg"></div>
+        <a href="../index.html#projects" class="detail-back magnetic" data-hover>
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            BACK
+        </a>
+        <div class="detail-tag">Edge AI · YOLOv5 · RK3588</div>
+        <h1 class="detail-title">Metro <span class="hl">Gate</span> Detection</h1>
+        <p class="detail-subtitle">基于 YOLOv5 的地铁闸机翻越检测系统，从模型训练到 RK3588 边缘设备部署的全链路实践，实现地铁场景下违规行为的实时识别与告警。</p>
+        <div class="detail-meta">
+            <div class="detail-meta-item"><span class="detail-meta-label">Role</span><span class="detail-meta-value">独立开发者</span></div>
+            <div class="detail-meta-item"><span class="detail-meta-label">Duration</span><span class="detail-meta-value">2 months</span></div>
+            <div class="detail-meta-item"><span class="detail-meta-label">Hardware</span><span class="detail-meta-value">RK3588</span></div>
+        </div>
+    </section>
+
+    <div class="detail-image-section reveal">
+        <div class="detail-image-wrap">
+            <div class="detail-image">
+                <div class="detail-image-gradient" style="background: linear-gradient(135deg, #1a1a0a, #0a1a2e, #1a0a1a);">
+                    <div class="detail-image-placeholder">RK3588 Edge Deployment</div>
+                </div>
+            </div>
+            <div class="detail-image-overlay"></div>
+            <div class="detail-image-dots">
+                <div class="detail-image-dot" style="background:#ff5f57"></div>
+                <div class="detail-image-dot" style="background:#febc2e"></div>
+                <div class="detail-image-dot" style="background:#28c840"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="detail-content">
+        <!-- Overview -->
+        <div class="detail-section reveal" id="overview">
+            <div class="detail-section-label">Overview</div>
+            <h2 class="detail-section-title">地铁安全的 AI 守门人</h2>
+            <p class="detail-text">
+                地铁闸机翻越（或钻越）是城市轨道交通中最常见的违规行为之一，不仅造成票务损失，更存在严重的人身安全隐患。
+                传统方案依赖人工监控，效率低、漏检率高。本项目基于 <strong>YOLOv5</strong> 目标检测模型，
+                训练了一个专门识别闸机翻越行为的检测器，并将其部署到 <strong>Rockchip RK3588</strong> 边缘设备上，
+                实现了从视频流输入到违规告警输出的全链路实时推理。
+            </p>
+        </div>
+
+        <!-- Challenge -->
+        <div class="detail-section reveal" id="challenge">
+            <div class="detail-section-label">Challenge</div>
+            <h2 class="detail-section-title">场景挑战</h2>
+            <p class="detail-text">
+                地铁闸机场景的视觉检测面临多重挑战：
+            </p>
+            <ul>
+                <li><strong>遮挡严重</strong> — 闸机通道狭窄，人体经常被闸机挡板、其他乘客遮挡，需要模型具备较强的遮挡推理能力</li>
+                <li><strong>动作多样</strong> — 翻越动作包括跨栏式翻越、撑手翻越、钻越等多种形态，且持续时间短（通常 1-3 秒），对检测的实时性要求高</li>
+                <li><strong>光照复杂</strong> — 地下站台光照条件多变，存在逆光、侧光、荧光灯频闪等问题</li>
+                <li><strong>边缘部署</strong> — 需要在功耗受限的嵌入式设备上运行，模型必须足够轻量</li>
+            </ul>
+        </div>
+
+        <!-- Model -->
+        <div class="detail-section reveal" id="model">
+            <div class="detail-section-label">Model Design</div>
+            <h2 class="detail-section-title">模型设计</h2>
+            <p class="detail-text">
+                基于 YOLOv5s 架构进行定制化改造。首先对 Backbone 进行轻量化，将 C3 模块中的标准卷积替换为 <strong>深度可分离卷积</strong>（Depthwise Separable Conv），
+                在保持特征提取能力的同时将参数量从 7.2M 降低到 4.1M。
+            </p>
+            <p class="detail-text">
+                数据集方面，我们从地铁站监控视频中采集了 <strong>8,000+ 帧</strong>图像，标注了三类目标：<code>normal_pass</code>（正常通行）、
+                <code>climb_over</code>（翻越闸机）和 <code>crawl_under</code>（钻越闸机）。采用 Mosaic + MixUp + 随机裁剪增强策略，
+                并针对翻越动作的时序特性，引入了相邻帧的光流特征作为辅助输入。
+            </p>
+        </div>
+
+        <!-- Hardware -->
+        <div class="detail-section reveal" id="hardware">
+            <div class="detail-section-label">Hardware</div>
+            <h2 class="detail-section-title">RK3588 硬件平台</h2>
+            <p class="detail-text">
+                <strong>Rockchip RK3588</strong> 是目前国产边缘 AI 芯片中性能最强的 SoC 之一，集成了四核 Cortex-A76 + 四核 Cortex-A55 CPU、
+                Mali-G610 GPU 以及独立的 <strong>6 TOPS NPU</strong>（Neural Processing Unit）。其 NPU 支持 INT8/INT16/FP16 混合精度推理，
+                特别适合部署量化后的 YOLO 系列模型。
+            </p>
+            <p class="detail-text">
+                我们选用的开发板配备了 <strong>8GB LPDDR5</strong> 内存和独立的 NPU 加速单元。相比 GPU 方案（如 Jetson Orin Nano），
+                RK3588 的优势在于更低的功耗（典型 5-8W vs 15W）和更高的性价比，非常适合地铁站这种需要大规模部署的场景。
+                NPU 的 6 TOPS 算力对于 YOLOv5s 级别的模型绰绰有余，实测推理速度可达 <strong>60+ FPS</strong>。
+            </p>
+        </div>
+
+        <!-- Deploy -->
+        <div class="detail-section reveal" id="deploy">
+            <div class="detail-section-label">Deployment</div>
+            <h2 class="detail-section-title">部署流程</h2>
+            <p class="detail-text">
+                从 PyTorch 模型到 RK3588 NPU 部署，需要经过以下关键步骤：
+            </p>
+            <ul>
+                <li><strong>Step 1: 导出 ONNX</strong> — 将 PyTorch 模型导出为 ONNX 格式，固定输入尺寸为 640×640</li>
+                <li><strong>Step 2: RKNN 转换</strong> — 使用 Rockchip 提供的 <code>rknn-toolkit2</code> 将 ONNX 模型转换为 RKNN 格式，进行 INT8 量化（校准集 500 张）</li>
+                <li><strong>Step 3: NPU 部署</strong> — 在 RK3588 上使用 <code>rknn-lite2</code> 运行时加载 RKNN 模型，通过 NPU 加速推理</li>
+                <li><strong>Step 4: 视频流对接</strong> — 使用 OpenCV 采集 RTSP 视频流，逐帧送入模型推理，结果通过 WebSocket 推送至告警系统</li>
+            </ul>
+        </div>
+
+        <!-- Optimization -->
+        <div class="detail-section reveal" id="optimization">
+            <div class="detail-section-label">Optimization</div>
+            <h2 class="detail-section-title">推理优化</h2>
+            <p class="detail-text">
+                在 RK3588 上部署时，我们进行了多维度的推理优化：
+            </p>
+            <ul>
+                <li><strong>INT8 量化</strong> — 使用 rknn-toolkit2 的量化功能，将 FP32 模型量化为 INT8，模型体积缩小 4 倍，推理速度提升 2.5 倍，mAP 仅下降 1.2%</li>
+                <li><strong>多核 NPU 并行</strong> — RK3588 的 NPU 支持 3 核并行推理，通过设置 <code>core_mask=RKNN.NPU_CORE_0_1_2</code> 充分利用算力</li>
+                <li><strong>零拷贝优化</strong> — 使用 DMA buffer 实现视频帧到 NPU 的零拷贝传输，减少内存拷贝开销</li>
+                <li><strong>异步流水线</strong> — 视频采集、预处理、推理、后处理四个阶段采用异步流水线，最大化吞吐量</li>
+            </ul>
+        </div>
+
+        <!-- Code -->
+        <div class="detail-section reveal" id="code">
+            <div class="detail-section-label">Code</div>
+            <h2 class="detail-section-title">RKNN 推理代码</h2>
+            <div class="detail-code-block">
+                <div class="detail-code-header">
+                    <div class="detail-code-dot" style="background:#ff5f57"></div>
+                    <div class="detail-code-dot" style="background:#febc2e"></div>
+                    <div class="detail-code-dot" style="background:#28c840"></div>
+                    <div class="detail-code-title">rknn_infer.py</div>
+                </div>
+                <div class="detail-code-body">
+                    <div class="line"><span class="line-content"><span style="color:#ff79c6">from</span> rknnlite.api <span style="color:#ff79c6">import</span> RKNNLite</span></div>
+                    <div class="line"><span class="line-content"><span style="color:#ff79c6">import</span> cv2, numpy <span style="color:#ff79c6">as</span> np</span></div>
+                    <div class="line"><span class="line-content"></span></div>
+                    <div class="line"><span class="line-content">rknn = RKNNLite()</span></div>
+                    <div class="line"><span class="line-content">rknn.load_rknn(<span style="color:#f1fa8c">'yolov5s_gate.rknn'</span>)</span></div>
+                    <div class="line"><span class="line-content">rknn.init_runtime(core_mask=RKNNLite.NPU_CORE_0_1_2)</span></div>
+                    <div class="line"><span class="line-content"></span></div>
+                    <div class="line"><span class="line-content"><span style="color:#6272a4"># Preprocess</span></span></div>
+                    <div class="line"><span class="line-content">frame = cv2.imread(<span style="color:#f1fa8c">'gate_frame.jpg'</span>)</span></div>
+                    <div class="line"><span class="line-content">blob = cv2.resize(frame, (<span style="color:#bd93f9">640</span>, <span style="color:#bd93f9">640</span>))</span></div>
+                    <div class="line"><span class="line-content">blob = blob[:, :, ::-<span style="color:#bd93f9">1</span>].transpose(<span style="color:#bd93f9">2</span>, <span style="color:#bd93f9">0</span>, <span style="color:#bd93f9">1</span>).copy()</span></div>
+                    <div class="line"><span class="line-content"></span></div>
+                    <div class="line"><span class="line-content"><span style="color:#6272a4"># NPU inference</span></span></div>
+                    <div class="line"><span class="line-content">outputs = rknn.inference(inputs=[blob])</span></div>
+                    <div class="line"><span class="line-content"></span></div>
+                    <div class="line"><span class="line-content"><span style="color:#6272a4"># Post-process: NMS + decode</span></span></div>
+                    <div class="line"><span class="line-content">detections = postprocess(outputs[<span style="color:#bd93f9">0</span>], conf_thres=<span style="color:#bd93f9">0.5</span>, iou_thres=<span style="color:#bd93f9">0.45</span>)</span></div>
+                    <div class="line"><span class="line-content"></span></div>
+                    <div class="line"><span class="line-content"><span style="color:#50fa7b">print</span>(f<span style="color:#f1fa8c">"Detected {len(detections)} violations"</span>)</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results -->
+        <div class="detail-section reveal" id="results">
+            <div class="detail-section-label">Results</div>
+            <h2 class="detail-section-title">部署效果</h2>
+            <div class="detail-stats">
+                <div class="detail-stat" data-hover>
+                    <div class="detail-stat-num">62 FPS</div>
+                    <div class="detail-stat-label">NPU Inference</div>
+                </div>
+                <div class="detail-stat" data-hover>
+                    <div class="detail-stat-num">91.3%</div>
+                    <div class="detail-stat-label">mAP@0.5</div>
+                </div>
+                <div class="detail-stat" data-hover>
+                    <div class="detail-stat-num">~6W</div>
+                    <div class="detail-stat-label">Power</div>
+                </div>
+                <div class="detail-stat" data-hover>
+                    <div class="detail-stat-num">&lt;20ms</div>
+                    <div class="detail-stat-label">E2E Latency</div>
+                </div>
+            </div>
+            <p class="detail-text" style="margin-top: 20px;">
+                系统在 RK3588 上实现了 62 FPS 的推理速度，端到端延迟（含预处理和后处理）低于 20ms，
+                完全满足地铁站实时监控的需求。INT8 量化后模型仅 <strong>3.8MB</strong>，在 6W 功耗下即可稳定运行，
+                适合大规模部署到各站点的闸机通道。
+            </p>
+        </div>
+    </div>
+
+    <footer class="detail-footer">
+        <div class="detail-footer-copy">&copy; 2026 Eric. Built with <span class="heart">♥</span> and too much coffee.</div>
+        <div class="detail-footer-links">
+            <a href="../index.html">← Back to Home</a>
+            <a href="https://github.com/powerpan" target="_blank">GitHub</a>
+        </div>
+    </footer>
+    <button class="back-to-top" id="backToTop" title="回到顶部">↑</button>
+    <script src="../js/detail.js"><\/script>
+</body>
+</html>
