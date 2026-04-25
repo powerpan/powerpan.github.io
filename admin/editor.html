@@ -8,6 +8,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/base.css">
     <style>
+        /* ===== Variable Aliases (match base.css names) ===== */
+        :root {
+            --text: var(--text-primary);
+            --card: var(--bg-elevated);
+            --border: rgba(0, 255, 136, 0.08);
+            --purple: var(--accent-secondary);
+            --text-dim: var(--text-secondary);
+        }
         /* ===== Editor Layout ===== */
         *, *::before, *::after { box-sizing: border-box; }
         body {
@@ -16,7 +24,9 @@
             color: var(--text);
             min-height: 100vh;
             overflow-x: hidden;
+            cursor: auto !important;
         }
+        body::after { display: none !important; }
         .editor-wrap {
             max-width: 1200px;
             margin: 0 auto;
