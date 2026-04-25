@@ -26,10 +26,10 @@
     <nav id="nav">
         <a href="../index.html" class="nav-logo magnetic" data-hover>ERIC<span class="dot">.</span></a>
         <ul class="nav-center">
-            <li><a href="../index.html#about" data-hover>// 关于</a></li>
-            <li><a href="../index.html#projects" data-hover>// 项目</a></li>
-            <li><a href="../index.html#blog" data-hover>// 博客</a></li>
-            <li><a href="../index.html#contact" data-hover>// 联系</a></li>
+            <li><a href="../index.html#about" data-hover data-i18n="nav_about">// 关于</a></li>
+            <li><a href="../index.html#projects" data-hover data-i18n="nav_projects">// 项目</a></li>
+            <li><a href="../index.html#blog" data-hover data-i18n="nav_blog">// 博客</a></li>
+            <li><a href="../index.html#contact" data-hover data-i18n="nav_contact">// 联系</a></li>
         </ul>
         <div class="nav-status">
             <span class="status-dot"></span>
@@ -58,7 +58,7 @@
             返回博客
         </a>
         <div class="blog-article-tag reveal">AI/CV</div>
-        <h1 class="blog-article-title reveal reveal-d1">SAM 2 在工业质检中的落地实践：从 Prompt Engineering 到产线部署</h1>
+        <h1 class="blog-article-title reveal reveal-d1" data-i18n-html="bs_title">SAM 2 在工业质检中的落地实践：从 Prompt Engineering 到产线部署</h1>
         <div class="blog-article-meta reveal reveal-d2">
             <span>📅 2025.07.18</span>
             <span>⏱️ 14 min</span>
@@ -71,7 +71,7 @@
 
         <!-- Section 1: 引言 -->
         <section class="detail-section reveal" id="intro">
-            <h2>引言</h2>
+            <h2 data-i18n="bs_s1">引言</h2>
             <p>工业质检是计算机视觉技术最重要的落地场景之一。传统的缺陷检测方案通常需要为每种产品训练专门的模型，数据标注成本高、模型迭代周期长。Meta 发布的 SAM 2（Segment Anything Model 2）为这一领域带来了新的可能性——通过强大的零样本分割能力和灵活的 Prompt 机制，我们可以用更少的标注数据实现高精度的缺陷分割。</p>
             <p>在参与视觉模型开发的实习项目中，我有幸深度参与了基于 SAM 2 的工业质检系统建设。本文将分享在电子元器件表面缺陷检测项目中落地 SAM 2 的完整经验，包括 Prompt Engineering 策略、模型微调方法和边缘设备部署优化。</p>
             <blockquote>SAM 2 的核心优势不在于它能替代所有专用模型，而在于它提供了一个强大的通用基座，大幅降低了新场景的适配成本。</blockquote>
@@ -79,7 +79,7 @@
 
         <!-- Section 2: SAM 2 架构 -->
         <section class="detail-section reveal" id="architecture">
-            <h2>SAM 2 架构解析</h2>
+            <h2 data-i18n="bs_s2">SAM 2 架构解析</h2>
             <p>SAM 2 在原始 SAM 的基础上引入了时序建模能力，使其能够处理视频序列中的目标分割。其核心架构由三个模块组成：</p>
             <ul>
                 <li><strong>Image Encoder</strong> — 基于 Hiera（Hierarchical Vision Transformer）的图像编码器，提取多尺度视觉特征。相比 SAM 的 ViT-H，Hiera 在保持精度的同时推理速度提升 6 倍</li>
@@ -91,7 +91,7 @@
 
         <!-- Section 3: Prompt Engineering -->
         <section class="detail-section reveal" id="prompt">
-            <h2>Prompt Engineering 策略</h2>
+            <h2 data-i18n="bs_s3">Prompt Engineering 策略</h2>
             <p>在工业质检场景中，Prompt 的设计直接决定了分割质量。经过大量实验，我们总结了以下 Prompt Engineering 策略：</p>
             <ul>
                 <li><strong>点 Prompt 策略</strong> — 对于已知缺陷位置的区域，在缺陷中心点放置 1 个正点（foreground），在缺陷边缘均匀放置 3-5 个负点（background），可以有效控制分割边界</li>
@@ -104,7 +104,7 @@
 
         <!-- Section 4: 缺陷检测流程 -->
         <section class="detail-section reveal" id="workflow">
-            <h2>缺陷检测工作流</h2>
+            <h2 data-i18n="bs_s4">缺陷检测工作流</h2>
             <p>我们设计了一套两阶段的缺陷检测工作流，结合了传统检测模型的速度优势和 SAM 2 的分割精度优势：</p>
             <ul>
                 <li><strong>阶段一：快速筛查</strong> — 使用轻量级 YOLOv8-nano 模型进行初步检测，快速定位疑似缺陷区域，过滤 90% 的正常区域</li>
@@ -117,7 +117,7 @@
 
         <!-- Section 5: 代码实现 -->
         <section class="detail-section reveal" id="code">
-            <h2>Python 推理代码</h2>
+            <h2 data-i18n="bs_s5">Python 推理代码</h2>
             <p>以下是完整的缺陷检测推理代码，包括模型加载、Prompt 构造和后处理：</p>
             <div class="detail-code-block">
                 <div class="detail-code-header">
@@ -164,7 +164,7 @@
 
         <!-- Section 6: 模型微调 -->
         <section class="detail-section reveal" id="finetune">
-            <h2>领域微调策略</h2>
+            <h2 data-i18n="bs_s6">领域微调策略</h2>
             <p>虽然 SAM 2 的零样本能力已经相当出色，但在特定工业场景中进行轻量级微调可以进一步提升性能。我们的微调策略：</p>
             <ul>
                 <li><strong>冻结 Image Encoder</strong> — 只微调 Prompt Encoder 和 Mask Decoder，减少训练参数量（从 200M 降低到 15M）</li>
@@ -177,7 +177,7 @@
 
         <!-- Section 7: 边缘部署 -->
         <section class="detail-section reveal" id="edge">
-            <h2>边缘设备部署优化</h2>
+            <h2 data-i18n="bs_s7">边缘设备部署优化</h2>
             <p>产线环境通常没有高性能服务器，需要将模型部署到边缘设备（如 NVIDIA Jetson Orin）。以下是我们的优化方案：</p>
             <ul>
                 <li><strong>模型蒸馏</strong> — 将 SAM 2-Large 的知识蒸馏到 SAM 2-Small，模型大小从 900MB 压缩到 150MB</li>
@@ -191,7 +191,7 @@
 
         <!-- Section 8: 实际效果 -->
         <section class="detail-section reveal" id="results">
-            <h2>实际产线效果</h2>
+            <h2 data-i18n="bs_s8">实际产线效果</h2>
             <p>系统在某电子元器件工厂的 SMT 产线上线后，取得了显著的效果：</p>
             <ul>
                 <li><strong>缺陷检出率</strong> — 从人工检测的 85% 提升到 AI 系统的 <strong>97.5%</strong></li>
@@ -204,7 +204,7 @@
 
         <!-- Section 9: 总结 -->
         <section class="detail-section reveal" id="conclusion">
-            <h2>总结与展望</h2>
+            <h2 data-i18n="bs_s9">总结与展望</h2>
             <p>SAM 2 为工业质检带来了范式转变：从 "为每种缺陷训练专用模型" 变为 "用通用基座模型 + 少量 Prompt 适配新场景"。这种方式大幅降低了 AI 质检的落地门槛，使得中小工厂也能快速部署 AI 检测系统。</p>
             <p>未来我们计划探索以下方向：</p>
             <ul>
@@ -243,6 +243,7 @@
     <!-- ============ BACK TO TOP ============ -->
     <button class="back-to-top" id="backToTop" title="回到顶部">↑</button>
 
+    <script src="../js/i18n.js"></script>
     <script src="../js/detail.js"></script>
 </body>
 </html>

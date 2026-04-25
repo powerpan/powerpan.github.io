@@ -26,10 +26,10 @@
     <nav id="nav">
         <a href="../index.html" class="nav-logo magnetic" data-hover>ERIC<span class="dot">.</span></a>
         <ul class="nav-center">
-            <li><a href="../index.html#about" data-hover>// 关于</a></li>
-            <li><a href="../index.html#projects" data-hover>// 项目</a></li>
-            <li><a href="../index.html#blog" data-hover>// 博客</a></li>
-            <li><a href="../index.html#contact" data-hover>// 联系</a></li>
+            <li><a href="../index.html#about" data-hover data-i18n="nav_about">// 关于</a></li>
+            <li><a href="../index.html#projects" data-hover data-i18n="nav_projects">// 项目</a></li>
+            <li><a href="../index.html#blog" data-hover data-i18n="nav_blog">// 博客</a></li>
+            <li><a href="../index.html#contact" data-hover data-i18n="nav_contact">// 联系</a></li>
         </ul>
         <div class="nav-status">
             <span class="status-dot"></span>
@@ -58,7 +58,7 @@
             返回博客
         </a>
         <div class="blog-article-tag reveal">Web/AI</div>
-        <h1 class="blog-article-title reveal reveal-d1">WebGPU 入门：在浏览器中运行深度学习推理的性能优化指南</h1>
+        <h1 class="blog-article-title reveal reveal-d1" data-i18n-html="bw_title">WebGPU 入门：在浏览器中运行深度学习推理的性能优化指南</h1>
         <div class="blog-article-meta reveal reveal-d2">
             <span>📅 2025.11.10</span>
             <span>⏱️ 15 min</span>
@@ -71,7 +71,7 @@
 
         <!-- Section 1: 概述 -->
         <section class="detail-section reveal" id="intro">
-            <h2>概述</h2>
+            <h2 data-i18n="bw_s1">概述</h2>
             <p>WebGPU 正在彻底改变浏览器中高性能计算的格局。作为 WebGL 的继任者，它不仅提供了更现代的图形 API，更重要的是暴露了强大的 Compute Shader 能力——这意味着我们终于可以在浏览器中高效地运行深度学习推理，而无需依赖 WebAssembly 的 workaround。</p>
             <p>作为一名在学习视觉模型开发的学生，我对"能否在浏览器中跑模型"这个问题特别感兴趣。本文将从零开始，带你了解 WebGPU 的核心概念，并通过实际的 ML 推理案例，展示如何在浏览器中获得接近原生 GPU 的性能。</p>
             <blockquote>WebGPU 的出现标志着浏览器从 "图形渲染工具" 升级为 "通用 GPU 计算平台"，这是 Web 平台能力的一次质的飞跃。</blockquote>
@@ -79,7 +79,7 @@
 
         <!-- Section 2: WebGPU 基础 -->
         <section class="detail-section reveal" id="fundamentals">
-            <h2>WebGPU 核心概念</h2>
+            <h2 data-i18n="bw_s2">WebGPU 核心概念</h2>
             <p>WebGPU 是由 W3C GPU Working Group 开发的全新 Web API，设计灵感来自 Vulkan、Metal 和 Direct3D 12。与 WebGL 相比，它提供了更底层的 GPU 访问能力，同时保持了 Web 平台的安全性和可移植性。</p>
             <p>WebGPU 的核心抽象包括：</p>
             <ul>
@@ -94,7 +94,7 @@
 
         <!-- Section 3: Compute Shader -->
         <section class="detail-section reveal" id="compute">
-            <h2>Compute Pipeline 搭建</h2>
+            <h2 data-i18n="bw_s3">Compute Pipeline 搭建</h2>
             <p>WebGPU 的使用流程遵循一个清晰的模式：请求适配器 - 请求设备 - 创建 Buffer - 编写 Shader - 构建 Pipeline - 提交执行。每一步都是显式的，给你最大的控制权。</p>
             <p>与 WebGL 的状态机模型不同，WebGPU 采用命令缓冲区（Command Buffer）模式：先录制所有 GPU 命令，然后一次性提交。这种设计天然适合 ML 推理的批处理场景。</p>
             <p>在 ML 推理场景中，典型的工作流程是：</p>
@@ -108,7 +108,7 @@
 
         <!-- Section 4: WGSL Shader 代码 -->
         <section class="detail-section reveal" id="shader">
-            <h2>WGSL 着色器编程</h2>
+            <h2 data-i18n="bw_s4">WGSL 着色器编程</h2>
             <p>WGSL（WebGPU Shading Language）是 WebGPU 的着色器语言，语法类似 Rust，支持向量化操作和共享内存。对于 ML 推理，我们需要将矩阵乘法、激活函数等操作翻译为 WGSL compute shader。</p>
             <p>以下是一个使用 Shared Memory Tiling 优化的矩阵乘法 shader，这是 Transformer 模型中最核心的计算操作：</p>
             <div class="detail-code-block">
@@ -156,7 +156,7 @@
 
         <!-- Section 5: ONNX 模型 -->
         <section class="detail-section reveal" id="onnx">
-            <h2>在浏览器中运行 ONNX 模型</h2>
+            <h2 data-i18n="bw_s5">在浏览器中运行 ONNX 模型</h2>
             <p>ONNX Runtime Web 是连接 WebGPU 和深度学习模型的桥梁。它将 ONNX 模型中的每个算子映射为 WebGPU compute shader，实现了端到端的浏览器内推理。</p>
             <p>核心工作流程包括：</p>
             <ul>
@@ -170,7 +170,7 @@
 
         <!-- Section 6: 内存管理 -->
         <section class="detail-section reveal" id="memory">
-            <h2>GPU 内存管理策略</h2>
+            <h2 data-i18n="bw_s6">GPU 内存管理策略</h2>
             <p>WebGPU 的内存模型与原生 GPU API 非常相似。Buffer 是 GPU 可见的内存块，关键的优化点在于最小化 CPU 与 GPU 之间的数据传输。</p>
             <p>对于 ML 推理场景，推荐以下最佳实践：</p>
             <ul>
@@ -185,7 +185,7 @@
 
         <!-- Section 7: 性能基准 -->
         <section class="detail-section reveal" id="benchmark">
-            <h2>性能基准测试</h2>
+            <h2 data-i18n="bw_s7">性能基准测试</h2>
             <p>我们在三种方案上跑了一系列基准测试，使用相同的 MobileNetV3 模型处理 224x224 的输入图像。测试环境为 MacBook Pro M3 Max + Chrome 125。</p>
             <ul>
                 <li><strong>WebGPU Compute Shader</strong> — 8ms / inference, GPU 利用率 92%</li>
@@ -198,7 +198,7 @@
 
         <!-- Section 8: 实战建议 -->
         <section class="detail-section reveal" id="tips">
-            <h2>实战建议与最佳实践</h2>
+            <h2 data-i18n="bw_s8">实战建议与最佳实践</h2>
             <p>基于我们在生产环境中的经验，总结以下 WebGPU ML 推理的最佳实践：</p>
             <ul>
                 <li><strong>渐进增强</strong> — 首选 WebGPU，fallback 到 WebGL，最后 fallback 到 WASM，确保最大兼容性</li>
@@ -236,6 +236,7 @@
     <!-- ============ BACK TO TOP ============ -->
     <button class="back-to-top" id="backToTop" title="回到顶部">↑</button>
 
+    <script src="../js/i18n.js"></script>
     <script src="../js/detail.js"></script>
 </body>
 </html>

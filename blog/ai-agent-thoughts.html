@@ -21,10 +21,10 @@
     <nav id="nav">
         <a href="../index.html" class="nav-logo magnetic" data-hover>ERIC<span class="dot">.</span></a>
         <ul class="nav-center">
-            <li><a href="../index.html#about" data-hover>// 关于</a></li>
-            <li><a href="../index.html#projects" data-hover>// 项目</a></li>
-            <li><a href="../index.html#blog" data-hover>// 博客</a></li>
-            <li><a href="../index.html#contact" data-hover>// 联系</a></li>
+            <li><a href="../index.html#about" data-hover data-i18n="nav_about">// 关于</a></li>
+            <li><a href="../index.html#projects" data-hover data-i18n="nav_projects">// 项目</a></li>
+            <li><a href="../index.html#blog" data-hover data-i18n="nav_blog">// 博客</a></li>
+            <li><a href="../index.html#contact" data-hover data-i18n="nav_contact">// 联系</a></li>
         </ul>
         <div class="nav-status"><span class="status-dot"></span>Open to work</div>
         <button class="nav-hamburger" id="navHamburger" aria-label="Menu"><span></span><span></span><span></span></button>
@@ -45,7 +45,7 @@
             返回博客
         </a>
         <div class="blog-article-tag reveal">Industry</div>
-        <h1 class="blog-article-title reveal reveal-d1">AI Agent：重塑工作流的变革者，还是新一轮泡沫？</h1>
+        <h1 class="blog-article-title reveal reveal-d1" data-i18n-html="ba_title">AI Agent：重塑工作流的变革者，还是新一轮泡沫？</h1>
         <div class="blog-article-meta reveal reveal-d2">
             <span>📅 2026.04.20</span>
             <span>⏱️ 12 min</span>
@@ -55,13 +55,13 @@
 
     <article class="blog-article-body">
         <section class="detail-section reveal" id="intro">
-            <h2>引言</h2>
+            <h2 data-i18n="ba_s1">引言</h2>
             <p>2025 年以来，AI Agent 成为了科技圈最炙手可热的概念。从 Cursor、Devin 到各种 Copilot，从「一句话生成一个应用」到「AI 自主完成整个项目」，Agent 似乎正在重新定义人与计算机的交互方式。作为一名正在学习和实践 AI 技术的学生开发者，我想从个人和企业两个维度，冷静地谈谈 AI Agent 带来的变革与隐忧。</p>
             <blockquote>Agent 的本质不是「替代人类」，而是「重新分配注意力」——它把人从重复性劳动中解放出来，但也对人的判断力和创造力提出了更高的要求。</blockquote>
         </section>
 
         <section class="detail-section reveal" id="what-is-agent">
-            <h2>什么是 AI Agent？</h2>
+            <h2 data-i18n="ba_s2">什么是 AI Agent？</h2>
             <p>严格来说，AI Agent 是一个能够<strong>自主感知环境、制定计划、执行动作并根据反馈迭代</strong>的智能体。与传统的「输入-输出」式 LLM 调用不同，Agent 具备以下核心能力：</p>
             <ul>
                 <li><strong>工具调用（Tool Use）</strong> — 能够调用外部 API、执行代码、读写文件、搜索信息</li>
@@ -73,7 +73,7 @@
         </section>
 
         <section class="detail-section reveal" id="individual">
-            <h2>对个人开发者的影响</h2>
+            <h2 data-i18n="ba_s3">对个人开发者的影响</h2>
             <p>对于个人开发者来说，AI Agent 带来的变化是深刻且双面的：</p>
             <p><strong>积极面：</strong></p>
             <ul>
@@ -90,7 +90,7 @@
         </section>
 
         <section class="detail-section reveal" id="enterprise">
-            <h2>对企业的机遇与挑战</h2>
+            <h2 data-i18n="ba_s4">对企业的机遇与挑战</h2>
             <p>企业级 AI Agent 的落地远比个人场景复杂。目前主要的应用方向包括：</p>
             <ul>
                 <li><strong>客服自动化</strong> — Agent 处理 80% 的常规咨询，人工只介入复杂 case，客服成本降低 40-60%</li>
@@ -102,7 +102,7 @@
         </section>
 
         <section class="detail-section reveal" id="future">
-            <h2>未来展望</h2>
+            <h2 data-i18n="ba_s5">未来展望</h2>
             <p>我认为 AI Agent 正处于 Gartner 技术成熟度曲线的「膨胀期」向「幻灭期」过渡的阶段。短期内会有大量炒作退潮、项目失败，但长期来看，Agent 将成为软件开发和知识工作的基础设施。</p>
             <p>对于个人开发者，我的建议是：<strong>用 Agent 提升效率，但不要放弃深度理解</strong>。用 Agent 写代码可以，但要能读懂每一行；用 Agent 做设计可以，但要能判断好坏。未来的赢家不是「用 Agent 最多的人」，而是「最懂得何时用、如何用 Agent 的人」。</p>
             <p>对于企业，关键是<strong>找到 Agent 的甜蜜点</strong>——那些容错率高、重复性强、规则明确的场景。不要试图让 Agent 做它不擅长的事，而是让它在擅长的领域做到极致。</p>
@@ -125,6 +125,7 @@
         </div>
     </footer>
     <button class="back-to-top" id="backToTop" title="回到顶部">↑</button>
+    <script src="../js/i18n.js"></script>
     <script src="../js/detail.js"><\/script>
 </body>
 </html>

@@ -26,10 +26,10 @@
     <nav id="nav">
         <a href="../index.html" class="nav-logo magnetic" data-hover>ERIC<span class="dot">.</span></a>
         <ul class="nav-center">
-            <li><a href="../index.html#about" data-hover>// 关于</a></li>
-            <li><a href="../index.html#projects" data-hover>// 项目</a></li>
-            <li><a href="../index.html#blog" data-hover>// 博客</a></li>
-            <li><a href="../index.html#contact" data-hover>// 联系</a></li>
+            <li><a href="../index.html#about" data-hover data-i18n="nav_about">// 关于</a></li>
+            <li><a href="../index.html#projects" data-hover data-i18n="nav_projects">// 项目</a></li>
+            <li><a href="../index.html#blog" data-hover data-i18n="nav_blog">// 博客</a></li>
+            <li><a href="../index.html#contact" data-hover data-i18n="nav_contact">// 联系</a></li>
         </ul>
         <div class="nav-status">
             <span class="status-dot"></span>
@@ -58,7 +58,7 @@
             返回博客
         </a>
         <div class="blog-article-tag reveal">AI/CV</div>
-        <h1 class="blog-article-title reveal reveal-d1">从 DETR 到 YOLOv8：Transformer 在目标检测中的演进与工程实践</h1>
+        <h1 class="blog-article-title reveal reveal-d1" data-i18n-html="bt_title">从 DETR 到 YOLOv8：Transformer 在目标检测中的演进与工程实践</h1>
         <div class="blog-article-meta reveal reveal-d2">
             <span>📅 2026.03.15</span>
             <span>⏱️ 12 min</span>
@@ -71,7 +71,7 @@
 
         <!-- Section 1: 引言 -->
         <section class="detail-section reveal" id="intro">
-            <h2>引言</h2>
+            <h2 data-i18n="bt_s1">引言</h2>
             <p>目标检测是计算机视觉中最核心的任务之一。从 R-CNN 系列到 YOLO 系列，两阶段和单阶段检测器在过去十年中不断演进。然而，2020 年 DETR 的出现彻底改变了游戏规则——它首次将 Transformer 架构引入目标检测，用端到端的方式取代了传统的 anchor-based 方法。</p>
             <p>本文将从 DETR 的核心思想出发，逐步介绍其演进路线，并分享我在工程实践中遇到的挑战与解决方案。</p>
             <blockquote>DETR 的核心贡献在于将目标检测从 "启发式设计" 转变为 "端到端学习"，这是范式层面的变革。</blockquote>
@@ -79,7 +79,7 @@
 
         <!-- Section 2: DETR 架构 -->
         <section class="detail-section reveal" id="architecture">
-            <h2>DETR 架构解析</h2>
+            <h2 data-i18n="bt_s2">DETR 架构解析</h2>
             <p>DETR（Detection Transformer）的核心思想是将目标检测建模为一个集合预测问题。它使用 Transformer 的 encoder-decoder 结构，通过匈牙利匹配算法直接预测固定数量的 bounding box，完全消除了 anchor 和 NMS 后处理。</p>
             <p>整体架构由三个核心组件构成：</p>
             <ul>
@@ -92,7 +92,7 @@
 
         <!-- Section 3: Attention 机制 -->
         <section class="detail-section reveal" id="attention">
-            <h2>注意力机制的工程优化</h2>
+            <h2 data-i18n="bt_s3">注意力机制的工程优化</h2>
             <p>Transformer 的核心计算瓶颈在于注意力机制。标准的自注意力复杂度为 O(n²)，对于高分辨率特征图来说计算开销巨大。在工程实践中，我们采用了以下优化策略：</p>
             <ul>
                 <li><strong>Deformable Attention</strong> — 只关注少量关键采样点，将复杂度从 O(n²) 降低到 O(n)，同时保持检测精度</li>
@@ -105,7 +105,7 @@
 
         <!-- Section 4: 模型优化 -->
         <section class="detail-section reveal" id="optimization">
-            <h2>模型优化：TensorRT 与 ONNX</h2>
+            <h2 data-i18n="bt_s4">模型优化：TensorRT 与 ONNX</h2>
             <p>将 DETR 模型从 PyTorch 移植到生产环境需要经过多个优化阶段。以下是我们的完整优化流水线：</p>
             <ul>
                 <li><strong>ONNX 导出</strong> — 使用 torch.onnx.export 将模型导出为 ONNX 格式，注意需要处理动态 axis 和自定义算子</li>
@@ -118,7 +118,7 @@
 
         <!-- Section 5: 代码实现 -->
         <section class="detail-section reveal" id="code">
-            <h2>PyTorch 推理代码</h2>
+            <h2 data-i18n="bt_s5">PyTorch 推理代码</h2>
             <p>以下是完整的推理流水线代码，包括模型加载、预处理、推理和后处理：</p>
             <div class="detail-code-block">
                 <div class="detail-code-header">
@@ -160,7 +160,7 @@
 
         <!-- Section 6: Benchmark -->
         <section class="detail-section reveal" id="benchmark">
-            <h2>基准测试结果</h2>
+            <h2 data-i18n="bt_s6">基准测试结果</h2>
             <p>我们在 COCO 2017 验证集上进行了全面的基准测试，对比了不同模型和部署方案的性能表现：</p>
             <ul>
                 <li><strong>原始 DETR (ResNet-50)</strong> — 42.0 mAP, 45ms latency (V100)</li>
@@ -175,7 +175,7 @@
 
         <!-- Section 7: 工程部署 -->
         <section class="detail-section reveal" id="deployment">
-            <h2>工程部署实践</h2>
+            <h2 data-i18n="bt_s7">工程部署实践</h2>
             <p>将 DETR 系列模型部署到生产环境面临几个关键挑战：</p>
             <ul>
                 <li><strong>动态 Batch</strong> — 不同视频流的帧率和分辨率不同，需要支持动态 batch size，我们通过 TensorRT 的 dynamic shape 机制解决</li>
@@ -188,7 +188,7 @@
 
         <!-- Section 8: 总结 -->
         <section class="detail-section reveal" id="conclusion">
-            <h2>总结与展望</h2>
+            <h2 data-i18n="bt_s8">总结与展望</h2>
             <p>Transformer 在目标检测领域的应用才刚刚开始。从 DETR 到 Deformable DETR，再到最新的 DINO 和 Co-DETR，这个领域正在快速演进。未来几个值得关注的方向：</p>
             <ul>
                 <li><strong>Vision-Language 融合</strong> — 结合 CLIP 等视觉语言模型，实现开放词汇目标检测</li>
@@ -225,6 +225,7 @@
     <!-- ============ BACK TO TOP ============ -->
     <button class="back-to-top" id="backToTop" title="回到顶部">↑</button>
 
+    <script src="../js/i18n.js"></script>
     <script src="../js/detail.js"></script>
 </body>
 </html>

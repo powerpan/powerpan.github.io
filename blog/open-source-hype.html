@@ -21,10 +21,10 @@
     <nav id="nav">
         <a href="../index.html" class="nav-logo magnetic" data-hover>ERIC<span class="dot">.</span></a>
         <ul class="nav-center">
-            <li><a href="../index.html#about" data-hover>// 关于</a></li>
-            <li><a href="../index.html#projects" data-hover>// 项目</a></li>
-            <li><a href="../index.html#blog" data-hover>// 博客</a></li>
-            <li><a href="../index.html#contact" data-hover>// 联系</a></li>
+            <li><a href="../index.html#about" data-hover data-i18n="nav_about">// 关于</a></li>
+            <li><a href="../index.html#projects" data-hover data-i18n="nav_projects">// 项目</a></li>
+            <li><a href="../index.html#blog" data-hover data-i18n="nav_blog">// 博客</a></li>
+            <li><a href="../index.html#contact" data-hover data-i18n="nav_contact">// 联系</a></li>
         </ul>
         <div class="nav-status"><span class="status-dot"></span>Open to work</div>
         <button class="nav-hamburger" id="navHamburger" aria-label="Menu"><span></span><span></span><span></span></button>
@@ -45,7 +45,7 @@
             返回博客
         </a>
         <div class="blog-article-tag reveal">Industry</div>
-        <h1 class="blog-article-title reveal reveal-d1">开源项目的「三个月定律」：从爆火到无人问津</h1>
+        <h1 class="blog-article-title reveal reveal-d1" data-i18n-html="bo_title">开源项目的「三个月定律」：从爆火到无人问津</h1>
         <div class="blog-article-meta reveal reveal-d2">
             <span>📅 2026.04.10</span>
             <span>⏱️ 10 min</span>
@@ -55,13 +55,13 @@
 
     <article class="blog-article-body">
         <section class="detail-section reveal" id="intro">
-            <h2>引言</h2>
+            <h2 data-i18n="bo_s1">引言</h2>
             <p>你有没有注意到一个规律？每隔几个月，GitHub 上就会冒出一个「革命性」的开源项目——Star 数在一周内暴涨到 10K+，Twitter 上到处是「This changes everything」的推文，技术群里人人都在转发。然而三个月后再去看，Issue 区堆满了未解决的 bug，最近一次 commit 已经是两个月前，曾经的「革命者」悄无声息地躺在你的 Star 列表里吃灰。</p>
             <p>从 OpenClaw 到各种 AI Agent 框架、推理引擎、编程工具，这种「爆火→跟风→冷寂」的循环似乎已经成为开源社区的常态。今天我想认真分析一下：为什么会这样？这正常吗？我们作为开发者应该如何看待？</p>
         </section>
 
         <section class="detail-section reveal" id="phenomenon">
-            <h2>「三个月定律」的典型轨迹</h2>
+            <h2 data-i18n="bo_s2">「三个月定律」的典型轨迹</h2>
             <p>一个现象级开源项目的生命周期通常遵循这样的轨迹：</p>
             <ul>
                 <li><strong>第 1 周：引爆期</strong> — 项目发布，配合精心设计的 landing page 和 demo 视频，在 Hacker News / Product Hunt / Twitter 上引发病毒式传播。Star 数日增 2000+</li>
@@ -72,7 +72,7 @@
         </section>
 
         <section class="detail-section reveal" id="openclaw">
-            <h2>OpenClaw 现象分析</h2>
+            <h2 data-i18n="bo_s3">OpenClaw 现象分析</h2>
             <p>以 OpenClaw 为例（这里指代一类现象，而非特指某个项目），这类项目有几个共同特征：</p>
             <p><strong>为什么能火？</strong></p>
             <ul>
@@ -91,7 +91,7 @@
         </section>
 
         <section class="detail-section reveal" id="psychology">
-            <h2>社区心理与从众效应</h2>
+            <h2 data-i18n="bo_s4">社区心理与从众效应</h2>
             <p>开源社区的热度周期本质上是一种<strong>技术版的 FOMO（Fear of Missing Out）</strong>。当一个项目在社交媒体上获得大量关注时，开发者会出于以下心理参与其中：</p>
             <ul>
                 <li><strong>错失恐惧</strong> — 「大家都在用，我不用就落后了」</li>
@@ -103,7 +103,7 @@
         </section>
 
         <section class="detail-section reveal" id="lesson">
-            <h2>我们应该学到什么？</h2>
+            <h2 data-i18n="bo_s5">我们应该学到什么？</h2>
             <p>作为一个经历过多次「追热点→失望→回归理性」循环的开发者，我总结了几条个人原则：</p>
             <ul>
                 <li><strong>区分「有趣的」和「有用的」</strong> — 一个项目可以同时很有趣但没用。花 30 分钟体验一下就够了，不需要投入三天去深度集成</li>
@@ -116,7 +116,7 @@
         </section>
 
         <section class="detail-section reveal" id="conclusion">
-            <h2>结语</h2>
+            <h2 data-i18n="bo_s6">结语</h2>
             <p>开源社区的「三个月定律」不是什么坏事——它本质上是市场机制在技术领域的自然表达。大量项目被创建，少部分存活，最终沉淀下来的才是真正有价值的东西。作为开发者，我们不需要为每一个新项目的热度负责，也不需要为错过什么而焦虑。</p>
             <p>保持好奇心，但不要失去判断力。追热点可以，但记得回家。</p>
         </section>
@@ -139,6 +139,7 @@
         </div>
     </footer>
     <button class="back-to-top" id="backToTop" title="回到顶部">↑</button>
+    <script src="../js/i18n.js"></script>
     <script src="../js/detail.js"><\/script>
 </body>
 </html>

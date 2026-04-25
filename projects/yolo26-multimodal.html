@@ -21,10 +21,10 @@
     <nav id="nav">
         <a href="../index.html" class="nav-logo magnetic" data-hover>ERIC<span class="dot">.</span></a>
         <ul class="nav-center">
-            <li><a href="../index.html#about" data-hover>// 关于</a></li>
-            <li><a href="../index.html#projects" data-hover>// 项目</a></li>
-            <li><a href="../index.html#blog" data-hover>// 博客</a></li>
-            <li><a href="../index.html#contact" data-hover>// 联系</a></li>
+            <li><a href="../index.html#about" data-hover data-i18n="nav_about">// 关于</a></li>
+            <li><a href="../index.html#projects" data-hover data-i18n="nav_projects">// 项目</a></li>
+            <li><a href="../index.html#blog" data-hover data-i18n="nav_blog">// 博客</a></li>
+            <li><a href="../index.html#contact" data-hover data-i18n="nav_contact">// 联系</a></li>
         </ul>
         <div class="nav-status"><span class="status-dot"></span>Open to work</div>
         <button class="nav-hamburger" id="navHamburger" aria-label="Menu"><span></span><span></span><span></span></button>
@@ -56,7 +56,7 @@
             BACK
         </a>
         <div class="detail-tag">AI Vision · YOLO26 · Multi-head</div>
-        <h1 class="detail-title">YOLO26 <span class="hl">Multimodal</span></h1>
+        <h1 class="detail-title" data-i18n-html="yolo26_title">YOLO26 <span class="hl">Multimodal</span></h1>
         <p class="detail-subtitle">基于 YOLO26 的多模态视觉检测系统，通过可复用的 Backbone 与 Neck 架构，设计三个独立检测头，在单次前向推理中同时输出目标检测、关键点定位与实例分割三类结果。</p>
         <div class="detail-meta">
             <div class="detail-meta-item"><span class="detail-meta-label">Role</span><span class="detail-meta-value">独立开发者</span></div>
@@ -85,7 +85,7 @@
         <!-- Overview -->
         <div class="detail-section reveal" id="overview">
             <div class="detail-section-label">Overview</div>
-            <h2 class="detail-section-title">一个模型，三重感知</h2>
+            <h2 class="detail-section-title" data-i18n="yolo26_s1">一个模型，三重感知</h2>
             <p class="detail-text">
                 在实际视觉检测场景中，我们往往需要同时获取目标的<strong>位置</strong>（检测框）、<strong>形态</strong>（关键点）和<strong>轮廓</strong>（分割掩码）。
                 传统方案通常需要为每种任务单独训练一个模型，再通过多模型级联或集成的方式组合输出——这不仅增加了系统复杂度，也带来了不可忽视的推理延迟。
@@ -100,7 +100,7 @@
         <!-- Architecture -->
         <div class="detail-section reveal" id="architecture">
             <div class="detail-section-label">Architecture</div>
-            <h2 class="detail-section-title">多头架构设计</h2>
+            <h2 class="detail-section-title" data-i18n="yolo26_s2">多头架构设计</h2>
             <p class="detail-text">
                 整体架构遵循 YOLO 系列的 One-Stage 设计哲学，但在 Head 层做了关键创新。传统 YOLO 的 Head 通常只负责单一的检测任务（bounding box + class），
                 而我们将 Head 拆分为三个功能独立的分支，每个分支有自己的输出通道数、激活函数和损失计算逻辑。
@@ -130,7 +130,7 @@
         <!-- Three Heads -->
         <div class="detail-section reveal" id="heads">
             <div class="detail-section-label">Three Heads</div>
-            <h2 class="detail-section-title">三头设计详解</h2>
+            <h2 class="detail-section-title" data-i18n="yolo26_s3">三头设计详解</h2>
             <div class="detail-features">
                 <div class="detail-feature" data-hover>
                     <div class="detail-feature-icon">📦</div>
@@ -165,7 +165,7 @@
         <!-- Loss -->
         <div class="detail-section reveal" id="loss">
             <div class="detail-section-label">Loss Function</div>
-            <h2 class="detail-section-title">多任务损失函数设计</h2>
+            <h2 class="detail-section-title" data-i18n="yolo26_s4">多任务损失函数设计</h2>
             <p class="detail-text">
                 三个 Head 各自拥有独立的损失函数，总损失为加权和：
             </p>
@@ -186,7 +186,7 @@
         <!-- Training -->
         <div class="detail-section reveal" id="training">
             <div class="detail-section-label">Training Strategy</div>
-            <h2 class="detail-section-title">训练策略</h2>
+            <h2 class="detail-section-title" data-i18n="yolo26_s5">训练策略</h2>
             <p class="detail-text">
                 数据集方面，我们收集并标注了约 <strong>12,000 张</strong>多任务标注图像，每张图像同时包含检测框、关键点坐标和分割掩码三类标注。
                 数据增强采用 Mosaic + MixUp + Random HSV + 水平翻转的组合策略，并针对关键点任务做了特殊的几何变换（确保关键点坐标同步变换）。
@@ -201,7 +201,7 @@
         <!-- Code -->
         <div class="detail-section reveal" id="code">
             <div class="detail-section-label">Code</div>
-            <h2 class="detail-section-title">核心推理代码</h2>
+            <h2 class="detail-section-title" data-i18n="yolo26_s6">核心推理代码</h2>
             <p class="detail-text">多头推理的前向传播流程</p>
             <div class="detail-code-block">
                 <div class="detail-code-header">
@@ -246,7 +246,7 @@
         <!-- Results -->
         <div class="detail-section reveal" id="results">
             <div class="detail-section-label">Results</div>
-            <h2 class="detail-section-title">实验结果</h2>
+            <h2 class="detail-section-title" data-i18n="yolo26_s7">实验结果</h2>
             <div class="detail-stats">
                 <div class="detail-stat" data-hover>
                     <div class="detail-stat-num">48.2</div>
@@ -281,6 +281,7 @@
         </div>
     </footer>
     <button class="back-to-top" id="backToTop" title="回到顶部">↑</button>
+    <script src="../js/i18n.js"></script>
     <script src="../js/detail.js"><\/script>
 </body>
 </html>

@@ -30,6 +30,7 @@ const I18N = {
     stat_projects: '完成项目',
     stat_years: '年学习',
     stat_repos: '开源仓库',
+    stat_stars: 'GitHub Stars',
     terminal_cmd: 'neofetch --short',
     terminal_output_1: 'Eric — Full-Stack & AI Vision Developer',
     terminal_output_2: '📍 广州 · 华南理工大学',
@@ -70,6 +71,10 @@ const I18N = {
     skills_label: '// SKILLS',
     skills_title: '技能<span class="outline">矩阵</span>',
     skills_subtitle: '持续学习，持续精进',
+    skill_cat_frontend: '前端',
+    skill_cat_backend: '后端',
+    skill_cat_ai: 'AI / ML',
+    skill_cat_bigdata: '大数据 / DevOps',
 
     // Projects
     projects_label: '// PROJECTS',
@@ -87,6 +92,12 @@ const I18N = {
     proj4_tag: 'DevTools · PHP · Vue',
     proj4_title: 'StackForge CLI',
     proj4_desc: '全栈项目脚手架工具，一键生成 Vue 前端 + 后端 API + CI/CD 配置，提升团队开发效率',
+    proj5_tag: 'AI Vision · YOLO26 · Multi-head',
+    proj5_title: 'YOLO26 Multimodal',
+    proj5_desc: '基于 YOLO26 的多模态视觉检测系统，单模型同时输出检测、关键点、分割三类结果',
+    proj6_tag: 'Edge AI · YOLOv5 · RK3588',
+    proj6_title: 'Metro Gate Detection',
+    proj6_desc: '基于 YOLOv5 的地铁闸机翻越检测，部署至 RK3588 边缘设备实时推理',
 
     // Featured Code
     code_label: '// FEATURED CODE',
@@ -102,6 +113,8 @@ const I18N = {
     blog3_title: 'WebGPU 入门：在浏览器中运行深度学习推理的性能优化指南',
     blog4_title: '设计可扩展的图像处理流水线：从 Python 脚本到 Kubernetes 集群',
     blog5_title: 'SAM 2 在工业质检中的落地实践：从 Prompt Engineering 到产线部署',
+    blog6_title: 'AI Agent：重塑工作流的变革者，还是新一轮泡沫？',
+    blog7_title: '开源项目的「三个月定律」：从爆火到无人问津',
 
     // GitHub
     github_label: '// GITHUB',
@@ -121,6 +134,9 @@ const I18N = {
     test1_text: 'Eric 是我见过最有工程直觉的同学之一。他不仅能快速理解复杂的技术问题，还能给出优雅且高效的解决方案，在视觉检测项目中的表现尤为突出。',
     test2_text: '和 Eric 一起做课程项目是一段很棒的经历。他对实用技术的执着以及把知识落到实处的态度让我们整个小组都受益匪浅，尤其是在大数据课程相关技术的实践上。',
     test3_text: 'Eric 的全栈能力令人印象深刻，从前端 Vue 到后端 Python/Java，再到 AI 模型训练，他都能游刃有余地驾驭。强烈推荐！',
+    test1_role: '带队导师 @ AI 科技公司',
+    test2_role: '项目组长 @ 华南理工大学',
+    test3_role: '实习同事 @ 互联网公司',
 
     // Next Chapter
     next_label: '// 下一站',
@@ -176,6 +192,133 @@ const I18N = {
 
     // Back to top
     back_to_top: '回到顶部',
+
+    // Detail: Metro Gate
+    metro_title: 'Metro <span class="hl">Gate</span> Detection',
+    metro_s1: '地铁安全的 AI 守门人',
+    metro_s2: '场景挑战',
+    metro_s3: '模型设计',
+    metro_s4: 'RK3588 硬件平台',
+    metro_s5: '部署流程',
+    metro_s6: '推理优化',
+    metro_s7: 'RKNN 推理代码',
+    metro_s8: '部署效果',
+
+    // Detail: YOLO26 Multimodal
+    yolo26_title: 'YOLO26 <span class="hl">Multimodal</span>',
+    yolo26_s1: '一个模型，三重感知',
+    yolo26_s2: '多头架构设计',
+    yolo26_s3: '三头设计详解',
+    yolo26_s4: '多任务损失函数设计',
+    yolo26_s5: '训练策略',
+    yolo26_s6: '核心推理代码',
+    yolo26_s7: '实验结果',
+
+    // Detail: NeuralVision Pro
+    nv_title: 'Neural<span class="hl">Vision</span> Pro',
+    nv_s1: 'YOLO + SAM 驱动的工业质检系统',
+    nv_s2: '技术架构',
+    nv_s3: '核心能力',
+    nv_s4: '性能指标',
+    nv_s5: '核心推理流程',
+
+    // Detail: DataFlow Pipeline
+    df_title: 'Data<span class="hl">Flow</span> Pipeline',
+    df_s1: '实时流式数据处理平台',
+    df_s2: '技术架构',
+    df_s3: '核心能力',
+    df_s4: '性能指标',
+    df_s5: 'Flink 流处理作业',
+
+    // Detail: PixelMind SDK
+    pm_title: 'PixelMind <span class="hl">SDK</span>',
+    pm_s1: '轻量级视觉推理引擎',
+    pm_s2: '技术选型',
+    pm_s3: '核心能力',
+    pm_s4: '性能指标',
+    pm_s5: 'Python 推理示例',
+
+    // Detail: StackForge CLI
+    sf_title: 'Stack<span class="hl">Forge</span> CLI',
+    sf_s1: '为什么需要 StackForge？',
+    sf_s2: '核心技术',
+    sf_s3: '设计哲学',
+    sf_s4: '影响力',
+    sf_s5: '快速上手',
+
+    // Detail Blog: AI Agent
+    ba_title: 'AI Agent：重塑工作流的变革者，还是新一轮泡沫？',
+    ba_s1: '引言',
+    ba_s2: '什么是 AI Agent？',
+    ba_s3: '对个人开发者的影响',
+    ba_s4: '对企业的机遇与挑战',
+    ba_s5: '未来展望',
+
+    // Detail Blog: Open Source Hype
+    bo_title: '开源项目的「三个月定律」：从爆火到无人问津',
+    bo_s1: '引言',
+    bo_s2: '「三个月定律」的典型轨迹',
+    bo_s3: 'OpenClaw 现象分析',
+    bo_s4: '社区心理与从众效应',
+    bo_s5: '我们应该学到什么？',
+    bo_s6: '结语',
+
+    // Detail Blog: Transformer Detection
+    bt_title: '从 DETR 到 YOLOv8：Transformer 在目标检测中的演进与工程实践',
+    bt_s1: '引言',
+    bt_s2: 'DETR 架构解析',
+    bt_s3: '注意力机制的工程优化',
+    bt_s4: '模型优化：TensorRT 与 ONNX',
+    bt_s5: 'PyTorch 推理代码',
+    bt_s6: '基准测试结果',
+    bt_s7: '工程部署实践',
+    bt_s8: '总结与展望',
+
+    // Detail Blog: Flink + Kafka
+    bf_title: '实时数据处理架构设计：Flink + Kafka 的流式计算最佳实践',
+    bf_s1: '为什么要用流式计算',
+    bf_s2: '整体架构设计',
+    bf_s3: 'Kafka Topic 设计与配置',
+    bf_s4: 'Flink 核心概念',
+    bf_s5: 'Flink 实时聚合示例',
+    bf_s6: 'Exactly-Once 语义实现',
+    bf_s7: '状态管理与优化',
+    bf_s8: '性能调优实践',
+    bf_s9: '总结',
+
+    // Detail Blog: WebGPU
+    bw_title: 'WebGPU 入门：在浏览器中运行深度学习推理的性能优化指南',
+    bw_s1: '概述',
+    bw_s2: 'WebGPU 核心概念',
+    bw_s3: 'Compute Pipeline 搭建',
+    bw_s4: 'WGSL 着色器编程',
+    bw_s5: '在浏览器中运行 ONNX 模型',
+    bw_s6: 'GPU 内存管理策略',
+    bw_s7: '性能基准测试',
+    bw_s8: '实战建议与最佳实践',
+
+    // Detail Blog: Image Pipeline
+    bi_title: '设计可扩展的图像处理流水线：从 Python 脚本到 Kubernetes 集群',
+    bi_s1: '架构概述',
+    bi_s2: '流水线阶段设计',
+    bi_s3: 'Kafka 流式架构',
+    bi_s4: 'Worker 并发模型',
+    bi_s5: 'Kubernetes 部署配置',
+    bi_s6: '监控与可观测性',
+    bi_s7: '扩展策略',
+    bi_s8: '总结与经验',
+
+    // Detail Blog: SAM2 Inspection
+    bs_title: 'SAM 2 在工业质检中的落地实践：从 Prompt Engineering 到产线部署',
+    bs_s1: '引言',
+    bs_s2: 'SAM 2 架构解析',
+    bs_s3: 'Prompt Engineering 策略',
+    bs_s4: '缺陷检测工作流',
+    bs_s5: 'Python 推理代码',
+    bs_s6: '领域微调策略',
+    bs_s7: '边缘设备部署优化',
+    bs_s8: '实际产线效果',
+    bs_s9: '总结与展望',
   },
 
   en: {
@@ -205,6 +348,7 @@ const I18N = {
     stat_projects: 'Projects',
     stat_years: 'Years Study',
     stat_repos: 'OSS Repos',
+    stat_stars: 'GitHub Stars',
     terminal_cmd: 'neofetch --short',
     terminal_output_1: 'Eric — Full-Stack & AI Vision Developer',
     terminal_output_2: '📍 Guangzhou · SCUT',
@@ -245,6 +389,10 @@ const I18N = {
     skills_label: '// SKILLS',
     skills_title: 'Skills <span class="outline">Matrix</span>',
     skills_subtitle: 'Always learning, always improving',
+    skill_cat_frontend: 'Frontend',
+    skill_cat_backend: 'Backend',
+    skill_cat_ai: 'AI / ML',
+    skill_cat_bigdata: 'Big Data / DevOps',
 
     // Projects
     projects_label: '// PROJECTS',
@@ -262,6 +410,12 @@ const I18N = {
     proj4_tag: 'DevTools · PHP · Vue',
     proj4_title: 'StackForge CLI',
     proj4_desc: 'Full-stack project scaffolding tool, generating Vue frontend + backend API + CI/CD configuration in one click to boost team productivity',
+    proj5_tag: 'AI Vision · YOLO26 · Multi-head',
+    proj5_title: 'YOLO26 Multimodal',
+    proj5_desc: 'Multimodal vision detection system based on YOLO26, outputting detection, keypoints, and segmentation from a single model',
+    proj6_tag: 'Edge AI · YOLOv5 · RK3588',
+    proj6_title: 'Metro Gate Detection',
+    proj6_desc: 'Metro gate vaulting detection based on YOLOv5, deployed on RK3588 edge device for real-time inference',
 
     // Featured Code
     code_label: '// FEATURED CODE',
@@ -277,6 +431,8 @@ const I18N = {
     blog3_title: 'WebGPU Intro: A Performance Optimization Guide for Running Deep Learning Inference in the Browser',
     blog4_title: 'Designing a Scalable Image Processing Pipeline: From Python Scripts to Kubernetes Clusters',
     blog5_title: 'SAM 2 in Industrial Inspection: From Prompt Engineering to Production Line Deployment',
+    blog6_title: 'AI Agents: Reshaping Workflows or the Next Bubble?',
+    blog7_title: 'The "Three-Month Law" of Open Source: From Hype to Abandonment',
 
     // GitHub
     github_label: '// GITHUB',
@@ -296,6 +452,9 @@ const I18N = {
     test1_text: 'Eric is one of the most engineering-intuitive classmates I\'ve ever met. He quickly grasps complex technical problems and delivers elegant, efficient solutions, especially impressive in vision detection projects.',
     test2_text: 'Working with Eric on course projects was a great experience. His dedication to practical technologies and turning ideas into working solutions benefited our whole group, especially in hands-on work around big-data coursework.',
     test3_text: 'Eric\'s full-stack capabilities are impressive — from Vue frontends to Python/Java backends to AI model training, he handles it all with ease. Highly recommended!',
+    test1_role: 'Mentor @ AI Tech Company',
+    test2_role: 'Project Lead @ SCUT',
+    test3_role: 'Intern Colleague @ Internet Company',
 
     // Next Chapter
     next_label: '// NEXT CHAPTER',
@@ -351,6 +510,133 @@ const I18N = {
 
     // Back to top
     back_to_top: 'Back to top',
+
+    // Detail: Metro Gate
+    metro_title: 'Metro <span class="hl">Gate</span> Detection',
+    metro_s1: 'AI Gatekeeper for Metro Safety',
+    metro_s2: 'Scene Challenges',
+    metro_s3: 'Model Design',
+    metro_s4: 'RK3588 Hardware Platform',
+    metro_s5: 'Deployment Pipeline',
+    metro_s6: 'Inference Optimization',
+    metro_s7: 'RKNN Inference Code',
+    metro_s8: 'Deployment Results',
+
+    // Detail: YOLO26 Multimodal
+    yolo26_title: 'YOLO26 <span class="hl">Multimodal</span>',
+    yolo26_s1: 'One Model, Triple Perception',
+    yolo26_s2: 'Multi-Head Architecture',
+    yolo26_s3: 'Three-Head Design Details',
+    yolo26_s4: 'Multi-Task Loss Design',
+    yolo26_s5: 'Training Strategy',
+    yolo26_s6: 'Core Inference Code',
+    yolo26_s7: 'Experimental Results',
+
+    // Detail: NeuralVision Pro
+    nv_title: 'Neural<span class="hl">Vision</span> Pro',
+    nv_s1: 'YOLO + SAM Industrial Inspection System',
+    nv_s2: 'Architecture',
+    nv_s3: 'Core Capabilities',
+    nv_s4: 'Performance Metrics',
+    nv_s5: 'Inference Pipeline',
+
+    // Detail: DataFlow Pipeline
+    df_title: 'Data<span class="hl">Flow</span> Pipeline',
+    df_s1: 'Real-Time Streaming Data Platform',
+    df_s2: 'Architecture',
+    df_s3: 'Core Capabilities',
+    df_s4: 'Performance Metrics',
+    df_s5: 'Flink Streaming Job',
+
+    // Detail: PixelMind SDK
+    pm_title: 'PixelMind <span class="hl">SDK</span>',
+    pm_s1: 'Lightweight Vision Inference Engine',
+    pm_s2: 'Tech Stack',
+    pm_s3: 'Core Capabilities',
+    pm_s4: 'Performance Metrics',
+    pm_s5: 'Python Inference Example',
+
+    // Detail: StackForge CLI
+    sf_title: 'Stack<span class="hl">Forge</span> CLI',
+    sf_s1: 'Why StackForge?',
+    sf_s2: 'Core Technology',
+    sf_s3: 'Design Philosophy',
+    sf_s4: 'Impact',
+    sf_s5: 'Quick Start',
+
+    // Detail Blog: AI Agent
+    ba_title: 'AI Agents: Reshaping Workflows or the Next Bubble?',
+    ba_s1: 'Introduction',
+    ba_s2: 'What is an AI Agent?',
+    ba_s3: 'Impact on Individual Developers',
+    ba_s4: 'Opportunities & Challenges for Enterprises',
+    ba_s5: 'Future Outlook',
+
+    // Detail Blog: Open Source Hype
+    bo_title: 'The "Three-Month Law" of Open Source: From Hype to Abandonment',
+    bo_s1: 'Introduction',
+    bo_s2: 'The Typical Trajectory',
+    bo_s3: 'OpenClaw Phenomenon Analysis',
+    bo_s4: 'Community Psychology & Herd Mentality',
+    bo_s5: 'What Should We Learn?',
+    bo_s6: 'Conclusion',
+
+    // Detail Blog: Transformer Detection
+    bt_title: 'From DETR to YOLOv8: Transformer Evolution in Object Detection',
+    bt_s1: 'Introduction',
+    bt_s2: 'DETR Architecture Analysis',
+    bt_s3: 'Attention Mechanism Optimization',
+    bt_s4: 'Model Optimization: TensorRT & ONNX',
+    bt_s5: 'PyTorch Inference Code',
+    bt_s6: 'Benchmark Results',
+    bt_s7: 'Engineering Deployment',
+    bt_s8: 'Summary & Outlook',
+
+    // Detail Blog: Flink + Kafka
+    bf_title: 'Real-Time Data Processing: Flink + Kafka Best Practices',
+    bf_s1: 'Why Streaming?',
+    bf_s2: 'Overall Architecture',
+    bf_s3: 'Kafka Topic Design',
+    bf_s4: 'Flink Core Concepts',
+    bf_s5: 'Flink Real-Time Aggregation',
+    bf_s6: 'Exactly-Once Semantics',
+    bf_s7: 'State Management',
+    bf_s8: 'Performance Tuning',
+    bf_s9: 'Summary',
+
+    // Detail Blog: WebGPU
+    bw_title: 'WebGPU: Running Deep Learning Inference in the Browser',
+    bw_s1: 'Overview',
+    bw_s2: 'WebGPU Core Concepts',
+    bw_s3: 'Compute Pipeline Setup',
+    bw_s4: 'WGSL Shader Programming',
+    bw_s5: 'Running ONNX Models in Browser',
+    bw_s6: 'GPU Memory Management',
+    bw_s7: 'Performance Benchmarks',
+    bw_s8: 'Best Practices',
+
+    // Detail Blog: Image Pipeline
+    bi_title: 'Scalable Image Processing Pipeline: From Python to Kubernetes',
+    bi_s1: 'Architecture Overview',
+    bi_s2: 'Pipeline Stage Design',
+    bi_s3: 'Kafka Streaming Architecture',
+    bi_s4: 'Worker Concurrency Model',
+    bi_s5: 'Kubernetes Deployment',
+    bi_s6: 'Monitoring & Observability',
+    bi_s7: 'Scaling Strategies',
+    bi_s8: 'Summary & Lessons',
+
+    // Detail Blog: SAM2 Inspection
+    bs_title: 'SAM 2 in Industrial Inspection: From Prompt Engineering to Production',
+    bs_s1: 'Introduction',
+    bs_s2: 'SAM 2 Architecture',
+    bs_s3: 'Prompt Engineering Strategy',
+    bs_s4: 'Defect Detection Workflow',
+    bs_s5: 'Python Inference Code',
+    bs_s6: 'Domain Fine-Tuning',
+    bs_s7: 'Edge Deployment Optimization',
+    bs_s8: 'Production Line Results',
+    bs_s9: 'Summary & Outlook',
   },
 };
 

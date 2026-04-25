@@ -27,10 +27,10 @@
     <nav id="nav">
         <a href="../index.html" class="nav-logo magnetic" data-hover>ERIC<span class="dot">.</span></a>
         <ul class="nav-center">
-            <li><a href="../index.html#about" data-hover>// 关于</a></li>
-            <li><a href="../index.html#projects" data-hover>// 项目</a></li>
-            <li><a href="../index.html#blog" data-hover>// 博客</a></li>
-            <li><a href="../index.html#contact" data-hover>// 联系</a></li>
+            <li><a href="../index.html#about" data-hover data-i18n="nav_about">// 关于</a></li>
+            <li><a href="../index.html#projects" data-hover data-i18n="nav_projects">// 项目</a></li>
+            <li><a href="../index.html#blog" data-hover data-i18n="nav_blog">// 博客</a></li>
+            <li><a href="../index.html#contact" data-hover data-i18n="nav_contact">// 联系</a></li>
         </ul>
         <div class="nav-status">
             <span class="status-dot"></span>
@@ -68,7 +68,7 @@
             BACK
         </a>
         <div class="detail-tag">AI Vision · YOLO · SAM</div>
-        <h1 class="detail-title">Neural<span class="hl">Vision</span> Pro</h1>
+        <h1 class="detail-title" data-i18n-html="nv_title">Neural<span class="hl">Vision</span> Pro</h1>
         <p class="detail-subtitle">基于 YOLO 与 SAM 的实时目标检测与分割系统，面向工业质检场景，支持多类缺陷的自动识别与像素级分割，为产线自动化质检提供高效视觉解决方案。</p>
         <div class="detail-meta">
             <div class="detail-meta-item">
@@ -109,7 +109,7 @@
         <!-- Overview -->
         <div class="detail-section reveal" id="overview">
             <div class="detail-section-label">Overview</div>
-            <h2 class="detail-section-title">YOLO + SAM 驱动的工业质检系统</h2>
+            <h2 class="detail-section-title" data-i18n="nv_s1">YOLO + SAM 驱动的工业质检系统</h2>
             <p class="detail-text">
                 NeuralVision Pro 是一个面向<strong>工业质检场景</strong>的视觉检测系统，基于 YOLOv8 实现高速目标检测，
                 结合 SAM（Segment Anything Model）实现像素级缺陷分割。系统支持多种工业场景的缺陷识别，
@@ -125,7 +125,7 @@
         <!-- Tech Stack -->
         <div class="detail-section reveal" id="tech">
             <div class="detail-section-label">Tech Stack</div>
-            <h2 class="detail-section-title">技术架构</h2>
+            <h2 class="detail-section-title" data-i18n="nv_s2">技术架构</h2>
             <p class="detail-text">从模型训练到服务部署，端到端技术选型</p>
             <div class="detail-tech-grid">
                 <div class="detail-tech-badge" data-hover>Python</div>
@@ -142,7 +142,7 @@
         <!-- Features -->
         <div class="detail-section reveal" id="features">
             <div class="detail-section-label">Key Features</div>
-            <h2 class="detail-section-title">核心能力</h2>
+            <h2 class="detail-section-title" data-i18n="nv_s3">核心能力</h2>
             <div class="detail-features">
                 <div class="detail-feature" data-hover>
                     <div class="detail-feature-icon">⚡</div>
@@ -170,7 +170,7 @@
         <!-- Stats -->
         <div class="detail-section reveal" id="stats">
             <div class="detail-section-label">Performance</div>
-            <h2 class="detail-section-title">性能指标</h2>
+            <h2 class="detail-section-title" data-i18n="nv_s4">性能指标</h2>
             <div class="detail-stats">
                 <div class="detail-stat" data-hover>
                     <div class="detail-stat-num">15ms</div>
@@ -194,7 +194,7 @@
         <!-- Code -->
         <div class="detail-section reveal" id="code">
             <div class="detail-section-label">Code Example</div>
-            <h2 class="detail-section-title">核心推理流程</h2>
+            <h2 class="detail-section-title" data-i18n="nv_s5">核心推理流程</h2>
             <p class="detail-text">YOLO 检测 + SAM 分割的级联推理管道</p>
             <div class="detail-code-block">
                 <div class="detail-code-header">
@@ -247,6 +247,7 @@
     <button class="back-to-top" id="backToTop" title="回到顶部">↑</button>
 
     <!-- Scripts -->
+    <script src="../js/i18n.js"></script>
     <script src="../js/detail.js"></script>
 </body>
 </html>

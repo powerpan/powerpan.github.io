@@ -21,10 +21,10 @@
     <nav id="nav">
         <a href="../index.html" class="nav-logo magnetic" data-hover>ERIC<span class="dot">.</span></a>
         <ul class="nav-center">
-            <li><a href="../index.html#about" data-hover>// 关于</a></li>
-            <li><a href="../index.html#projects" data-hover>// 项目</a></li>
-            <li><a href="../index.html#blog" data-hover>// 博客</a></li>
-            <li><a href="../index.html#contact" data-hover>// 联系</a></li>
+            <li><a href="../index.html#about" data-hover data-i18n="nav_about">// 关于</a></li>
+            <li><a href="../index.html#projects" data-hover data-i18n="nav_projects">// 项目</a></li>
+            <li><a href="../index.html#blog" data-hover data-i18n="nav_blog">// 博客</a></li>
+            <li><a href="../index.html#contact" data-hover data-i18n="nav_contact">// 联系</a></li>
         </ul>
         <div class="nav-status">
             <span class="status-dot"></span>
@@ -58,7 +58,7 @@
             BACK
         </a>
         <div class="detail-tag">Big Data · Flink · Kafka</div>
-        <h1 class="detail-title">Data<span class="hl">Flow</span> Pipeline</h1>
+        <h1 class="detail-title" data-i18n-html="df_title">Data<span class="hl">Flow</span> Pipeline</h1>
         <p class="detail-subtitle">基于 Apache Flink 与 Kafka 构建的实时数据处理流水线，支持高吞吐量的流式数据计算与可视化监控，是大数据课程的核心实战项目。</p>
         <div class="detail-meta">
             <div class="detail-meta-item">
@@ -96,7 +96,7 @@
 
         <div class="detail-section reveal" id="overview">
             <div class="detail-section-label">Overview</div>
-            <h2 class="detail-section-title">实时流式数据处理平台</h2>
+            <h2 class="detail-section-title" data-i18n="df_s1">实时流式数据处理平台</h2>
             <p class="detail-text">
                 DataFlow Pipeline 是一个基于 <strong>Apache Flink + Kafka</strong> 的实时数据处理流水线平台。
                 用户可以通过 Vue 前端界面配置数据处理任务，系统将任务编排为 DAG 图形，
@@ -112,7 +112,7 @@
 
         <div class="detail-section reveal" id="tech">
             <div class="detail-section-label">Tech Stack</div>
-            <h2 class="detail-section-title">技术架构</h2>
+            <h2 class="detail-section-title" data-i18n="df_s2">技术架构</h2>
             <p class="detail-text">流式计算 + 可视化监控的全栈大数据方案</p>
             <div class="detail-tech-grid">
                 <div class="detail-tech-badge" data-hover>Java</div>
@@ -128,7 +128,7 @@
 
         <div class="detail-section reveal" id="features">
             <div class="detail-section-label">Key Features</div>
-            <h2 class="detail-section-title">核心能力</h2>
+            <h2 class="detail-section-title" data-i18n="df_s3">核心能力</h2>
             <div class="detail-features">
                 <div class="detail-feature" data-hover>
                     <div class="detail-feature-icon">🔄</div>
@@ -155,7 +155,7 @@
 
         <div class="detail-section reveal" id="stats">
             <div class="detail-section-label">Performance</div>
-            <h2 class="detail-section-title">性能指标</h2>
+            <h2 class="detail-section-title" data-i18n="df_s4">性能指标</h2>
             <div class="detail-stats">
                 <div class="detail-stat" data-hover>
                     <div class="detail-stat-num">500K+</div>
@@ -178,7 +178,7 @@
 
         <div class="detail-section reveal" id="code">
             <div class="detail-section-label">Code Sample</div>
-            <h2 class="detail-section-title">Flink 流处理作业</h2>
+            <h2 class="detail-section-title" data-i18n="df_s5">Flink 流处理作业</h2>
             <p class="detail-text">核心 Flink 作业定义，实现 Kafka 数据流的实时处理</p>
             <div class="detail-code-block">
                 <div class="detail-code-header">
@@ -234,6 +234,7 @@
     </footer>
 
     <button class="back-to-top" id="backToTop" title="回到顶部">↑</button>
+    <script src="../js/i18n.js"></script>
     <script src="../js/detail.js"></script>
 </body>
 </html>

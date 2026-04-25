@@ -27,10 +27,10 @@
     <nav id="nav">
         <a href="../index.html" class="nav-logo magnetic" data-hover>ERIC<span class="dot">.</span></a>
         <ul class="nav-center">
-            <li><a href="../index.html#about" data-hover>// 关于</a></li>
-            <li><a href="../index.html#projects" data-hover>// 项目</a></li>
-            <li><a href="../index.html#blog" data-hover>// 博客</a></li>
-            <li><a href="../index.html#contact" data-hover>// 联系</a></li>
+            <li><a href="../index.html#about" data-hover data-i18n="nav_about">// 关于</a></li>
+            <li><a href="../index.html#projects" data-hover data-i18n="nav_projects">// 项目</a></li>
+            <li><a href="../index.html#blog" data-hover data-i18n="nav_blog">// 博客</a></li>
+            <li><a href="../index.html#contact" data-hover data-i18n="nav_contact">// 联系</a></li>
         </ul>
         <div class="nav-status">
             <span class="status-dot"></span>
@@ -61,7 +61,7 @@
         <div class="detail-tag reveal">
             <span>DevTools · Vue · PHP</span>
         </div>
-        <h1 class="detail-title reveal">Stack<span class="hl">Forge</span> CLI</h1>
+        <h1 class="detail-title reveal" data-i18n-html="sf_title">Stack<span class="hl">Forge</span> CLI</h1>
         <p class="detail-subtitle reveal">全栈项目脚手架工具，一条命令生成 Vue 前端 + 后端 API + Docker 配置，让团队从第一天就站在最佳实践之上，告别重复搭建项目结构的烦恼。</p>
         <div class="detail-meta reveal">
             <div class="detail-meta-item">
@@ -118,7 +118,7 @@
         <!-- Overview -->
         <div class="detail-section reveal" id="overview">
             <div class="detail-section-label">概述</div>
-            <h2 class="detail-section-title">为什么需要 StackForge？</h2>
+            <h2 class="detail-section-title" data-i18n="sf_s1">为什么需要 StackForge？</h2>
             <p class="detail-text">每个新项目都要重新搭建脚手架——选择框架、配置 ESLint、设置 CI/CD、编写 Dockerfile、配置环境变量……这些重复劳动消耗了大量宝贵时间。</p>
             <p class="detail-text"><strong>StackForge CLI</strong> 将这些最佳实践封装成可组合的模板，一条命令即可生成生产级项目骨架。支持 <strong>Vue + PHP/Python</strong> 技术栈，自动生成前端项目结构、后端 API 模板、Docker 配置和 CI/CD 流水线。</p>
             <p class="detail-text">内置 20+ 种项目模板，覆盖 Vue + Flask、Vue + Spring Boot、Vue + PHP Laravel 等主流开发场景。核心引擎用 Python 编写，模板系统基于 YAML 配置，保持灵活性和可扩展性。</p>
@@ -127,7 +127,7 @@
         <!-- Tech Stack -->
         <div class="detail-section reveal" id="tech">
             <div class="detail-section-label">技术栈</div>
-            <h2 class="detail-section-title">核心技术</h2>
+            <h2 class="detail-section-title" data-i18n="sf_s2">核心技术</h2>
             <p class="detail-text">StackForge 采用 Python 核心 + Shell 辅助的轻量架构，模板系统基于 YAML 配置，支持自定义模板扩展。</p>
             <div class="detail-tech-grid">
                 <div class="detail-tech-badge magnetic" data-hover>
@@ -160,7 +160,7 @@
         <!-- Features -->
         <div class="detail-section reveal" id="features">
             <div class="detail-section-label">核心特性</div>
-            <h2 class="detail-section-title">设计哲学</h2>
+            <h2 class="detail-section-title" data-i18n="sf_s3">设计哲学</h2>
             <div class="detail-features">
                 <div class="detail-feature">
                     <div class="detail-feature-icon">🧩</div>
@@ -188,7 +188,7 @@
         <!-- Stats -->
         <div class="detail-section reveal" id="stats">
             <div class="detail-section-label">数据</div>
-            <h2 class="detail-section-title">影响力</h2>
+            <h2 class="detail-section-title" data-i18n="sf_s4">影响力</h2>
             <div class="detail-stats">
                 <div class="detail-stat">
                     <div class="detail-stat-num" data-count="20">0</div>
@@ -212,7 +212,7 @@
         <!-- Code Example -->
         <div class="detail-section reveal" id="code">
             <div class="detail-section-label">使用示例</div>
-            <h2 class="detail-section-title">快速上手</h2>
+            <h2 class="detail-section-title" data-i18n="sf_s5">快速上手</h2>
             <p class="detail-text">只需一条命令，即可初始化一个 Vue + PHP 全栈项目。StackForge 会交互式引导你选择技术栈，并自动生成所有配置文件。</p>
 
             <div class="detail-code-block">
@@ -278,6 +278,7 @@
     <button class="back-to-top" id="backToTop" title="回到顶部">↑</button>
 
     <!-- Scripts -->
+    <script src="../js/i18n.js"></script>
     <script src="../js/detail.js"></script>
 </body>
 </html>

@@ -21,10 +21,10 @@
     <nav id="nav">
         <a href="../index.html" class="nav-logo magnetic" data-hover>ERIC<span class="dot">.</span></a>
         <ul class="nav-center">
-            <li><a href="../index.html#about" data-hover>// 关于</a></li>
-            <li><a href="../index.html#projects" data-hover>// 项目</a></li>
-            <li><a href="../index.html#blog" data-hover>// 博客</a></li>
-            <li><a href="../index.html#contact" data-hover>// 联系</a></li>
+            <li><a href="../index.html#about" data-hover data-i18n="nav_about">// 关于</a></li>
+            <li><a href="../index.html#projects" data-hover data-i18n="nav_projects">// 项目</a></li>
+            <li><a href="../index.html#blog" data-hover data-i18n="nav_blog">// 博客</a></li>
+            <li><a href="../index.html#contact" data-hover data-i18n="nav_contact">// 联系</a></li>
         </ul>
         <div class="nav-status"><span class="status-dot"></span>Open to work</div>
         <button class="nav-hamburger" id="navHamburger" aria-label="Menu"><span></span><span></span><span></span></button>
@@ -56,7 +56,7 @@
             BACK
         </a>
         <div class="detail-tag">Edge AI · YOLOv5 · RK3588</div>
-        <h1 class="detail-title">Metro <span class="hl">Gate</span> Detection</h1>
+        <h1 class="detail-title" data-i18n-html="metro_title">Metro <span class="hl">Gate</span> Detection</h1>
         <p class="detail-subtitle">基于 YOLOv5 的地铁闸机翻越检测系统，从模型训练到 RK3588 边缘设备部署的全链路实践，实现地铁场景下违规行为的实时识别与告警。</p>
         <div class="detail-meta">
             <div class="detail-meta-item"><span class="detail-meta-label">Role</span><span class="detail-meta-value">独立开发者</span></div>
@@ -85,7 +85,7 @@
         <!-- Overview -->
         <div class="detail-section reveal" id="overview">
             <div class="detail-section-label">Overview</div>
-            <h2 class="detail-section-title">地铁安全的 AI 守门人</h2>
+            <h2 class="detail-section-title" data-i18n="metro_s1">地铁安全的 AI 守门人</h2>
             <p class="detail-text">
                 地铁闸机翻越（或钻越）是城市轨道交通中最常见的违规行为之一，不仅造成票务损失，更存在严重的人身安全隐患。
                 传统方案依赖人工监控，效率低、漏检率高。本项目基于 <strong>YOLOv5</strong> 目标检测模型，
@@ -97,7 +97,7 @@
         <!-- Challenge -->
         <div class="detail-section reveal" id="challenge">
             <div class="detail-section-label">Challenge</div>
-            <h2 class="detail-section-title">场景挑战</h2>
+            <h2 class="detail-section-title" data-i18n="metro_s2">场景挑战</h2>
             <p class="detail-text">
                 地铁闸机场景的视觉检测面临多重挑战：
             </p>
@@ -112,7 +112,7 @@
         <!-- Model -->
         <div class="detail-section reveal" id="model">
             <div class="detail-section-label">Model Design</div>
-            <h2 class="detail-section-title">模型设计</h2>
+            <h2 class="detail-section-title" data-i18n="metro_s3">模型设计</h2>
             <p class="detail-text">
                 基于 YOLOv5s 架构进行定制化改造。首先对 Backbone 进行轻量化，将 C3 模块中的标准卷积替换为 <strong>深度可分离卷积</strong>（Depthwise Separable Conv），
                 在保持特征提取能力的同时将参数量从 7.2M 降低到 4.1M。
@@ -127,7 +127,7 @@
         <!-- Hardware -->
         <div class="detail-section reveal" id="hardware">
             <div class="detail-section-label">Hardware</div>
-            <h2 class="detail-section-title">RK3588 硬件平台</h2>
+            <h2 class="detail-section-title" data-i18n="metro_s4">RK3588 硬件平台</h2>
             <p class="detail-text">
                 <strong>Rockchip RK3588</strong> 是目前国产边缘 AI 芯片中性能最强的 SoC 之一，集成了四核 Cortex-A76 + 四核 Cortex-A55 CPU、
                 Mali-G610 GPU 以及独立的 <strong>6 TOPS NPU</strong>（Neural Processing Unit）。其 NPU 支持 INT8/INT16/FP16 混合精度推理，
@@ -143,7 +143,7 @@
         <!-- Deploy -->
         <div class="detail-section reveal" id="deploy">
             <div class="detail-section-label">Deployment</div>
-            <h2 class="detail-section-title">部署流程</h2>
+            <h2 class="detail-section-title" data-i18n="metro_s5">部署流程</h2>
             <p class="detail-text">
                 从 PyTorch 模型到 RK3588 NPU 部署，需要经过以下关键步骤：
             </p>
@@ -158,7 +158,7 @@
         <!-- Optimization -->
         <div class="detail-section reveal" id="optimization">
             <div class="detail-section-label">Optimization</div>
-            <h2 class="detail-section-title">推理优化</h2>
+            <h2 class="detail-section-title" data-i18n="metro_s6">推理优化</h2>
             <p class="detail-text">
                 在 RK3588 上部署时，我们进行了多维度的推理优化：
             </p>
@@ -173,7 +173,7 @@
         <!-- Code -->
         <div class="detail-section reveal" id="code">
             <div class="detail-section-label">Code</div>
-            <h2 class="detail-section-title">RKNN 推理代码</h2>
+            <h2 class="detail-section-title" data-i18n="metro_s7">RKNN 推理代码</h2>
             <div class="detail-code-block">
                 <div class="detail-code-header">
                     <div class="detail-code-dot" style="background:#ff5f57"></div>
@@ -208,7 +208,7 @@
         <!-- Results -->
         <div class="detail-section reveal" id="results">
             <div class="detail-section-label">Results</div>
-            <h2 class="detail-section-title">部署效果</h2>
+            <h2 class="detail-section-title" data-i18n="metro_s8">部署效果</h2>
             <div class="detail-stats">
                 <div class="detail-stat" data-hover>
                     <div class="detail-stat-num">62 FPS</div>
@@ -243,6 +243,7 @@
         </div>
     </footer>
     <button class="back-to-top" id="backToTop" title="回到顶部">↑</button>
+    <script src="../js/i18n.js"></script>
     <script src="../js/detail.js"><\/script>
 </body>
 </html>

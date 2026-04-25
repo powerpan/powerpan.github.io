@@ -26,10 +26,10 @@
     <nav id="nav">
         <a href="../index.html" class="nav-logo magnetic" data-hover>ERIC<span class="dot">.</span></a>
         <ul class="nav-center">
-            <li><a href="../index.html#about" data-hover>// 关于</a></li>
-            <li><a href="../index.html#projects" data-hover>// 项目</a></li>
-            <li><a href="../index.html#blog" data-hover>// 博客</a></li>
-            <li><a href="../index.html#contact" data-hover>// 联系</a></li>
+            <li><a href="../index.html#about" data-hover data-i18n="nav_about">// 关于</a></li>
+            <li><a href="../index.html#projects" data-hover data-i18n="nav_projects">// 项目</a></li>
+            <li><a href="../index.html#blog" data-hover data-i18n="nav_blog">// 博客</a></li>
+            <li><a href="../index.html#contact" data-hover data-i18n="nav_contact">// 联系</a></li>
         </ul>
         <div class="nav-status">
             <span class="status-dot"></span>
@@ -58,7 +58,7 @@
             返回博客
         </a>
         <div class="blog-article-tag reveal">System</div>
-        <h1 class="blog-article-title reveal reveal-d1">设计可扩展的图像处理流水线：从 Python 脚本到 Kubernetes 集群</h1>
+        <h1 class="blog-article-title reveal reveal-d1" data-i18n-html="bi_title">设计可扩展的图像处理流水线：从 Python 脚本到 Kubernetes 集群</h1>
         <div class="blog-article-meta reveal reveal-d2">
             <span>📅 2025.09.05</span>
             <span>⏱️ 11 min</span>
@@ -71,7 +71,7 @@
 
         <!-- Section 1: 架构概述 -->
         <section class="detail-section reveal" id="architecture">
-            <h2>架构概述</h2>
+            <h2 data-i18n="bi_s1">架构概述</h2>
             <p>在构建实时图像处理系统时，传统的请求-响应模式往往无法满足高吞吐量和低延迟的双重需求。我们需要一种事件驱动的流水线架构，将图像处理拆分为多个独立的阶段，每个阶段可以独立扩展和优化。</p>
             <p>核心设计原则：<strong>解耦、可扩展、容错</strong>。每个处理阶段都是一个独立的服务，通过消息队列进行通信，支持水平扩展和故障隔离。</p>
             <blockquote>流水线的价值不在于单个环节的高效，而在于整体的协调与平衡。一个瓶颈节点会拖慢整条链路。</blockquote>
@@ -79,7 +79,7 @@
 
         <!-- Section 2: 流水线阶段 -->
         <section class="detail-section reveal" id="stages">
-            <h2>流水线阶段设计</h2>
+            <h2 data-i18n="bi_s2">流水线阶段设计</h2>
             <p>我们将图像处理拆分为 5 个核心阶段，每个阶段对应一个独立的微服务：</p>
             <ul>
                 <li><strong>Ingest</strong> — 接收原始图像，进行格式校验和元数据提取，支持 HTTP / gRPC / WebSocket 多种接入方式</li>
@@ -93,7 +93,7 @@
 
         <!-- Section 3: Kafka 流处理 -->
         <section class="detail-section reveal" id="kafka">
-            <h2>Kafka 流式架构</h2>
+            <h2 data-i18n="bi_s3">Kafka 流式架构</h2>
             <p>Kafka 作为流水线的核心消息中间件，承担了数据流转、背压控制和故障恢复三大职责。我们设计了以下 Topic 结构：</p>
             <ul>
                 <li><strong>image.ingest</strong> — 原始图像元数据，3 个分区，7 天保留</li>
@@ -112,7 +112,7 @@
 
         <!-- Section 4: Worker 实现 -->
         <section class="detail-section reveal" id="worker">
-            <h2>Worker 并发模型</h2>
+            <h2 data-i18n="bi_s4">Worker 并发模型</h2>
             <p>每个流水线阶段的 Worker 采用 Go 语言实现，利用 goroutine 实现高并发处理。核心采用 Worker Pool 模式，通过 channel 进行任务分发和结果收集。</p>
             <p>Worker Pool 的设计要点：</p>
             <ul>
@@ -125,7 +125,7 @@
 
         <!-- Section 5: Kubernetes 部署 -->
         <section class="detail-section reveal" id="k8s">
-            <h2>Kubernetes 部署配置</h2>
+            <h2 data-i18n="bi_s5">Kubernetes 部署配置</h2>
             <p>每个流水线阶段作为一个独立的 Kubernetes Deployment 运行，通过 HPA（Horizontal Pod Autoscaler）根据队列深度自动扩缩容。以下是 Inference Worker 的部署配置：</p>
             <div class="detail-code-block">
                 <div class="detail-code-header">
@@ -170,7 +170,7 @@
 
         <!-- Section 6: 监控 -->
         <section class="detail-section reveal" id="monitoring">
-            <h2>监控与可观测性</h2>
+            <h2 data-i18n="bi_s6">监控与可观测性</h2>
             <p>我们采用三大支柱的可观测性方案，确保流水线的每个环节都透明可控：</p>
             <ul>
                 <li><strong>Metrics</strong> — Prometheus 采集每个阶段的吞吐量、延迟 P99、错误率等关键指标，Grafana Dashboard 实时展示</li>
@@ -188,7 +188,7 @@
 
         <!-- Section 7: 扩展策略 -->
         <section class="detail-section reveal" id="scaling">
-            <h2>扩展策略</h2>
+            <h2 data-i18n="bi_s7">扩展策略</h2>
             <p>在生产环境中，我们采用了分层扩展的策略，确保系统在不同负载下都能高效运行：</p>
             <ul>
                 <li><strong>水平扩展</strong> — 每个阶段独立 HPA，根据各自负载自动扩缩，互不影响</li>
@@ -201,7 +201,7 @@
 
         <!-- Section 8: 总结 -->
         <section class="detail-section reveal" id="conclusion">
-            <h2>总结与经验</h2>
+            <h2 data-i18n="bi_s8">总结与经验</h2>
             <p>构建实时图像处理流水线是一个系统工程，涉及架构设计、消息中间件选型、容器编排和监控告警等多个层面。以下是我们的核心经验：</p>
             <ul>
                 <li><strong>先解耦后优化</strong> — 初期优先保证架构的可扩展性，后期再针对瓶颈环节做深度优化</li>
@@ -239,6 +239,7 @@
     <!-- ============ BACK TO TOP ============ -->
     <button class="back-to-top" id="backToTop" title="回到顶部">↑</button>
 
+    <script src="../js/i18n.js"></script>
     <script src="../js/detail.js"></script>
 </body>
 </html>

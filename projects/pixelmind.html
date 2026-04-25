@@ -20,10 +20,10 @@
     <nav id="nav">
         <a href="../index.html" class="nav-logo magnetic" data-hover>ERIC<span class="dot">.</span></a>
         <ul class="nav-center">
-            <li><a href="../index.html#about" data-hover>// 关于</a></li>
-            <li><a href="../index.html#projects" data-hover>// 项目</a></li>
-            <li><a href="../index.html#blog" data-hover>// 博客</a></li>
-            <li><a href="../index.html#contact" data-hover>// 联系</a></li>
+            <li><a href="../index.html#about" data-hover data-i18n="nav_about">// 关于</a></li>
+            <li><a href="../index.html#projects" data-hover data-i18n="nav_projects">// 项目</a></li>
+            <li><a href="../index.html#blog" data-hover data-i18n="nav_blog">// 博客</a></li>
+            <li><a href="../index.html#contact" data-hover data-i18n="nav_contact">// 联系</a></li>
         </ul>
         <div class="nav-status"><span class="status-dot"></span>Open to work</div>
         <button class="nav-hamburger" id="navHamburger" aria-label="Menu">
@@ -55,7 +55,7 @@
     <section class="detail-hero">
         <div class="detail-hero-bg"></div>
         <div class="detail-tag">AI SDK · Model Deploy · Docker</div>
-        <h1 class="detail-title">PixelMind <span class="hl">SDK</span></h1>
+        <h1 class="detail-title" data-i18n-html="pm_title">PixelMind <span class="hl">SDK</span></h1>
         <p class="detail-subtitle">面向边缘设备的轻量级视觉模型推理引擎，支持 PyTorch/ONNX 多后端与 Docker 容器化部署，让 AI 模型轻松落地。</p>
         <div class="detail-meta">
             <div class="detail-meta-item"><div class="detail-meta-label">Type</div><div class="detail-meta-value">Open Source SDK</div></div>
@@ -79,14 +79,14 @@
     <div class="detail-content">
         <section class="detail-section reveal" id="overview">
             <div class="detail-section-label">Overview</div>
-            <h2 class="detail-section-title">轻量级视觉推理引擎</h2>
+            <h2 class="detail-section-title" data-i18n="pm_s1">轻量级视觉推理引擎</h2>
             <p class="detail-text">PixelMind SDK 是一个为边缘设备和资源受限环境设计的<strong>视觉模型推理引擎</strong>。支持 PyTorch 和 ONNX 两种推理后端，通过 Docker 容器化部署，可以快速将训练好的视觉模型部署到各类硬件平台上。</p>
             <p class="detail-text">SDK 提供统一的 Python API，内置模型格式转换工具（PyTorch → ONNX），支持 YOLO、SAM 等主流视觉模型的推理加速。配合 Flask/FastAPI 可快速搭建推理服务，单帧推理延迟低至 <strong>8ms</strong>。</p>
         </section>
 
         <section class="detail-section reveal" id="tech">
             <div class="detail-section-label">Tech Stack</div>
-            <h2 class="detail-section-title">技术选型</h2>
+            <h2 class="detail-section-title" data-i18n="pm_s2">技术选型</h2>
             <div class="detail-tech-grid">
                 <div class="detail-tech-badge" data-hover>Python</div>
                 <div class="detail-tech-badge" data-hover>PyTorch</div>
@@ -101,7 +101,7 @@
 
         <section class="detail-section reveal" id="features">
             <div class="detail-section-label">Key Features</div>
-            <h2 class="detail-section-title">核心能力</h2>
+            <h2 class="detail-section-title" data-i18n="pm_s3">核心能力</h2>
             <div class="detail-features">
                 <div class="detail-feature" data-hover>
                     <div class="detail-feature-icon">🔌</div>
@@ -128,7 +128,7 @@
 
         <section class="detail-section reveal" id="stats">
             <div class="detail-section-label">Performance</div>
-            <h2 class="detail-section-title">性能指标</h2>
+            <h2 class="detail-section-title" data-i18n="pm_s4">性能指标</h2>
             <div class="detail-stats">
                 <div class="detail-stat"><div class="detail-stat-num">10MB</div><div class="detail-stat-label">Image Size</div></div>
                 <div class="detail-stat"><div class="detail-stat-num" data-count="60">0</div><div class="detail-stat-label">+ FPS</div></div>
@@ -139,7 +139,7 @@
 
         <section class="detail-section reveal" id="code">
             <div class="detail-section-label">Code Example</div>
-            <h2 class="detail-section-title">Python 推理示例</h2>
+            <h2 class="detail-section-title" data-i18n="pm_s5">Python 推理示例</h2>
             <div class="detail-code-block">
                 <div class="detail-code-header">
                     <div class="detail-code-dot" style="background:#ff5f57"></div>
@@ -181,6 +181,7 @@
     </footer>
 
     <button class="back-to-top" id="backToTop" title="回到顶部">↑</button>
+    <script src="../js/i18n.js"></script>
     <script src="../js/detail.js"></script>
 </body>
 </html>
