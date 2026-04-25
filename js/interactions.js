@@ -358,31 +358,3 @@
         if (mobileNavClose) {
             mobileNavClose.addEventListener('click', closeMobileNav);
         }
-
-        /* ========================================
-           MOBILE BGM TOGGLE
-        ======================================== */
-        const mobileBgmBtn = document.getElementById('mobileBgmBtn');
-        const mobileBgmState = document.getElementById('mobileBgmState');
-        if (mobileBgmBtn) {
-            mobileBgmBtn.addEventListener('click', () => {
-                const bgm = document.getElementById('bgm');
-                const npIcon = document.getElementById('npIcon');
-                const npBars = document.getElementById('npBars');
-                if (!bgm) return;
-                if (bgm.paused) {
-                    bgm.play().then(() => {
-                        mobileBgmBtn.classList.add('playing');
-                        if (mobileBgmState) mobileBgmState.textContent = '⏸';
-                        if (npIcon) npIcon.textContent = '⏸';
-                        if (npBars) npBars.classList.add('playing');
-                    }).catch(() => {});
-                } else {
-                    bgm.pause();
-                    mobileBgmBtn.classList.remove('playing');
-                    if (mobileBgmState) mobileBgmState.textContent = '▶';
-                    if (npIcon) npIcon.textContent = '▶';
-                    if (npBars) npBars.classList.remove('playing');
-                }
-            });
-        }

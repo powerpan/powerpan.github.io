@@ -327,14 +327,29 @@
             if (mobileBgmBtn) mobileBgmBtn.classList.toggle('playing', playing);
             if (mobileBgmState) mobileBgmState.textContent = playing ? '⏸' : '▶';
         };
+        const toggleBgm = () => {
+            if (!bgm) return;
+            if (bgm.paused) {
+                bgm.play().then(() => {
+                    if (npIcon) npIcon.textContent = '⏸';
+                    if (npBars) npBars.classList.add('playing');
+                    syncBgmUI(true);
+                }).catch(() => {});
+            } else {
+                bgm.pause();
+                if (npIcon) npIcon.textContent = '▶';
+                if (npBars) npBars.classList.remove('playing');
+                syncBgmUI(false);
+            }
+        };
         if (bgm && nowPlaying) {
             let userInteracted = false;
             const tryPlay = () => {
                 if (!userInteracted) {
                     userInteracted = true;
                     bgm.play().then(() => {
-                        npIcon.textContent = '⏸';
-                        npBars.classList.add('playing');
+                        if (npIcon) npIcon.textContent = '⏸';
+                        if (npBars) npBars.classList.add('playing');
                         syncBgmUI(true);
                     }).catch(() => {});
                     document.removeEventListener('click', tryPlay);
@@ -346,17 +361,12 @@
 
             nowPlaying.addEventListener('click', (e) => {
                 e.stopPropagation();
-                if (bgm.paused) {
-                    bgm.play().then(() => {
-                        npIcon.textContent = '⏸';
-                        npBars.classList.add('playing');
-                        syncBgmUI(true);
-                    }).catch(() => {});
-                } else {
-                    bgm.pause();
-                    npIcon.textContent = '▶';
-                    npBars.classList.remove('playing');
-                    syncBgmUI(false);
-                }
+                toggleBgm();
+            });
+        }
+        if (mobileBgmBtn) {
+            mobileBgmBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                toggleBgm();
             });
         }
