@@ -444,13 +444,12 @@
         <div class="featured-code-wrap">
             <div class="featured-code-text">
                 <div class="section-label reveal" data-i18n="code_label">// FEATURED CODE</div>
-                <h3 class="reveal reveal-d1" data-i18n-html="code_heading">写代码不只是工作，<br>更是一种<span class="hl">表达</span></h3>
-                <p class="reveal reveal-d2" data-i18n="code_text">这是我最近在做的一个高性能推理引擎的核心模块，基于 Rust + CUDA 实现了零拷贝的 Tensor 调度器，将端到端推理延迟降低了 40%。</p>
+                <h3 class="reveal reveal-d1" data-i18n-html="code_heading">好的代码，<br>是写给机器的<span class="hl">诗</span></h3>
+                <p class="reveal reveal-d2" data-i18n="code_text">训练一个神经网络，就像人类学习的过程——从无知到感知，从犯错到成长。每一次反向传播，都是一次自我认知的迭代。</p>
                 <div class="featured-code-tags reveal reveal-d3">
-                    <span>Python</span>
                     <span>PyTorch</span>
-                    <span>YOLO</span>
-                    <span>SAM</span>
+                    <span>Neural Network</span>
+                    <span>Backpropagation</span>
                 </div>
             </div>
             <div class="code-window reveal reveal-d2" id="codeWindow">
@@ -458,29 +457,40 @@
                     <div class="code-window-dot" style="background:#ff5f57"></div>
                     <div class="code-window-dot" style="background:#febc2e"></div>
                     <div class="code-window-dot" style="background:#28c840"></div>
-                    <div class="code-window-title">vision_pipeline.py</div>
+                    <div class="code-window-title">train.py</div>
                 </div>
                 <div class="code-window-body">
                     <div class="code-line"><span class="code-kw">import</span> torch</div>
-                    <div class="code-line"><span class="code-kw">from</span> ultralytics <span class="code-kw">import</span> YOLO</div>
-                    <div class="code-line"><span class="code-kw">from</span> segment_anything <span class="code-kw">import</span> sam_model_registry</div>
+                    <div class="code-line"><span class="code-kw">import</span> torch.nn <span class="code-kw">as</span> nn</div>
                     <div class="code-line"></div>
-                    <div class="code-line"><span class="code-cm"># Multi-model cascade inference pipeline</span></div>
-                    <div class="code-line"><span class="code-kw">class</span> <span class="code-type">VisionPipeline</span>:</div>
-                    <div class="code-line">    <span class="code-kw">def</span> <span class="code-fn">__init__</span>(self, device=<span class="code-str">"cuda:0"</span>):</div>
-                    <div class="code-line">        self.yolo = YOLO(<span class="code-str">"yolov8m.pt"</span>)</div>
-                    <div class="code-line">        self.sam = sam_model_registry[<span class="code-str">"vit_h"</span>](</div>
-                    <div class="code-line">            checkpoint=<span class="code-str">"sam_vit_h.pth"</span></div>
-                    <div class="code-line">        ).to(device)</div>
+                    <div class="code-line"><span class="code-cm"># 1. 初始化权重 — 我们生来就带着某些天赋</span></div>
+                    <div class="code-line">model = nn.Sequential(</div>
+                    <div class="code-line">    nn.Linear(<span class="code-num">784</span>, <span class="code-num">256</span>),</div>
+                    <div class="code-line">    nn.ReLU(),</div>
+                    <div class="code-line">    nn.Linear(<span class="code-num">256</span>, <span class="code-num">10</span>)</div>
+                    <div class="code-line">)</div>
                     <div class="code-line"></div>
-                    <div class="code-line">    <span class="code-kw">def</span> <span class="code-fn">detect_and_segment</span>(self, image):</div>
-                    <div class="code-line">        <span class="code-cm"># Step 1: YOLO detection</span></div>
-                    <div class="code-line">        detections = self.yolo.predict(image)</div>
-                    <div class="code-line">        <span class="code-cm"># Step 2: SAM segmentation on ROIs</span></div>
-                    <div class="code-line">        masks = self.sam.predict(</div>
-                    <div class="code-line">            boxes=detections.boxes.xyxy</div>
-                    <div class="code-line">        )</div>
-                    <div class="code-line">        <span class="code-kw">return</span> detections, masks</div>
+                    <div class="code-line">optimizer = torch.optim.Adam(</div>
+                    <div class="code-line">    model.parameters(), lr=<span class="code-num">1e-3</span></div>
+                    <div class="code-line">)</div>
+                    <div class="code-line">criterion = nn.CrossEntropyLoss()</div>
+                    <div class="code-line"></div>
+                    <div class="code-line"><span class="code-kw">for</span> epoch <span class="code-kw">in</span> <span class="code-kw">range</span>(<span class="code-num">100</span>):</div>
+                    <div class="code-line">    <span class="code-cm"># 2. 前向传播 — 用现有知识理解世界</span></div>
+                    <div class="code-line">    output = model(images)</div>
+                    <div class="code-line"></div>
+                    <div class="code-line">    <span class="code-cm"># 3. 计算损失 — 认识到自己的不足</span></div>
+                    <div class="code-line">    loss = criterion(output, labels)</div>
+                    <div class="code-line"></div>
+                    <div class="code-line">    <span class="code-cm"># 4. 反向传播 — 从错误中学习</span></div>
+                    <div class="code-line">    loss.backward()</div>
+                    <div class="code-line"></div>
+                    <div class="code-line">    <span class="code-cm"># 5. 更新权重 — 成长和改变</span></div>
+                    <div class="code-line">    optimizer.step()</div>
+                    <div class="code-line">    optimizer.zero_grad()</div>
+                    <div class="code-line"></div>
+                    <div class="code-line"><span class="code-cm"># 最终，我们不是要完美复制过去</span></div>
+                    <div class="code-line"><span class="code-cm"># 而是要学会泛化到未来</span></div>
                 </div>
             </div>
         </div>

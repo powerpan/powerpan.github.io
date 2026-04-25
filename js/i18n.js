@@ -91,7 +91,7 @@ const I18N = {
     // Featured Code
     code_label: '// FEATURED CODE',
     code_heading: '好的代码，是写给机器的<span class="hl">诗</span>',
-    code_text: '这段代码来自一个视觉检测流水线的核心模块——用 Python + PyTorch 构建多模型级联推理，在精度与速度之间寻找最优解。每一层抽象、每一次权衡，都是对"如何让机器更好地理解世界"这个问题的回答。',
+    code_text: '训练一个神经网络，就像人类学习的过程——从无知到感知，从犯错到成长。每一次反向传播，都是一次自我认知的迭代。',
 
     // Blog
     blog_label: '// BLOG',
@@ -266,7 +266,7 @@ const I18N = {
     // Featured Code
     code_label: '// FEATURED CODE',
     code_heading: 'Good code is <span class="hl">poetry</span> written for machines',
-    code_text: 'This snippet comes from the core of a visual inspection pipeline — multi-model cascade inference built with Python + PyTorch, finding the optimal balance between precision and speed. Every abstraction, every trade-off, is an answer to the question: how can machines better understand the world?',
+    code_text: 'Training a neural network is like the human journey — from ignorance to perception, from mistakes to growth. Every backpropagation is an iteration of self-awareness.',
 
     // Blog
     blog_label: '// BLOG',
