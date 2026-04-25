@@ -86,7 +86,7 @@
         <div class="detail-section reveal" id="overview">
             <div class="detail-section-label">Overview</div>
             <h2 class="detail-section-title" data-i18n="metro_s1">地铁安全的 AI 守门人</h2>
-            <p class="detail-text" data-i18n="metro_p1">
+            <p class="detail-text" data-i18n-html="metro_p1">
                 地铁闸机翻越（或钻越）是城市轨道交通中最常见的违规行为之一，不仅造成票务损失，更存在严重的人身安全隐患。
                 传统方案依赖人工监控，效率低、漏检率高。本项目基于 <strong>YOLOv5</strong> 目标检测模型，
                 训练了一个专门识别闸机翻越行为的检测器，并将其部署到 <strong>Rockchip RK3588</strong> 边缘设备上，
@@ -113,11 +113,11 @@
         <div class="detail-section reveal" id="model">
             <div class="detail-section-label">Model Design</div>
             <h2 class="detail-section-title" data-i18n="metro_s3">模型设计</h2>
-            <p class="detail-text" data-i18n="metro_p3">
+            <p class="detail-text" data-i18n-html="metro_p3">
                 基于 YOLOv5s 架构进行定制化改造。首先对 Backbone 进行轻量化，将 C3 模块中的标准卷积替换为 <strong>深度可分离卷积</strong>（Depthwise Separable Conv），
                 在保持特征提取能力的同时将参数量从 7.2M 降低到 4.1M。
             </p>
-            <p class="detail-text" data-i18n="metro_p4">
+            <p class="detail-text" data-i18n-html="metro_p4">
                 数据集方面，我们从地铁站监控视频中采集了 <strong>8,000+ 帧</strong>图像，标注了三类目标：<code>normal_pass</code>（正常通行）、
                 <code>climb_over</code>（翻越闸机）和 <code>crawl_under</code>（钻越闸机）。采用 Mosaic + MixUp + 随机裁剪增强策略，
                 并针对翻越动作的时序特性，引入了相邻帧的光流特征作为辅助输入。
@@ -128,12 +128,12 @@
         <div class="detail-section reveal" id="hardware">
             <div class="detail-section-label">Hardware</div>
             <h2 class="detail-section-title" data-i18n="metro_s4">RK3588 硬件平台</h2>
-            <p class="detail-text" data-i18n="metro_p5">
+            <p class="detail-text" data-i18n-html="metro_p5">
                 <strong>Rockchip RK3588</strong> 是目前国产边缘 AI 芯片中性能最强的 SoC 之一，集成了四核 Cortex-A76 + 四核 Cortex-A55 CPU、
                 Mali-G610 GPU 以及独立的 <strong>6 TOPS NPU</strong>（Neural Processing Unit）。其 NPU 支持 INT8/INT16/FP16 混合精度推理，
                 特别适合部署量化后的 YOLO 系列模型。
             </p>
-            <p class="detail-text" data-i18n="metro_p6">
+            <p class="detail-text" data-i18n-html="metro_p6">
                 我们选用的开发板配备了 <strong>8GB LPDDR5</strong> 内存和独立的 NPU 加速单元。相比 GPU 方案（如 Jetson Orin Nano），
                 RK3588 的优势在于更低的功耗（典型 5-8W vs 15W）和更高的性价比，非常适合地铁站这种需要大规模部署的场景。
                 NPU 的 6 TOPS 算力对于 YOLOv5s 级别的模型绰绰有余，实测推理速度可达 <strong>60+ FPS</strong>。
@@ -227,7 +227,7 @@
                     <div class="detail-stat-label">E2E Latency</div>
                 </div>
             </div>
-            <p class="detail-text" style="margin-top: 20px;" data-i18n="metro_p9">
+            <p class="detail-text" style="margin-top: 20px;" data-i18n-html="metro_p9">
                 系统在 RK3588 上实现了 62 FPS 的推理速度，端到端延迟（含预处理和后处理）低于 20ms，
                 完全满足地铁站实时监控的需求。INT8 量化后模型仅 <strong>3.8MB</strong>，在 6W 功耗下即可稳定运行，
                 适合大规模部署到各站点的闸机通道。
