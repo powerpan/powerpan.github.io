@@ -191,8 +191,8 @@
         flex-direction: column; align-items: center; gap: 12px;
     }
     .next-float-stat { width: 100%; max-width: 280px; padding: 14px 16px; }
-    .next-float-stat .num { font-size: 1.3rem; }
-    .next-float-stat .label { font-size: 0.55rem; }
+    .float-stat-num { font-size: 1.3rem; }
+    .float-stat-label { font-size: 0.55rem; }
 
     /* Scroll Progress */
     .scroll-progress { height: 2px; }
@@ -249,11 +249,13 @@
     .next-chapter { padding: 60px 16px; }
     .next-card-inner { padding: 20px 16px; }
     .next-status-title { font-size: 1.2rem; }
+    .next-status-abbr { font-size: 0.55rem; }
     .next-status-sub { font-size: 0.65rem; }
     .next-status-icon { font-size: 1.8rem; margin-bottom: 12px; }
     .next-milestone { font-size: 0.6rem; padding: 6px 10px; }
     .next-float-stat { padding: 12px; }
-    .next-float-stat .num { font-size: 1.1rem; }
+    .float-stat-num { font-size: 1.1rem; }
+    .float-arrow { font-size: 0.8rem; }
 
     .mobile-nav-links { gap: 24px; }
     .mobile-nav-links a { font-size: 1.4rem; }
