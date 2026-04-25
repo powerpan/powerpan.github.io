@@ -31,10 +31,10 @@
     </nav>
     <div class="mobile-nav" id="mobileNav">
         <ul class="mobile-nav-links">
-            <li><a href="../index.html#about">// 关于</a></li>
-            <li><a href="../index.html#projects">// 项目</a></li>
-            <li><a href="../index.html#blog">// 博客</a></li>
-            <li><a href="../index.html#contact">// 联系</a></li>
+            <li><a href="../index.html#about" data-i18n="nav_about">// 关于</a></li>
+            <li><a href="../index.html#projects" data-i18n="nav_projects">// 项目</a></li>
+            <li><a href="../index.html#blog" data-i18n="nav_blog">// 博客</a></li>
+            <li><a href="../index.html#contact" data-i18n="nav_contact">// 联系</a></li>
         </ul>
     </div>
 
@@ -56,69 +56,69 @@
     <article class="blog-article-body">
         <section class="detail-section reveal" id="intro">
             <h2 data-i18n="bo_s1">引言</h2>
-            <p>你有没有注意到一个规律？每隔几个月，GitHub 上就会冒出一个「革命性」的开源项目——Star 数在一周内暴涨到 10K+，Twitter 上到处是「This changes everything」的推文，技术群里人人都在转发。然而三个月后再去看，Issue 区堆满了未解决的 bug，最近一次 commit 已经是两个月前，曾经的「革命者」悄无声息地躺在你的 Star 列表里吃灰。</p>
-            <p>从 OpenClaw 到各种 AI Agent 框架、推理引擎、编程工具，这种「爆火→跟风→冷寂」的循环似乎已经成为开源社区的常态。今天我想认真分析一下：为什么会这样？这正常吗？我们作为开发者应该如何看待？</p>
+            <p data-i18n="bo_p1">你有没有注意到一个规律？每隔几个月，GitHub 上就会冒出一个「革命性」的开源项目——Star 数在一周内暴涨到 10K+，Twitter 上到处是「This changes everything」的推文，技术群里人人都在转发。然而三个月后再去看，Issue 区堆满了未解决的 bug，最近一次 commit 已经是两个月前，曾经的「革命者」悄无声息地躺在你的 Star 列表里吃灰。</p>
+            <p data-i18n="bo_p2">从 OpenClaw 到各种 AI Agent 框架、推理引擎、编程工具，这种「爆火→跟风→冷寂」的循环似乎已经成为开源社区的常态。今天我想认真分析一下：为什么会这样？这正常吗？我们作为开发者应该如何看待？</p>
         </section>
 
         <section class="detail-section reveal" id="phenomenon">
             <h2 data-i18n="bo_s2">「三个月定律」的典型轨迹</h2>
-            <p>一个现象级开源项目的生命周期通常遵循这样的轨迹：</p>
+            <p data-i18n="bo_p3">一个现象级开源项目的生命周期通常遵循这样的轨迹：</p>
             <ul>
-                <li><strong>第 1 周：引爆期</strong> — 项目发布，配合精心设计的 landing page 和 demo 视频，在 Hacker News / Product Hunt / Twitter 上引发病毒式传播。Star 数日增 2000+</li>
-                <li><strong>第 2-4 周：跟风期</strong> — 大量开发者涌入，fork 项目、写教程、做二次开发。各种「XX 的平替」「XX 增强版」如雨后春笋般出现</li>
-                <li><strong>第 2-3 个月：幻灭期</strong> — 热度开始消退。核心维护者精力耗尽，Issue 堆积，PR 积压。用户发现实际使用中存在大量文档未提及的问题</li>
-                <li><strong>第 3-6 个月：沉淀期</strong> — 大部分跟风者离开，项目进入「安静维护」状态。真正有价值的项目会存活下来，其余的逐渐被遗忘</li>
+                <li data-i18n-html="bo_f1"><strong>第 1 周：引爆期</strong> — 项目发布，配合精心设计的 landing page 和 demo 视频，在 Hacker News / Product Hunt / Twitter 上引发病毒式传播。Star 数日增 2000+</li>
+                <li data-i18n-html="bo_f2"><strong>第 2-4 周：跟风期</strong> — 大量开发者涌入，fork 项目、写教程、做二次开发。各种「XX 的平替」「XX 增强版」如雨后春笋般出现</li>
+                <li data-i18n-html="bo_f3"><strong>第 2-3 个月：幻灭期</strong> — 热度开始消退。核心维护者精力耗尽，Issue 堆积，PR 积压。用户发现实际使用中存在大量文档未提及的问题</li>
+                <li data-i18n-html="bo_f4"><strong>第 3-6 个月：沉淀期</strong> — 大部分跟风者离开，项目进入「安静维护」状态。真正有价值的项目会存活下来，其余的逐渐被遗忘</li>
             </ul>
         </section>
 
         <section class="detail-section reveal" id="openclaw">
             <h2 data-i18n="bo_s3">OpenClaw 现象分析</h2>
-            <p>以 OpenClaw 为例（这里指代一类现象，而非特指某个项目），这类项目有几个共同特征：</p>
-            <p><strong>为什么能火？</strong></p>
+            <p data-i18n="bo_p4">以 OpenClaw 为例（这里指代一类现象，而非特指某个项目），这类项目有几个共同特征：</p>
+            <p data-i18n-html="bo_p5"><strong>为什么能火？</strong></p>
             <ul>
-                <li><strong>切中痛点</strong> — 解决了一个真实存在且广泛共鸣的问题（比如「让 AI 自主操作电脑」「一键搭建个人知识库」）</li>
-                <li><strong>Demo 效果炸裂</strong> — 演示视频精心挑选了最佳 case，给人「未来已来」的冲击感</li>
-                <li><strong>低门槛</strong> — 提供了开箱即用的体验，让人觉得「我也能用」</li>
-                <li><strong>叙事正确</strong> — 踩中了「AI 革命」「开源替代闭源」等社区情绪</li>
+                <li data-i18n-html="bo_f5"><strong>切中痛点</strong> — 解决了一个真实存在且广泛共鸣的问题（比如「让 AI 自主操作电脑」「一键搭建个人知识库」）</li>
+                <li data-i18n-html="bo_f6"><strong>Demo 效果炸裂</strong> — 演示视频精心挑选了最佳 case，给人「未来已来」的冲击感</li>
+                <li data-i18n-html="bo_f7"><strong>低门槛</strong> — 提供了开箱即用的体验，让人觉得「我也能用」</li>
+                <li data-i18n-html="bo_f8"><strong>叙事正确</strong> — 踩中了「AI 革命」「开源替代闭源」等社区情绪</li>
             </ul>
-            <p><strong>为什么凉了？</strong></p>
+            <p data-i18n-html="bo_p6"><strong>为什么凉了？</strong></p>
             <ul>
-                <li><strong>生产环境差距</strong> — Demo 里的完美表现无法复现到真实场景。光照变化、网络延迟、异常输入等 edge case 大量暴露</li>
-                <li><strong>维护成本被低估</strong> — 开源不只是「把代码丢出去」，持续的文档维护、Issue 回复、版本兼容性工作量远超想象</li>
-                <li><strong>商业化困境</strong> — 没有可持续的收入模式，核心贡献者在热情消退后缺乏继续投入的动力</li>
-                <li><strong>注意力经济</strong> — 技术社区的注意力是有限的，下一个「革命性项目」很快就会出现，抢占同一批人的关注度</li>
+                <li data-i18n-html="bo_f9"><strong>生产环境差距</strong> — Demo 里的完美表现无法复现到真实场景。光照变化、网络延迟、异常输入等 edge case 大量暴露</li>
+                <li data-i18n-html="bo_f10"><strong>维护成本被低估</strong> — 开源不只是「把代码丢出去」，持续的文档维护、Issue 回复、版本兼容性工作量远超想象</li>
+                <li data-i18n-html="bo_f11"><strong>商业化困境</strong> — 没有可持续的收入模式，核心贡献者在热情消退后缺乏继续投入的动力</li>
+                <li data-i18n-html="bo_f12"><strong>注意力经济</strong> — 技术社区的注意力是有限的，下一个「革命性项目」很快就会出现，抢占同一批人的关注度</li>
             </ul>
         </section>
 
         <section class="detail-section reveal" id="psychology">
             <h2 data-i18n="bo_s4">社区心理与从众效应</h2>
-            <p>开源社区的热度周期本质上是一种<strong>技术版的 FOMO（Fear of Missing Out）</strong>。当一个项目在社交媒体上获得大量关注时，开发者会出于以下心理参与其中：</p>
+            <p data-i18n-html="bo_p7">开源社区的热度周期本质上是一种<strong>技术版的 FOMO（Fear of Missing Out）</strong>。当一个项目在社交媒体上获得大量关注时，开发者会出于以下心理参与其中：</p>
             <ul>
-                <li><strong>错失恐惧</strong> — 「大家都在用，我不用就落后了」</li>
-                <li><strong>社交货币</strong> — 分享新工具的教程和体验可以获得社区认可和关注</li>
-                <li><strong>探索欲</strong> — 对新技术的好奇心是真实的，这本身没有问题</li>
-                <li><strong>简历驱动</strong> — 「Contributor to XX（热门项目）」听起来比「用了 YY 框架」更有吸引力</li>
+                <li data-i18n-html="bo_f13"><strong>错失恐惧</strong> — 「大家都在用，我不用就落后了」</li>
+                <li data-i18n-html="bo_f14"><strong>社交货币</strong> — 分享新工具的教程和体验可以获得社区认可和关注</li>
+                <li data-i18n-html="bo_f15"><strong>探索欲</strong> — 对新技术的好奇心是真实的，这本身没有问题</li>
+                <li data-i18n-html="bo_f16"><strong>简历驱动</strong> — 「Contributor to XX（热门项目）」听起来比「用了 YY 框架」更有吸引力</li>
             </ul>
-            <p>问题在于，这种由情绪驱动的参与往往是浅层的。很多人 fork 了项目但从未真正使用，写了教程但自己没跑通，点了 Star 但从未读过一行源码。</p>
+            <p data-i18n="bo_p8">问题在于，这种由情绪驱动的参与往往是浅层的。很多人 fork 了项目但从未真正使用，写了教程但自己没跑通，点了 Star 但从未读过一行源码。</p>
         </section>
 
         <section class="detail-section reveal" id="lesson">
             <h2 data-i18n="bo_s5">我们应该学到什么？</h2>
-            <p>作为一个经历过多次「追热点→失望→回归理性」循环的开发者，我总结了几条个人原则：</p>
+            <p data-i18n="bo_p9">作为一个经历过多次「追热点→失望→回归理性」循环的开发者，我总结了几条个人原则：</p>
             <ul>
-                <li><strong>区分「有趣的」和「有用的」</strong> — 一个项目可以同时很有趣但没用。花 30 分钟体验一下就够了，不需要投入三天去深度集成</li>
-                <li><strong>看 Issue 和 Commit 频率</strong> — 一个项目的健康度不看 Star 数，而看 maintainer 的回复速度和 commit 频率</li>
-                <li><strong>等待 3.0 版本</strong> — 很多项目在 1.x 时是实验性的，2.x 开始稳定，3.x 才真正可用。耐心等待比盲目追新更明智</li>
-                <li><strong>投资基础能力</strong> — 框架会过时，但数据结构、算法、系统设计、网络协议这些基础知识不会。把 80% 的学习时间花在不变的东西上</li>
-                <li><strong>做减法而非加法</strong> — 与其同时关注 50 个新项目，不如深入理解 3 个核心工具。深度永远比广度更有价值</li>
+                <li data-i18n-html="bo_f17"><strong>区分「有趣的」和「有用的」</strong> — 一个项目可以同时很有趣但没用。花 30 分钟体验一下就够了，不需要投入三天去深度集成</li>
+                <li data-i18n-html="bo_f18"><strong>看 Issue 和 Commit 频率</strong> — 一个项目的健康度不看 Star 数，而看 maintainer 的回复速度和 commit 频率</li>
+                <li data-i18n-html="bo_f19"><strong>等待 3.0 版本</strong> — 很多项目在 1.x 时是实验性的，2.x 开始稳定，3.x 才真正可用。耐心等待比盲目追新更明智</li>
+                <li data-i18n-html="bo_f20"><strong>投资基础能力</strong> — 框架会过时，但数据结构、算法、系统设计、网络协议这些基础知识不会。把 80% 的学习时间花在不变的东西上</li>
+                <li data-i18n-html="bo_f21"><strong>做减法而非加法</strong> — 与其同时关注 50 个新项目，不如深入理解 3 个核心工具。深度永远比广度更有价值</li>
             </ul>
-            <blockquote>最好的技术判断力不是「知道最新的工具是什么」，而是「知道什么值得投入时间，什么应该观望」。</blockquote>
+            <blockquote data-i18n="bo_p10">最好的技术判断力不是「知道最新的工具是什么」，而是「知道什么值得投入时间，什么应该观望」。</blockquote>
         </section>
 
         <section class="detail-section reveal" id="conclusion">
             <h2 data-i18n="bo_s6">结语</h2>
-            <p>开源社区的「三个月定律」不是什么坏事——它本质上是市场机制在技术领域的自然表达。大量项目被创建，少部分存活，最终沉淀下来的才是真正有价值的东西。作为开发者，我们不需要为每一个新项目的热度负责，也不需要为错过什么而焦虑。</p>
-            <p>保持好奇心，但不要失去判断力。追热点可以，但记得回家。</p>
+            <p data-i18n="bo_p11">开源社区的「三个月定律」不是什么坏事——它本质上是市场机制在技术领域的自然表达。大量项目被创建，少部分存活，最终沉淀下来的才是真正有价值的东西。作为开发者，我们不需要为每一个新项目的热度负责，也不需要为错过什么而焦虑。</p>
+            <p data-i18n="bo_p12">保持好奇心，但不要失去判断力。追热点可以，但记得回家。</p>
         </section>
     </article>
 
