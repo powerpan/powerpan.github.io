@@ -76,9 +76,11 @@ const I18N = {
     skill_cat_ai: 'AI / ML',
     skill_cat_bigdata: '大数据 / DevOps',
     skill_wxapp: '微信小程序 (WXML/WXSS)',
-    code_c2: '# 输出 10 个类别的概率分布',
-    code_c5: '# 与真实标签对比',
-    code_c8: '# 清空梯度，准备下一轮',
+    code_c1: '# 初始化权重 — 我们生来就带着某些天赋（随机初始化）',
+    code_c3: '# 前向传播 — 用现有知识理解世界',
+    code_c4: '# 计算损失 — 认识到自己的不足',
+    code_c6: '# 反向传播 — 从错误中学习，计算每个权重的梯度',
+    code_c7: '# 更新权重 — 成长和改变，沿梯度方向微调参数',
     code_c9: '# 最终，我们不是要完美复制过去，而是要学会泛化到未来',
 
     // --- Project subtitles ---
@@ -822,9 +824,11 @@ const I18N = {
     skill_cat_ai: 'AI / ML',
     skill_cat_bigdata: 'Big Data / DevOps',
     skill_wxapp: 'WeChat Mini Program (WXML/WXSS)',
-    code_c2: '# Output probability distribution for 10 classes',
-    code_c5: '# Compare with ground truth labels',
-    code_c8: '# Clear gradients, prepare for next iteration',
+    code_c1: '# Initialize weights — Born with certain talents (random init)',
+    code_c3: '# Forward pass — Understanding the world with existing knowledge',
+    code_c4: '# Compute loss — Recognizing our shortcomings',
+    code_c6: '# Backpropagation — Learning from mistakes, computing gradients',
+    code_c7: '# Update weights — Growth and change, fine-tuning along gradients',
     code_c9: '# Ultimately, we learn not to replicate the past, but to generalize to the future',
 
     // --- Project subtitles ---
