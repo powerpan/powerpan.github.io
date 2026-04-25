@@ -797,14 +797,17 @@
     </div>
 
     <!-- ============ NOW PLAYING ============ -->
-    <div class="now-playing">
-        <div class="np-bars">
+    <audio id="bgm" loop preload="auto">
+        <source src="assets/bgm.mp3" type="audio/mpeg">
+    </audio>
+    <div class="now-playing" id="nowPlaying" data-hover role="button" tabindex="0" aria-label="Toggle background music">
+        <div class="np-bars" id="npBars">
             <div class="np-bar"></div>
             <div class="np-bar"></div>
             <div class="np-bar"></div>
             <div class="np-bar"></div>
         </div>
-        <span>🎵</span>
+        <span class="np-icon" id="npIcon">▶</span>
         <span class="np-title">Lofi Beats to Code To</span>
     </div>
 

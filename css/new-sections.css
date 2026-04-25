@@ -685,6 +685,13 @@
             font-size: 0.68rem; color: var(--text-muted);
             opacity: 0; transform: translateY(16px);
             animation: npIn 0.6s ease 3s forwards;
+            cursor: pointer;
+            transition: border-color 0.3s, background 0.3s;
+            user-select: none;
+        }
+        .now-playing:hover {
+            border-color: rgba(var(--accent-rgb), 0.3);
+            background: rgba(var(--accent-rgb), 0.05);
         }
         @keyframes npIn {
             to { opacity: 1; transform: translateY(0); }
@@ -696,15 +703,27 @@
             width: 3px;
             background: var(--accent);
             border-radius: 1px;
+            transform: scaleY(0.4);
+            transition: transform 0.2s;
+        }
+        .np-bars.playing .np-bar {
             animation: npPulse 1.2s ease-in-out infinite;
         }
-        .np-bar:nth-child(1) { height: 60%; animation-delay: 0s; }
-        .np-bar:nth-child(2) { height: 100%; animation-delay: 0.15s; }
-        .np-bar:nth-child(3) { height: 40%; animation-delay: 0.3s; }
-        .np-bar:nth-child(4) { height: 80%; animation-delay: 0.45s; }
+        .np-bar:nth-child(1) { height: 60%; }
+        .np-bar:nth-child(2) { height: 100%; }
+        .np-bar:nth-child(3) { height: 40%; }
+        .np-bar:nth-child(4) { height: 80%; }
+        .np-bars.playing .np-bar:nth-child(1) { animation-delay: 0s; }
+        .np-bars.playing .np-bar:nth-child(2) { animation-delay: 0.15s; }
+        .np-bars.playing .np-bar:nth-child(3) { animation-delay: 0.3s; }
+        .np-bars.playing .np-bar:nth-child(4) { animation-delay: 0.45s; }
         @keyframes npPulse {
             0%, 100% { transform: scaleY(0.4); }
             50% { transform: scaleY(1); }
+        }
+        .np-icon {
+            color: var(--accent);
+            font-size: 0.6rem;
         }
         .np-title { color: var(--text-primary); }
 

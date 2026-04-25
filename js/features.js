@@ -313,3 +313,41 @@
             }, { threshold: 0.3 });
             nextObs.observe(nextProgressFill.closest('.next-chapter-card'));
         }
+
+        /* ========================================
+           BACKGROUND MUSIC PLAYER
+        ======================================== */
+        const bgm = document.getElementById('bgm');
+        const nowPlaying = document.getElementById('nowPlaying');
+        const npIcon = document.getElementById('npIcon');
+        const npBars = document.getElementById('npBars');
+        if (bgm && nowPlaying) {
+            let userInteracted = false;
+            const tryPlay = () => {
+                if (!userInteracted) {
+                    userInteracted = true;
+                    bgm.play().then(() => {
+                        npIcon.textContent = '⏸';
+                        npBars.classList.add('playing');
+                    }).catch(() => {});
+                    document.removeEventListener('click', tryPlay);
+                    document.removeEventListener('keydown', tryPlay);
+                }
+            };
+            document.addEventListener('click', tryPlay, { once: false });
+            document.addEventListener('keydown', tryPlay, { once: false });
+
+            nowPlaying.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (bgm.paused) {
+                    bgm.play().then(() => {
+                        npIcon.textContent = '⏸';
+                        npBars.classList.add('playing');
+                    }).catch(() => {});
+                } else {
+                    bgm.pause();
+                    npIcon.textContent = '▶';
+                    npBars.classList.remove('playing');
+                }
+            });
+        }
