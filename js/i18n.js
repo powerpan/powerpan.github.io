@@ -1538,6 +1538,8 @@ function setLang(lang) {
   // Update lang toggle button text
   const langBtn = document.getElementById('langToggle');
   if (langBtn) langBtn.textContent = t.nav_lang;
+  const mobileLangBtn = document.getElementById('mobileLangBtn');
+  if (mobileLangBtn) mobileLangBtn.textContent = t.nav_lang;
 
   // Re-render command palette if open
   if (typeof renderCommands === 'function') renderCommands('');

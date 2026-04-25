@@ -56,6 +56,23 @@
     transition: color 0.3s ease;
 }
 .mobile-nav-links a:hover { color: var(--accent); }
+.mobile-lang-btn {
+    font-family: var(--font-mono);
+    font-size: 0.75rem; font-weight: 500;
+    color: var(--text-secondary);
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 100px;
+    padding: 8px 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    letter-spacing: 0.1em;
+}
+.mobile-lang-btn:hover {
+    color: var(--accent);
+    border-color: rgba(0,255,136,0.2);
+    background: rgba(0,255,136,0.05);
+}
 
 /* ========================================
    TABLET (max-width: 900px)
