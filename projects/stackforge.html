@@ -42,10 +42,10 @@
     </nav>
     <div class="mobile-nav" id="mobileNav">
         <ul class="mobile-nav-links">
-            <li><a href="../index.html#about">// 关于</a></li>
-            <li><a href="../index.html#projects">// 项目</a></li>
-            <li><a href="../index.html#blog">// 博客</a></li>
-            <li><a href="../index.html#contact">// 联系</a></li>
+            <li><a href="../index.html#about" data-i18n="nav_about">// 关于</a></li>
+            <li><a href="../index.html#projects" data-i18n="nav_projects">// 项目</a></li>
+            <li><a href="../index.html#blog" data-i18n="nav_blog">// 博客</a></li>
+            <li><a href="../index.html#contact" data-i18n="nav_contact">// 联系</a></li>
         </ul>
     </div>
 
@@ -62,7 +62,7 @@
             <span>DevTools · Vue · PHP</span>
         </div>
         <h1 class="detail-title reveal" data-i18n-html="sf_title">Stack<span class="hl">Forge</span> CLI</h1>
-        <p class="detail-subtitle reveal">全栈项目脚手架工具，一条命令生成 Vue 前端 + 后端 API + Docker 配置，让团队从第一天就站在最佳实践之上，告别重复搭建项目结构的烦恼。</p>
+        <p class="detail-subtitle reveal" data-i18n="sf_sub">全栈项目脚手架工具，一条命令生成 Vue 前端 + 后端 API + Docker 配置，让团队从第一天就站在最佳实践之上，告别重复搭建项目结构的烦恼。</p>
         <div class="detail-meta reveal">
             <div class="detail-meta-item">
                 <span class="detail-meta-label">类型</span>
@@ -119,16 +119,16 @@
         <div class="detail-section reveal" id="overview">
             <div class="detail-section-label">概述</div>
             <h2 class="detail-section-title" data-i18n="sf_s1">为什么需要 StackForge？</h2>
-            <p class="detail-text">每个新项目都要重新搭建脚手架——选择框架、配置 ESLint、设置 CI/CD、编写 Dockerfile、配置环境变量……这些重复劳动消耗了大量宝贵时间。</p>
-            <p class="detail-text"><strong>StackForge CLI</strong> 将这些最佳实践封装成可组合的模板，一条命令即可生成生产级项目骨架。支持 <strong>Vue + PHP/Python</strong> 技术栈，自动生成前端项目结构、后端 API 模板、Docker 配置和 CI/CD 流水线。</p>
-            <p class="detail-text">内置 20+ 种项目模板，覆盖 Vue + Flask、Vue + Spring Boot、Vue + PHP Laravel 等主流开发场景。核心引擎用 Python 编写，模板系统基于 YAML 配置，保持灵活性和可扩展性。</p>
+            <p class="detail-text" data-i18n="sf_p1">每个新项目都要重新搭建脚手架——选择框架、配置 ESLint、设置 CI/CD、编写 Dockerfile、配置环境变量……这些重复劳动消耗了大量宝贵时间。</p>
+            <p class="detail-text" data-i18n="sf_p2"><strong>StackForge CLI</strong> 将这些最佳实践封装成可组合的模板，一条命令即可生成生产级项目骨架。支持 <strong>Vue + PHP/Python</strong> 技术栈，自动生成前端项目结构、后端 API 模板、Docker 配置和 CI/CD 流水线。</p>
+            <p class="detail-text" data-i18n="sf_p3">内置 20+ 种项目模板，覆盖 Vue + Flask、Vue + Spring Boot、Vue + PHP Laravel 等主流开发场景。核心引擎用 Python 编写，模板系统基于 YAML 配置，保持灵活性和可扩展性。</p>
         </div>
 
         <!-- Tech Stack -->
         <div class="detail-section reveal" id="tech">
             <div class="detail-section-label">技术栈</div>
             <h2 class="detail-section-title" data-i18n="sf_s2">核心技术</h2>
-            <p class="detail-text">StackForge 采用 Python 核心 + Shell 辅助的轻量架构，模板系统基于 YAML 配置，支持自定义模板扩展。</p>
+            <p class="detail-text" data-i18n="sf_p4">StackForge 采用 Python 核心 + Shell 辅助的轻量架构，模板系统基于 YAML 配置，支持自定义模板扩展。</p>
             <div class="detail-tech-grid">
                 <div class="detail-tech-badge magnetic" data-hover>
                     <span style="color:var(--accent);margin-right:6px;">▸</span> Python
@@ -165,22 +165,22 @@
                 <div class="detail-feature">
                     <div class="detail-feature-icon">🧩</div>
                     <div class="detail-feature-title">Vue 项目模板</div>
-                    <div class="detail-feature-desc">内置 Vue 2/3 项目模板，自动生成组件结构、路由配置、状态管理、TypeScript 支持等，开箱即用。</div>
+                    <div class="detail-feature-desc" data-i18n="sf_f1">内置 Vue 2/3 项目模板，自动生成组件结构、路由配置、状态管理、TypeScript 支持等，开箱即用。</div>
                 </div>
                 <div class="detail-feature">
                     <div class="detail-feature-icon">🚀</div>
                     <div class="detail-feature-title">API 脚手架</div>
-                    <div class="detail-feature-desc">支持 PHP Laravel、Python Flask/FastAPI、Java Spring Boot 等后端模板，自动生成 RESTful API 骨架和数据库模型。</div>
+                    <div class="detail-feature-desc" data-i18n="sf_f2">支持 PHP Laravel、Python Flask/FastAPI、Java Spring Boot 等后端模板，自动生成 RESTful API 骨架和数据库模型。</div>
                 </div>
                 <div class="detail-feature">
                     <div class="detail-feature-icon">🐳</div>
                     <div class="detail-feature-title">Docker 配置生成</div>
-                    <div class="detail-feature-desc">自动生成 Dockerfile 和 docker-compose.yml，支持开发环境和生产环境两套配置，内置健康检查和资源限制。</div>
+                    <div class="detail-feature-desc" data-i18n="sf_f3">自动生成 Dockerfile 和 docker-compose.yml，支持开发环境和生产环境两套配置，内置健康检查和资源限制。</div>
                 </div>
                 <div class="detail-feature">
                     <div class="detail-feature-icon">🔌</div>
                     <div class="detail-feature-title">CI/CD 模板</div>
-                    <div class="detail-feature-desc">内置 GitHub Actions 和 GitLab CI 模板，自动生成测试、构建、部署流水线，支持多环境配置。</div>
+                    <div class="detail-feature-desc" data-i18n="sf_f4">内置 GitHub Actions 和 GitLab CI 模板，自动生成测试、构建、部署流水线，支持多环境配置。</div>
                 </div>
             </div>
         </div>
@@ -213,7 +213,7 @@
         <div class="detail-section reveal" id="code">
             <div class="detail-section-label">使用示例</div>
             <h2 class="detail-section-title" data-i18n="sf_s5">快速上手</h2>
-            <p class="detail-text">只需一条命令，即可初始化一个 Vue + PHP 全栈项目。StackForge 会交互式引导你选择技术栈，并自动生成所有配置文件。</p>
+            <p class="detail-text" data-i18n="sf_p5">只需一条命令，即可初始化一个 Vue + PHP 全栈项目。StackForge 会交互式引导你选择技术栈，并自动生成所有配置文件。</p>
 
             <div class="detail-code-block">
                 <div class="detail-code-header">

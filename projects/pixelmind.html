@@ -32,10 +32,10 @@
     </nav>
     <div class="mobile-nav" id="mobileNav">
         <ul class="mobile-nav-links">
-            <li><a href="../index.html#about">// 关于</a></li>
-            <li><a href="../index.html#projects">// 项目</a></li>
-            <li><a href="../index.html#blog">// 博客</a></li>
-            <li><a href="../index.html#contact">// 联系</a></li>
+            <li><a href="../index.html#about" data-i18n="nav_about">// 关于</a></li>
+            <li><a href="../index.html#projects" data-i18n="nav_projects">// 项目</a></li>
+            <li><a href="../index.html#blog" data-i18n="nav_blog">// 博客</a></li>
+            <li><a href="../index.html#contact" data-i18n="nav_contact">// 联系</a></li>
         </ul>
     </div>
 
@@ -56,7 +56,7 @@
         <div class="detail-hero-bg"></div>
         <div class="detail-tag">AI SDK · Model Deploy · Docker</div>
         <h1 class="detail-title" data-i18n-html="pm_title">PixelMind <span class="hl">SDK</span></h1>
-        <p class="detail-subtitle">面向边缘设备的轻量级视觉模型推理引擎，支持 PyTorch/ONNX 多后端与 Docker 容器化部署，让 AI 模型轻松落地。</p>
+        <p class="detail-subtitle" data-i18n="pm_sub">面向边缘设备的轻量级视觉模型推理引擎，支持 PyTorch/ONNX 多后端与 Docker 容器化部署，让 AI 模型轻松落地。</p>
         <div class="detail-meta">
             <div class="detail-meta-item"><div class="detail-meta-label">Type</div><div class="detail-meta-value">Open Source SDK</div></div>
             <div class="detail-meta-item"><div class="detail-meta-label">Role</div><div class="detail-meta-value">独立开发者</div></div>
@@ -80,8 +80,8 @@
         <section class="detail-section reveal" id="overview">
             <div class="detail-section-label">Overview</div>
             <h2 class="detail-section-title" data-i18n="pm_s1">轻量级视觉推理引擎</h2>
-            <p class="detail-text">PixelMind SDK 是一个为边缘设备和资源受限环境设计的<strong>视觉模型推理引擎</strong>。支持 PyTorch 和 ONNX 两种推理后端，通过 Docker 容器化部署，可以快速将训练好的视觉模型部署到各类硬件平台上。</p>
-            <p class="detail-text">SDK 提供统一的 Python API，内置模型格式转换工具（PyTorch → ONNX），支持 YOLO、SAM 等主流视觉模型的推理加速。配合 Flask/FastAPI 可快速搭建推理服务，单帧推理延迟低至 <strong>8ms</strong>。</p>
+            <p class="detail-text" data-i18n="pm_p1">PixelMind SDK 是一个为边缘设备和资源受限环境设计的<strong>视觉模型推理引擎</strong>。支持 PyTorch 和 ONNX 两种推理后端，通过 Docker 容器化部署，可以快速将训练好的视觉模型部署到各类硬件平台上。</p>
+            <p class="detail-text" data-i18n="pm_p2">SDK 提供统一的 Python API，内置模型格式转换工具（PyTorch → ONNX），支持 YOLO、SAM 等主流视觉模型的推理加速。配合 Flask/FastAPI 可快速搭建推理服务，单帧推理延迟低至 <strong>8ms</strong>。</p>
         </section>
 
         <section class="detail-section reveal" id="tech">
@@ -106,22 +106,22 @@
                 <div class="detail-feature" data-hover>
                     <div class="detail-feature-icon">🔌</div>
                     <div class="detail-feature-title">多后端支持</div>
-                    <div class="detail-feature-desc">统一 Python API，支持 PyTorch 和 ONNX Runtime 两种推理后端，根据硬件自动选择最优方案。</div>
+                    <div class="detail-feature-desc" data-i18n="pm_f1">统一 Python API，支持 PyTorch 和 ONNX Runtime 两种推理后端，根据硬件自动选择最优方案。</div>
                 </div>
                 <div class="detail-feature" data-hover>
                     <div class="detail-feature-icon">🐳</div>
                     <div class="detail-feature-title">Docker 部署</div>
-                    <div class="detail-feature-desc">内置 Dockerfile 和 docker-compose 配置，一键构建推理服务镜像，支持 GPU 和 CPU 两种运行模式。</div>
+                    <div class="detail-feature-desc" data-i18n="pm_f2">内置 Dockerfile 和 docker-compose 配置，一键构建推理服务镜像，支持 GPU 和 CPU 两种运行模式。</div>
                 </div>
                 <div class="detail-feature" data-hover>
                     <div class="detail-feature-icon">🚀</div>
                     <div class="detail-feature-title">简洁 API</div>
-                    <div class="detail-feature-desc">三行代码即可完成模型加载、推理、结果解析。提供 RESTful API 接口，方便前后端集成。</div>
+                    <div class="detail-feature-desc" data-i18n="pm_f3">三行代码即可完成模型加载、推理、结果解析。提供 RESTful API 接口，方便前后端集成。</div>
                 </div>
                 <div class="detail-feature" data-hover>
                     <div class="detail-feature-icon">⚙️</div>
                     <div class="detail-feature-title">模型转换</div>
-                    <div class="detail-feature-desc">内置 PyTorch → ONNX 转换工具，支持 YOLO、SAM 等主流视觉模型的格式转换与验证。</div>
+                    <div class="detail-feature-desc" data-i18n="pm_f4">内置 PyTorch → ONNX 转换工具，支持 YOLO、SAM 等主流视觉模型的格式转换与验证。</div>
                 </div>
             </div>
         </section>

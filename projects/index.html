@@ -143,35 +143,35 @@
     <nav id="nav">
         <a href="../index.html" class="nav-logo magnetic" data-hover>ERIC<span class="dot">.</span></a>
         <ul class="nav-center">
-            <li><a href="../index.html#about" data-hover>// 关于</a></li>
-            <li><a href="../index.html#projects" data-hover>// 项目</a></li>
-            <li><a href="../index.html#blog" data-hover>// 博客</a></li>
-            <li><a href="../index.html#contact" data-hover>// 联系</a></li>
+            <li><a href="../index.html#about" data-hover data-i18n="nav_about">// 关于</a></li>
+            <li><a href="../index.html#projects" data-hover data-i18n="nav_projects">// 项目</a></li>
+            <li><a href="../index.html#blog" data-hover data-i18n="nav_blog">// 博客</a></li>
+            <li><a href="../index.html#contact" data-hover data-i18n="nav_contact">// 联系</a></li>
         </ul>
         <div class="nav-status"><span class="status-dot"></span>Open to work</div>
         <button class="nav-hamburger" id="navHamburger" aria-label="Menu"><span></span><span></span><span></span></button>
     </nav>
     <div class="mobile-nav" id="mobileNav">
         <ul class="mobile-nav-links">
-            <li><a href="../index.html#about">// 关于</a></li>
-            <li><a href="../index.html#projects">// 项目</a></li>
-            <li><a href="../index.html#blog">// 博客</a></li>
-            <li><a href="../index.html#contact">// 联系</a></li>
+            <li><a href="../index.html#about" data-i18n="nav_about">// 关于</a></li>
+            <li><a href="../index.html#projects" data-i18n="nav_projects">// 项目</a></li>
+            <li><a href="../index.html#blog" data-i18n="nav_blog">// 博客</a></li>
+            <li><a href="../index.html#contact" data-i18n="nav_contact">// 联系</a></li>
         </ul>
     </div>
 
     <main class="project-listing">
-        <a href="../index.html" class="project-listing-back reveal">← 返回首页</a>
+        <a href="../index.html" class="project-listing-back reveal" data-i18n="proj_back">← 返回首页</a>
         <div class="project-listing-header reveal">
-            <h1>// 全部项目</h1>
-            <p>All Projects — 6 projects and counting</p>
+            <h1 data-i18n="proj_list_title">// 全部项目</h1>
+            <p data-i18n="proj_list_sub">All Projects — 6 projects and counting</p>
         </div>
         <div class="project-listing-grid">
             <!-- 1: YOLO26 Multimodal -->
             <a href="yolo26-multimodal.html" class="project-list-card reveal" data-hover>
                 <div class="project-list-num">01</div>
                 <div class="project-list-title">YOLO26 Multimodal</div>
-                <div class="project-list-desc">基于 YOLO26 的多模态视觉检测系统，单模型同时输出检测、关键点、分割三类结果，可复用 backbone 与 neck 的多头架构设计。</div>
+                <div class="project-list-desc" data-i18n="proj_card1_desc">基于 YOLO26 的多模态视觉检测系统，单模型同时输出检测、关键点、分割三类结果，可复用 backbone 与 neck 的多头架构设计。</div>
                 <div class="project-list-footer">
                     <div class="project-list-tags">
                         <span class="project-list-tag">YOLO26</span>
@@ -185,7 +185,7 @@
             <a href="metro-gate.html" class="project-list-card reveal" data-hover>
                 <div class="project-list-num">02</div>
                 <div class="project-list-title">Metro Gate Detection</div>
-                <div class="project-list-desc">基于 YOLOv5 的地铁闸机翻越检测系统，部署至 RK3588 边缘设备，RKNN 推理加速，实时识别违规行为。</div>
+                <div class="project-list-desc" data-i18n="proj_card2_desc">基于 YOLOv5 的地铁闸机翻越检测系统，部署至 RK3588 边缘设备，RKNN 推理加速，实时识别违规行为。</div>
                 <div class="project-list-footer">
                     <div class="project-list-tags">
                         <span class="project-list-tag">YOLOv5</span>
@@ -199,7 +199,7 @@
             <a href="neural-vision.html" class="project-list-card reveal" data-hover>
                 <div class="project-list-num">03</div>
                 <div class="project-list-title">NeuralVision Pro</div>
-                <div class="project-list-desc">基于 YOLO 与 SAM 的实时目标检测与分割系统，面向工业质检场景，支持多类缺陷的自动识别与像素级分割。</div>
+                <div class="project-list-desc" data-i18n="proj_card3_desc">基于 YOLO 与 SAM 的实时目标检测与分割系统，面向工业质检场景，支持多类缺陷的自动识别与像素级分割。</div>
                 <div class="project-list-footer">
                     <div class="project-list-tags">
                         <span class="project-list-tag">YOLO</span>
@@ -213,7 +213,7 @@
             <a href="dataflow.html" class="project-list-card reveal" data-hover>
                 <div class="project-list-num">04</div>
                 <div class="project-list-title">DataFlow Engine</div>
-                <div class="project-list-desc">基于 Flink + Kafka 的实时流式计算引擎，支持 Exactly-Once 语义与毫秒级窗口聚合，面向大数据场景。</div>
+                <div class="project-list-desc" data-i18n="proj_card4_desc">基于 Flink + Kafka 的实时流式计算引擎，支持 Exactly-Once 语义与毫秒级窗口聚合，面向大数据场景。</div>
                 <div class="project-list-footer">
                     <div class="project-list-tags">
                         <span class="project-list-tag">Flink</span>
@@ -227,7 +227,7 @@
             <a href="pixelmind.html" class="project-list-card reveal" data-hover>
                 <div class="project-list-num">05</div>
                 <div class="project-list-title">PixelMind Engine</div>
-                <div class="project-list-desc">轻量级视觉模型推理引擎，支持模型量化与剪枝优化，面向边缘设备部署场景。</div>
+                <div class="project-list-desc" data-i18n="proj_card5_desc">轻量级视觉模型推理引擎，支持模型量化与剪枝优化，面向边缘设备部署场景。</div>
                 <div class="project-list-footer">
                     <div class="project-list-tags">
                         <span class="project-list-tag">ONNX</span>
@@ -241,7 +241,7 @@
             <a href="stackforge.html" class="project-list-card reveal" data-hover>
                 <div class="project-list-num">06</div>
                 <div class="project-list-title">StackForge</div>
-                <div class="project-list-desc">基于 Vue + PHP 的全栈脚手架工具，一键生成前后端项目模板，集成权限管理与数据可视化。</div>
+                <div class="project-list-desc" data-i18n="proj_card6_desc">基于 Vue + PHP 的全栈脚手架工具，一键生成前后端项目模板，集成权限管理与数据可视化。</div>
                 <div class="project-list-footer">
                     <div class="project-list-tags">
                         <span class="project-list-tag">Vue</span>
@@ -262,6 +262,7 @@
         </div>
     </footer>
     <button class="back-to-top" id="backToTop" title="回到顶部">↑</button>
+    <script src="../js/i18n.js"></script>
     <script src="../js/detail.js"></script>
 </body>
 </html>

@@ -36,10 +36,10 @@
     </nav>
     <div class="mobile-nav" id="mobileNav">
         <ul class="mobile-nav-links">
-            <li><a href="../index.html#about">// 关于</a></li>
-            <li><a href="../index.html#projects">// 项目</a></li>
-            <li><a href="../index.html#blog">// 博客</a></li>
-            <li><a href="../index.html#contact">// 联系</a></li>
+            <li><a href="../index.html#about" data-i18n="nav_about">// 关于</a></li>
+            <li><a href="../index.html#projects" data-i18n="nav_projects">// 项目</a></li>
+            <li><a href="../index.html#blog" data-i18n="nav_blog">// 博客</a></li>
+            <li><a href="../index.html#contact" data-i18n="nav_contact">// 联系</a></li>
         </ul>
     </div>
 
@@ -59,7 +59,7 @@
         </a>
         <div class="detail-tag">Big Data · Flink · Kafka</div>
         <h1 class="detail-title" data-i18n-html="df_title">Data<span class="hl">Flow</span> Pipeline</h1>
-        <p class="detail-subtitle">基于 Apache Flink 与 Kafka 构建的实时数据处理流水线，支持高吞吐量的流式数据计算与可视化监控，是大数据课程的核心实战项目。</p>
+        <p class="detail-subtitle" data-i18n="df_sub">基于 Apache Flink 与 Kafka 构建的实时数据处理流水线，支持高吞吐量的流式数据计算与可视化监控，是大数据课程的核心实战项目。</p>
         <div class="detail-meta">
             <div class="detail-meta-item">
                 <span class="detail-meta-label">Role</span>
@@ -97,12 +97,12 @@
         <div class="detail-section reveal" id="overview">
             <div class="detail-section-label">Overview</div>
             <h2 class="detail-section-title" data-i18n="df_s1">实时流式数据处理平台</h2>
-            <p class="detail-text">
+            <p class="detail-text" data-i18n="df_p1">
                 DataFlow Pipeline 是一个基于 <strong>Apache Flink + Kafka</strong> 的实时数据处理流水线平台。
                 用户可以通过 Vue 前端界面配置数据处理任务，系统将任务编排为 DAG 图形，
                 由 Flink 引擎执行流式计算，Kafka 作为消息中间件实现数据的高效流转。
             </p>
-            <p class="detail-text">
+            <p class="detail-text" data-i18n="df_p2">
                 平台支持多种数据源接入（MySQL、Redis、Kafka Topic），内置常用的数据清洗、
                 聚合、窗口计算等算子。后端采用 Java 开发，提供 RESTful API 供前端调用，
                 配合 Redis 缓存实现任务状态的实时查询。项目作为大数据课程的核心实践，
@@ -113,7 +113,7 @@
         <div class="detail-section reveal" id="tech">
             <div class="detail-section-label">Tech Stack</div>
             <h2 class="detail-section-title" data-i18n="df_s2">技术架构</h2>
-            <p class="detail-text">流式计算 + 可视化监控的全栈大数据方案</p>
+            <p class="detail-text" data-i18n="df_p3">流式计算 + 可视化监控的全栈大数据方案</p>
             <div class="detail-tech-grid">
                 <div class="detail-tech-badge" data-hover>Java</div>
                 <div class="detail-tech-badge" data-hover>Python</div>
@@ -133,22 +133,22 @@
                 <div class="detail-feature" data-hover>
                     <div class="detail-feature-icon">🔄</div>
                     <div class="detail-feature-title">流式计算引擎</div>
-                    <div class="detail-feature-desc">基于 Flink 的高性能流处理引擎，支持窗口计算、状态管理、Exactly-Once 语义保证</div>
+                    <div class="detail-feature-desc" data-i18n="df_f1">基于 Flink 的高性能流处理引擎，支持窗口计算、状态管理、Exactly-Once 语义保证</div>
                 </div>
                 <div class="detail-feature" data-hover>
                     <div class="detail-feature-icon">📊</div>
                     <div class="detail-feature-title">可视化监控</div>
-                    <div class="detail-feature-desc">Vue 前端实时展示任务运行状态、吞吐量、延迟等关键指标，支持任务的启停与配置管理</div>
+                    <div class="detail-feature-desc" data-i18n="df_f2">Vue 前端实时展示任务运行状态、吞吐量、延迟等关键指标，支持任务的启停与配置管理</div>
                 </div>
                 <div class="detail-feature" data-hover>
                     <div class="detail-feature-icon">🛡️</div>
                     <div class="detail-feature-title">容错与恢复</div>
-                    <div class="detail-feature-desc">基于 Flink Checkpoint 机制实现任务故障自动恢复，配合 Kafka 的持久化消息保证数据不丢失</div>
+                    <div class="detail-feature-desc" data-i18n="df_f3">基于 Flink Checkpoint 机制实现任务故障自动恢复，配合 Kafka 的持久化消息保证数据不丢失</div>
                 </div>
                 <div class="detail-feature" data-hover>
                     <div class="detail-feature-icon">📈</div>
                     <div class="detail-feature-title">多维数据分析</div>
-                    <div class="detail-feature-desc">内置聚合、过滤、Join、窗口等多种数据处理算子，支持自定义 UDF 扩展处理逻辑</div>
+                    <div class="detail-feature-desc" data-i18n="df_f4">内置聚合、过滤、Join、窗口等多种数据处理算子，支持自定义 UDF 扩展处理逻辑</div>
                 </div>
             </div>
         </div>
@@ -179,7 +179,7 @@
         <div class="detail-section reveal" id="code">
             <div class="detail-section-label">Code Sample</div>
             <h2 class="detail-section-title" data-i18n="df_s5">Flink 流处理作业</h2>
-            <p class="detail-text">核心 Flink 作业定义，实现 Kafka 数据流的实时处理</p>
+            <p class="detail-text" data-i18n="df_p4">核心 Flink 作业定义，实现 Kafka 数据流的实时处理</p>
             <div class="detail-code-block">
                 <div class="detail-code-header">
                     <div class="detail-code-dot" style="background:#ff5f57"></div>

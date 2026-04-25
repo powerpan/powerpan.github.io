@@ -41,10 +41,10 @@
     </nav>
     <div class="mobile-nav" id="mobileNav">
         <ul class="mobile-nav-links">
-            <li><a href="../index.html#about">// 关于</a></li>
-            <li><a href="../index.html#projects">// 项目</a></li>
-            <li><a href="../index.html#blog">// 博客</a></li>
-            <li><a href="../index.html#contact">// 联系</a></li>
+            <li><a href="../index.html#about" data-i18n="nav_about">// 关于</a></li>
+            <li><a href="../index.html#projects" data-i18n="nav_projects">// 项目</a></li>
+            <li><a href="../index.html#blog" data-i18n="nav_blog">// 博客</a></li>
+            <li><a href="../index.html#contact" data-i18n="nav_contact">// 联系</a></li>
         </ul>
     </div>
 
@@ -72,47 +72,47 @@
         <!-- Section 1: 引言 -->
         <section class="detail-section reveal" id="intro">
             <h2 data-i18n="bf_s1">为什么要用流式计算</h2>
-            <p>在大数据时代，传统的批处理模式已经无法满足业务对实时性的要求。用户行为分析、实时风控、IoT 数据监控等场景要求数据从产生到产生洞察的延迟控制在秒级甚至毫秒级。Apache Flink 和 Apache Kafka 的组合，为构建高吞吐、低延迟、Exactly-Once 语义的实时数据处理管道提供了成熟的技术方案。</p>
-            <p>本文将从架构设计、核心概念、代码实现和生产部署四个层面，分享我在课程项目和实习中使用 Flink + Kafka 构建实时数据处理系统的实践经验。</p>
+            <p data-i18n="bf_p1">在大数据时代，传统的批处理模式已经无法满足业务对实时性的要求。用户行为分析、实时风控、IoT 数据监控等场景要求数据从产生到产生洞察的延迟控制在秒级甚至毫秒级。Apache Flink 和 Apache Kafka 的组合，为构建高吞吐、低延迟、Exactly-Once 语义的实时数据处理管道提供了成熟的技术方案。</p>
+            <p data-i18n="bf_p2">本文将从架构设计、核心概念、代码实现和生产部署四个层面，分享我在课程项目和实习中使用 Flink + Kafka 构建实时数据处理系统的实践经验。</p>
             <blockquote>流式计算的本质不是"更快的批处理"，而是一种完全不同的数据处理范式——数据到达即处理，而非攒够一批再处理。</blockquote>
         </section>
 
         <!-- Section 2: 架构概述 -->
         <section class="detail-section reveal" id="architecture">
             <h2 data-i18n="bf_s2">整体架构设计</h2>
-            <p>一个典型的 Flink + Kafka 实时数据处理架构包含以下核心组件：</p>
+            <p data-i18n="bf_p3">一个典型的 Flink + Kafka 实时数据处理架构包含以下核心组件：</p>
             <ul>
-                <li><strong>数据源层（Kafka Producers）</strong> — 业务系统、日志采集器（Flume/Filebeat）、IoT 设备等将数据写入 Kafka Topic</li>
-                <li><strong>消息缓冲层（Kafka）</strong> — 作为数据总线，提供持久化存储、解耦生产者和消费者、支持多消费者并行读取</li>
-                <li><strong>计算层（Flink）</strong> — 从 Kafka 消费数据，执行窗口聚合、流关联、CEP 等计算逻辑，结果写回 Kafka 或外部存储</li>
-                <li><strong>存储层</strong> — 计算结果持久化到 MySQL、Redis、Elasticsearch 等，供下游应用查询</li>
-                <li><strong>展示层</strong> — 实时 Dashboard（Grafana）或业务系统消费计算结果进行展示和告警</li>
+                <li data-i18n-html="bf_f1"><strong>数据源层（Kafka Producers）</strong> — 业务系统、日志采集器（Flume/Filebeat）、IoT 设备等将数据写入 Kafka Topic</li>
+                <li data-i18n-html="bf_f2"><strong>消息缓冲层（Kafka）</strong> — 作为数据总线，提供持久化存储、解耦生产者和消费者、支持多消费者并行读取</li>
+                <li data-i18n-html="bf_f3"><strong>计算层（Flink）</strong> — 从 Kafka 消费数据，执行窗口聚合、流关联、CEP 等计算逻辑，结果写回 Kafka 或外部存储</li>
+                <li data-i18n-html="bf_f4"><strong>存储层</strong> — 计算结果持久化到 MySQL、Redis、Elasticsearch 等，供下游应用查询</li>
+                <li data-i18n-html="bf_f5"><strong>展示层</strong> — 实时 Dashboard（Grafana）或业务系统消费计算结果进行展示和告警</li>
             </ul>
-            <p>这种分层架构的核心优势在于：每层都可以独立扩展和替换。例如，当需要支持新的数据源时，只需添加新的 Kafka Producer，无需修改 Flink 作业代码。</p>
+            <p data-i18n="bf_p4">这种分层架构的核心优势在于：每层都可以独立扩展和替换。例如，当需要支持新的数据源时，只需添加新的 Kafka Producer，无需修改 Flink 作业代码。</p>
         </section>
 
         <!-- Section 3: Kafka 配置 -->
         <section class="detail-section reveal" id="kafka">
             <h2 data-i18n="bf_s3">Kafka Topic 设计与配置</h2>
-            <p>Kafka 的 Topic 设计直接影响系统的吞吐量和容错能力。以下是我们的最佳实践：</p>
+            <p data-i18n="bf_p5">Kafka 的 Topic 设计直接影响系统的吞吐量和容错能力。以下是我们的最佳实践：</p>
             <ul>
-                <li><strong>分区策略</strong> — 分区数 = max(目标吞吐量 / 单分区吞吐量, 消费者实例数)。我们通常从 6-12 个分区开始，根据实际负载动态调整</li>
-                <li><strong>副本因子</strong> — 生产环境建议 replication.factor=3，配合 min.insync.replicas=2，确保在单节点故障时不丢数据</li>
-                <li><strong>消息保留</strong> — 热数据 Topic 设置 24 小时保留，冷数据 Topic 设置 7 天保留，支持 Flink 作业的回放和重算</li>
-                <li><strong>消息压缩</strong> — 使用 LZ4 压缩，在吞吐量和 CPU 开销之间取得最佳平衡</li>
+                <li data-i18n-html="bf_f6"><strong>分区策略</strong> — 分区数 = max(目标吞吐量 / 单分区吞吐量, 消费者实例数)。我们通常从 6-12 个分区开始，根据实际负载动态调整</li>
+                <li data-i18n-html="bf_f7"><strong>副本因子</strong> — 生产环境建议 replication.factor=3，配合 min.insync.replicas=2，确保在单节点故障时不丢数据</li>
+                <li data-i18n-html="bf_f8"><strong>消息保留</strong> — 热数据 Topic 设置 24 小时保留，冷数据 Topic 设置 7 天保留，支持 Flink 作业的回放和重算</li>
+                <li data-i18n-html="bf_f9"><strong>消息压缩</strong> — 使用 LZ4 压缩，在吞吐量和 CPU 开销之间取得最佳平衡</li>
             </ul>
-            <p>一个关键的设计决策是：是否将大消息（如完整的用户行为事件）直接放入 Kafka？答案是尽量避免。Kafka 对大消息的处理效率较低，建议将大消息体（超过 1KB）存储到对象存储（S3/MinIO），Kafka 消息只包含引用指针。</p>
+            <p data-i18n="bf_p6">一个关键的设计决策是：是否将大消息（如完整的用户行为事件）直接放入 Kafka？答案是尽量避免。Kafka 对大消息的处理效率较低，建议将大消息体（超过 1KB）存储到对象存储（S3/MinIO），Kafka 消息只包含引用指针。</p>
         </section>
 
         <!-- Section 4: Flink 核心概念 -->
         <section class="detail-section reveal" id="flink">
             <h2 data-i18n="bf_s4">Flink 核心概念</h2>
-            <p>理解 Flink 的核心概念是构建可靠流处理应用的基础：</p>
+            <p data-i18n="bf_p7">理解 Flink 的核心概念是构建可靠流处理应用的基础：</p>
             <ul>
-                <li><strong>Event Time vs Processing Time</strong> — Event Time 是数据产生的时间，Processing Time 是数据被处理的时间。生产环境应始终使用 Event Time，配合 Watermark 处理乱序数据</li>
-                <li><strong>Watermark</strong> — 用于衡量 Event Time 的进展。当 Watermark 超过窗口结束时间时，Flink 触发窗口计算。合理设置 Watermark 延迟是平衡准确性和延迟的关键</li>
-                <li><strong>Checkpoint</strong> — Flink 的容错机制，定期将作业状态快照持久化到 HDFS/S3。作业失败时从最近的 Checkpoint 恢复，实现 Exactly-Once 语义</li>
-                <li><strong>State</strong> — Flink 提供了丰富的状态后端（RocksDB、Heap），支持 Keyed State 和 Operator State，是实现复杂流处理逻辑的基础</li>
+                <li data-i18n-html="bf_f10"><strong>Event Time vs Processing Time</strong> — Event Time 是数据产生的时间，Processing Time 是数据被处理的时间。生产环境应始终使用 Event Time，配合 Watermark 处理乱序数据</li>
+                <li data-i18n-html="bf_f11"><strong>Watermark</strong> — 用于衡量 Event Time 的进展。当 Watermark 超过窗口结束时间时，Flink 触发窗口计算。合理设置 Watermark 延迟是平衡准确性和延迟的关键</li>
+                <li data-i18n-html="bf_f12"><strong>Checkpoint</strong> — Flink 的容错机制，定期将作业状态快照持久化到 HDFS/S3。作业失败时从最近的 Checkpoint 恢复，实现 Exactly-Once 语义</li>
+                <li data-i18n-html="bf_f13"><strong>State</strong> — Flink 提供了丰富的状态后端（RocksDB、Heap），支持 Keyed State 和 Operator State，是实现复杂流处理逻辑的基础</li>
             </ul>
             <blockquote>Watermark 的设置是一门艺术：设太小会导致迟到数据被丢弃，设太大会增加计算延迟。建议从数据的实际乱序程度出发，通过实验找到最优值。</blockquote>
         </section>
@@ -120,7 +120,7 @@
         <!-- Section 5: 代码实现 -->
         <section class="detail-section reveal" id="code">
             <h2 data-i18n="bf_s5">Flink 实时聚合示例</h2>
-            <p>以下是一个实时用户行为聚合的完整示例，展示如何从 Kafka 读取数据、按用户分组、计算 5 分钟滚动窗口内的行为统计：</p>
+            <p data-i18n="bf_p8">以下是一个实时用户行为聚合的完整示例，展示如何从 Kafka 读取数据、按用户分组、计算 5 分钟滚动窗口内的行为统计：</p>
             <div class="detail-code-block">
                 <div class="detail-code-header">
                     <div class="detail-code-dot" style="background:#ff5f57"></div>
@@ -156,24 +156,24 @@
         }</div>
                 </div>
             </div>
-            <p>关键配置说明：<code>forBoundedOutOfOrderness(10s)</code> 表示允许数据最多迟到 10 秒；<code>enableCheckpointing(60000)</code> 每 60 秒做一次状态快照，确保 Exactly-Once 语义。</p>
+            <p data-i18n-html="bf_p9">关键配置说明：<code>forBoundedOutOfOrderness(10s)</code> 表示允许数据最多迟到 10 秒；<code>enableCheckpointing(60000)</code> 每 60 秒做一次状态快照，确保 Exactly-Once 语义。</p>
         </section>
 
         <!-- Section 6: Exactly-Once -->
         <section class="detail-section reveal" id="exactlyonce">
             <h2 data-i18n="bf_s6">Exactly-Once 语义实现</h2>
-            <p>Exactly-Once 是流处理系统的核心挑战。Flink 通过 Checkpoint + 两阶段提交协议实现了端到端的 Exactly-Once：</p>
+            <p data-i18n="bf_p10">Exactly-Once 是流处理系统的核心挑战。Flink 通过 Checkpoint + 两阶段提交协议实现了端到端的 Exactly-Once：</p>
             <ul>
-                <li><strong>Source 端</strong> — Kafka Source 在 Checkpoint 时记录当前消费的 offset，恢复时从 Checkpoint 的 offset 开始消费</li>
-                <li><strong>算子端</strong> — Flink 的状态后端（如 RocksDB）在 Checkpoint 时将所有状态持久化到分布式存储</li>
-                <li><strong>Sink 端</strong> — 使用 Kafka Sink 的事务写入模式（KafkaProducer + 事务），只有在 Checkpoint 完成后才提交消息</li>
+                <li data-i18n-html="bf_f14"><strong>Source 端</strong> — Kafka Source 在 Checkpoint 时记录当前消费的 offset，恢复时从 Checkpoint 的 offset 开始消费</li>
+                <li data-i18n-html="bf_f15"><strong>算子端</strong> — Flink 的状态后端（如 RocksDB）在 Checkpoint 时将所有状态持久化到分布式存储</li>
+                <li data-i18n-html="bf_f16"><strong>Sink 端</strong> — 使用 Kafka Sink 的事务写入模式（KafkaProducer + 事务），只有在 Checkpoint 完成后才提交消息</li>
             </ul>
-            <p>配置要点：</p>
+            <p data-i18n="bf_p11">配置要点：</p>
             <ul>
-                <li>设置 <code>CheckpointingMode.EXACTLY_ONCE</code></li>
-                <li>Kafka Sink 使用 <code>DeliveryGuarantee.EXACTLY_ONCE</code></li>
-                <li>Kafka Consumer 设置 <code>isolation.level=read_committed</code></li>
-                <li>Checkpoint 间隔不宜过长（建议 30s-60s），否则恢复时间会很长</li>
+                <li data-i18n-html="bf_l1">设置 <code>CheckpointingMode.EXACTLY_ONCE</code></li>
+                <li data-i18n-html="bf_l2">Kafka Sink 使用 <code>DeliveryGuarantee.EXACTLY_ONCE</code></li>
+                <li data-i18n-html="bf_l3">Kafka Consumer 设置 <code>isolation.level=read_committed</code></li>
+                <li data-i18n-html="bf_l4">Checkpoint 间隔不宜过长（建议 30s-60s），否则恢复时间会很长</li>
             </ul>
             <blockquote>Exactly-Once 的代价是性能。在我们的测试中，开启 Exactly-Once 后吞吐量下降约 15%，但对于金融、风控等场景，数据准确性远比吞吐量重要。</blockquote>
         </section>
@@ -181,51 +181,51 @@
         <!-- Section 7: 状态管理 -->
         <section class="detail-section reveal" id="state">
             <h2 data-i18n="bf_s7">状态管理与优化</h2>
-            <p>Flink 的状态管理能力是其区别于简单消息转发器的核心优势。合理使用 State 可以实现复杂的流处理逻辑：</p>
+            <p data-i18n="bf_p12">Flink 的状态管理能力是其区别于简单消息转发器的核心优势。合理使用 State 可以实现复杂的流处理逻辑：</p>
             <ul>
-                <li><strong>ValueState</strong> — 存储单个值，适用于计数器、累加器等场景</li>
-                <li><strong>ListState</strong> — 存储元素列表，适用于最近 N 条记录的缓存</li>
-                <li><strong>MapState</strong> — 存储 Key-Value 映射，适用于去重、关联等场景</li>
-                <li><strong>ReducingState / AggregatingState</strong> — 支持增量聚合，避免每次窗口触发时遍历所有元素</li>
+                <li data-i18n-html="bf_f17"><strong>ValueState</strong> — 存储单个值，适用于计数器、累加器等场景</li>
+                <li data-i18n-html="bf_f18"><strong>ListState</strong> — 存储元素列表，适用于最近 N 条记录的缓存</li>
+                <li data-i18n-html="bf_f19"><strong>MapState</strong> — 存储 Key-Value 映射，适用于去重、关联等场景</li>
+                <li data-i18n-html="bf_f20"><strong>ReducingState / AggregatingState</strong> — 支持增量聚合，避免每次窗口触发时遍历所有元素</li>
             </ul>
-            <p>状态后端选择：</p>
+            <p data-i18n="bf_p13">状态后端选择：</p>
             <ul>
-                <li><strong>HeapStateBackend</strong> — 状态存储在 JVM 堆内存，适合状态量小（GB 级别以下）的场景，读写速度快</li>
-                <li><strong>RocksDBStateBackend</strong> — 状态存储在本地磁盘（RocksDB），支持增量 Checkpoint，适合状态量大（TB 级别）的生产环境</li>
+                <li data-i18n-html="bf_f21"><strong>HeapStateBackend</strong> — 状态存储在 JVM 堆内存，适合状态量小（GB 级别以下）的场景，读写速度快</li>
+                <li data-i18n-html="bf_f22"><strong>RocksDBStateBackend</strong> — 状态存储在本地磁盘（RocksDB），支持增量 Checkpoint，适合状态量大（TB 级别）的生产环境</li>
             </ul>
-            <p>我们使用 RocksDB + 增量 Checkpoint 的组合，将 Checkpoint 时间从全量的 45 秒降低到增量的 3-5 秒，显著减少了 Checkpoint 对正常处理的干扰。</p>
+            <p data-i18n="bf_p14">我们使用 RocksDB + 增量 Checkpoint 的组合，将 Checkpoint 时间从全量的 45 秒降低到增量的 3-5 秒，显著减少了 Checkpoint 对正常处理的干扰。</p>
         </section>
 
         <!-- Section 8: 性能调优 -->
         <section class="detail-section reveal" id="tuning">
             <h2 data-i18n="bf_s8">性能调优实践</h2>
-            <p>以下是我们在实际项目中总结的 Flink + Kafka 性能调优经验：</p>
+            <p data-i18n="bf_p15">以下是我们在实际项目中总结的 Flink + Kafka 性能调优经验：</p>
             <ul>
-                <li><strong>并行度设置</strong> — Flink 算子并行度应与 Kafka 分区数对齐。Source 并行度 = Kafka 分区数，算子并行度根据 CPU 密集度调整</li>
-                <li><strong>网络缓冲</strong> — 增大 <code>taskmanager.memory.network.fraction</code>（默认 0.1），提升 Shuffle 效率，推荐设为 0.2</li>
-                <li><strong>反压处理</strong> — 使用 Flink Web UI 的反压监控，定位瓶颈算子。常见原因：下游写入慢、窗口过大、状态后端配置不当</li>
-                <li><strong>Kafka 优化</strong> — 增大 <code>fetch.min.bytes</code> 和 <code>fetch.max.wait.ms</code>，减少小批量拉取的网络开销</li>
+                <li data-i18n-html="bf_f23"><strong>并行度设置</strong> — Flink 算子并行度应与 Kafka 分区数对齐。Source 并行度 = Kafka 分区数，算子并行度根据 CPU 密集度调整</li>
+                <li data-i18n-html="bf_f24"><strong>网络缓冲</strong> — 增大 <code>taskmanager.memory.network.fraction</code>（默认 0.1），提升 Shuffle 效率，推荐设为 0.2</li>
+                <li data-i18n-html="bf_f25"><strong>反压处理</strong> — 使用 Flink Web UI 的反压监控，定位瓶颈算子。常见原因：下游写入慢、窗口过大、状态后端配置不当</li>
+                <li data-i18n-html="bf_f26"><strong>Kafka 优化</strong> — 增大 <code>fetch.min.bytes</code> 和 <code>fetch.max.wait.ms</code>，减少小批量拉取的网络开销</li>
             </ul>
-            <p>调优前后对比：</p>
+            <p data-i18n="bf_p16">调优前后对比：</p>
             <ul>
-                <li><strong>吞吐量</strong> — 从 50K events/s 提升到 200K events/s</li>
-                <li><strong>端到端延迟</strong> — P99 从 2.5s 降低到 800ms</li>
-                <li><strong>Checkpoint 耗时</strong> — 从 45s 降低到 3-5s（增量 Checkpoint）</li>
-                <li><strong>资源利用率</strong> — CPU 利用率从 40% 提升到 70%</li>
+                <li data-i18n-html="bf_f27"><strong>吞吐量</strong> — 从 50K events/s 提升到 200K events/s</li>
+                <li data-i18n-html="bf_f28"><strong>端到端延迟</strong> — P99 从 2.5s 降低到 800ms</li>
+                <li data-i18n-html="bf_f29"><strong>Checkpoint 耗时</strong> — 从 45s 降低到 3-5s（增量 Checkpoint）</li>
+                <li data-i18n-html="bf_f30"><strong>资源利用率</strong> — CPU 利用率从 40% 提升到 70%</li>
             </ul>
         </section>
 
         <!-- Section 9: 总结 -->
         <section class="detail-section reveal" id="conclusion">
             <h2 data-i18n="bf_s9">总结</h2>
-            <p>Flink + Kafka 的组合为实时数据处理提供了工业级的解决方案。核心优势在于：</p>
+            <p data-i18n="bf_p17">Flink + Kafka 的组合为实时数据处理提供了工业级的解决方案。核心优势在于：</p>
             <ul>
-                <li><strong>真正的流处理</strong> — 逐条处理而非微批，延迟更低</li>
-                <li><strong>Exactly-Once 语义</strong> — 端到端的数据准确性保证</li>
-                <li><strong>丰富的状态管理</strong> — 支持复杂的有状态计算逻辑</li>
-                <li><strong>强大的容错能力</strong> — Checkpoint 机制确保作业可恢复</li>
+                <li data-i18n-html="bf_f31"><strong>真正的流处理</strong> — 逐条处理而非微批，延迟更低</li>
+                <li data-i18n-html="bf_f32"><strong>Exactly-Once 语义</strong> — 端到端的数据准确性保证</li>
+                <li data-i18n-html="bf_f33"><strong>丰富的状态管理</strong> — 支持复杂的有状态计算逻辑</li>
+                <li data-i18n-html="bf_f34"><strong>强大的容错能力</strong> — Checkpoint 机制确保作业可恢复</li>
             </ul>
-            <p>当然，这套方案也有学习曲线陡峭、运维复杂度高等挑战。建议从小规模 PoC 开始，逐步积累经验后再推广到生产环境。对于团队来说，流式计算不是一个可以"一蹴而就"的技术，而是需要持续投入和优化的工程实践。</p>
+            <p data-i18n="bf_p18">当然，这套方案也有学习曲线陡峭、运维复杂度高等挑战。建议从小规模 PoC 开始，逐步积累经验后再推广到生产环境。对于团队来说，流式计算不是一个可以"一蹴而就"的技术，而是需要持续投入和优化的工程实践。</p>
         </section>
     </article>
 

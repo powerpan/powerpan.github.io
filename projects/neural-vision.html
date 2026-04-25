@@ -42,10 +42,10 @@
     </nav>
     <div class="mobile-nav" id="mobileNav">
         <ul class="mobile-nav-links">
-            <li><a href="../index.html#about">// 关于</a></li>
-            <li><a href="../index.html#projects">// 项目</a></li>
-            <li><a href="../index.html#blog">// 博客</a></li>
-            <li><a href="../index.html#contact">// 联系</a></li>
+            <li><a href="../index.html#about" data-i18n="nav_about">// 关于</a></li>
+            <li><a href="../index.html#projects" data-i18n="nav_projects">// 项目</a></li>
+            <li><a href="../index.html#blog" data-i18n="nav_blog">// 博客</a></li>
+            <li><a href="../index.html#contact" data-i18n="nav_contact">// 联系</a></li>
         </ul>
     </div>
 
@@ -69,7 +69,7 @@
         </a>
         <div class="detail-tag">AI Vision · YOLO · SAM</div>
         <h1 class="detail-title" data-i18n-html="nv_title">Neural<span class="hl">Vision</span> Pro</h1>
-        <p class="detail-subtitle">基于 YOLO 与 SAM 的实时目标检测与分割系统，面向工业质检场景，支持多类缺陷的自动识别与像素级分割，为产线自动化质检提供高效视觉解决方案。</p>
+        <p class="detail-subtitle" data-i18n="nv_sub">基于 YOLO 与 SAM 的实时目标检测与分割系统，面向工业质检场景，支持多类缺陷的自动识别与像素级分割，为产线自动化质检提供高效视觉解决方案。</p>
         <div class="detail-meta">
             <div class="detail-meta-item">
                 <span class="detail-meta-label">Role</span>
@@ -110,12 +110,12 @@
         <div class="detail-section reveal" id="overview">
             <div class="detail-section-label">Overview</div>
             <h2 class="detail-section-title" data-i18n="nv_s1">YOLO + SAM 驱动的工业质检系统</h2>
-            <p class="detail-text">
+            <p class="detail-text" data-i18n="nv_p1">
                 NeuralVision Pro 是一个面向<strong>工业质检场景</strong>的视觉检测系统，基于 YOLOv8 实现高速目标检测，
                 结合 SAM（Segment Anything Model）实现像素级缺陷分割。系统支持多种工业场景的缺陷识别，
                 包括表面划痕、异物混入、尺寸偏差等常见质检问题。
             </p>
-            <p class="detail-text">
+            <p class="detail-text" data-i18n="nv_p2">
                 通过 YOLO 的快速检测与 SAM 的精准分割级联推理，系统在保证检测精度的同时实现了<strong>亚 20ms</strong> 的端到端推理延迟。
                 项目采用 Python + PyTorch 技术栈，后端服务基于 Flask 构建，数据存储使用 MySQL，
                 支持 Docker 容器化部署，已成功应用于多个实际质检场景的验证测试。
@@ -126,7 +126,7 @@
         <div class="detail-section reveal" id="tech">
             <div class="detail-section-label">Tech Stack</div>
             <h2 class="detail-section-title" data-i18n="nv_s2">技术架构</h2>
-            <p class="detail-text">从模型训练到服务部署，端到端技术选型</p>
+            <p class="detail-text" data-i18n="nv_p3">从模型训练到服务部署，端到端技术选型</p>
             <div class="detail-tech-grid">
                 <div class="detail-tech-badge" data-hover>Python</div>
                 <div class="detail-tech-badge" data-hover>PyTorch</div>
@@ -147,22 +147,22 @@
                 <div class="detail-feature" data-hover>
                     <div class="detail-feature-icon">⚡</div>
                     <div class="detail-feature-title">YOLO 高速检测</div>
-                    <div class="detail-feature-desc">基于 YOLOv8 的实时目标检测，单帧推理延迟低至 15ms，满足产线实时检测需求</div>
+                    <div class="detail-feature-desc" data-i18n="nv_f1">基于 YOLOv8 的实时目标检测，单帧推理延迟低至 15ms，满足产线实时检测需求</div>
                 </div>
                 <div class="detail-feature" data-hover>
                     <div class="detail-feature-icon">🎯</div>
                     <div class="detail-feature-title">SAM 精准分割</div>
-                    <div class="detail-feature-desc">利用 SAM 对检测区域进行像素级分割，精确标注缺陷边界，支持自动与 Prompt 两种分割模式</div>
+                    <div class="detail-feature-desc" data-i18n="nv_f2">利用 SAM 对检测区域进行像素级分割，精确标注缺陷边界，支持自动与 Prompt 两种分割模式</div>
                 </div>
                 <div class="detail-feature" data-hover>
                     <div class="detail-feature-icon">🏭</div>
                     <div class="detail-feature-title">多场景适配</div>
-                    <div class="detail-feature-desc">支持表面划痕、异物混入、尺寸偏差等多种工业质检场景，可通过配置文件快速切换检测策略</div>
+                    <div class="detail-feature-desc" data-i18n="nv_f3">支持表面划痕、异物混入、尺寸偏差等多种工业质检场景，可通过配置文件快速切换检测策略</div>
                 </div>
                 <div class="detail-feature" data-hover>
                     <div class="detail-feature-icon">📦</div>
                     <div class="detail-feature-title">容器化部署</div>
-                    <div class="detail-feature-desc">完整 Docker 部署方案，支持单机与集群部署，一键启动推理服务，方便在不同产线环境快速落地</div>
+                    <div class="detail-feature-desc" data-i18n="nv_f4">完整 Docker 部署方案，支持单机与集群部署，一键启动推理服务，方便在不同产线环境快速落地</div>
                 </div>
             </div>
         </div>
@@ -195,7 +195,7 @@
         <div class="detail-section reveal" id="code">
             <div class="detail-section-label">Code Example</div>
             <h2 class="detail-section-title" data-i18n="nv_s5">核心推理流程</h2>
-            <p class="detail-text">YOLO 检测 + SAM 分割的级联推理管道</p>
+            <p class="detail-text" data-i18n="nv_p4">YOLO 检测 + SAM 分割的级联推理管道</p>
             <div class="detail-code-block">
                 <div class="detail-code-header">
                     <div class="detail-code-dot" style="background:#ff5f57"></div>

@@ -248,7 +248,7 @@
                 </div>
                 <div class="skill-bar-item">
                     <div class="skill-bar-header">
-                        <span class="skill-bar-name">微信小程序 (WXML/WXSS)</span>
+                        <span class="skill-bar-name" data-i18n="skill_wxapp">微信小程序 (WXML/WXSS)</span>
                         <span class="skill-bar-pct">80%</span>
                     </div>
                     <div class="skill-bar-track"><div class="skill-bar-fill" data-width="80"></div></div>
@@ -462,30 +462,30 @@
                 <div class="code-window-body">
                     <div class="code-line"><span class="code-kw">import</span> torch, torch.nn <span class="code-kw">as</span> nn, torch.optim <span class="code-kw">as</span> optim</div>
                     <div class="code-line"></div>
-                    <div class="code-line"><span class="code-cm"># 1. 初始化权重 — 我们生来就带着某些天赋（随机初始化）</span></div>
+                    <div class="code-line"><span class="code-cm" data-i18n="code_c1"># 1. 初始化权重 — 我们生来就带着某些天赋（随机初始化）</span></div>
                     <div class="code-line">model = nn.Sequential(</div>
                     <div class="code-line">    nn.Linear(<span class="code-num">784</span>, <span class="code-num">256</span>), nn.BatchNorm1d(<span class="code-num">256</span>), nn.ReLU(),</div>
                     <div class="code-line">    nn.Linear(<span class="code-num">256</span>, <span class="code-num">128</span>), nn.BatchNorm1d(<span class="code-num">128</span>), nn.ReLU(),</div>
-                    <div class="code-line">    nn.Linear(<span class="code-num">128</span>, <span class="code-num">10</span>)   <span class="code-cm"># 输出 10 个类别的概率分布</span></div>
+                    <div class="code-line">    nn.Linear(<span class="code-num">128</span>, <span class="code-num">10</span>)   <span class="code-cm" data-i18n="code_c2"># 输出 10 个类别的概率分布</span></div>
                     <div class="code-line">)</div>
                     <div class="code-line">optimizer = optim.AdamW(model.parameters(), lr=<span class="code-num">1e-3</span>, weight_decay=<span class="code-num">1e-4</span>)</div>
                     <div class="code-line">criterion = nn.CrossEntropyLoss(label_smoothing=<span class="code-num">0.1</span>)</div>
                     <div class="code-line"></div>
                     <div class="code-line"><span class="code-kw">for</span> epoch <span class="code-kw">in</span> <span class="code-kw">range</span>(<span class="code-num">100</span>):</div>
-                    <div class="code-line">    <span class="code-cm"># 2. 前向传播 — 用现有知识理解世界</span></div>
+                    <div class="code-line">    <span class="code-cm" data-i18n="code_c3"># 2. 前向传播 — 用现有知识理解世界</span></div>
                     <div class="code-line">    predictions = model(train_images)          <span class="code-cm"># shape: [batch, 10]</span></div>
                     <div class="code-line"></div>
-                    <div class="code-line">    <span class="code-cm"># 3. 计算损失 — 认识到自己的不足</span></div>
-                    <div class="code-line">    loss = criterion(predictions, train_labels) <span class="code-cm"># 与真实标签对比</span></div>
+                    <div class="code-line">    <span class="code-cm" data-i18n="code_c4"># 3. 计算损失 — 认识到自己的不足</span></div>
+                    <div class="code-line">    loss = criterion(predictions, train_labels) <span class="code-cm" data-i18n="code_c5"># 与真实标签对比</span></div>
                     <div class="code-line"></div>
-                    <div class="code-line">    <span class="code-cm"># 4. 反向传播 — 从错误中学习，计算每个权重的梯度</span></div>
+                    <div class="code-line">    <span class="code-cm" data-i18n="code_c6"># 4. 反向传播 — 从错误中学习，计算每个权重的梯度</span></div>
                     <div class="code-line">    loss.backward()                              <span class="code-cm"># dL/dW 自动求导</span></div>
                     <div class="code-line"></div>
-                    <div class="code-line">    <span class="code-cm"># 5. 更新权重 — 成长和改变，沿梯度方向微调参数</span></div>
+                    <div class="code-line">    <span class="code-cm" data-i18n="code_c7"># 5. 更新权重 — 成长和改变，沿梯度方向微调参数</span></div>
                     <div class="code-line">    optimizer.step()                             <span class="code-cm"># W = W - lr * grad</span></div>
-                    <div class="code-line">    optimizer.zero_grad()                        <span class="code-cm"># 清空梯度，准备下一轮</span></div>
+                    <div class="code-line">    optimizer.zero_grad()                        <span class="code-cm" data-i18n="code_c8"># 清空梯度，准备下一轮</span></div>
                     <div class="code-line"></div>
-                    <div class="code-line"><span class="code-cm"># 最终，我们不是要完美复制过去，而是要学会泛化到未来</span></div>
+                    <div class="code-line"><span class="code-cm" data-i18n="code_c9"># 最终，我们不是要完美复制过去，而是要学会泛化到未来</span></div>
                 </div>
             </div>
         </div>
