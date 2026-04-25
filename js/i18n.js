@@ -86,6 +86,14 @@ const I18N = {
     code_c8: '# 清空梯度，准备下一轮',
     code_c9: '# 最终，我们不是要完美复制过去，而是要学会泛化到未来',
 
+    // --- Project subtitles ---
+    metro_sub: '基于 YOLOv5 的地铁闸机翻越检测系统，从模型训练到 RK3588 边缘设备部署的全链路实践，实现地铁场景下违规行为的实时识别与告警。',
+    yolo26_sub: '基于 YOLO26 的多模态视觉检测系统，通过可复用的 Backbone 与 Neck 架构，设计三个独立检测头，在单次前向推理中同时输出目标检测、关键点定位与实例分割三类结果。',
+    nv_sub: '基于 YOLO 与 SAM 的实时目标检测与分割系统，面向工业质检场景，支持多类缺陷的自动识别与像素级分割，为产线自动化质检提供高效视觉解决方案。',
+    df_sub: '基于 Apache Flink 与 Kafka 构建的实时数据处理流水线，支持高吞吐量的流式数据计算与可视化监控，是大数据课程的核心实战项目。',
+    pm_sub: '面向边缘设备的轻量级视觉模型推理引擎，支持 PyTorch/ONNX 多后端与 Docker 容器化部署，让 AI 模型轻松落地。',
+    sf_sub: '全栈项目脚手架工具，一条命令生成 Vue 前端 + 后端 API + Docker 配置，让团队从第一天就站在最佳实践之上，告别重复搭建项目结构的烦恼。',
+
     // --- metro-gate ---
     metro_p1: '地铁闸机翻越（或钻越）是城市轨道交通中最常见的违规行为之一，不仅造成票务损失，更存在严重的人身安全隐患。传统方案依赖人工监控，效率低、漏检率高。本项目基于 <strong>YOLOv5</strong> 目标检测模型，训练了一个专门识别闸机翻越行为的检测器，并将其部署到 <strong>Rockchip RK3588</strong> 边缘设备上，实现了从视频流输入到违规告警输出的全链路实时推理。',
     metro_p2: '地铁闸机场景的视觉检测面临多重挑战：',
@@ -826,6 +834,14 @@ const I18N = {
     code_c7: '# 5. Update weights — Growth and change, fine-tuning along gradients',
     code_c8: '# Clear gradients, prepare for next iteration',
     code_c9: '# Ultimately, we learn not to replicate the past, but to generalize to the future',
+
+    // --- Project subtitles ---
+    metro_sub: 'YOLOv5-based metro gate vaulting detection system — end-to-end from model training to RK3588 edge deployment, enabling real-time identification and alerting of violations in metro scenarios.',
+    yolo26_sub: 'Multi-modal visual detection system based on YOLO26, featuring reusable Backbone and Neck architecture with three independent detection heads, outputting object detection, keypoint localization, and instance segmentation in a single forward pass.',
+    nv_sub: 'Real-time object detection and segmentation system based on YOLO and SAM, designed for industrial quality inspection with multi-class defect identification and pixel-level segmentation.',
+    df_sub: 'Real-time data processing pipeline built on Apache Flink and Kafka, supporting high-throughput stream computing and visual monitoring — a core hands-on project for big data coursework.',
+    pm_sub: 'Lightweight vision model inference engine for edge devices, supporting PyTorch/ONNX multi-backend and Docker containerized deployment.',
+    sf_sub: 'Full-stack project scaffolding tool — one command generates Vue frontend + backend API + Docker config, letting teams stand on best practices from day one.',
 
     // --- metro-gate ---
     metro_p1: 'Metro gate vaulting (or crawling under) is one of the most common violations in urban rail transit, causing both fare losses and serious safety hazards. Traditional approaches rely on manual monitoring, which is inefficient and prone to missed detections. This project uses a <strong>YOLOv5</strong> object detection model trained specifically to identify gate vaulting behavior, deployed on a <strong>Rockchip RK3588</strong> edge device for end-to-end real-time inference from video stream input to violation alerts.',
