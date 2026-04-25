@@ -132,8 +132,9 @@
     .featured-code-section { padding: 80px 24px; }
     .featured-code-wrap { grid-template-columns: 1fr; gap: 32px; }
     .featured-code-text { order: 1; }
-    .code-window { order: 2; overflow: visible; }
+    .code-window { order: 2; overflow: hidden; max-width: 100%; }
     .code-window-body { padding: 16px; font-size: 0.65rem; overflow-x: auto; }
+    .code-line { font-size: 0.65rem; }
 
     /* GitHub */
     .github-section { padding: 80px 24px; }
@@ -230,7 +231,9 @@
     .skill-cat-title { font-size: 0.68rem; }
 
     .featured-code-section { padding: 60px 16px; }
-    .code-window-body { padding: 12px; font-size: 0.6rem; }
+    .code-window-body { padding: 12px; font-size: 0.58rem; }
+    .code-line { font-size: 0.58rem; }
+    .code-line::before { width: 22px; margin-right: 10px; font-size: 0.55rem; }
 
     .github-section { padding: 60px 16px; }
     .gh-stats-row { gap: 16px; }

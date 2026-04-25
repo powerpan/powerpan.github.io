@@ -870,4 +870,11 @@
     .detail-footer-links {
         gap: 20px;
     }
+
+    /* Code blocks — mobile */
+    .detail-code-block { margin: 24px -24px; border-radius: 0; border-left: none; border-right: none; }
+    .detail-code-body { padding: 16px; font-size: 0.7rem; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .detail-code-body .line { gap: 12px; }
+    .detail-code-body .line-num { min-width: 20px; font-size: 0.65rem; }
+    .detail-code-body .line-content { font-size: 0.7rem; }
 }
