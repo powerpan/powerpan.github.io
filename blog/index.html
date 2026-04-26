@@ -92,20 +92,6 @@
             background: linear-gradient(90deg, var(--accent), transparent);
             box-shadow: 0 0 12px rgba(0,255,136,0.45);
         }
-        .blog-filter-title {
-            font-family: 'Syne', sans-serif;
-            font-size: clamp(1.2rem, 3vw, 1.65rem);
-            font-weight: 700;
-            color: var(--text);
-            margin-bottom: 6px;
-        }
-        .blog-filter-sub {
-            max-width: 560px;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.78rem;
-            line-height: 1.7;
-            color: var(--text-dim);
-        }
         .blog-filter-stat {
             position: relative;
             min-width: 160px;
@@ -441,10 +427,6 @@
             .blog-list-desc { -webkit-line-clamp: 1; }
         }
         @media (max-width: 480px) {
-            .blog-filter-title {
-                font-size: 1.08rem;
-            }
-            .blog-filter-sub,
             .blog-empty-text {
                 font-size: 0.74rem;
             }
@@ -509,8 +491,6 @@
             <div class="blog-filter-top">
                 <div>
                     <div class="blog-filter-kicker" data-i18n="blog_filter_kicker">SIGNAL ROUTER</div>
-                    <h2 class="blog-filter-title" id="blogFilterTitle" data-i18n="blog_filter_title">按主题轨道切换阅读流</h2>
-                    <p class="blog-filter-sub" data-i18n="blog_filter_sub">把文章列表切成不同信道，快速定位 AI 视觉、工程实践、社会观察和技术趋势内容。</p>
                 </div>
                 <div class="blog-filter-stat">
                     <span class="blog-filter-stat-label" data-i18n="blog_filter_stat_label">Visible Posts</span>
