@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 编程时代的代码审查债务：为什么写得更快，反而更容易失控 — Eric</title>
+    <meta name="description" content="AI coding 工具让提交速度越来越快，但团队真正积累的往往不是代码，而是代码审查债务。如何识别并控制这类新成本？">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/detail.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body>
+    <div class="detail-scroll-progress" id="detailScrollProgress"></div>
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor-dot" id="cursorDot"></div>
+    <canvas id="particleCanvas"></canvas>
+
+    <nav id="nav">
+        <a href="../index.html" class="nav-logo magnetic" data-hover>ERIC<span class="dot">.</span></a>
+        <ul class="nav-center">
+            <li><a href="../index.html#about" data-hover data-i18n="nav_about">// 关于</a></li>
+            <li><a href="../index.html#projects" data-hover data-i18n="nav_projects">// 项目</a></li>
+            <li><a href="../index.html#blog" data-hover data-i18n="nav_blog">// 博客</a></li>
+            <li><a href="../index.html#contact" data-hover data-i18n="nav_contact">// 联系</a></li>
+        </ul>
+        <div class="nav-status"><span class="status-dot"></span>Open to work</div>
+        <button class="nav-hamburger" id="navHamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+    </nav>
+    <div class="mobile-nav" id="mobileNav">
+        <button class="mobile-nav-close" id="mobileNavClose" aria-label="Close menu">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+        <ul class="mobile-nav-links">
+            <li><a href="../index.html#about" data-i18n="nav_about">// 关于</a></li>
+            <li><a href="../index.html#projects" data-i18n="nav_projects">// 项目</a></li>
+            <li><a href="../index.html#blog" data-i18n="nav_blog">// 博客</a></li>
+            <li><a href="../index.html#contact" data-i18n="nav_contact">// 联系</a></li>
+            <li><button class="mobile-lang-btn" id="mobileLangBtn" onclick="toggleLang()" data-i18n="nav_lang">中 / EN</button></li>
+        </ul>
+    </div>
+
+    <section class="blog-article-hero">
+        <div class="detail-hero-bg"></div>
+        <a href="../index.html#blog" class="detail-back" data-hover>
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            返回博客
+        </a>
+        <div class="blog-article-tag reveal">Engineering</div>
+        <h1 class="blog-article-title reveal reveal-d1" data-i18n-html="bcrd_title">AI 编程时代的<span class="hl">代码审查债务</span></h1>
+        <div class="blog-article-meta reveal reveal-d2">
+            <span>📅 2026.04</span>
+            <span>⏱️ 9 min</span>
+            <span>👤 Eric Pan</span>
+        </div>
+    </section>
+
+    <article class="blog-article-body">
+        <section class="detail-section reveal" id="intro">
+            <h2 data-i18n="bcrd_s1">写代码更快了，但团队真的更快了吗？</h2>
+            <p data-i18n="bcrd_p1">最近一年，AI coding 工具最大的变化不是「能不能写代码」，而是「能把提交速度推到多快」。一个熟练使用 Cursor、Claude Code 或 Copilot 的开发者，一下午产出的代码量，往往能顶过去几天。</p>
+            <p data-i18n="bcrd_p2">表面上看，这当然是生产力跃迁。但在实际协作里，我越来越强烈地感受到另一件事：代码生成速度提升之后，团队积累得最快的资产未必是功能，而是 <strong>代码审查债务（Code Review Debt）</strong>。</p>
+            <p data-i18n-html="bcrd_p3">所谓代码审查债务，不是说 PR 没人看，而是说 <strong>提交增长速度已经超过了团队稳定理解、验证、追责这些改动的能力</strong>。代码能写出来，不等于团队能真正消化它。</p>
+        </section>
+
+        <section class="detail-section reveal" id="why">
+            <h2 data-i18n="bcrd_s2">为什么 AI 时代更容易产生审查债务</h2>
+            <p data-i18n="bcrd_p4">过去一个工程师写一段复杂逻辑，速度本身就是天然闸门。你写得慢一点，往往也意味着你在实现过程中会不断自检。现在这个闸门被弱化了。AI 把样板代码、边界分支、测试骨架、接口拼装全部加速，PR 可以很快从 200 行膨胀到 2000 行。</p>
+            <p data-i18n="bcrd_p5">问题在于，审查者的认知带宽并没有同步扩容。Review 仍然要靠人理解业务、判断边界、识别风险、联想上下游影响。AI 解决了「生成」问题，却没有顺手解决「信任」问题。</p>
+            <ul>
+                <li data-i18n-html="bcrd_f1"><strong>改动体积更大</strong> —— AI 很擅长“一口气补全”，于是一个本来该拆成 3 个 PR 的需求，经常被合并成一个巨型提交</li>
+                <li data-i18n-html="bcrd_f2"><strong>局部看着都对</strong> —— 生成代码往往语法完整、命名体面、结构像样，最危险的问题反而藏在业务前提、兼容性假设和异常路径里</li>
+                <li data-i18n-html="bcrd_f3"><strong>责任边界变模糊</strong> —— 当作者自己也只是“指导 AI 产出”，他对每一行代码的确信程度，可能比传统手写时代更低</li>
+            </ul>
+        </section>
+
+        <section class="detail-section reveal" id="signals">
+            <h2 data-i18n="bcrd_s3">团队已经欠下审查债务的几个信号</h2>
+            <p data-i18n="bcrd_p6">这类债务最麻烦的地方，是它早期不像性能瓶颈那样容易被监控到。系统照样能跑，迭代也照样在继续，但团队对代码的真实掌控感正在下降。</p>
+            <ul>
+                <li data-i18n-html="bcrd_f4"><strong>PR 合并越来越快，但回归问题也越来越多</strong> —— 这通常说明团队在追求吞吐量，而不是在建立理解</li>
+                <li data-i18n-html="bcrd_f5"><strong>Review 评论越来越偏表面</strong> —— 大家只改命名、排版、文案，而很少讨论业务假设、状态流转或失败路径</li>
+                <li data-i18n-html="bcrd_f6"><strong>作者自己也说不清关键设计</strong> —— 一旦 reviewer 追问“为什么这样做”，回答开始退回到“AI 是这么补的”或“这样跑通了”</li>
+                <li data-i18n-html="bcrd_f7"><strong>代码能改，但没人敢动</strong> —— 新功能可以堆上去，可一遇到重构、抽象、替换实现，团队普遍心虚</li>
+            </ul>
+            <p data-i18n="bcrd_p7">如果这些现象开始频繁出现，团队欠下的不是文档债，也不只是测试债，而是更根本的理解债。</p>
+        </section>
+
+        <section class="detail-section reveal" id="response">
+            <h2 data-i18n="bcrd_s4">真正有用的应对方式，不是禁用 AI</h2>
+            <p data-i18n="bcrd_p8">我并不认为答案是“回到手写时代”。AI coding 已经是现实生产力，不可能也没必要倒退。关键在于，团队要把流程从“默认相信生成速度”切换成“主动保护审查质量”。</p>
+            <ul>
+                <li data-i18n-html="bcrd_f8"><strong>强制缩小 PR 粒度</strong> —— 与其限制是否用 AI，不如限制一次提交能跨多少模块、引入多少行为变化</li>
+                <li data-i18n-html="bcrd_f9"><strong>要求作者写出“风险说明”</strong> —— 不是总结功能，而是明确这次改动最可能出问题的地方、没有覆盖到的边界、reviewer 应重点看的区域</li>
+                <li data-i18n-html="bcrd_f10"><strong>把 AI 用在审查准备上</strong> —— 让它先产出变更摘要、调用链分析、测试建议，帮助 reviewer 更快进入上下文，而不是只帮作者扩写代码</li>
+                <li data-i18n-html="bcrd_f11"><strong>保留人工问责点</strong> —— 每个关键 PR 必须有能解释设计取舍的人，不能把责任外包给工具</li>
+            </ul>
+            <p data-i18n-html="bcrd_p9">说白了，<strong>AI 可以放大产能，但不能替团队完成“对代码负责”这件事</strong>。这个责任必须被重新设计到流程里。</p>
+        </section>
+
+        <section class="detail-section reveal" id="takeaway">
+            <h2 data-i18n="bcrd_s5">最后：别让吞吐量伪装成工程能力</h2>
+            <p data-i18n="bcrd_p10">今天很多团队都在追求“更快交付”，这没有问题。但如果衡量指标只剩下提交数、PR 数量、需求完成速度，AI 会很轻易地把这些表面指标全部拉高，同时悄悄透支真正稀缺的东西：理解力、可维护性和团队信任。</p>
+            <p data-i18n="bcrd_p11">从长期看，工程团队的护城河不是“谁能生成更多代码”，而是“谁能在更高生成速度下，仍然保持系统可控”。这也是我越来越在意代码审查债务的原因。</p>
+            <p data-i18n="bcrd_p12">写得更快当然很好，但如果没有对应的审查纪律，速度最后只会变成一种更昂贵的混乱。</p>
+        </section>
+    </article>
+
+    <div class="detail-toc" id="detailToc">
+        <div class="detail-toc-item" data-target="intro" data-label="引子"></div>
+        <div class="detail-toc-item" data-target="why" data-label="成因"></div>
+        <div class="detail-toc-item" data-target="signals" data-label="信号"></div>
+        <div class="detail-toc-item" data-target="response" data-label="应对"></div>
+        <div class="detail-toc-item" data-target="takeaway" data-label="结语"></div>
+    </div>
+
+    <footer class="detail-footer">
+        <div class="detail-footer-copy">&copy; 2026 Eric. Built with <span class="heart">♥</span> and too much coffee.</div>
+        <div class="detail-footer-links">
+            <a href="../index.html">← Back to Home</a>
+            <a href="https://github.com/powerpan" target="_blank">GitHub</a>
+        </div>
+    </footer>
+    <button class="back-to-top" id="backToTop" title="回到顶部">↑</button>
+    <script src="../js/i18n.js"></script>
+    <script src="../js/detail.js"></script>
+</body>
+</html>
