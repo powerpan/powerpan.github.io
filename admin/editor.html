@@ -8,7 +8,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/base.css">
     <style>
-        /* ===== Variable Aliases (match base.css names) ===== */
         :root {
             --text: var(--text-primary);
             --card: var(--bg-elevated);
@@ -16,7 +15,6 @@
             --purple: var(--accent-secondary);
             --text-dim: var(--text-secondary);
         }
-        /* ===== Editor Layout ===== */
         *, *::before, *::after { box-sizing: border-box; }
         body {
             font-family: 'JetBrains Mono', monospace;
@@ -27,371 +25,246 @@
             cursor: auto !important;
         }
         body::after { display: none !important; }
-        .editor-wrap {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 24px;
-        }
+        .editor-wrap { max-width: 1400px; margin: 0 auto; padding: 24px; }
+
+        /* Top Bar */
         .editor-topbar {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 16px 0;
-            border-bottom: 1px solid var(--border);
-            margin-bottom: 24px;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 16px 0; border-bottom: 1px solid var(--border); margin-bottom: 24px;
         }
-        .editor-topbar h1 {
-            font-family: 'Syne', sans-serif;
-            font-size: 1.4rem;
-            font-weight: 700;
-            color: var(--accent);
-        }
+        .editor-topbar h1 { font-family: 'Syne', sans-serif; font-size: 1.4rem; font-weight: 700; color: var(--accent); }
         .editor-topbar h1 span { color: var(--text-dim); font-weight: 400; font-size: 0.8rem; margin-left: 8px; }
         .editor-topbar-actions { display: flex; gap: 10px; }
         .editor-topbar-actions a {
-            font-size: 0.78rem;
-            color: var(--text-dim);
-            text-decoration: none;
-            padding: 6px 12px;
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            transition: all 0.2s;
+            font-size: 0.78rem; color: var(--text-dim); text-decoration: none;
+            padding: 6px 12px; border: 1px solid var(--border); border-radius: 6px; transition: all 0.2s;
         }
         .editor-topbar-actions a:hover { color: var(--accent); border-color: rgba(0,255,136,0.3); }
 
         /* Mode Toggle */
         .mode-toggle {
-            display: flex;
-            gap: 0;
-            background: rgba(10,14,20,0.8);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            overflow: hidden;
-            margin-bottom: 24px;
+            display: flex; gap: 0; background: rgba(10,14,20,0.8);
+            border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin-bottom: 24px;
         }
         .mode-btn {
-            flex: 1;
-            padding: 12px 20px;
-            background: transparent;
-            border: none;
-            color: var(--text-dim);
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.85rem;
-            cursor: pointer;
-            transition: all 0.3s;
+            flex: 1; padding: 12px 20px; background: transparent; border: none;
+            color: var(--text-dim); font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; cursor: pointer; transition: all 0.3s;
         }
-        .mode-btn.active {
-            background: rgba(0,255,136,0.08);
-            color: var(--accent);
-        }
+        .mode-btn.active { background: rgba(0,255,136,0.08); color: var(--accent); }
         .mode-btn:hover:not(.active) { color: var(--text); }
 
         /* Main Grid */
-        .editor-main {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 24px;
-            align-items: start;
-        }
-        @media (max-width: 900px) {
-            .editor-main { grid-template-columns: 1fr; }
-        }
+        .editor-main { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start; }
+        @media (max-width: 900px) { .editor-main { grid-template-columns: 1fr; } }
 
         /* Panels */
         .editor-panel {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 24px;
+            background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 24px;
         }
         .panel-title {
-            font-family: 'Syne', sans-serif;
-            font-size: 1rem;
-            font-weight: 600;
-            color: var(--accent);
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 600; color: var(--accent);
+            margin-bottom: 20px; display: flex; align-items: center; gap: 8px;
         }
-        .panel-title::before {
-            content: '>';
-            color: var(--text-dim);
-            font-family: 'JetBrains Mono', monospace;
-        }
+        .panel-title::before { content: '>'; color: var(--text-dim); font-family: 'JetBrains Mono', monospace; }
 
         /* Form Fields */
-        .field {
-            margin-bottom: 16px;
-        }
+        .field { margin-bottom: 16px; }
         .field label {
-            display: block;
-            font-size: 0.75rem;
-            color: var(--text-dim);
-            margin-bottom: 6px;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
+            display: block; font-size: 0.75rem; color: var(--text-dim);
+            margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.05em;
         }
         .field input, .field textarea, .field select {
-            width: 100%;
-            padding: 10px 14px;
-            background: rgba(5,5,8,0.8);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            color: var(--text);
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.82rem;
-            transition: border-color 0.3s;
-            outline: none;
+            width: 100%; padding: 10px 14px; background: rgba(5,5,8,0.8);
+            border: 1px solid var(--border); border-radius: 8px; color: var(--text);
+            font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; transition: border-color 0.3s; outline: none;
         }
-        .field input:focus, .field textarea:focus, .field select:focus {
-            border-color: rgba(0,255,136,0.4);
-        }
-        .field textarea {
-            min-height: 100px;
-            resize: vertical;
-            line-height: 1.7;
-        }
-        .field-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-        }
+        .field input:focus, .field textarea:focus, .field select:focus { border-color: rgba(0,255,136,0.4); }
+        .field textarea { min-height: 100px; resize: vertical; line-height: 1.7; }
+        .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .field-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
         .field select {
             appearance: none;
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2 4l4 4 4-4' fill='none' stroke='%235a6a7a' stroke-width='1.5'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 12px center;
-            padding-right: 32px;
+            background-repeat: no-repeat; background-position: right 12px center; padding-right: 32px;
         }
+        .field-hint { font-size: 0.7rem; color: var(--text-dim); margin-top: 4px; opacity: 0.7; }
 
         /* Sections Editor */
-        .sections-list {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-bottom: 12px;
-        }
+        .sections-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 12px; }
         .section-item {
-            background: rgba(5,5,8,0.6);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 14px;
-            position: relative;
+            background: rgba(5,5,8,0.6); border: 1px solid var(--border);
+            border-radius: 8px; padding: 14px; position: relative;
         }
         .section-item .field { margin-bottom: 10px; }
         .section-item .field:last-child { margin-bottom: 0; }
         .section-remove {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: none;
-            border: none;
-            color: var(--text-dim);
-            cursor: pointer;
-            font-size: 0.9rem;
-            padding: 2px 6px;
-            border-radius: 4px;
-            transition: all 0.2s;
+            position: absolute; top: 10px; right: 10px; background: none; border: none;
+            color: var(--text-dim); cursor: pointer; font-size: 0.9rem; padding: 2px 6px;
+            border-radius: 4px; transition: all 0.2s;
         }
         .section-remove:hover { color: var(--pink); background: rgba(255,51,102,0.1); }
+        .section-header {
+            display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;
+        }
+        .section-num { font-size: 0.75rem; color: var(--accent); font-weight: 600; }
 
         .add-section-btn {
-            width: 100%;
-            padding: 10px;
-            background: rgba(0,255,136,0.04);
-            border: 1px dashed rgba(0,255,136,0.2);
-            border-radius: 8px;
-            color: var(--accent);
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.8rem;
-            cursor: pointer;
-            transition: all 0.3s;
+            width: 100%; padding: 10px; background: rgba(0,255,136,0.04);
+            border: 1px dashed rgba(0,255,136,0.2); border-radius: 8px; color: var(--accent);
+            font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; cursor: pointer; transition: all 0.3s;
         }
-        .add-section-btn:hover {
-            background: rgba(0,255,136,0.08);
-            border-color: rgba(0,255,136,0.4);
-        }
+        .add-section-btn:hover { background: rgba(0,255,136,0.08); border-color: rgba(0,255,136,0.4); }
 
-        /* Stats Editor (projects only) */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-bottom: 12px;
-        }
-        .stat-input {
-            display: flex;
-            gap: 6px;
-        }
-        .stat-input input {
-            flex: 1;
-            padding: 8px 10px;
-            background: rgba(5,5,8,0.8);
-            border: 1px solid var(--border);
+        /* Rich Text Toolbar */
+        .richtext-toolbar {
+            display: flex; flex-wrap: wrap; gap: 2px; margin-bottom: 6px;
+            padding: 4px; background: rgba(5,5,8,0.6); border: 1px solid var(--border);
             border-radius: 6px;
-            color: var(--text);
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.78rem;
-            outline: none;
         }
-        .stat-input input:first-child { max-width: 60px; }
-        .stat-input input:focus { border-color: rgba(0,255,136,0.4); }
+        .richtext-toolbar .tb-sep {
+            width: 1px; background: var(--border); margin: 2px 4px;
+        }
+        .richtext-toolbar button {
+            padding: 4px 8px; background: transparent; border: none;
+            color: var(--text-dim); font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem; cursor: pointer; border-radius: 4px;
+            transition: all 0.15s; line-height: 1.4;
+        }
+        .richtext-toolbar button:hover { background: rgba(0,255,136,0.08); color: var(--accent); }
+        .richtext-toolbar button.tb-bold { font-weight: 700; }
+        .richtext-toolbar button.tb-italic { font-style: italic; }
+        .richtext-toolbar button.tb-code {
+            font-family: 'JetBrains Mono', monospace;
+            background: rgba(0,255,136,0.06); color: var(--accent); font-size: 0.68rem;
+        }
+        .richtext-toolbar button.tb-quote { color: var(--purple); }
+        .richtext-toolbar button.tb-list { letter-spacing: -1px; }
+
+        /* Quick Snippet */
+        .snippet-bar {
+            display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px;
+        }
+        .snippet-bar button {
+            padding: 3px 8px; background: rgba(168,85,247,0.06); border: 1px solid rgba(168,85,247,0.15);
+            border-radius: 4px; color: var(--purple); font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem; cursor: pointer; transition: all 0.15s; white-space: nowrap;
+        }
+        .snippet-bar button:hover { background: rgba(168,85,247,0.12); border-color: rgba(168,85,247,0.3); }
+
+        /* Stats / Meta Editor */
+        .meta-grid { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
+        .meta-row { display: flex; gap: 6px; }
+        .meta-row input {
+            flex: 1; padding: 8px 10px; background: rgba(5,5,8,0.8);
+            border: 1px solid var(--border); border-radius: 6px; color: var(--text);
+            font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; outline: none;
+        }
+        .meta-row input:first-child { max-width: 100px; }
+        .meta-row input:focus { border-color: rgba(0,255,136,0.4); }
+        .meta-row .meta-remove {
+            background: none; border: none; color: var(--text-dim); cursor: pointer;
+            font-size: 0.8rem; padding: 2px 6px; border-radius: 4px; transition: all 0.2s;
+        }
+        .meta-row .meta-remove:hover { color: var(--pink); }
+        .add-meta-btn {
+            width: 100%; padding: 8px; background: rgba(168,85,247,0.04);
+            border: 1px dashed rgba(168,85,247,0.2); border-radius: 6px; color: var(--purple);
+            font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; cursor: pointer; transition: all 0.3s;
+        }
+        .add-meta-btn:hover { background: rgba(168,85,247,0.08); border-color: rgba(168,85,247,0.4); }
 
         /* Action Buttons */
-        .action-bar {
-            display: flex;
-            gap: 10px;
-            margin-top: 20px;
-            flex-wrap: wrap;
-        }
+        .action-bar { display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap; }
         .btn {
-            padding: 10px 20px;
-            border-radius: 8px;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.82rem;
-            cursor: pointer;
-            border: none;
-            transition: all 0.3s;
+            padding: 10px 20px; border-radius: 8px; font-family: 'JetBrains Mono', monospace;
+            font-size: 0.82rem; cursor: pointer; border: none; transition: all 0.3s;
         }
-        .btn-primary {
-            background: var(--accent);
-            color: #050508;
-            font-weight: 600;
-        }
+        .btn-primary { background: var(--accent); color: #050508; font-weight: 600; }
         .btn-primary:hover { background: #00e67a; transform: translateY(-1px); }
-        .btn-secondary {
-            background: rgba(168,85,247,0.12);
-            color: var(--purple);
-            border: 1px solid rgba(168,85,247,0.3);
-        }
+        .btn-secondary { background: rgba(168,85,247,0.12); color: var(--purple); border: 1px solid rgba(168,85,247,0.3); }
         .btn-secondary:hover { background: rgba(168,85,247,0.2); }
-        .btn-outline {
-            background: transparent;
-            color: var(--text-dim);
-            border: 1px solid var(--border);
-        }
+        .btn-outline { background: transparent; color: var(--text-dim); border: 1px solid var(--border); }
         .btn-outline:hover { color: var(--text); border-color: rgba(0,255,136,0.3); }
 
         /* Preview */
         .preview-frame {
-            background: #0a0e14;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            overflow: hidden;
-            min-height: 400px;
+            background: #0a0e14; border: 1px solid var(--border); border-radius: 8px; overflow: hidden;
         }
         .preview-toolbar {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 14px;
-            background: rgba(10,14,20,0.9);
-            border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; gap: 8px; padding: 8px 14px;
+            background: rgba(10,14,20,0.9); border-bottom: 1px solid var(--border);
         }
-        .preview-dot {
-            width: 8px; height: 8px;
-            border-radius: 50%;
-            background: var(--text-dim);
-            opacity: 0.3;
-        }
+        .preview-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--text-dim); opacity: 0.3; }
         .preview-dot:first-child { background: var(--pink); opacity: 0.6; }
         .preview-dot:nth-child(2) { background: #ffbb33; opacity: 0.6; }
         .preview-dot:nth-child(3) { background: var(--accent); opacity: 0.6; }
-        .preview-url {
-            flex: 1;
-            text-align: center;
-            font-size: 0.7rem;
-            color: var(--text-dim);
+        .preview-url { flex: 1; text-align: center; font-size: 0.7rem; color: var(--text-dim); }
+        .preview-actions { display: flex; gap: 6px; }
+        .preview-actions button {
+            background: none; border: 1px solid var(--border); color: var(--text-dim);
+            font-size: 0.65rem; padding: 2px 8px; border-radius: 4px; cursor: pointer;
+            font-family: 'JetBrains Mono', monospace; transition: all 0.2s;
         }
-        .preview-body {
-            padding: 24px;
-            font-size: 0.82rem;
-            line-height: 1.8;
-            max-height: 600px;
-            overflow-y: auto;
+        .preview-actions button:hover { color: var(--accent); border-color: rgba(0,255,136,0.3); }
+        .preview-body { position: relative; }
+        .preview-body iframe {
+            width: 100%; height: 600px; border: none; background: #050508;
         }
-        .preview-body::-webkit-scrollbar { width: 4px; }
-        .preview-body::-webkit-scrollbar-track { background: transparent; }
-        .preview-body::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+        .preview-placeholder {
+            padding: 40px; text-align: center; color: var(--text-dim); font-size: 0.82rem;
+        }
 
         /* Existing Content */
-        .existing-list {
-            margin-top: 24px;
-        }
+        .existing-list { margin-top: 24px; }
         .existing-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 12px 16px;
-            background: rgba(5,5,8,0.6);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            margin-bottom: 8px;
-            font-size: 0.8rem;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 12px 16px; background: rgba(5,5,8,0.6); border: 1px solid var(--border);
+            border-radius: 8px; margin-bottom: 8px; font-size: 0.8rem;
         }
-        .existing-item-name {
-            color: var(--text);
-            font-weight: 500;
-        }
-        .existing-item-path {
-            color: var(--text-dim);
-            font-size: 0.72rem;
-        }
-        .existing-item-actions {
-            display: flex;
-            gap: 8px;
-        }
+        .existing-item-name { color: var(--text); font-weight: 500; }
+        .existing-item-path { color: var(--text-dim); font-size: 0.72rem; }
+        .existing-item-actions { display: flex; gap: 8px; }
         .existing-item-actions a, .existing-item-actions button {
-            font-size: 0.72rem;
-            color: var(--text-dim);
-            text-decoration: none;
-            padding: 4px 8px;
-            border-radius: 4px;
-            background: none;
-            border: 1px solid var(--border);
-            cursor: pointer;
-            font-family: 'JetBrains Mono', monospace;
-            transition: all 0.2s;
+            font-size: 0.72rem; color: var(--text-dim); text-decoration: none; padding: 4px 8px;
+            border-radius: 4px; background: none; border: 1px solid var(--border); cursor: pointer;
+            font-family: 'JetBrains Mono', monospace; transition: all 0.2s;
         }
         .existing-item-actions a:hover { color: var(--accent); border-color: rgba(0,255,136,0.3); }
         .existing-item-actions button:hover { color: var(--pink); border-color: rgba(255,51,102,0.3); }
 
         /* Toast */
         .toast {
-            position: fixed;
-            bottom: 24px;
-            right: 24px;
-            padding: 12px 20px;
-            background: rgba(0,255,136,0.12);
-            border: 1px solid rgba(0,255,136,0.3);
-            border-radius: 8px;
-            color: var(--accent);
-            font-size: 0.82rem;
-            z-index: 10000;
-            opacity: 0;
-            transform: translateY(10px);
-            transition: all 0.3s;
-            pointer-events: none;
+            position: fixed; bottom: 24px; right: 24px; padding: 12px 20px;
+            background: rgba(0,255,136,0.12); border: 1px solid rgba(0,255,136,0.3);
+            border-radius: 8px; color: var(--accent); font-size: 0.82rem; z-index: 10000;
+            opacity: 0; transform: translateY(10px); transition: all 0.3s; pointer-events: none;
         }
         .toast.show { opacity: 1; transform: translateY(0); }
-        .toast.error {
-            background: rgba(255,51,102,0.12);
-            border-color: rgba(255,51,102,0.3);
-            color: var(--pink);
-        }
+        .toast.error { background: rgba(255,51,102,0.12); border-color: rgba(255,51,102,0.3); color: var(--pink); }
 
-        /* Hidden sections */
+        /* Section visibility */
         .project-only { display: none; }
         body.mode-project .project-only { display: block; }
         body.mode-project .blog-only { display: none; }
+
+        /* Collapsible */
+        .collapsible-header {
+            display: flex; align-items: center; justify-content: space-between;
+            cursor: pointer; padding: 8px 0; user-select: none;
+        }
+        .collapsible-header .chevron {
+            transition: transform 0.2s; font-size: 0.7rem; color: var(--text-dim);
+        }
+        .collapsible-header.collapsed .chevron { transform: rotate(-90deg); }
+        .collapsible-body { overflow: hidden; transition: max-height 0.3s ease; }
+        .collapsible-body.collapsed { max-height: 0 !important; padding: 0; }
     </style>
 </head>
 <body class="mode-blog">
     <div class="editor-wrap">
         <!-- Top Bar -->
         <div class="editor-topbar">
-            <h1>📝 Content Editor <span>v1.0</span></h1>
+            <h1>📝 Content Editor <span>v2.0</span></h1>
             <div class="editor-topbar-actions">
                 <a href="../index.html">← 返回首页</a>
             </div>
@@ -424,6 +297,12 @@
                     <input type="text" id="titleEn" placeholder="Article Title" oninput="updatePreview()">
                 </div>
 
+                <div class="field">
+                    <label>i18n 前缀</label>
+                    <input type="text" id="i18nPrefix" placeholder="ba" oninput="updatePreview()">
+                    <div class="field-hint">用于 data-i18n 属性，如 ba_title, ba_s1, ba_p1</div>
+                </div>
+
                 <div class="field-row">
                     <div class="field">
                         <label>日期</label>
@@ -451,24 +330,45 @@
                 </div>
 
                 <div class="field">
-                    <label>描述 (用于列表页)</label>
+                    <label>描述 (用于 meta description)</label>
                     <textarea id="description" rows="2" placeholder="简短描述文章内容..." oninput="updatePreview()"></textarea>
                 </div>
 
-                <!-- Project Only: Stats -->
+                <!-- Project Only: Meta & Tech -->
                 <div class="project-only">
                     <div class="field">
-                        <label>项目统计 (数字 + 标签)</label>
-                        <div class="stats-grid">
-                            <div class="stat-input"><input placeholder="12" id="stat1num"><input placeholder="项目" id="stat1label"></div>
-                            <div class="stat-input"><input placeholder="4" id="stat2num"><input placeholder="年经验" id="stat2label"></div>
-                            <div class="stat-input"><input placeholder="6" id="stat3num"><input placeholder="开源仓库" id="stat3label"></div>
-                            <div class="stat-input"><input placeholder="480" id="stat4num"><input placeholder="GitHub Stars" id="stat4label"></div>
+                        <label>项目元数据 (Label + Value)</label>
+                        <div class="meta-grid" id="metaGrid">
+                            <div class="meta-row">
+                                <input placeholder="Role" class="meta-label" oninput="updatePreview()">
+                                <input placeholder="独立开发者" class="meta-value" oninput="updatePreview()">
+                                <button class="meta-remove" onclick="removeMeta(this)" title="删除">✕</button>
+                            </div>
+                            <div class="meta-row">
+                                <input placeholder="Duration" class="meta-label" oninput="updatePreview()">
+                                <input placeholder="3 months" class="meta-value" oninput="updatePreview()">
+                                <button class="meta-remove" onclick="removeMeta(this)" title="删除">✕</button>
+                            </div>
                         </div>
+                        <button class="add-meta-btn" onclick="addMeta()">+ 添加元数据</button>
                     </div>
                     <div class="field">
                         <label>技术栈 (逗号分隔)</label>
                         <input type="text" id="techStack" placeholder="YOLO, SAM, PyTorch, Docker" oninput="updatePreview()">
+                    </div>
+                    <div class="field-row-3">
+                        <div class="field">
+                            <label>图片渐变色 1</label>
+                            <input type="color" id="gradColor1" value="#00ff88" style="height:38px;padding:4px;">
+                        </div>
+                        <div class="field">
+                            <label>图片渐变色 2</label>
+                            <input type="color" id="gradColor2" value="#a855f7" style="height:38px;padding:4px;">
+                        </div>
+                        <div class="field">
+                            <label>图片渐变色 3</label>
+                            <input type="color" id="gradColor3" value="#0066ff" style="height:38px;padding:4px;">
+                        </div>
                     </div>
                 </div>
 
@@ -477,18 +377,43 @@
                     <label>文章内容 (按章节)</label>
                     <div class="sections-list" id="sectionsList">
                         <div class="section-item" data-idx="0">
-                            <button class="section-remove" onclick="removeSection(this)" title="删除">✕</button>
+                            <div class="section-header">
+                                <span class="section-num">§ 1</span>
+                                <button class="section-remove" onclick="removeSection(this)" title="删除">✕</button>
+                            </div>
                             <div class="field">
                                 <label>章节 ID</label>
                                 <input type="text" class="sec-id" placeholder="intro" oninput="updatePreview()">
                             </div>
                             <div class="field">
-                                <label>章节标题</label>
+                                <label>章节标题 (中文)</label>
                                 <input type="text" class="sec-title" placeholder="引言" oninput="updatePreview()">
+                            </div>
+                            <div class="field project-only">
+                                <label>章节标签 (English Label)</label>
+                                <input type="text" class="sec-label" placeholder="Overview" oninput="updatePreview()">
                             </div>
                             <div class="field">
                                 <label>内容 (支持 HTML)</label>
-                                <textarea class="sec-content" rows="4" placeholder="<p>在这里写内容...</p>" oninput="updatePreview()"></textarea>
+                                <div class="richtext-toolbar">
+                                    <button class="tb-bold" onclick="insertFormat(this,'bold')" title="加粗"><b>B</b></button>
+                                    <button class="tb-italic" onclick="insertFormat(this,'italic')" title="斜体"><i>I</i></button>
+                                    <button class="tb-code" onclick="insertFormat(this,'code')" title="行内代码">&lt;/&gt;</button>
+                                    <div class="tb-sep"></div>
+                                    <button class="tb-quote" onclick="insertFormat(this,'quote')" title="引用块">❝</button>
+                                    <button class="tb-list" onclick="insertFormat(this,'list')" title="列表">▸ UL</button>
+                                    <button onclick="insertFormat(this,'link')" title="链接">🔗</button>
+                                    <button onclick="insertFormat(this,'br')" title="换行">&darr;</button>
+                                </div>
+                                <textarea class="sec-content" rows="6" placeholder="在这里写内容...&#10;&#10;提示：选中文本后点击上方工具栏按钮，或直接输入 HTML" oninput="updatePreview()"></textarea>
+                                <div class="snippet-bar">
+                                    <button onclick="insertSnippet(this,'p')">+ 段落</button>
+                                    <button onclick="insertSnippet(this,'blockquote')">+ 精华结论</button>
+                                    <button onclick="insertSnippet(this,'ul3')">+ 三项列表</button>
+                                    <button onclick="insertSnippet(this,'strong-list')">+ 加粗列表</button>
+                                    <button onclick="insertSnippet(this,'code-block')">+ 代码块</button>
+                                    <button onclick="insertSnippet(this,'hl-paragraph')">+ 高亮段落</button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -514,11 +439,16 @@
                             <span class="preview-dot"></span>
                             <span class="preview-dot"></span>
                             <span class="preview-url" id="previewUrl">preview://localhost</span>
+                            <div class="preview-actions">
+                                <button onclick="refreshPreview()" title="刷新预览">↻ 刷新</button>
+                                <button onclick="openPreviewTab()" title="新窗口打开">↗ 新窗口</button>
+                            </div>
                         </div>
                         <div class="preview-body" id="previewBody">
-                            <p style="color: var(--text-dim); text-align: center; padding: 40px 0;">
-                                填写左侧表单后，点击「生成 HTML」查看预览
-                            </p>
+                            <div class="preview-placeholder">
+                                填写左侧表单后，点击「生成 HTML」查看预览<br>
+                                <small>预览使用 iframe 加载完整页面，效果与实际一致</small>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -526,126 +456,7 @@
                 <!-- Existing Content -->
                 <div class="editor-panel existing-list">
                     <div class="panel-title">已有内容</div>
-                    <div id="existingList">
-                        <div class="existing-item">
-                            <div>
-                                <div class="existing-item-name">AI Agent 行业思考</div>
-                                <div class="existing-item-path">blog/ai-agent-thoughts.html</div>
-                            </div>
-                            <div class="existing-item-actions">
-                                <a href="../blog/ai-agent-thoughts.html" target="_blank">查看</a>
-                            </div>
-                        </div>
-                        <div class="existing-item">
-                            <div>
-                                <div class="existing-item-name">开源项目三个月定律</div>
-                                <div class="existing-item-path">blog/open-source-hype.html</div>
-                            </div>
-                            <div class="existing-item-actions">
-                                <a href="../blog/open-source-hype.html" target="_blank">查看</a>
-                            </div>
-                        </div>
-                        <div class="existing-item">
-                            <div>
-                                <div class="existing-item-name">从 DETR 到 YOLOv8</div>
-                                <div class="existing-item-path">blog/transformer-detection.html</div>
-                            </div>
-                            <div class="existing-item-actions">
-                                <a href="../blog/transformer-detection.html" target="_blank">查看</a>
-                            </div>
-                        </div>
-                        <div class="existing-item">
-                            <div>
-                                <div class="existing-item-name">Flink + Kafka 流式计算</div>
-                                <div class="existing-item-path">blog/turborepo-trpc.html</div>
-                            </div>
-                            <div class="existing-item-actions">
-                                <a href="../blog/turborepo-trpc.html" target="_blank">查看</a>
-                            </div>
-                        </div>
-                        <div class="existing-item">
-                            <div>
-                                <div class="existing-item-name">WebGPU 浏览器端深度学习</div>
-                                <div class="existing-item-path">blog/webgpu-dl.html</div>
-                            </div>
-                            <div class="existing-item-actions">
-                                <a href="../blog/webgpu-dl.html" target="_blank">查看</a>
-                            </div>
-                        </div>
-                        <div class="existing-item">
-                            <div>
-                                <div class="existing-item-name">图像处理流水线设计</div>
-                                <div class="existing-item-path">blog/image-pipeline.html</div>
-                            </div>
-                            <div class="existing-item-actions">
-                                <a href="../blog/image-pipeline.html" target="_blank">查看</a>
-                            </div>
-                        </div>
-                        <div class="existing-item">
-                            <div>
-                                <div class="existing-item-name">SAM2 工业质检实战</div>
-                                <div class="existing-item-path">blog/sam2-inspection.html</div>
-                            </div>
-                            <div class="existing-item-actions">
-                                <a href="../blog/sam2-inspection.html" target="_blank">查看</a>
-                            </div>
-                        </div>
-                        <hr style="border:none;border-top:1px solid var(--border);margin:12px 0;">
-                        <div class="existing-item">
-                            <div>
-                                <div class="existing-item-name">YOLO26 Multimodal</div>
-                                <div class="existing-item-path">projects/yolo26-multimodal.html</div>
-                            </div>
-                            <div class="existing-item-actions">
-                                <a href="../projects/yolo26-multimodal.html" target="_blank">查看</a>
-                            </div>
-                        </div>
-                        <div class="existing-item">
-                            <div>
-                                <div class="existing-item-name">Metro Gate Detection</div>
-                                <div class="existing-item-path">projects/metro-gate.html</div>
-                            </div>
-                            <div class="existing-item-actions">
-                                <a href="../projects/metro-gate.html" target="_blank">查看</a>
-                            </div>
-                        </div>
-                        <div class="existing-item">
-                            <div>
-                                <div class="existing-item-name">Neural Vision Guard</div>
-                                <div class="existing-item-path">projects/neural-vision.html</div>
-                            </div>
-                            <div class="existing-item-actions">
-                                <a href="../projects/neural-vision.html" target="_blank">查看</a>
-                            </div>
-                        </div>
-                        <div class="existing-item">
-                            <div>
-                                <div class="existing-item-name">DataFlow Engine</div>
-                                <div class="existing-item-path">projects/dataflow.html</div>
-                            </div>
-                            <div class="existing-item-actions">
-                                <a href="../projects/dataflow.html" target="_blank">查看</a>
-                            </div>
-                        </div>
-                        <div class="existing-item">
-                            <div>
-                                <div class="existing-item-name">PixelMind Engine</div>
-                                <div class="existing-item-path">projects/pixelmind.html</div>
-                            </div>
-                            <div class="existing-item-actions">
-                                <a href="../projects/pixelmind.html" target="_blank">查看</a>
-                            </div>
-                        </div>
-                        <div class="existing-item">
-                            <div>
-                                <div class="existing-item-name">StackForge</div>
-                                <div class="existing-item-path">projects/stackforge.html</div>
-                            </div>
-                            <div class="existing-item-actions">
-                                <a href="../projects/stackforge.html" target="_blank">查看</a>
-                            </div>
-                        </div>
-                    </div>
+                    <div id="existingList"></div>
                 </div>
             </div>
         </div>
@@ -658,15 +469,55 @@
     let currentMode = 'blog';
     let generatedHTML = '';
 
+    /* ===== Existing Content List ===== */
+    const existingContent = {
+        blog: [
+            { name: 'AI Agent 行业思考', path: 'blog/ai-agent-thoughts.html' },
+            { name: '上下文腐烂', path: 'blog/context-rot.html' },
+            { name: '女性主义思考', path: 'blog/feminism-thoughts.html' },
+            { name: '图像处理流水线', path: 'blog/image-pipeline.html' },
+            { name: 'SAM2 工业质检', path: 'blog/sam2-inspection.html' },
+            { name: '从 DETR 到 YOLOv8', path: 'blog/transformer-detection.html' },
+            { name: 'WebGPU 浏览器端深度学习', path: 'blog/webgpu-dl.html' },
+        ],
+        project: [
+            { name: 'YOLO26 Multimodal', path: 'projects/yolo26-multimodal.html' },
+            { name: 'Metro Gate Detection', path: 'projects/metro-gate.html' },
+            { name: 'Neural Vision Guard', path: 'projects/neural-vision.html' },
+            { name: 'DataFlow Engine', path: 'projects/dataflow.html' },
+            { name: 'PixelMind Engine', path: 'projects/pixelmind.html' },
+            { name: 'StackForge', path: 'projects/stackforge.html' },
+        ]
+    };
+
+    function renderExistingList() {
+        const list = document.getElementById('existingList');
+        const items = existingContent[currentMode] || [];
+        list.innerHTML = items.map(item => `
+            <div class="existing-item">
+                <div>
+                    <div class="existing-item-name">${item.name}</div>
+                    <div class="existing-item-path">${item.path}</div>
+                </div>
+                <div class="existing-item-actions">
+                    <a href="../${item.path}" target="_blank">查看</a>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    /* ===== Mode Switch ===== */
     function switchMode(mode) {
         currentMode = mode;
         document.body.className = 'mode-' + mode;
         document.querySelectorAll('.mode-btn').forEach(b => {
             b.classList.toggle('active', b.dataset.mode === mode);
         });
+        renderExistingList();
         updatePreview();
     }
 
+    /* ===== Section Management ===== */
     function addSection() {
         const list = document.getElementById('sectionsList');
         const idx = list.children.length;
@@ -674,61 +525,124 @@
         div.className = 'section-item';
         div.dataset.idx = idx;
         div.innerHTML = `
-            <button class="section-remove" onclick="removeSection(this)" title="删除">✕</button>
+            <div class="section-header">
+                <span class="section-num">§ ${idx + 1}</span>
+                <button class="section-remove" onclick="removeSection(this)" title="删除">✕</button>
+            </div>
             <div class="field">
                 <label>章节 ID</label>
                 <input type="text" class="sec-id" placeholder="section-${idx}" oninput="updatePreview()">
             </div>
             <div class="field">
-                <label>章节标题</label>
+                <label>章节标题 (中文)</label>
                 <input type="text" class="sec-title" placeholder="章节 ${idx + 1}" oninput="updatePreview()">
+            </div>
+            <div class="field project-only" style="${currentMode === 'project' ? '' : 'display:none'}">
+                <label>章节标签 (English Label)</label>
+                <input type="text" class="sec-label" placeholder="Section Label" oninput="updatePreview()">
             </div>
             <div class="field">
                 <label>内容 (支持 HTML)</label>
-                <textarea class="sec-content" rows="4" placeholder="<p>在这里写内容...</p>" oninput="updatePreview()"></textarea>
+                <div class="richtext-toolbar">
+                    <button class="tb-bold" onclick="insertFormat(this,'bold')" title="加粗"><b>B</b></button>
+                    <button class="tb-italic" onclick="insertFormat(this,'italic')" title="斜体"><i>I</i></button>
+                    <button class="tb-code" onclick="insertFormat(this,'code')" title="行内代码">&lt;/&gt;</button>
+                    <div class="tb-sep"></div>
+                    <button class="tb-quote" onclick="insertFormat(this,'quote')" title="引用块">❝</button>
+                    <button class="tb-list" onclick="insertFormat(this,'list')" title="列表">▸ UL</button>
+                    <button onclick="insertFormat(this,'link')" title="链接">🔗</button>
+                    <button onclick="insertFormat(this,'br')" title="换行">&darr;</button>
+                </div>
+                <textarea class="sec-content" rows="6" placeholder="在这里写内容..." oninput="updatePreview()"></textarea>
+                <div class="snippet-bar">
+                    <button onclick="insertSnippet(this,'p')">+ 段落</button>
+                    <button onclick="insertSnippet(this,'blockquote')">+ 精华结论</button>
+                    <button onclick="insertSnippet(this,'ul3')">+ 三项列表</button>
+                    <button onclick="insertSnippet(this,'strong-list')">+ 加粗列表</button>
+                    <button onclick="insertSnippet(this,'code-block')">+ 代码块</button>
+                    <button onclick="insertSnippet(this,'hl-paragraph')">+ 高亮段落</button>
+                </div>
             </div>
         `;
         list.appendChild(div);
+        updateSectionNumbers();
     }
 
     function removeSection(btn) {
         const list = document.getElementById('sectionsList');
         if (list.children.length > 1) {
             btn.closest('.section-item').remove();
+            updateSectionNumbers();
             updatePreview();
         } else {
             showToast('至少保留一个章节', true);
         }
     }
 
+    function updateSectionNumbers() {
+        document.querySelectorAll('.section-item').forEach((item, i) => {
+            const num = item.querySelector('.section-num');
+            if (num) num.textContent = '§ ' + (i + 1);
+        });
+    }
+
+    /* ===== Meta Management (Project) ===== */
+    function addMeta() {
+        const grid = document.getElementById('metaGrid');
+        const div = document.createElement('div');
+        div.className = 'meta-row';
+        div.innerHTML = `
+            <input placeholder="Label" class="meta-label" oninput="updatePreview()">
+            <input placeholder="Value" class="meta-value" oninput="updatePreview()">
+            <button class="meta-remove" onclick="removeMeta(this)" title="删除">✕</button>
+        `;
+        grid.appendChild(div);
+    }
+
+    function removeMeta(btn) {
+        const grid = document.getElementById('metaGrid');
+        if (grid.children.length > 1) {
+            btn.closest('.meta-row').remove();
+            updatePreview();
+        }
+    }
+
+    /* ===== Form Data ===== */
     function getFormData() {
         const sections = [];
         document.querySelectorAll('.section-item').forEach(item => {
             sections.push({
-                id: item.querySelector('.sec-id').value,
-                title: item.querySelector('.sec-title').value,
-                content: item.querySelector('.sec-content').value
+                id: item.querySelector('.sec-id')?.value || '',
+                title: item.querySelector('.sec-title')?.value || '',
+                label: item.querySelector('.sec-label')?.value || '',
+                content: item.querySelector('.sec-content')?.value || ''
             });
         });
+
+        const metaItems = [];
+        document.querySelectorAll('#metaGrid .meta-row').forEach(row => {
+            const label = row.querySelector('.meta-label')?.value || '';
+            const value = row.querySelector('.meta-value')?.value || '';
+            if (label || value) metaItems.push({ label, value });
+        });
+
         return {
             mode: currentMode,
             slug: document.getElementById('slug').value,
             titleZh: document.getElementById('titleZh').value,
             titleEn: document.getElementById('titleEn').value,
+            i18nPrefix: document.getElementById('i18nPrefix').value,
             date: document.getElementById('date').value,
             readtime: document.getElementById('readtime').value,
             category: document.getElementById('category').value,
             difficulty: document.getElementById('difficulty').value,
             description: document.getElementById('description').value,
             sections,
-            // project only
-            stats: [
-                { num: document.getElementById('stat1num')?.value, label: document.getElementById('stat1label')?.value },
-                { num: document.getElementById('stat2num')?.value, label: document.getElementById('stat2label')?.value },
-                { num: document.getElementById('stat3num')?.value, label: document.getElementById('stat3label')?.value },
-                { num: document.getElementById('stat4num')?.value, label: document.getElementById('stat4label')?.value },
-            ],
-            techStack: document.getElementById('techStack')?.value || ''
+            metaItems,
+            techStack: document.getElementById('techStack')?.value || '',
+            gradColor1: document.getElementById('gradColor1')?.value || '#00ff88',
+            gradColor2: document.getElementById('gradColor2')?.value || '#a855f7',
+            gradColor3: document.getElementById('gradColor3')?.value || '#0066ff',
         };
     }
 
@@ -737,18 +651,193 @@
         return dateStr.replace(/-/g, '.');
     }
 
+    function escapeAttr(s) {
+        return (s || '').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
+    /* ===== Rich Text Formatting ===== */
+    function getTextarea(btn) {
+        const sectionItem = btn.closest('.section-item') || btn.closest('.field')?.closest('.section-item');
+        if (sectionItem) return sectionItem.querySelector('.sec-content');
+        // fallback: find nearest textarea
+        const field = btn.closest('.field');
+        return field ? field.querySelector('textarea') : null;
+    }
+
+    function insertFormat(btn, type) {
+        const ta = getTextarea(btn);
+        if (!ta) return;
+        const start = ta.selectionStart;
+        const end = ta.selectionEnd;
+        const sel = ta.value.substring(start, end);
+        const before = ta.value.substring(0, start);
+        const after = ta.value.substring(end);
+
+        let insert = '', cursorOffset = 0;
+        switch (type) {
+            case 'bold':
+                if (sel) {
+                    insert = `<strong>${sel}</strong>`;
+                    cursorOffset = insert.length;
+                } else {
+                    insert = '<strong></strong>';
+                    cursorOffset = 8;
+                }
+                break;
+            case 'italic':
+                if (sel) {
+                    insert = `<em>${sel}</em>`;
+                    cursorOffset = insert.length;
+                } else {
+                    insert = '<em></em>';
+                    cursorOffset = 4;
+                }
+                break;
+            case 'code':
+                if (sel) {
+                    insert = `<code>${sel}</code>`;
+                    cursorOffset = insert.length;
+                } else {
+                    insert = '<code></code>';
+                    cursorOffset = 6;
+                }
+                break;
+            case 'quote':
+                if (sel) {
+                    insert = `<blockquote>${sel}</blockquote>`;
+                    cursorOffset = insert.length;
+                } else {
+                    insert = '<blockquote>精华结论...</blockquote>';
+                    cursorOffset = 12;
+                }
+                break;
+            case 'list':
+                if (sel) {
+                    // wrap each line in <li>
+                    const lines = sel.split('\n').filter(l => l.trim());
+                    const items = lines.map(l => `    <li>${l}</li>`).join('\n');
+                    insert = `<ul>\n${items}\n</ul>`;
+                } else {
+                    insert = '<ul>\n    <li>列表项 1</li>\n    <li>列表项 2</li>\n    <li>列表项 3</li>\n</ul>';
+                }
+                cursorOffset = insert.length;
+                break;
+            case 'link':
+                if (sel) {
+                    insert = `<a href="">${sel}</a>`;
+                    cursorOffset = 9; // position inside href
+                } else {
+                    insert = '<a href="">链接文字</a>';
+                    cursorOffset = 9;
+                }
+                break;
+            case 'br':
+                insert = '<br>';
+                cursorOffset = 4;
+                break;
+        }
+        ta.value = before + insert + after;
+        // set cursor position
+        if (sel) {
+            ta.selectionStart = ta.selectionEnd = start + cursorOffset;
+        } else {
+            // for wrap tags, place cursor inside
+            const tagEnd = start + insert.length;
+            const openEnd = insert.indexOf('>') + 1;
+            const closeStart = insert.lastIndexOf('<');
+            if (closeStart > openEnd) {
+                ta.selectionStart = start + openEnd;
+                ta.selectionEnd = start + closeStart;
+            } else {
+                ta.selectionStart = ta.selectionEnd = tagEnd;
+            }
+        }
+        ta.focus();
+        updatePreview();
+    }
+
+    const snippets = {
+        'p': `<p>在这里写段落内容...</p>`,
+        'blockquote': `<blockquote>这是一段精华结论，会以紫色左边框和斜体显示，用来突出文章中的关键观点或总结。</blockquote>`,
+        'ul3': `<ul>\n    <li><strong>要点一</strong> — 描述第一个关键点</li>\n    <li><strong>要点二</strong> — 描述第二个关键点</li>\n    <li><strong>要点三</strong> — 描述第三个关键点</li>\n</ul>`,
+        'strong-list': `<ul>\n    <li><strong>功能 A</strong> — 功能 A 的详细说明，包括核心优势和应用场景</li>\n    <li><strong>功能 B</strong> — 功能 B 的详细说明，包括核心优势和应用场景</li>\n    <li><strong>功能 C</strong> — 功能 C 的详细说明，包括核心优势和应用场景</li>\n</ul>`,
+        'code-block': `<div class="detail-code-block">\n    <div class="detail-code-header">\n        <div class="detail-code-dot" style="background:#ff5f57"></div>\n        <div class="detail-code-dot" style="background:#febc2e"></div>\n        <div class="detail-code-dot" style="background:#28c840"></div>\n        <div class="detail-code-title">example.py</div>\n    </div>\n    <div class="detail-code-body">\n        <div class="line"><span class="line-content"><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">hello</span>():</span></div>\n        <div class="line"><span class="line-content">    <span style="color:#6272a4"># TODO: add code here</span></span></div>\n        <div class="line"><span class="line-content">    <span style="color:#f1fa8c">print</span>(<span style="color:#f1fa8c">"Hello World"</span>)</span></div>\n    </div>\n</div>`,
+        'hl-paragraph': `<p><strong>核心观点：</strong>在这里写一段带有加粗前缀的高亮段落，用于强调文章中的重要结论或关键信息。</p>`,
+    };
+
+    function insertSnippet(btn, key) {
+        const field = btn.closest('.field');
+        const ta = field ? field.querySelector('textarea') : null;
+        if (!ta) return;
+        const snippet = snippets[key] || '';
+        const start = ta.selectionStart;
+        const before = ta.value.substring(0, start);
+        const after = ta.value.substring(ta.selectionEnd);
+        // add newline before if not at start and before doesn't end with newline
+        const prefix = (start > 0 && !before.endsWith('\n\n')) ? '\n\n' : '';
+        ta.value = before + prefix + snippet + '\n' + after;
+        ta.selectionStart = ta.selectionEnd = start + prefix.length + snippet.length + 1;
+        ta.focus();
+        updatePreview();
+    }
+
+    /* ===== Shared Nav HTML ===== */
+    function getNavHTML() {
+        return `    <nav id="nav">
+        <a href="../index.html" class="nav-logo magnetic" data-hover>ERIC<span class="dot">.</span></a>
+        <ul class="nav-center">
+            <li><a href="../index.html#about" data-hover data-i18n="nav_about">// 关于</a></li>
+            <li><a href="../index.html#projects" data-hover data-i18n="nav_projects">// 项目</a></li>
+            <li><a href="../index.html#blog" data-hover data-i18n="nav_blog">// 博客</a></li>
+            <li><a href="../index.html#contact" data-hover data-i18n="nav_contact">// 联系</a></li>
+        </ul>
+        <div class="nav-status"><span class="status-dot"></span>Open to work</div>
+        <button class="nav-hamburger" id="navHamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+    </nav>
+    <div class="mobile-nav" id="mobileNav">
+        <button class="mobile-nav-close" id="mobileNavClose" aria-label="Close menu">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+        <ul class="mobile-nav-links">
+            <li><a href="../index.html#about" data-i18n="nav_about">// 关于</a></li>
+            <li><a href="../index.html#projects" data-i18n="nav_projects">// 项目</a></li>
+            <li><a href="../index.html#blog" data-i18n="nav_blog">// 博客</a></li>
+            <li><a href="../index.html#contact" data-i18n="nav_contact">// 联系</a></li>
+            <li><button class="mobile-lang-btn" id="mobileLangBtn" onclick="toggleLang()" data-i18n="nav_lang">中 / EN</button></li>
+        </ul>
+    </div>`;
+    }
+
+    function getFooterHTML() {
+        return `    <footer class="detail-footer">
+        <div class="detail-footer-copy">&copy; 2026 Eric. Built with <span class="heart">♥</span> and too much coffee.</div>
+        <div class="detail-footer-links">
+            <a href="../index.html">← Back to Home</a>
+            <a href="https://github.com/powerpan" target="_blank">GitHub</a>
+        </div>
+    </footer>
+
+    <button class="back-to-top" id="backToTop" title="回到顶部">↑</button>
+
+    <script src="../js/i18n.js"><\/script>
+    <script src="../js/detail.js"><\/script>`;
+    }
+
+    /* ===== Blog Template ===== */
     function generateBlogHTML(d) {
+        const p = d.i18nPrefix || 'b';
         const dateFormatted = formatDate(d.date);
         const tocItems = d.sections.filter(s => s.id && s.title).map(s =>
             `        <div class="detail-toc-item" data-target="${s.id}" data-label="${s.title}"></div>`
         ).join('\n');
 
         const contentSections = d.sections.map(s => {
-            const heading = s.title ? `\n            <h2 id="${s.id}">${s.title}</h2>` : '';
+            const idAttr = s.id ? ` id="${s.id}"` : '';
+            const heading = s.title ? `\n            <h2 data-i18n="${p}_s${d.sections.indexOf(s) + 1}">${s.title}</h2>` : '';
             return `
         <!-- ============ ${s.title || s.id} ============ -->
-        <section${s.id ? ` id="${s.id}"` : ''}>${heading}
-            <div class="detail-paragraph">
+        <section class="detail-section reveal"${idAttr}>${heading}
+            <div data-i18n-html="${p}_p${d.sections.indexOf(s) + 1}">
                 ${s.content || '<p>内容待填充...</p>'}
             </div>
         </section>`;
@@ -759,8 +848,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${d.titleZh || '新文章'} — Eric</title>
-    <meta name="description" content="${d.description}">
+    <title>${escapeAttr(d.titleZh) || '新文章'} — Eric</title>
+    <meta name="description" content="${escapeAttr(d.description)}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/base.css">
@@ -769,109 +858,74 @@
     <link rel="stylesheet" href="../css/responsive.css">
 </head>
 <body>
-    <!-- ============ SCROLL PROGRESS ============ -->
     <div class="detail-scroll-progress" id="detailScrollProgress"></div>
-
-    <!-- ============ CURSOR ============ -->
     <div class="cursor" id="cursor"></div>
     <div class="cursor-dot" id="cursorDot"></div>
-
-    <!-- ============ PARTICLE CANVAS ============ -->
     <canvas id="particleCanvas"></canvas>
 
-    <!-- ============ NAV ============ -->
-    <nav id="nav">
-        <a href="../index.html" class="nav-logo magnetic" data-hover>ERIC<span class="dot">.</span></a>
-        <ul class="nav-center">
-            <li><a href="../index.html#about" data-hover>// 关于</a></li>
-            <li><a href="../index.html#projects" data-hover>// 项目</a></li>
-            <li><a href="../index.html#blog" data-hover>// 博客</a></li>
-            <li><a href="../index.html#contact" data-hover>// 联系</a></li>
-        </ul>
-        <div class="nav-status">
-            <span class="status-dot"></span>
-            Open to work
+${getNavHTML()}
+
+    <section class="blog-article-hero">
+        <div class="detail-hero-bg"></div>
+        <a href="../index.html#blog" class="detail-back" data-hover>
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            返回博客
+        </a>
+        <div class="blog-article-tag reveal">${escapeAttr(d.category) || 'Tech'}</div>
+        <h1 class="blog-article-title reveal reveal-d1" data-i18n-html="${p}_title">${escapeAttr(d.titleZh) || '新文章'}</h1>
+        <div class="blog-article-meta reveal reveal-d2">
+            <span>📅 ${dateFormatted}</span>
+            <span>⏱️ ${escapeAttr(d.readtime) || '10 min'}</span>
+            <span>👤 Eric Pan</span>
         </div>
-        <button class="nav-hamburger" id="navHamburger" aria-label="Menu">
-            <span></span><span></span><span></span>
-        </button>
-    </nav>
-    <div class="mobile-nav" id="mobileNav">
-        <button class="mobile-nav-close" id="mobileNavClose" aria-label="Close menu">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
-        </button>
-        <ul class="mobile-nav-links">
-            <li><a href="../index.html#about">// 关于</a></li>
-            <li><a href="../index.html#projects">// 项目</a></li>
-            <li><a href="../index.html#blog">// 博客</a></li>
-            <li><a href="../index.html#contact">// 联系</a></li>
-        </ul>
-    </div>
+    </section>
 
-    <!-- ============ ARTICLE ============ -->
-    <main class="detail-content">
-        <header class="detail-header reveal">
-            <div class="detail-meta">
-                <span class="detail-tag">${d.category || 'Tech'}</span>
-                <span class="detail-date">${dateFormatted}</span>
-                <span class="detail-readtime">${d.readtime || '10 min'} read</span>
-            </div>
-            <h1 class="detail-title">${d.titleZh || '新文章'}</h1>
-            <p class="detail-subtitle">${d.titleEn || ''}</p>
-        </header>
+    <article class="blog-article-body">
 ${contentSections}
-    </main>
+    </article>
 
-    <!-- ============ TABLE OF CONTENTS ============ -->
-    <div class="detail-toc">
+    <div class="detail-toc" id="detailToc">
 ${tocItems}
     </div>
 
-    <!-- ============ FOOTER ============ -->
-    <footer class="detail-footer">
-        <div class="detail-footer-copy">
-            &copy; 2026 Eric. Built with <span class="heart">♥</span> and too much coffee.
-        </div>
-        <div class="detail-footer-links">
-            <a href="../index.html">← Back to Home</a>
-            <a href="https://github.com/powerpan" target="_blank">GitHub</a>
-        </div>
-    </footer>
-
-    <!-- ============ BACK TO TOP ============ -->
-    <button class="back-to-top" id="backToTop" title="回到顶部">↑</button>
-
-    <script src="../js/detail.js"><\/script>
+${getFooterHTML()}
 </body>
 </html>`;
     }
 
+    /* ===== Project Template ===== */
     function generateProjectHTML(d) {
+        const p = d.i18nPrefix || 'proj';
         const dateFormatted = formatDate(d.date);
-        const statsHTML = d.stats.filter(s => s.num && s.label).map(s =>
-            `                <div class="detail-stat-card">
-                    <div class="detail-stat-num">${s.num}</div>
-                    <div class="detail-stat-label">${s.label}</div>
-                </div>`
+
+        // TOC items (placed before hero in project pages)
+        const tocItems = d.sections.filter(s => s.id).map(s => {
+            const label = s.label || s.title || s.id;
+            return `        <div class="detail-toc-item" data-target="${s.id}" data-label="${label}"></div>`;
+        }).join('\n');
+
+        // Meta items
+        const metaHTML = d.metaItems.map(m =>
+            `            <div class="detail-meta-item"><span class="detail-meta-label">${escapeAttr(m.label)}</span><span class="detail-meta-value">${escapeAttr(m.value)}</span></div>`
         ).join('\n');
 
+        // Tech tags
         const techTags = d.techStack.split(',').map(t => t.trim()).filter(Boolean).map(t =>
-            `            <span class="tech-tag">${t}</span>`
+            `            <div class="detail-tech-badge" data-hover>${escapeAttr(t)}</div>`
         ).join('\n');
 
-        const tocItems = d.sections.filter(s => s.id && s.title).map(s =>
-            `        <div class="detail-toc-item" data-target="${s.id}" data-label="${s.title}"></div>`
-        ).join('\n');
-
-        const contentSections = d.sections.map(s => {
-            const heading = s.title ? `\n            <h2 id="${s.id}">${s.title}</h2>` : '';
+        // Content sections with proper classes
+        const contentSections = d.sections.map((s, i) => {
+            const idAttr = s.id ? ` id="${s.id}"` : '';
+            const label = s.label ? `\n            <div class="detail-section-label">${escapeAttr(s.label)}</div>` : '';
+            const heading = s.title ? `\n            <h2 class="detail-section-title" data-i18n="${p}_s${i + 1}">${escapeAttr(s.title)}</h2>` : '';
             return `
         <!-- ============ ${s.title || s.id} ============ -->
-        <section${s.id ? ` id="${s.id}"` : ''}>${heading}
-            <div class="detail-paragraph">
+        <div class="detail-section reveal"${idAttr}>${label}${heading}
+            <div class="detail-text" data-i18n-html="${p}_p${i + 1}">
                 ${s.content || '<p>内容待填充...</p>'}
             </div>
-        </section>`;
+        </div>`;
         }).join('\n');
 
         return `<!DOCTYPE html>
@@ -879,8 +933,8 @@ ${tocItems}
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${d.titleZh || '新项目'} — Eric</title>
-    <meta name="description" content="${d.description}">
+    <title>${escapeAttr(d.titleZh) || '新项目'} — Eric's Project</title>
+    <meta name="description" content="${escapeAttr(d.description)}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/base.css">
@@ -889,123 +943,113 @@ ${tocItems}
     <link rel="stylesheet" href="../css/responsive.css">
 </head>
 <body>
-    <!-- ============ SCROLL PROGRESS ============ -->
     <div class="detail-scroll-progress" id="detailScrollProgress"></div>
-
-    <!-- ============ CURSOR ============ -->
     <div class="cursor" id="cursor"></div>
     <div class="cursor-dot" id="cursorDot"></div>
-
-    <!-- ============ PARTICLE CANVAS ============ -->
     <canvas id="particleCanvas"></canvas>
 
-    <!-- ============ NAV ============ -->
-    <nav id="nav">
-        <a href="../index.html" class="nav-logo magnetic" data-hover>ERIC<span class="dot">.</span></a>
-        <ul class="nav-center">
-            <li><a href="../index.html#about" data-hover>// 关于</a></li>
-            <li><a href="../index.html#projects" data-hover>// 项目</a></li>
-            <li><a href="../index.html#blog" data-hover>// 博客</a></li>
-            <li><a href="../index.html#contact" data-hover>// 联系</a></li>
-        </ul>
-        <div class="nav-status">
-            <span class="status-dot"></span>
-            Open to work
-        </div>
-        <button class="nav-hamburger" id="navHamburger" aria-label="Menu">
-            <span></span><span></span><span></span>
-        </button>
-    </nav>
-    <div class="mobile-nav" id="mobileNav">
-        <button class="mobile-nav-close" id="mobileNavClose" aria-label="Close menu">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
-        </button>
-        <ul class="mobile-nav-links">
-            <li><a href="../index.html#about">// 关于</a></li>
-            <li><a href="../index.html#projects">// 项目</a></li>
-            <li><a href="../index.html#blog">// 博客</a></li>
-            <li><a href="../index.html#contact">// 联系</a></li>
-        </ul>
-    </div>
+${getNavHTML()}
 
-    <!-- ============ PROJECT HERO ============ -->
-    <main class="detail-content">
-        <header class="detail-header reveal">
-            <div class="detail-meta">
-                <span class="detail-tag">${d.category || 'Project'}</span>
-                <span class="detail-date">${dateFormatted}</span>
-            </div>
-            <h1 class="detail-title">${d.titleZh || '新项目'}</h1>
-            <p class="detail-subtitle">${d.titleEn || ''}</p>
-        </header>
-
-        <div class="detail-stats reveal">
-${statsHTML}
-        </div>
-
-        <div class="detail-tech reveal">
-${techTags}
-        </div>
-${contentSections}
-    </main>
-
-    <!-- ============ TABLE OF CONTENTS ============ -->
-    <div class="detail-toc">
+    <div class="detail-toc" id="detailToc">
 ${tocItems}
     </div>
 
-    <!-- ============ FOOTER ============ -->
-    <footer class="detail-footer">
-        <div class="detail-footer-copy">
-            &copy; 2026 Eric. Built with <span class="heart">♥</span> and too much coffee.
+    <section class="detail-hero">
+        <div class="detail-hero-bg"></div>
+        <a href="../index.html#projects" class="detail-back magnetic" data-hover>
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            BACK
+        </a>
+        <div class="detail-tag">${escapeAttr(d.category) || 'Project'}</div>
+        <h1 class="detail-title" data-i18n-html="${p}_title">${escapeAttr(d.titleZh) || '新项目'}</h1>
+        <p class="detail-subtitle" data-i18n="${p}_sub">${escapeAttr(d.titleEn) || ''}</p>
+        <div class="detail-meta">
+${metaHTML}
         </div>
-        <div class="detail-footer-links">
-            <a href="../index.html">← Back to Home</a>
-            <a href="https://github.com/powerpan" target="_blank">GitHub</a>
+    </section>
+
+    <div class="detail-image-section reveal">
+        <div class="detail-image-wrap">
+            <div class="detail-image">
+                <div class="detail-image-gradient" style="background: linear-gradient(135deg, ${d.gradColor1}22, ${d.gradColor2}33, ${d.gradColor3}22);">
+                    <div class="detail-image-placeholder">${escapeAttr(d.titleZh) || 'Project'}</div>
+                </div>
+            </div>
+            <div class="detail-image-overlay"></div>
+            <div class="detail-image-dots">
+                <div class="detail-image-dot" style="background:#ff5f57"></div>
+                <div class="detail-image-dot" style="background:#febc2e"></div>
+                <div class="detail-image-dot" style="background:#28c840"></div>
+            </div>
         </div>
-    </footer>
+    </div>
 
-    <!-- ============ BACK TO TOP ============ -->
-    <button class="back-to-top" id="backToTop" title="回到顶部">↑</button>
+    <div class="detail-content">
+${contentSections}
+    </div>
 
-    <script src="../js/detail.js"><\/script>
+${getFooterHTML()}
 </body>
 </html>`;
     }
+
+    /* ===== Preview ===== */
+    let autoPreview = false;
 
     function updatePreview() {
         const d = getFormData();
         document.getElementById('previewUrl').textContent =
             `preview://${d.mode}/${d.slug || 'untitled'}.html`;
-
-        if (!d.titleZh && d.sections.every(s => !s.title)) {
-            document.getElementById('previewBody').innerHTML =
-                '<p style="color: var(--text-dim); text-align: center; padding: 40px 0;">填写左侧表单后，点击「生成 HTML」查看预览</p>';
-            return;
+        // auto-refresh preview if already generated
+        if (autoPreview && generatedHTML) {
+            generatedHTML = d.mode === 'blog' ? generateBlogHTML(d) : generateProjectHTML(d);
+            renderIframePreview(generatedHTML);
         }
-
-        // Simple preview: show structure
-        let html = `<div style="font-family: 'Syne', sans-serif;">`;
-        html += `<div style="margin-bottom:4px;font-size:0.7rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.1em;">${d.category || d.mode} · ${formatDate(d.date)}</div>`;
-        html += `<h1 style="font-size:1.6rem;color:var(--accent);margin-bottom:8px;font-weight:700;">${d.titleZh || 'Untitled'}</h1>`;
-        if (d.titleEn) html += `<p style="font-size:0.85rem;color:var(--text-dim);margin-bottom:16px;">${d.titleEn}</p>`;
-        if (d.description) html += `<p style="font-size:0.82rem;color:var(--text);line-height:1.7;margin-bottom:20px;">${d.description}</p>`;
-        d.sections.forEach(s => {
-            if (s.title) html += `<h2 style="font-size:1.1rem;color:var(--purple);margin:16px 0 8px;font-weight:600;">${s.title}</h2>`;
-            if (s.content) html += `<div style="font-size:0.8rem;color:var(--text);line-height:1.7;margin-bottom:12px;">${s.content}</div>`;
-        });
-        html += `</div>`;
-        document.getElementById('previewBody').innerHTML = html;
     }
 
+    function refreshPreview() {
+        if (!generatedHTML) {
+            showToast('请先点击「生成 HTML」', true);
+            return;
+        }
+        renderIframePreview(generatedHTML);
+    }
+
+    function renderIframePreview(html) {
+        const container = document.getElementById('previewBody');
+        container.innerHTML = '';
+        const iframe = document.createElement('iframe');
+        iframe.sandbox = 'allow-scripts allow-same-origin';
+        iframe.style.width = '100%';
+        iframe.style.height = '600px';
+        iframe.style.border = 'none';
+        iframe.style.background = '#050508';
+        container.appendChild(iframe);
+
+        // Use srcdoc for local file safety
+        iframe.srcdoc = html;
+    }
+
+    function openPreviewTab() {
+        if (!generatedHTML) {
+            showToast('请先点击「生成 HTML」', true);
+            return;
+        }
+        const w = window.open('', '_blank');
+        w.document.write(generatedHTML);
+        w.document.close();
+    }
+
+    /* ===== Generate ===== */
     function generateHTML() {
         const d = getFormData();
         if (!d.slug) { showToast('请填写文件名 (slug)', true); return; }
         if (!d.titleZh) { showToast('请填写中文标题', true); return; }
 
         generatedHTML = d.mode === 'blog' ? generateBlogHTML(d) : generateProjectHTML(d);
-        updatePreview();
-        showToast('✅ HTML 已生成！点击下载或复制');
+        autoPreview = true;
+        renderIframePreview(generatedHTML);
+        showToast('✅ HTML 已生成！后续编辑将自动刷新预览');
     }
 
     function downloadHTML() {
@@ -1033,9 +1077,19 @@ ${tocItems}
 
     function clearForm() {
         if (!confirm('确定要清空所有内容吗？')) return;
-        document.querySelectorAll('input, textarea').forEach(el => el.value = '');
+        document.querySelectorAll('.editor-panel input[type="text"], .editor-panel input[type="date"], .editor-panel textarea').forEach(el => {
+            if (el.type === 'date') {
+                el.valueAsDate = new Date();
+            } else {
+                el.value = '';
+            }
+        });
         generatedHTML = '';
-        updatePreview();
+        document.getElementById('previewBody').innerHTML = `
+            <div class="preview-placeholder">
+                填写左侧表单后，点击「生成 HTML」查看预览<br>
+                <small>预览使用 iframe 加载完整页面，效果与实际一致</small>
+            </div>`;
         showToast('🗑️ 已清空');
     }
 
@@ -1046,8 +1100,9 @@ ${tocItems}
         setTimeout(() => t.className = 'toast', 2500);
     }
 
-    // Set default date
+    /* ===== Init ===== */
     document.getElementById('date').valueAsDate = new Date();
+    renderExistingList();
     </script>
 </body>
 </html>
