@@ -21,6 +21,33 @@
 
 ---
 
+## 0.5 固定输入输出目录
+
+每一次文章任务都必须使用下面的固定目录，不要临时发明新位置。
+
+| 阶段 | 目录 | 命名规则 | 说明 |
+|------|------|----------|------|
+| 外部转入原稿 | `transfer/{YYYY-MM-DD}/` | 保留来源文件名 | 从其他仓库或工具转入的原始材料，只做归档，不直接发布 |
+| RAG 标准底稿 | `rag-articles/` | `{slug}.md` | 进入 RAG 系统的标准 Markdown，必须带统一 front matter |
+| 博客浓缩稿 | `blog-drafts/` | `{slug}.md` | 基于 RAG 底稿浓缩后的博客长度 Markdown，用于人工审阅和生成 HTML |
+| 博客详情页 | `blog/` | `{slug}.html` | 站点实际发布页面 |
+| 国际化文本 | `js/i18n.js` | `{prefix}_*`、`blog{N}_title`、`blog_card{N}_*` | 中英文都必须补齐 |
+| 首页最新文章 | `index.html` | 最新 6 篇 | 只维护首页博客区的最新 6 篇卡片 |
+| 全量文章列表 | `blog/index.html` | 全部文章倒序 | 必须维护总数、筛选计数和连续编号 |
+| 主题使用记录 | `BLOG_TOPIC_POOL.md` | 主题行追加日期 | 每次发文都要记录选用主题 |
+| 转换脚本 | `tools/` | `*.py` | 项目内工具脚本统一放这里 |
+
+固定路径示例：
+
+```text
+transfer/2026-04-27/ai-agent-architecture-survey-draft.md
+rag-articles/ai-agent-architecture.md
+blog-drafts/ai-agent-architecture.md
+blog/ai-agent-architecture.html
+```
+
+---
+
 ## 1. 标准 RAG Markdown 格式
 
 后续所有进入 RAG 底座的文章，都统一整理为：
@@ -128,7 +155,13 @@ original_file: {slug}.html
 
 RAG Markdown 是底稿，不等于最终博客。
 
-在生成 HTML 前，需要把文章浓缩成适合站点风格的博客长度：
+在生成 HTML 前，需要把文章浓缩成适合站点风格的博客长度，并固定输出到：
+
+```text
+blog-drafts/{slug}.md
+```
+
+浓缩要求：
 
 - 保留一个清晰主论点。
 - 控制小节数量，通常 4 到 6 个。
@@ -191,7 +224,7 @@ NEW_BLOG_POST.md
 
 1. 选定 slug 和文章主题。
 2. 写入或更新 `rag-articles/{slug}.md`。
-3. 基于 RAG Markdown 浓缩成站点博客稿。
+3. 基于 RAG Markdown 浓缩成 `blog-drafts/{slug}.md`。
 4. 按 `NEW_BLOG_POST.md` 生成 `blog/{slug}.html`。
 5. 更新 `js/i18n.js`。
 6. 更新 `index.html` 最新 6 篇。
@@ -199,6 +232,7 @@ NEW_BLOG_POST.md
 8. 更新 `BLOG_TOPIC_POOL.md` 使用日期。
 9. 运行必要校验。
 10. 默认只留在工作区，除非用户明确要求提交或推送。
+11. 如果用户明确要求提交并推送远程，推送完成后必须提醒用户：把本次新增或更新的 `rag-articles/{slug}.md` 放入实际 RAG 系统。
 
 ---
 
@@ -214,4 +248,4 @@ NEW_BLOG_POST.md
 - [ ] `blog_list_sub` 计数正确
 - [ ] 没有写入 `webblog` 项目之外
 - [ ] 没有修改无关文件
-
+- [ ] 如已推送远程，已提醒用户同步 `rag-articles/{slug}.md` 到 RAG 系统
