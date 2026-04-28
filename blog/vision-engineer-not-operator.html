@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>视觉算法工程师，别把自己做成流程操作员 — Eric</title>
+    <meta name="description" content="开源模型和训练部署平台会继续降低门槛，视觉算法工程师真正的价值在于定义问题、设计数据闭环、诊断模型并让系统稳定落地。">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/detail.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body>
+    <div class="detail-scroll-progress" id="detailScrollProgress"></div>
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor-dot" id="cursorDot"></div>
+    <canvas id="particleCanvas"></canvas>
+
+    <nav id="nav">
+        <a href="../index.html" class="nav-logo magnetic" data-hover>ERIC<span class="dot">.</span></a>
+        <ul class="nav-center">
+            <li><a href="../index.html#about" data-hover data-i18n="nav_about">// 关于</a></li>
+            <li><a href="../index.html#projects" data-hover data-i18n="nav_projects">// 项目</a></li>
+            <li><a href="../index.html#blog" data-hover data-i18n="nav_blog">// 博客</a></li>
+            <li><a href="../index.html#contact" data-hover data-i18n="nav_contact">// 联系</a></li>
+        </ul>
+        <div class="nav-status"><span class="status-dot"></span>Open to work</div>
+        <button class="nav-hamburger" id="navHamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+    </nav>
+    <div class="mobile-nav" id="mobileNav">
+        <button class="mobile-nav-close" id="mobileNavClose" aria-label="Close menu">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+        <ul class="mobile-nav-links">
+            <li><a href="../index.html#about" data-i18n="nav_about">// 关于</a></li>
+            <li><a href="../index.html#projects" data-i18n="nav_projects">// 项目</a></li>
+            <li><a href="../index.html#blog" data-i18n="nav_blog">// 博客</a></li>
+            <li><a href="../index.html#contact" data-i18n="nav_contact">// 联系</a></li>
+            <li><button class="mobile-lang-btn" id="mobileLangBtn" onclick="toggleLang()" data-i18n="nav_lang">中 / EN</button></li>
+        </ul>
+    </div>
+
+    <section class="blog-article-hero">
+        <div class="detail-hero-bg"></div>
+        <a href="../index.html#blog" class="detail-back" data-hover>
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            返回博客
+        </a>
+        <div class="blog-article-tag reveal">AI/CV</div>
+        <h1 class="blog-article-title reveal reveal-d1" data-i18n-html="bveo_title">视觉算法工程师，别把自己做成 <span class="hl">流程操作员</span></h1>
+        <div class="blog-article-meta reveal reveal-d2">
+            <span>📅 2026.04</span>
+            <span>⏱️ 8 min</span>
+            <span>👤 Eric Pan</span>
+        </div>
+    </section>
+
+    <article class="blog-article-body">
+        <section class="detail-section reveal" id="operator">
+            <h2 data-i18n="bveo_s1">岗位正在被流程化压缩</h2>
+            <p data-i18n="bveo_p1">很多视觉算法岗位，表面上还叫“算法工程师”，实际工作却越来越像流程操作员：收数据、催标注、改配置、跑训练、看指标、转模型、部署接口。项目一轮不行，就继续补数据、重新训练、再次上线。久而久之，工程师的价值会被压缩成数据标注员、训练启动员和模型部署员。</p>
+            <p data-i18n="bveo_p2">这些工作不是不重要。没有数据、训练和部署，模型没有任何业务价值。但问题在于，如果一个工程师只停留在这些动作本身，开源模型、自动训练平台和部署工具越成熟，他的替代风险就越高。</p>
+            <p data-i18n="bveo_p3">视觉算法工程师真正的价值，不是把模型跑起来，而是把一个视觉问题变成可验证、可迭代、可落地的系统方案。</p>
+        </section>
+
+        <section class="detail-section reveal" id="modeling">
+            <h2 data-i18n="bveo_s2">先定义问题，而不是先选模型</h2>
+            <p data-i18n="bveo_p4">很多项目一开始就问错了问题。业务方说要检测某个目标，工程师马上开始选 YOLO、准备数据、训练模型。但真实需求可能不是单纯目标检测，而是检测、分类、跟踪、区域判断、时序分析和业务规则的组合。</p>
+            <p data-i18n="bveo_p5">比如“判断工人是否违规”，并不只是检测人和安全帽。它还可能涉及人与设备的位置关系、动作持续时间、误报容忍度和报警策略。低阶执行者会问“用哪个模型”，真正的视觉算法工程师应该先问“这个问题应该怎么建模”。</p>
+        </section>
+
+        <section class="detail-section reveal" id="data-loop">
+            <h2 data-i18n="bveo_s3">数据不是越多越好，而是要形成闭环</h2>
+            <p data-i18n="bveo_p6">模型效果不好时，很多团队第一反应是继续标数据。但数据不是越多越好，而是越针对问题越好。模型到底错在哪里？是小目标漏检，还是遮挡误检？是类别混淆，还是标注规范不一致？是训练集和线上场景分布不一致，还是验证集本身不可靠？</p>
+            <p data-i18n="bveo_p7">如果不能回答这些问题，补数据就只是体力劳动。算法工程师要做的，是把线上失败样本回流，分析错误类型，针对性补充数据，再通过回归测试验证改进效果。数据不只是训练材料，而是系统持续进化的燃料。</p>
+        </section>
+
+        <section class="detail-section reveal" id="diagnosis">
+            <h2 data-i18n="bveo_s4">会启动训练，不等于会诊断模型</h2>
+            <p data-i18n="bveo_p8">现在跑一次训练并不难，难的是判断模型为什么失败。看到 mAP 低就换模型，看到 loss 不降就调学习率，看到线上效果差就补数据，这些都太粗糙。</p>
+            <p data-i18n="bveo_p9">一个合格的视觉算法工程师，应该能判断模型是欠拟合还是过拟合，数据划分是否合理，类别是否长尾，输入分辨率是否适合目标尺度，NMS 是否影响密集目标，线上误检到底来自模型能力、数据分布，还是业务规则设计。会跑训练脚本不等于会训练模型，会看日志也不等于会诊断模型。</p>
+        </section>
+
+        <section class="detail-section reveal" id="delivery">
+            <h2 data-i18n="bveo_s5">部署不是转换模型，而是建立可信系统</h2>
+            <p data-i18n="bveo_p10">部署不是把 .pt 转成 .onnx，也不是把模型塞进 TensorRT 就结束了。真实视觉系统面对的是摄像头角度、光照变化、帧率波动、设备算力、网络延迟、误报容忍度、人工复核机制和线上监控。</p>
+            <p data-i18n="bveo_p11">部署员关心模型能不能跑，视觉算法工程师关心系统能不能被业务长期信任。很多项目失败，不是模型完全不能识别，而是系统不稳定、不可靠、不可解释。要解决这些问题，靠的不是单纯换模型，而是时序平滑、置信度策略、错误样本回流、监控告警、规则层设计和持续迭代机制。</p>
+        </section>
+
+        <section class="detail-section reveal" id="assets">
+            <h2 data-i18n="bveo_s6">把能力沉淀成工程资产</h2>
+            <p data-i18n="bveo_p12">今天是 YOLO，明天是 RT-DETR，后天是 SAM 或多模态模型。模型会更新，框架会替换，工具会自动化。真正能留下来的，是你对问题定义、数据闭环、模型诊断、系统设计和工程交付的能力。</p>
+            <p data-i18n="bveo_p13">所以，视觉算法工程师要避免变成流程操作员，不是要拒绝标注、训练和部署，而是不能只做这些事情。标注时，要思考数据分布和失败模式；训练时，要思考实验设计和模型诊断；部署时，要思考系统可靠性和业务闭环。</p>
+            <p data-i18n="bveo_p14">未来真正稀缺的，不是会启动训练脚本的人，而是能把视觉问题拆清楚、把模型能力嵌入系统、把线上反馈转化为持续改进机制的人。视觉算法工程师的终点，不是把模型跑起来，而是让视觉系统在真实世界中持续有效。</p>
+        </section>
+    </article>
+
+    <div class="detail-toc" id="detailToc">
+        <div class="detail-toc-item" data-target="operator" data-label="流程化"></div>
+        <div class="detail-toc-item" data-target="modeling" data-label="问题建模"></div>
+        <div class="detail-toc-item" data-target="data-loop" data-label="数据闭环"></div>
+        <div class="detail-toc-item" data-target="diagnosis" data-label="模型诊断"></div>
+        <div class="detail-toc-item" data-target="delivery" data-label="系统落地"></div>
+        <div class="detail-toc-item" data-target="assets" data-label="工程资产"></div>
+    </div>
+
+    <footer class="detail-footer">
+        <div class="detail-footer-copy">&copy; 2026 Eric. Built with <span class="heart">♥</span> and too much coffee.</div>
+        <div class="detail-footer-links">
+            <a href="../index.html">← Back to Home</a>
+            <a href="https://github.com/powerpan" target="_blank">GitHub</a>
+        </div>
+    </footer>
+    <button class="back-to-top" id="backToTop" title="回到顶部">↑</button>
+    <script src="../js/i18n.js"></script>
+    <script src="../js/detail.js"></script>
+</body>
+</html>
