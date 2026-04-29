@@ -929,7 +929,13 @@
             function updateSummary(visibleCount) {
                 const t = getTranslations();
                 const activeKey = filterKeyMap[activeFilter] || filterKeyMap.all;
-                const activeLabel = t && t[activeKey] ? t[activeKey] : activeFilter;
+                const activeChip = chips.find(chip => chip.dataset.filter === activeFilter);
+                const chipLabel = activeChip
+                    ? activeChip.querySelector('span[data-i18n]')?.textContent.trim()
+                    : '';
+                const activeLabel = t && t[activeKey]
+                    ? t[activeKey]
+                    : (chipLabel || activeFilter);
 
                 if (countEl) countEl.textContent = visibleCount;
                 if (metaEl) metaEl.textContent = visibleCount + ' / ' + cards.length;
