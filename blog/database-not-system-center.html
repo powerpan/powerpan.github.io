@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>如果没有数据库，系统如何设计？ — Eric</title>
+    <meta name="description" content="不是否定数据库，而是把系统设计的起点从表结构拉回业务事实、状态规则、查询视图和一致性协议。">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/detail.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body>
+    <div class="detail-scroll-progress" id="detailScrollProgress"></div>
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor-dot" id="cursorDot"></div>
+    <canvas id="particleCanvas"></canvas>
+
+    <nav id="nav">
+        <a href="../index.html" class="nav-logo magnetic" data-hover>ERIC<span class="dot">.</span></a>
+        <ul class="nav-center">
+            <li><a href="../index.html#about" data-hover data-i18n="nav_about">// 关于</a></li>
+            <li><a href="../index.html#projects" data-hover data-i18n="nav_projects">// 项目</a></li>
+            <li><a href="../index.html#blog" data-hover data-i18n="nav_blog">// 博客</a></li>
+            <li><a href="../index.html#contact" data-hover data-i18n="nav_contact">// 联系</a></li>
+        </ul>
+        <div class="nav-status"><span class="status-dot"></span>Open to work</div>
+        <button class="nav-hamburger" id="navHamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+    </nav>
+    <div class="mobile-nav" id="mobileNav">
+        <button class="mobile-nav-close" id="mobileNavClose" aria-label="Close menu">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+        <ul class="mobile-nav-links">
+            <li><a href="../index.html#about" data-i18n="nav_about">// 关于</a></li>
+            <li><a href="../index.html#projects" data-i18n="nav_projects">// 项目</a></li>
+            <li><a href="../index.html#blog" data-i18n="nav_blog">// 博客</a></li>
+            <li><a href="../index.html#contact" data-i18n="nav_contact">// 联系</a></li>
+            <li><button class="mobile-lang-btn" id="mobileLangBtn" onclick="toggleLang()" data-i18n="nav_lang">中 / EN</button></li>
+        </ul>
+    </div>
+
+    <section class="blog-article-hero">
+        <div class="detail-hero-bg"></div>
+        <a href="../index.html#blog" class="detail-back" data-hover>
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            返回博客
+        </a>
+        <div class="blog-article-tag reveal">Architecture</div>
+        <h1 class="blog-article-title reveal reveal-d1" data-i18n-html="bdsc_title">如果没有数据库，<span class="hl">系统如何设计？</span></h1>
+        <div class="blog-article-meta reveal reveal-d2">
+            <span>📅 2026.04</span>
+            <span>⏱️ 9 min</span>
+            <span>👤 Eric Pan</span>
+        </div>
+    </section>
+
+    <article class="blog-article-body">
+        <section class="detail-section reveal" id="table-first">
+            <h2 data-i18n="bdsc_s1">数据库不是问题，表优先才是问题</h2>
+            <p data-i18n="bdsc_p1">很多业务系统一开始就问“需要几张表”，然后顺着表单、接口、Service、ORM、数据库表一路往下做。这个顺序很高效，也很熟悉，但它会悄悄把系统设计压缩成表结构设计。</p>
+            <p data-i18n="bdsc_p2">数据库本身当然不是问题。它提供持久化、事务、索引、约束和查询能力，对大多数业务系统都很重要。真正的问题不是使用数据库，而是让数据库表成为思考的起点。</p>
+            <p data-i18n="bdsc_p3">一旦系统从表开始，业务行为就容易被压缩成增删改查，复杂流程被压缩成几个状态字段，系统边界被压缩成表之间的关系。开发者看似在设计系统，实际可能只是在给表结构套接口和页面。</p>
+        </section>
+
+        <section class="detail-section reveal" id="facts">
+            <h2 data-i18n="bdsc_s2">先识别事实，再决定如何落库</h2>
+            <p data-i18n="bdsc_p4">以订单系统为例，订单状态是“已支付”只能说明系统现在相信什么，却无法说明支付是谁发起的、平台是否重复回调、金额是否校验、库存是否锁定、发货通知是否成功。</p>
+            <p data-i18n="bdsc_p5">如果先从业务事实出发，系统会更自然地识别出订单创建、支付提交、支付成功、库存锁定、订单发货这类事件。它们记录的不是某一时刻的结果，而是系统为什么走到现在。</p>
+            <p data-i18n="bdsc_p6">表记录的是系统现在相信什么，事件记录的是系统为什么相信。复杂系统需要的不只是最终状态，还需要能解释状态形成过程的事实链条。</p>
+        </section>
+
+        <section class="detail-section reveal" id="state-rules">
+            <h2 data-i18n="bdsc_s3">状态应该来自规则，而不是字段赋值</h2>
+            <p data-i18n="bdsc_p7">很多 CRUD 系统把状态当成一个可以直接修改的字段。几个枚举值看起来简单，但字段本身无法表达它为什么能变，也无法阻止不合法的变化。</p>
+            <p data-i18n="bdsc_p8">订单从待支付进入已支付，不应该只是执行一次更新语句。更合理的过程是：支付成功事件发生后，系统检查订单是否存在、是否仍处于待支付、金额是否匹配、回调是否处理过、订单是否超时关闭。全部满足后，状态才被推进。</p>
+            <p data-i18n="bdsc_p9">这时状态不再是字段，而是规则运行后的结果。系统越复杂，越需要把状态理解成状态机，而不是散落在表里的枚举值。</p>
+        </section>
+
+        <section class="detail-section reveal" id="views">
+            <h2 data-i18n="bdsc_s4">查询是视图，不是系统本体</h2>
+            <p data-i18n="bdsc_p10">数据库容易成为系统中心，还有一个原因：它同时服务写入、查询、后台管理、运营报表、审计追踪和数据分析。于是同一张表会不断被塞入展示字段、统计字段、冗余字段、标记字段和历史兼容字段。</p>
+            <p data-i18n="bdsc_p11">从业务建模角度看，写入关心事实是否成立，读取关心不同场景如何看见这些事实。用户订单列表、商家发货视图、财务对账视图、风控分析视图都可以来自同一批事实，但它们不必共享同一种结构。</p>
+            <p data-i18n="bdsc_p12">把查询看成场景化视图，系统就不会被迫让核心表同时满足所有人的需求。核心模型保持清晰，不同读模型围绕使用场景构建，复杂度也更容易被隔离。</p>
+        </section>
+
+        <section class="detail-section reveal" id="consistency">
+            <h2 data-i18n="bdsc_s5">一致性要靠协议，而不只靠事务</h2>
+            <p data-i18n="bdsc_p13">数据库事务能解决局部一致性，但真实系统常常包含支付回调、物流发货、短信通知、异步审核、AI 推理任务、跨服务库存锁定和外部系统同步。这些动作无法被一个数据库事务完整包住。</p>
+            <p data-i18n="bdsc_p14">这时系统需要的是业务协议：幂等协议保证重复请求不会重复处理，重试协议保证失败任务可以安全重试，补偿协议处理局部失败，状态机协议约束合法流转，对账协议发现并修复不一致。</p>
+            <p data-i18n="bdsc_p15">数据库事务保证“这一次写库不写一半”，业务协议保证“系统最终能回到可解释、可恢复、可追踪的状态”。越复杂的系统，越不能只把可靠性寄托在事务上。</p>
+        </section>
+
+        <section class="detail-section reveal" id="takeaway">
+            <h2 data-i18n="bdsc_s6">写在最后：数据库承载数据，不承包思考</h2>
+            <p data-i18n="bdsc_p16">讨论“如果没有数据库”，不是为了得出不要数据库的结论。大多数业务系统仍然应该使用数据库，因为它成熟、稳定、经济、易维护。</p>
+            <p data-i18n="bdsc_p17">真正需要警惕的是把系统设计退化成表设计。更合理的顺序应该是：先理解业务事实，再分析状态流转，再定义业务规则，再设计协作过程，再考虑查询视图，最后决定数据如何落库。</p>
+            <p data-i18n="bdsc_p18">数据库应该承载数据，但不应该承包思考。系统设计的起点不是表，而是事实、状态、规则和过程。当我们能在没有数据库的假设下重新设计系统，回过头再使用数据库，反而会更清醒。</p>
+        </section>
+    </article>
+
+    <div class="detail-toc" id="detailToc">
+        <div class="detail-toc-item" data-target="table-first" data-label="表优先"></div>
+        <div class="detail-toc-item" data-target="facts" data-label="业务事实"></div>
+        <div class="detail-toc-item" data-target="state-rules" data-label="状态规则"></div>
+        <div class="detail-toc-item" data-target="views" data-label="查询视图"></div>
+        <div class="detail-toc-item" data-target="consistency" data-label="一致性"></div>
+        <div class="detail-toc-item" data-target="takeaway" data-label="结语"></div>
+    </div>
+
+    <footer class="detail-footer">
+        <div class="detail-footer-copy">&copy; 2026 Eric. Built with <span class="heart">♥</span> and too much coffee.</div>
+        <div class="detail-footer-links">
+            <a href="../index.html">← Back to Home</a>
+            <a href="https://github.com/powerpan" target="_blank">GitHub</a>
+        </div>
+    </footer>
+    <button class="back-to-top" id="backToTop" title="回到顶部">↑</button>
+    <script src="../js/i18n.js"></script>
+    <script src="../js/detail.js"></script>
+</body>
+</html>
