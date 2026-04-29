@@ -40,7 +40,8 @@
 - 先随机挑选一行作为本次文章的大方向
 - 这一行只代表“大主题”，不要直接照抄成具体小标题
 - 具体内容仍然由当前文章情况、近期技术趋势和站点已有内容共同决定
-- `时事观察` 和 `社会思考` 都是独立主题，不要强行并入技术方向
+- 站点当前使用 6 个主分类：`AI 工程`、`Agent 自动化`、`视觉多模态`、`系统架构`、`技术观察`、`社会随笔`
+- `技术观察` 和 `社会随笔` 都是独立分类，不要强行并入技术实现方向
 - 如果某个主题已经使用过，就在同一行后面追加使用日期，格式为 `| 2026-04-26`
 - 同一主题可以再次使用，但要优先避免连续重复
 - 如果某一行后面已经有多个日期，表示这个主题历史上多次被使用过
@@ -49,9 +50,20 @@
 示例：
 
 ```text
-AI 视觉
-时事观察 | 2026-04-26
+AI 工程
+技术观察 | 2026-04-26
 ```
+
+站点筛选分类与 key 对应关系：
+
+| 主分类 | `data-category` | 筛选 key | 标签 key |
+|--------|-----------------|----------|----------|
+| AI 工程 | `ai` | `blog_filter_ai` | `blog_tag_ai` |
+| Agent 自动化 | `agent` | `blog_filter_agent` | `blog_tag_agent` |
+| 视觉多模态 | `vision` | `blog_filter_vision` | `blog_tag_vision` |
+| 系统架构 | `architecture` | `blog_filter_architecture` | `blog_tag_architecture` |
+| 技术观察 | `observation` | `blog_filter_observation` | `blog_tag_observation` |
+| 社会随笔 | `essay` | `blog_filter_essay` | `blog_tag_essay` |
 
 ---
 

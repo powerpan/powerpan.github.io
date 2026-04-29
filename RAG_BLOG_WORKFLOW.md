@@ -37,6 +37,17 @@
 | 主题使用记录 | `BLOG_TOPIC_POOL.md` | 主题行追加日期 | 每次发文都要记录选用主题 |
 | 转换脚本 | `tools/` | `*.py` | 项目内工具脚本统一放这里 |
 
+站点文章筛选固定使用 6 个主分类：
+
+| 主分类 | `data-category` | 筛选 key | 标签 key |
+|--------|-----------------|----------|----------|
+| AI 工程 | `ai` | `blog_filter_ai` | `blog_tag_ai` |
+| Agent 自动化 | `agent` | `blog_filter_agent` | `blog_tag_agent` |
+| 视觉多模态 | `vision` | `blog_filter_vision` | `blog_tag_vision` |
+| 系统架构 | `architecture` | `blog_filter_architecture` | `blog_tag_architecture` |
+| 技术观察 | `observation` | `blog_filter_observation` | `blog_tag_observation` |
+| 社会随笔 | `essay` | `blog_filter_essay` | `blog_tag_essay` |
+
 固定路径示例：
 
 ```text
