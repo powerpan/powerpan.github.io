@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Agent 正在重塑系统架构：从功能系统到任务系统 — Eric</title>
+    <meta name="description" content="Agent 的价值不只是聊天或工具调用，而是把分散功能重新组织成围绕目标推进的任务系统。">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/detail.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body>
+    <div class="detail-scroll-progress" id="detailScrollProgress"></div>
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor-dot" id="cursorDot"></div>
+    <canvas id="particleCanvas"></canvas>
+
+    <nav id="nav">
+        <a href="../index.html" class="nav-logo magnetic" data-hover>ERIC<span class="dot">.</span></a>
+        <ul class="nav-center">
+            <li><a href="../index.html#about" data-hover data-i18n="nav_about">// 关于</a></li>
+            <li><a href="../index.html#projects" data-hover data-i18n="nav_projects">// 项目</a></li>
+            <li><a href="../index.html#blog" data-hover data-i18n="nav_blog">// 博客</a></li>
+            <li><a href="../index.html#contact" data-hover data-i18n="nav_contact">// 联系</a></li>
+        </ul>
+        <div class="nav-status"><span class="status-dot"></span>Open to work</div>
+        <button class="nav-hamburger" id="navHamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+    </nav>
+    <div class="mobile-nav" id="mobileNav">
+        <button class="mobile-nav-close" id="mobileNavClose" aria-label="Close menu">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+        <ul class="mobile-nav-links">
+            <li><a href="../index.html#about" data-i18n="nav_about">// 关于</a></li>
+            <li><a href="../index.html#projects" data-i18n="nav_projects">// 项目</a></li>
+            <li><a href="../index.html#blog" data-i18n="nav_blog">// 博客</a></li>
+            <li><a href="../index.html#contact" data-i18n="nav_contact">// 联系</a></li>
+            <li><button class="mobile-lang-btn" id="mobileLangBtn" onclick="toggleLang()" data-i18n="nav_lang">中 / EN</button></li>
+        </ul>
+    </div>
+
+    <section class="blog-article-hero">
+        <div class="detail-hero-bg"></div>
+        <a href="../index.html#blog" class="detail-back" data-hover>
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            返回博客
+        </a>
+        <div class="blog-article-tag reveal" data-i18n="blog_tag_agent">Agent 自动化</div>
+        <h1 class="blog-article-title reveal reveal-d1" data-i18n-html="batsa_title">AI Agent 正在重塑系统架构：从<span class="hl">功能系统</span>到任务系统</h1>
+        <div class="blog-article-meta reveal reveal-d2">
+            <span>📅 2026.04</span>
+            <span>⏱️ 10 min</span>
+            <span>👤 Eric Pan</span>
+        </div>
+    </section>
+
+    <article class="blog-article-body">
+        <section class="detail-section reveal" id="not-chat">
+            <h2 data-i18n="batsa_s1">不是聊天框问题</h2>
+            <p data-i18n="batsa_p1">很多人谈 AI Agent 时，容易把它理解成更聪明的聊天机器人，或者一个能调用工具的大模型。这种说法没有错，但只看到了表层形态。真正重要的变化，是软件系统的组织方式正在从“功能集合”转向“任务推进”。</p>
+            <p data-i18n="batsa_p2">传统软件围绕功能设计：页面、按钮、表单、接口、数据库表决定了用户能做什么。用户想完成一件事，必须先理解系统有哪些功能，再把这些功能按自己的目标组合起来。系统负责提供能力，用户负责规划路径。</p>
+            <p data-i18n="batsa_p3">Agent 的变化在于，系统开始围绕任务目标组织能力。用户不一定要先知道进入哪个页面、调用哪个接口，而是直接表达目标。系统要做的也不只是响应操作，而是理解目标、拆解任务、检索上下文、调用工具、观察结果，并在必要时修正路径。</p>
+        </section>
+
+        <section class="detail-section reveal" id="traditional-boundary">
+            <h2 data-i18n="batsa_s2">传统系统擅长明确操作</h2>
+            <p data-i18n="batsa_p4">传统架构的优势是确定性。前端负责交互，后端负责业务逻辑，数据库负责持久化，权限系统负责边界控制。只要业务规则明确、输入输出可预测，这套结构依然是最可靠的工程组织方式。</p>
+            <p data-i18n="batsa_p5">它的边界在于开放目标。用户想“优化一个项目”时，传统系统可以提供代码仓库、日志系统、文档系统和任务系统，但“应该先看哪里”“哪些信息相关”“结果如何沉淀”，仍然要由人来组织。</p>
+            <p data-i18n="batsa_p6">所以问题不是传统系统没有能力，而是能力分散在不同入口里。用户面对的是一组工具，而不是一个能协同推进任务的系统。</p>
+        </section>
+
+        <section class="detail-section reveal" id="orchestration-layer">
+            <h2 data-i18n="batsa_s3">Agent 是任务编排层</h2>
+            <p data-i18n="batsa_p7">Agent 不应该替代后端，而应该成为传统系统之上的目标理解与任务编排层。后端继续负责稳定业务逻辑、权限、事务和规则，Agent 负责理解目标、选择工具、组织上下文和整合结果。</p>
+            <p data-i18n="batsa_p8">更合理的结构是：用户目标进入 Agent Layer，由它完成目标理解、任务规划和工具选择；Tool / API Layer 暴露搜索、代码执行、文件系统和业务接口；Business Service Layer 保证稳定规则；Data / Knowledge Layer 提供数据库、文档、向量库、日志和知识库。</p>
+            <p data-i18n="batsa_p9">这一区分很关键。Agent 化不是把系统重写成大模型，而是让大模型站在已有系统之上，成为能力的组织者。传统系统负责“能力是否可靠”，Agent 负责“能力如何围绕目标被调用”。</p>
+        </section>
+
+        <section class="detail-section reveal" id="not-prompt">
+            <h2 data-i18n="batsa_s4">一个可用 Agent 不是一个 Prompt</h2>
+            <p data-i18n="batsa_p10">很多 Agent demo 看起来惊艳，但进入工程场景后会暴露状态丢失、工具不稳定、权限模糊、错误不可追踪、结果不可复现等问题。根源在于，Agent 系统不是一个 prompt，也不是“模型 + 工具调用”这么简单。</p>
+            <p data-i18n="batsa_p11">一个可用 Agent 至少需要 Goal、Planner、Tool Router、Retriever、Memory、Evaluator 和 Human-in-the-loop。Goal 判断用户真正要完成什么；Planner 把复杂目标拆成可执行步骤；Tool Router 决定什么时候查知识库、调 API、读文件或停止；Retriever 和 Memory 管理外部依据与长期背景；Evaluator 和人工确认负责校验关键节点。</p>
+            <p data-i18n="batsa_p12">Agent 工程的核心不是让模型更自由，而是把模型的自由度放进可控边界里。</p>
+        </section>
+
+        <section class="detail-section reveal" id="engineering-risks">
+            <h2 data-i18n="batsa_s5">真正困难的是状态、权限和可观测性</h2>
+            <p data-i18n="batsa_p13">传统接口往往是短生命周期：request 到 response。Agent 任务则是长生命周期：goal、plan、step、observation、retry、confirm、complete。系统必须记录任务执行到哪一步，调用过哪些工具，中间结果是什么，失败原因是什么，哪些动作需要人工确认。</p>
+            <p data-i18n="batsa_p14">权限也会更复杂。读取文件、查询数据库、修改代码、发送邮件、删除数据、发布内容，风险等级完全不同。Agent 的能力越强，权限边界越重要，否则所谓智能执行很容易变成不可控执行。</p>
+            <p data-i18n="batsa_p15">可靠性和可观测性同样不能缺位。结构化输出、Schema 校验、工具返回校验、异常重试、结果验证、日志记录、回滚机制和人工确认，才是 Agent 从 demo 走向生产的基础。Agent 系统能不能产品化，取决于它是否可控、可追踪、可恢复，而不只是回答是否聪明。</p>
+        </section>
+
+        <section class="detail-section reveal" id="rag-memory">
+            <h2 data-i18n="batsa_s6">RAG、Memory 与知识反写</h2>
+            <p data-i18n="batsa_p16">如果说 Tool 决定 Agent 能做什么，那么 RAG 和 Memory 决定 Agent 知道什么、记得什么，以及能否越用越贴合具体场景。Agent 不应该只依赖模型参数里的通用知识，而应该能访问项目文档、历史记录、业务规则、代码说明、日志和长期问题库。</p>
+            <p data-i18n="batsa_p17">但只会检索还不够。普通 Agent 的问题是，任务结束后，结果只停留在对话里。下一次处理类似问题，系统仍然要重新理解、重新检索、重新组织。</p>
+            <p data-i18n="batsa_p18">更完整的闭环应该是：任务执行、结果总结、经验抽取、结构化归档、写入知识库、下次检索复用。没有知识反写的 Agent，每次任务都像从零开始；有知识反写的 Agent，才可能把一次次任务转化为长期系统能力。</p>
+        </section>
+
+        <section class="detail-section reveal" id="takeaway">
+            <h2 data-i18n="batsa_s7">写在最后</h2>
+            <p data-i18n="batsa_p19">AI Agent 对系统架构最大的改变，不是让大模型替代传统后端，而是在原有系统之上增加一层目标理解与任务编排能力。传统系统围绕功能模块设计，Agent 系统围绕任务目标设计；传统系统响应明确操作，Agent 系统尝试推进开放任务。</p>
+            <p data-i18n="batsa_p20">这不会让架构变简单，反而会让架构问题从“模块如何拆分”推进到“目标如何理解、任务如何执行、过程如何追踪、结果如何验证、经验如何沉淀”。</p>
+            <p data-i18n="batsa_p21">未来的软件系统，不一定会消失在一个聊天框里。更可能出现的是：聊天框成为入口，Agent 成为编排层，传统后端继续提供稳定能力，知识库提供长期上下文，工具系统提供执行能力。真正有价值的 Agent，不是一个能说会道的模型，而是一个被工程边界约束起来、能够持续推进任务并沉淀经验的系统组件。</p>
+        </section>
+    </article>
+
+    <div class="detail-toc" id="detailToc">
+        <div class="detail-toc-item" data-target="not-chat" data-label="入口"></div>
+        <div class="detail-toc-item" data-target="traditional-boundary" data-label="边界"></div>
+        <div class="detail-toc-item" data-target="orchestration-layer" data-label="编排层"></div>
+        <div class="detail-toc-item" data-target="not-prompt" data-label="组件"></div>
+        <div class="detail-toc-item" data-target="engineering-risks" data-label="工程化"></div>
+        <div class="detail-toc-item" data-target="rag-memory" data-label="知识闭环"></div>
+        <div class="detail-toc-item" data-target="takeaway" data-label="结语"></div>
+    </div>
+
+    <footer class="detail-footer">
+        <div class="detail-footer-copy">&copy; 2026 Eric. Built with <span class="heart">♥</span> and too much coffee.</div>
+        <div class="detail-footer-links">
+            <a href="../index.html">← Back to Home</a>
+            <a href="https://github.com/powerpan" target="_blank">GitHub</a>
+        </div>
+    </footer>
+    <button class="back-to-top" id="backToTop" title="回到顶部">↑</button>
+    <script src="../js/i18n.js"></script>
+    <script src="../js/detail.js"></script>
+</body>
+</html>
