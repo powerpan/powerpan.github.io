@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>当真的需要多 Agent：如何拆分、协作与合并结果 — Eric</title>
+    <meta name="description" content="多 Agent 的价值不在数量，而在能否把复杂任务拆成可控制、可追踪、可组合的协作单元。">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/detail.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body>
+    <div class="detail-scroll-progress" id="detailScrollProgress"></div>
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor-dot" id="cursorDot"></div>
+    <canvas id="particleCanvas"></canvas>
+
+    <nav id="nav">
+        <a href="../index.html" class="nav-logo magnetic" data-hover>ERIC<span class="dot">.</span></a>
+        <ul class="nav-center">
+            <li><a href="../index.html#about" data-hover data-i18n="nav_about">// 关于</a></li>
+            <li><a href="../index.html#projects" data-hover data-i18n="nav_projects">// 项目</a></li>
+            <li><a href="../index.html#blog" data-hover data-i18n="nav_blog">// 博客</a></li>
+            <li><a href="../index.html#contact" data-hover data-i18n="nav_contact">// 联系</a></li>
+        </ul>
+        <div class="nav-status"><span class="status-dot"></span>Open to work</div>
+        <button class="nav-hamburger" id="navHamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+    </nav>
+    <div class="mobile-nav" id="mobileNav">
+        <button class="mobile-nav-close" id="mobileNavClose" aria-label="Close menu">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+        <ul class="mobile-nav-links">
+            <li><a href="../index.html#about" data-i18n="nav_about">// 关于</a></li>
+            <li><a href="../index.html#projects" data-i18n="nav_projects">// 项目</a></li>
+            <li><a href="../index.html#blog" data-i18n="nav_blog">// 博客</a></li>
+            <li><a href="../index.html#contact" data-i18n="nav_contact">// 联系</a></li>
+            <li><button class="mobile-lang-btn" id="mobileLangBtn" onclick="toggleLang()" data-i18n="nav_lang">中 / EN</button></li>
+        </ul>
+    </div>
+
+    <section class="blog-article-hero">
+        <div class="detail-hero-bg"></div>
+        <a href="../index.html#blog" class="detail-back" data-hover>
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            返回博客
+        </a>
+        <div class="blog-article-tag reveal" data-i18n="blog_tag_agent">Agent 自动化</div>
+        <h1 class="blog-article-title reveal reveal-d1" data-i18n-html="bmacr_title">当真的需要多 Agent：如何拆分、协作与<span class="hl">合并结果</span></h1>
+        <div class="blog-article-meta reveal reveal-d2">
+            <span>📅 2026.05</span>
+            <span>⏱️ 10 min</span>
+            <span>👤 Eric Pan</span>
+        </div>
+    </section>
+
+    <article class="blog-article-body">
+        <section class="detail-section reveal" id="not-more">
+            <h2 data-i18n="bmacr_s1">多 Agent 不是不能用</h2>
+            <p data-i18n="bmacr_p1">多 Agent 的问题不是不能用，而是很多系统还没搞清楚为什么要拆，就已经开始堆角色。流程变长了，推理不一定更稳定；节点变多了，结果不一定更可靠。</p>
+            <p data-i18n="bmacr_p2">真正需要讨论的不是“要不要多 Agent”，而是更具体的问题：什么时候必须拆，按什么边界拆，Agent 之间共享什么，结果如何合并，谁负责最终判断。</p>
+            <p data-i18n="bmacr_p3">多 Agent 的价值不在于“多”，而在于能不能把复杂任务拆成可控制、可追踪、可组合的协作单元。</p>
+        </section>
+
+        <section class="detail-section reveal" id="when">
+            <h2 data-i18n="bmacr_s2">什么时候必须拆</h2>
+            <p data-i18n="bmacr_p4">如果单 Agent 能稳定完成任务，就不应该拆。单 Agent 的优势是上下文集中、目标一致、推理主线连续。强行拆分只会引入通信成本、状态同步成本和结果合并成本。</p>
+            <p data-i18n="bmacr_p5">真正值得拆的场景通常有五类：任务天然可以并行，子任务需要不同工具或能力，需要独立视角验证，需要隔离权限和风险，或者任务生命周期很长、状态需要分工。</p>
+            <p data-i18n="bmacr_p6">这些场景共同指向同一个原则：拆分不是为了模仿组织结构，而是为了降低单点上下文负担、隔离风险、引入并行和增强验证。</p>
+        </section>
+
+        <section class="detail-section reveal" id="boundaries">
+            <h2 data-i18n="bmacr_s3">按工程边界拆</h2>
+            <p data-i18n="bmacr_p7">最差的拆法，是按人类岗位机械拆分。更合理的拆法，是按任务依赖、上下文边界、工具边界、状态所有权和结果对象来拆。</p>
+            <p data-i18n="bmacr_p8">如果两个子任务只需要交换结果，可以拆；如果一个子任务的判断会持续改变另一个子任务的前提，就不能简单隔离。每个 Agent 也不应该拿到全部上下文，而是拿到完成当前任务所需的最小充分上下文。</p>
+            <p data-i18n="bmacr_p9">工具边界同样重要。检索、文件读取、代码执行、数据库写入、发布内容不是同一类能力。低风险工具可以开放，高风险工具必须收敛；只读能力可以前置，写入能力必须受控。</p>
+        </section>
+
+        <section class="detail-section reveal" id="structures">
+            <h2 data-i18n="bmacr_s4">协作结构要匹配任务</h2>
+            <p data-i18n="bmacr_p10">Coordinator-Worker 适合并行检索、多文件分析和批量检查。Coordinator 负责目标、计划、上下文分发和结果合并，Worker 负责局部任务。</p>
+            <p data-i18n="bmacr_p11">Pipeline 适合流程化任务，比如检索、分析、生成、审查、写入。它的风险是错误传递，所以必须有校验点、回退机制和中间状态记录。</p>
+            <p data-i18n="bmacr_p12">Blackboard 适合复杂系统设计和长期协作任务。多个 Agent 围绕共享状态区工作，写入发现、风险和候选方案。Generator-Critic 则适合代码审查、文章修订、方案评估和事实核查。</p>
+        </section>
+
+        <section class="detail-section reveal" id="merge">
+            <h2 data-i18n="bmacr_s5">合并不是拼接</h2>
+            <p data-i18n="bmacr_p13">多个 Agent 的结果不能只是拼起来。拼接不是合并，堆叠不是综合。</p>
+            <p data-i18n="bmacr_p14">独立子任务适合汇总式合并，要统一格式、保留来源、去重并标注冲突。多方案判断适合裁决式合并，必须有证据优先、约束优先、风险优先等明确标准。</p>
+            <p data-i18n="bmacr_p15">文章、报告、系统方案这类强主线输出，需要综合式合并：提取共识、识别冲突、保留证据、重建结构、统一表达。长期任务则更适合状态更新式合并，把发现、计划、风险和失败原因写入结构化任务状态。</p>
+        </section>
+
+        <section class="detail-section reveal" id="takeaway">
+            <h2 data-i18n="bmacr_s6">写在最后</h2>
+            <p data-i18n="bmacr_p16">好的多 Agent 架构，不是让多个 Agent 同时发言，而是让多个上下文处理单元围绕同一个任务状态，有边界地协作。</p>
+            <p data-i18n="bmacr_p17">什么时候拆，要看并行性、工具差异、验证需求、权限边界和长期状态分工。怎么拆，要看任务依赖、上下文边界、工具边界、状态所有权和结果对象。</p>
+            <p data-i18n="bmacr_p18">多 Agent 的成熟标志，不是 Agent 数量越来越多，而是系统边界越来越清楚。最终，它要组织的是可靠的信息流、状态流和结果流。</p>
+        </section>
+    </article>
+
+    <div class="detail-toc" id="detailToc">
+        <div class="detail-toc-item" data-target="not-more" data-label="起点"></div>
+        <div class="detail-toc-item" data-target="when" data-label="何时拆"></div>
+        <div class="detail-toc-item" data-target="boundaries" data-label="边界"></div>
+        <div class="detail-toc-item" data-target="structures" data-label="协作"></div>
+        <div class="detail-toc-item" data-target="merge" data-label="合并"></div>
+        <div class="detail-toc-item" data-target="takeaway" data-label="结语"></div>
+    </div>
+
+    <footer class="detail-footer">
+        <div class="detail-footer-copy">&copy; 2026 Eric. Built with <span class="heart">♥</span> and too much coffee.</div>
+        <div class="detail-footer-links">
+            <a href="../index.html">← Back to Home</a>
+            <a href="https://github.com/powerpan" target="_blank">GitHub</a>
+        </div>
+    </footer>
+    <button class="back-to-top" id="backToTop" title="回到顶部">↑</button>
+    <script src="../js/i18n.js"></script>
+    <script src="../js/detail.js"></script>
+</body>
+</html>

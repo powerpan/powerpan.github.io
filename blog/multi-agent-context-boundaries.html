@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>多 Agent 架构的真正问题：不是角色分工，而是上下文边界 — Eric</title>
+    <meta name="description" content="多 Agent 的关键不是设计多少角色，而是判断上下文如何共享、隔离、压缩、传递和合并。">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/detail.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body>
+    <div class="detail-scroll-progress" id="detailScrollProgress"></div>
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor-dot" id="cursorDot"></div>
+    <canvas id="particleCanvas"></canvas>
+
+    <nav id="nav">
+        <a href="../index.html" class="nav-logo magnetic" data-hover>ERIC<span class="dot">.</span></a>
+        <ul class="nav-center">
+            <li><a href="../index.html#about" data-hover data-i18n="nav_about">// 关于</a></li>
+            <li><a href="../index.html#projects" data-hover data-i18n="nav_projects">// 项目</a></li>
+            <li><a href="../index.html#blog" data-hover data-i18n="nav_blog">// 博客</a></li>
+            <li><a href="../index.html#contact" data-hover data-i18n="nav_contact">// 联系</a></li>
+        </ul>
+        <div class="nav-status"><span class="status-dot"></span>Open to work</div>
+        <button class="nav-hamburger" id="navHamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+    </nav>
+    <div class="mobile-nav" id="mobileNav">
+        <button class="mobile-nav-close" id="mobileNavClose" aria-label="Close menu">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+        <ul class="mobile-nav-links">
+            <li><a href="../index.html#about" data-i18n="nav_about">// 关于</a></li>
+            <li><a href="../index.html#projects" data-i18n="nav_projects">// 项目</a></li>
+            <li><a href="../index.html#blog" data-i18n="nav_blog">// 博客</a></li>
+            <li><a href="../index.html#contact" data-i18n="nav_contact">// 联系</a></li>
+            <li><button class="mobile-lang-btn" id="mobileLangBtn" onclick="toggleLang()" data-i18n="nav_lang">中 / EN</button></li>
+        </ul>
+    </div>
+
+    <section class="blog-article-hero">
+        <div class="detail-hero-bg"></div>
+        <a href="../index.html#blog" class="detail-back" data-hover>
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            返回博客
+        </a>
+        <div class="blog-article-tag reveal" data-i18n="blog_tag_agent">Agent 自动化</div>
+        <h1 class="blog-article-title reveal reveal-d1" data-i18n-html="bmacb_title">多 Agent 架构的真正问题：不是角色分工，而是<span class="hl">上下文边界</span></h1>
+        <div class="blog-article-meta reveal reveal-d2">
+            <span>📅 2026.05</span>
+            <span>⏱️ 10 min</span>
+            <span>👤 Eric Pan</span>
+        </div>
+    </section>
+
+    <article class="blog-article-body">
+        <section class="detail-section reveal" id="roles">
+            <h2 data-i18n="bmacb_s1">先别急着分角色</h2>
+            <p data-i18n="bmacb_p1">很多人设计多 Agent 系统时，第一反应是分角色：规划 Agent、检索 Agent、写作 Agent、审核 Agent、执行 Agent。看起来像一个完整团队，但很多时候，角色越多，系统越乱。</p>
+            <p data-i18n="bmacb_p2">真正的问题不在于模型能力不够，而在于架构把本来需要连续理解的上下文切碎了。每个 Agent 只拿到局部信息，各自做出看似合理的判断，最后合并起来却失去主线。</p>
+            <p data-i18n="bmacb_p3">多 Agent 的设计单位不应该是角色，而应该是上下文。角色只是表象，真正重要的是信息如何流动、状态如何共享、结论如何合并。</p>
+        </section>
+
+        <section class="detail-section reveal" id="failure">
+            <h2 data-i18n="bmacb_s2">为什么一拆就废</h2>
+            <p data-i18n="bmacb_p4">复杂任务并不天然适合拆分。有些任务看起来步骤很多，但它们依赖同一条连续主线，比如观点写作、系统架构、复杂 Bug 分析和产品方案设计。</p>
+            <p data-i18n="bmacb_p5">过早拆分会带来三个问题：主线被切断，信息在传递中损耗，协作产生噪音。子 Agent 可能完成了局部任务，但不一定理解整体意图；上下文被摘要两次之后，关键约束可能已经丢失。</p>
+            <p data-i18n="bmacb_p6">Agent 拆分不是免费增强。它会减轻单个 Agent 的上下文压力，但会增加通信、同步、合并和一致性成本。</p>
+        </section>
+
+        <section class="detail-section reveal" id="dependency">
+            <h2 data-i18n="bmacb_s3">判断标准是上下文依赖</h2>
+            <p data-i18n="bmacb_p7">判断任务是否适合多 Agent，关键不是任务复杂不复杂，而是子任务之间是否需要共享上下文。</p>
+            <p data-i18n="bmacb_p8">低上下文依赖任务适合拆。比如分别总结多篇文章、检查多个文件、从不同资料源检索证据、对同一问题做独立判断。这些任务可以隔离执行，最后返回压缩结论。</p>
+            <p data-i18n="bmacb_p9">高上下文依赖任务不能简单拆。复杂系统设计、长文写作、代码重构决策、多步骤诊断都需要持续维护目标、约束和判断标准。如果确实要拆，就必须共享状态，而不是简单分发和回收。</p>
+        </section>
+
+        <section class="detail-section reveal" id="patterns">
+            <h2 data-i18n="bmacb_s4">单 Agent、Sub-Agent 与 Agent Team</h2>
+            <p data-i18n="bmacb_p10">单 Agent 适合主线强、上下文必须连续的任务。只要它能稳定完成，就不要为了架构看起来更先进而拆分。</p>
+            <p data-i18n="bmacb_p11">Sub-Agent 适合可隔离、可并行、只需要返回结论的任务。主 Agent 负责目标和主线，子 Agent 处理边界清晰的局部任务。</p>
+            <p data-i18n="bmacb_p12">Agent Team 适合必须共享状态、持续协作的任务。它不是多叫几个 Agent 来讨论，而是一种更复杂的共享上下文系统，需要状态同步、冲突解决和最终裁决。</p>
+        </section>
+
+        <section class="detail-section reveal" id="costs">
+            <h2 data-i18n="bmacb_s5">多 Agent 的真实成本</h2>
+            <p data-i18n="bmacb_p13">多 Agent 架构真正困难的地方，不是让多个 Agent 同时工作，而是控制它们之间的副作用。</p>
+            <p data-i18n="bmacb_p14">信息传递不是无损的。主 Agent 不可能把全部上下文交给每个子 Agent，子 Agent 也不可能把完整推理过程返回。系统必须知道哪些信息可以压缩，哪些信息必须保留。</p>
+            <p data-i18n="bmacb_p15">协作也会制造噪音。如果边界不清，多个 Agent 会重复讨论、互相否定、输出大量相似观点。状态不一致更危险：一个 Agent 使用旧约束，另一个 Agent 使用新约束，最终系统就会分裂。</p>
+        </section>
+
+        <section class="detail-section reveal" id="takeaway">
+            <h2 data-i18n="bmacb_s6">写在最后</h2>
+            <p data-i18n="bmacb_p16">多 Agent 架构真正要解决的，不是角色分工问题，而是上下文边界问题。</p>
+            <p data-i18n="bmacb_p17">低水平的多 Agent 设计先想角色：谁规划、谁写作、谁审核。高水平的多 Agent 设计先看上下文：哪些信息必须连续，哪些任务可以隔离，哪些状态必须共享，哪些结果只需要汇总。</p>
+            <p data-i18n="bmacb_p18">最终，关键判断不是“这个任务需要几个 Agent”，而是“这个任务的上下文应该如何被共享、隔离、压缩、传递和合并”。这才是多 Agent 从玩具走向工程系统的分界线。</p>
+        </section>
+    </article>
+
+    <div class="detail-toc" id="detailToc">
+        <div class="detail-toc-item" data-target="roles" data-label="角色"></div>
+        <div class="detail-toc-item" data-target="failure" data-label="拆分成本"></div>
+        <div class="detail-toc-item" data-target="dependency" data-label="依赖"></div>
+        <div class="detail-toc-item" data-target="patterns" data-label="形态"></div>
+        <div class="detail-toc-item" data-target="costs" data-label="成本"></div>
+        <div class="detail-toc-item" data-target="takeaway" data-label="结语"></div>
+    </div>
+
+    <footer class="detail-footer">
+        <div class="detail-footer-copy">&copy; 2026 Eric. Built with <span class="heart">♥</span> and too much coffee.</div>
+        <div class="detail-footer-links">
+            <a href="../index.html">← Back to Home</a>
+            <a href="https://github.com/powerpan" target="_blank">GitHub</a>
+        </div>
+    </footer>
+    <button class="back-to-top" id="backToTop" title="回到顶部">↑</button>
+    <script src="../js/i18n.js"></script>
+    <script src="../js/detail.js"></script>
+</body>
+</html>
