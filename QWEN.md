@@ -72,36 +72,43 @@ webblog/
 
 ## JavaScript Loading Order (Main Page)
 
-Order matters — `i18n.js` and `loader.js` define globals used by later scripts:
+Order matters — `i18n.js` defines the runtime first, then page-specific i18n data chunks are loaded before interactive scripts:
 
 ```html
-<script src="js/i18n.js"></script>      <!-- 1. I18N object, currentLang, setLang(), toggleLang() -->
-<script src="js/loader.js"></script>     <!-- 2. sleep() global, runLoader(), loader dismiss -->
-<script src="js/particles.js"></script>  <!-- 3. particleCanvas -->
-<script src="js/cursor.js"></script>     <!-- 4. custom cursor -->
-<script src="js/interactions.js"></script><!-- 5. marquee, typing, orbit, cmd palette -->
-<script src="js/features.js"></script>   <!-- 6. reveals, counters, scroll handlers -->
+<script src="js/i18n.js"></script>           <!-- 1. runtime, currentLang, setLang(), toggleLang() -->
+<script src="js/i18n/core.js"></script>      <!-- 2. shared nav/category/detail keys -->
+<script src="js/i18n/home.js"></script>      <!-- 3. homepage-only keys -->
+<script src="js/i18n/projects.js"></script>  <!-- 4. project card/detail keys -->
+<script src="js/i18n/blog-list.js"></script> <!-- 5. homepage/archive blog cards and filters -->
+<script src="js/loader.js"></script>         <!-- 6. sleep() global, runLoader(), loader dismiss -->
+<script src="js/particles.js"></script>
+<script src="js/cursor.js"></script>
+<script src="js/interactions.js"></script>
+<script src="js/features.js"></script>
 ```
 
-Detail pages only load `detail.js` (self-contained IIFE with cursor, particles, scroll, reveals).
+Blog detail pages load `i18n.js`, `i18n/core.js`, their own `i18n/articles/{slug}.js`, then `detail.js`.
+Project pages load `i18n.js`, `i18n/core.js`, `i18n/projects.js`, then `detail.js`.
 
 ## Internationalization (i18n)
 
-- **Scope:** Main page only (`index.html`). Detail pages are NOT translated.
-- **System:** Custom implementation in `js/i18n.js` — no external libraries.
+- **Scope:** Main page, project pages, blog archive, and blog detail pages.
+- **System:** Custom runtime in `js/i18n.js`; translation data is split under `js/i18n/`.
+- **Data files:** `core.js`, `home.js`, `projects.js`, `blog-list.js`, and one file per article in `js/i18n/articles/{slug}.js`.
 - **Data attributes used:**
   - `data-i18n="key"` → sets `textContent`
   - `data-i18n-html="key"` → sets `innerHTML` (for formatted text with `<span class="outline">` etc.)
   - `data-i18n-placeholder="key"` → sets `placeholder`
   - `data-i18n-title="key"` → sets `title`
 - **Language toggle:** `<button id="langToggle">` in nav, persists to `localStorage` key `'lang'`, defaults to `'zh'`.
-- **Dictionary size:** ~80+ keys in each of `zh` and `en` objects.
+- **Validation:** run `node tools/check_i18n.js` after i18n or page changes.
 
 ## Key Technical Details
 
 ### Global Helpers
 - `sleep(ms)` — defined in `js/loader.js`, returns a Promise. **Do NOT redefine** in other JS files.
-- `I18N` — defined in `js/i18n.js`, object with `zh`/`en` dictionaries, `currentLang`, `setLang()`, `toggleLang()`.
+- `I18N` — initialized by `js/i18n.js`, then populated by `window.registerI18nChunk()` from split data files.
+- `currentLang`, `setLang()`, `toggleLang()` — defined by `js/i18n.js`.
 
 ### Responsive Breakpoints
 - **Main page:** `max-width: 900px` (defined in `css/responsive.css`)

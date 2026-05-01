@@ -808,7 +808,10 @@
     </div>`;
     }
 
-    function getFooterHTML() {
+    function getFooterHTML(d) {
+        const i18nDataScript = d.mode === 'project'
+            ? '../js/i18n/projects.js'
+            : `../js/i18n/articles/${escapeAttr(d.slug) || 'article-slug'}.js`;
         return `    <footer class="detail-footer">
         <div class="detail-footer-copy">&copy; 2026 Eric. Built with <span class="heart">♥</span> and too much coffee.</div>
         <div class="detail-footer-links">
@@ -820,6 +823,8 @@
     <button class="back-to-top" id="backToTop" title="回到顶部" data-i18n-title="back_to_top">↑</button>
 
     <script src="../js/i18n.js"><\/script>
+    <script src="../js/i18n/core.js"><\/script>
+    <script src="${i18nDataScript}"><\/script>
     <script src="../js/detail.js"><\/script>`;
     }
 
@@ -888,7 +893,7 @@ ${contentSections}
 ${tocItems}
     </div>
 
-${getFooterHTML()}
+${getFooterHTML(d)}
 </body>
 </html>`;
     }
@@ -988,7 +993,7 @@ ${metaHTML}
 ${contentSections}
     </div>
 
-${getFooterHTML()}
+${getFooterHTML(d)}
 </body>
 </html>`;
     }

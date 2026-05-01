@@ -26,7 +26,7 @@
 - `<head>` 中的 CSS 引用顺序：`base.css` → `components.css` → `detail.css` → `responsive.css`
 - Nav 结构、scroll progress、cursor、particle canvas
 - Footer（`.detail-footer`）、back-to-top 按钮
-- 底部 `<script>` 引用：`i18n.js` → `detail.js`
+- 底部 `<script>` 引用：`i18n.js` → `i18n/core.js` → `i18n/articles/{slug}.js` → `detail.js`
 - Mobile hamburger menu + `mobileLangBtn`
 
 ---
@@ -67,9 +67,18 @@ AI 工程
 
 ---
 
-## 2. 添加 i18n 翻译到 `js/i18n.js`
+## 2. 添加 i18n 翻译到分块文件
 
-在 `zh` 和 `en` 两个字典中**同时**添加以下 key：
+i18n 运行逻辑保留在 `js/i18n.js`，不要把新翻译继续塞回这个文件。
+
+新文章需要改两个数据文件：
+
+| 内容 | 文件 | 说明 |
+|------|------|------|
+| 文章正文、标题、小节 | `js/i18n/articles/{slug}.js` | 每篇文章一个文件，只放 `{prefix}_*` |
+| 首页/归档卡片 | `js/i18n/blog-list.js` | 放 `blog{N}_title`、`blog_card{N}_title`、`blog_card{N}_desc`、计数文案 |
+
+所有新增 key 都必须在 `zh` 和 `en` 两个字典中**同时**添加。
 
 ### Key 命名规范
 
@@ -170,7 +179,7 @@ AI 工程
 <p data-i18n="blog_list_sub">All Posts — {N} articles and counting</p>
 ```
 
-### 5b. `js/i18n.js` 中的计数（zh 和 en 都要改）
+### 5b. `js/i18n/blog-list.js` 中的计数（zh 和 en 都要改）
 
 ```js
 blog_list_sub: 'All Posts — {N} articles and counting',
@@ -180,14 +189,16 @@ blog_list_sub: 'All Posts — {N} articles and counting',
 
 ## 6. 验证清单
 
-- [ ] 详情页 HTML 中所有 `data-i18n` key 在 `i18n.js` 的 zh 字典中存在
-- [ ] 详情页 HTML 中所有 `data-i18n` key 在 `i18n.js` 的 en 字典中存在
+- [ ] 详情页底部引用了 `../js/i18n/articles/{slug}.js`
+- [ ] 详情页 HTML 中所有 `data-i18n` key 在对应 i18n 分块的 zh 字典中存在
+- [ ] 详情页 HTML 中所有 `data-i18n` key 在对应 i18n 分块的 en 字典中存在
 - [ ] 含 HTML 标签的翻译元素使用了 `data-i18n-html`（不是 `data-i18n`）
 - [ ] 主页最多 6 篇卡片，按日期倒序，reveal-d 值连续
 - [ ] 列表页包含全部文章，序号连续
 - [ ] `blog_list_sub` 计数 = 列表页实际卡片数
 - [ ] 详情页 CSS 加载顺序正确（base → components → detail → responsive）
 - [ ] 详情页包含 mobileLangBtn
+- [ ] 已运行 `node tools/check_i18n.js`
 
 ---
 

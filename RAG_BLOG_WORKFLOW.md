@@ -31,7 +31,7 @@
 | RAG 标准底稿 | `rag-articles/` | `{slug}.md` | 进入 RAG 系统的标准 Markdown，必须带统一 front matter |
 | 博客浓缩稿 | `blog-drafts/` | `{slug}.md` | 基于 RAG 底稿浓缩后的博客长度 Markdown，用于人工审阅和生成 HTML |
 | 博客详情页 | `blog/` | `{slug}.html` | 站点实际发布页面 |
-| 国际化文本 | `js/i18n.js` | `{prefix}_*`、`blog{N}_title`、`blog_card{N}_*` | 中英文都必须补齐 |
+| 国际化文本 | `js/i18n/articles/{slug}.js`、`js/i18n/blog-list.js` | `{prefix}_*`、`blog{N}_title`、`blog_card{N}_*` | 文章正文每篇一个文件，卡片和计数集中在 blog-list |
 | 首页最新文章 | `index.html` | 最新 6 篇 | 只维护首页博客区的最新 6 篇卡片 |
 | 全量文章列表 | `blog/index.html` | 全部文章倒序 | 必须维护总数、筛选计数和连续编号 |
 | 主题使用记录 | `BLOG_TOPIC_POOL.md` | 主题行追加日期 | 每次发文都要记录选用主题 |
@@ -211,7 +211,8 @@ NEW_BLOG_POST.md
 必须完成：
 
 - 新建 `blog/{slug}.html`
-- 更新 `js/i18n.js` 的 `zh` 和 `en` 字典
+- 新建或更新 `js/i18n/articles/{slug}.js` 的 `zh` 和 `en` 字典
+- 更新 `js/i18n/blog-list.js` 的首页/归档卡片 key 和计数
 - 如果是最新 6 篇，更新首页 `index.html`
 - 更新完整列表页 `blog/index.html`
 - 更新文章计数
@@ -237,7 +238,7 @@ NEW_BLOG_POST.md
 2. 写入或更新 `rag-articles/{slug}.md`。
 3. 基于 RAG Markdown 浓缩成 `blog-drafts/{slug}.md`。
 4. 按 `NEW_BLOG_POST.md` 生成 `blog/{slug}.html`。
-5. 更新 `js/i18n.js`。
+5. 更新 `js/i18n/articles/{slug}.js` 和 `js/i18n/blog-list.js`。
 6. 更新 `index.html` 最新 6 篇。
 7. 更新 `blog/index.html` 全量列表和计数。
 8. 更新 `BLOG_TOPIC_POOL.md` 使用日期。
@@ -253,7 +254,8 @@ NEW_BLOG_POST.md
 - [ ] Markdown front matter 符合标准
 - [ ] Markdown 标题和正文结构清晰
 - [ ] 博客 HTML 已按站点模板创建
-- [ ] `js/i18n.js` 中英文 key 齐全
+- [ ] 对应 i18n 分块中英文 key 齐全
+- [ ] `node tools/check_i18n.js` 严格项通过
 - [ ] 首页最新 6 篇规则正确
 - [ ] 列表页包含全部文章，排序和编号正确
 - [ ] `blog_list_sub` 计数正确

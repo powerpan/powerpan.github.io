@@ -26,16 +26,22 @@ function loadI18n() {
   };
 
   vm.createContext(sandbox);
-  const code = fs.readFileSync(path.join(root, 'js/i18n.js'), 'utf8');
-  vm.runInContext(`${code}\nthis.__I18N__ = I18N;`, sandbox);
-  return sandbox.__I18N__;
+  vm.runInContext(fs.readFileSync(path.join(root, 'js/i18n.js'), 'utf8'), sandbox);
+  for (const file of walkFiles(path.join(root, 'js/i18n'), '.js')) {
+    vm.runInContext(fs.readFileSync(file, 'utf8'), sandbox);
+  }
+  return sandbox.window.I18N;
 }
 
 function walkHtml(dir) {
+  return walkFiles(dir, '.html');
+}
+
+function walkFiles(dir, extension) {
   return fs.readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
     const file = path.join(dir, entry.name);
-    if (entry.isDirectory()) return entry.name.startsWith('.') ? [] : walkHtml(file);
-    return entry.isFile() && file.endsWith('.html') ? [file] : [];
+    if (entry.isDirectory()) return entry.name.startsWith('.') ? [] : walkFiles(file, extension);
+    return entry.isFile() && file.endsWith(extension) ? [file] : [];
   });
 }
 
@@ -79,6 +85,62 @@ function printGroup(title, items) {
   if (items.length > 20) console.log(`  ... ${items.length - 20} more`);
 }
 
+function scriptPathExists(htmlFile, src) {
+  const base = path.dirname(htmlFile);
+  return fs.existsSync(path.resolve(base, src));
+}
+
+function i18nScriptSrcs(raw) {
+  return Array.from(raw.matchAll(/<script src="([^"]*js\/i18n(?:\/[^"]+)?\.js)"><\/script>/g))
+    .map((match) => match[1]);
+}
+
+function assertI18nScripts(file, rel, raw, issues) {
+  if (rel === 'admin/editor.html') return;
+
+  const srcs = i18nScriptSrcs(raw);
+  const has = (src) => srcs.includes(src);
+  const missing = (src, reason) => {
+    if (!has(src)) addIssue(issues, 'I18n script reference issues', `${rel}: missing ${src} (${reason})`);
+  };
+
+  for (const src of srcs) {
+    if (!scriptPathExists(file, src)) {
+      addIssue(issues, 'I18n script reference issues', `${rel}: script target not found: ${src}`);
+    }
+  }
+
+  if (rel === 'index.html') {
+    missing('js/i18n.js', 'runtime');
+    missing('js/i18n/core.js', 'shared keys');
+    missing('js/i18n/home.js', 'homepage keys');
+    missing('js/i18n/projects.js', 'project cards');
+    missing('js/i18n/blog-list.js', 'latest blog cards');
+    return;
+  }
+
+  if (rel === 'blog/index.html') {
+    missing('../js/i18n.js', 'runtime');
+    missing('../js/i18n/core.js', 'shared keys');
+    missing('../js/i18n/blog-list.js', 'archive cards and filters');
+    return;
+  }
+
+  if (rel.startsWith('blog/') && rel.endsWith('.html')) {
+    const slug = path.basename(rel, '.html');
+    missing('../js/i18n.js', 'runtime');
+    missing('../js/i18n/core.js', 'shared keys');
+    missing(`../js/i18n/articles/${slug}.js`, 'article body keys');
+    return;
+  }
+
+  if (rel.startsWith('projects/') && rel.endsWith('.html')) {
+    missing('../js/i18n.js', 'runtime');
+    missing('../js/i18n/core.js', 'shared keys');
+    missing('../js/i18n/projects.js', 'project keys');
+  }
+}
+
 function main() {
   const I18N = loadI18n();
   const issues = {};
@@ -89,6 +151,8 @@ function main() {
     const rel = path.relative(root, file);
     const raw = fs.readFileSync(file, 'utf8');
     const html = stripScripts(raw);
+
+    assertI18nScripts(file, rel, raw, issues);
 
     if (rel !== 'admin/editor.html' && raw.includes('<\\/script>')) {
       addIssue(issues, 'Escaped script closer issues', `${rel}: escaped script closer`);
@@ -188,6 +252,7 @@ function main() {
     'TOC i18n derivation issues',
     'Category/filter issues',
     'Escaped script closer issues',
+    'I18n script reference issues',
   ];
 
   let failed = false;
