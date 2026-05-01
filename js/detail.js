@@ -106,6 +106,27 @@
     ======================================== */
     const tocItems = document.querySelectorAll('.detail-toc-item');
     const sections = document.querySelectorAll('.detail-section[id]');
+
+    function updateDetailTocLabels() {
+        const isZh = document.documentElement.lang.startsWith('zh');
+        tocItems.forEach(item => {
+            if (!item.dataset.labelZh) item.dataset.labelZh = item.dataset.label || '';
+            if (isZh && item.dataset.labelZh) {
+                item.dataset.label = item.dataset.labelZh;
+                return;
+            }
+
+            const target = document.getElementById(item.dataset.target);
+            const heading = target && target.querySelector('h2');
+            if (!heading) return;
+
+            const label = heading.textContent.trim().replace(/\s+/g, ' ');
+            if (label) item.dataset.label = label;
+        });
+    }
+
+    window.updateDetailTocLabels = updateDetailTocLabels;
+    updateDetailTocLabels();
     
     window.addEventListener('scroll', () => {
         let current = '';

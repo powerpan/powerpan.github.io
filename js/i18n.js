@@ -1088,6 +1088,7 @@ const I18N = {
     blog_tag_architecture: '系统架构',
     blog_tag_observation: '技术观察',
     blog_tag_essay: '社会随笔',
+    detail_back_blog: '返回博客',
     proj_back: '← 返回首页',
     proj_list_title: '// 全部项目',
     proj_list_sub: 'All Projects — 6 projects and counting',
@@ -2453,6 +2454,7 @@ const I18N = {
     blog_tag_architecture: 'System Architecture',
     blog_tag_observation: 'Tech Observation',
     blog_tag_essay: 'Social Essays',
+    detail_back_blog: 'Back to Blog',
     proj_back: '← Back to Home',
     proj_list_title: '// All Projects',
     proj_list_sub: 'All Projects — 6 projects and counting',
@@ -2768,6 +2770,23 @@ function setLang(lang) {
     const key = el.getAttribute('data-i18n-title');
     if (t[key] !== undefined) el.title = t[key];
   });
+
+  // Article pages derive head metadata from the translated on-page content.
+  const articleTitle = document.querySelector('.blog-article-title');
+  if (articleTitle) {
+    const titleText = articleTitle.textContent.trim().replace(/\s+/g, ' ');
+    if (titleText) document.title = `${titleText} — Eric`;
+  }
+  const articleDescription = document.querySelector('meta[name="description"]');
+  const firstArticleParagraph = document.querySelector('.blog-article-body p');
+  if (articleDescription && firstArticleParagraph) {
+    const descText = firstArticleParagraph.textContent.trim().replace(/\s+/g, ' ');
+    if (descText) articleDescription.setAttribute('content', descText.slice(0, 180));
+  }
+
+  if (typeof window.updateDetailTocLabels === 'function') {
+    window.updateDetailTocLabels();
+  }
 
   // Update lang toggle button text
   const langBtn = document.getElementById('langToggle');
