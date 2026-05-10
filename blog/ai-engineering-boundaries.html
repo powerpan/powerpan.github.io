@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 工程的核心不是让模型万能，而是定义边界 — Eric</title>
+    <meta name="description" content="成熟的 AI 工程不是把模型包装成万能助手，而是把模型放进边界清晰、责任明确、风险可控的系统里。">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/detail.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body>
+    <div class="detail-scroll-progress" id="detailScrollProgress"></div>
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor-dot" id="cursorDot"></div>
+    <canvas id="particleCanvas"></canvas>
+
+    <nav id="nav">
+        <a href="../index.html" class="nav-logo magnetic" data-hover>ERIC<span class="dot">.</span></a>
+        <ul class="nav-center">
+            <li><a href="../index.html#about" data-hover data-i18n="nav_about">// 关于</a></li>
+            <li><a href="../index.html#projects" data-hover data-i18n="nav_projects">// 项目</a></li>
+            <li><a href="../index.html#blog" data-hover data-i18n="nav_blog">// 博客</a></li>
+            <li><a href="../index.html#contact" data-hover data-i18n="nav_contact">// 联系</a></li>
+        </ul>
+        <div class="nav-status"><span class="status-dot"></span>Open to work</div>
+        <button class="nav-hamburger" id="navHamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+    </nav>
+    <div class="mobile-nav" id="mobileNav">
+        <button class="mobile-nav-close" id="mobileNavClose" aria-label="Close menu">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+        <ul class="mobile-nav-links">
+            <li><a href="../index.html#about" data-i18n="nav_about">// 关于</a></li>
+            <li><a href="../index.html#projects" data-i18n="nav_projects">// 项目</a></li>
+            <li><a href="../index.html#blog" data-i18n="nav_blog">// 博客</a></li>
+            <li><a href="../index.html#contact" data-i18n="nav_contact">// 联系</a></li>
+            <li><button class="mobile-lang-btn" id="mobileLangBtn" onclick="toggleLang()" data-i18n="nav_lang">中 / EN</button></li>
+        </ul>
+    </div>
+
+    <section class="blog-article-hero">
+        <div class="detail-hero-bg"></div>
+        <a href="../index.html#blog" class="detail-back" data-hover>
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            <span data-i18n="detail_back_blog">返回博客</span>
+        </a>
+        <div class="blog-article-tag reveal" data-i18n="blog_tag_ai">AI 工程</div>
+        <h1 class="blog-article-title reveal reveal-d1" data-i18n-html="baeb_title">AI 工程的核心不是让模型万能，而是<span class="hl">定义边界</span></h1>
+        <p class="detail-subtitle reveal reveal-d2" data-i18n="baeb_sub">成熟的 AI 工程不是把模型包装成万能助手，而是把模型放进边界清晰、责任明确、风险可控的系统里。</p>
+        <div class="blog-article-meta reveal reveal-d2">
+            <span>📅 2026.05</span>
+            <span>⏱️ 8 min</span>
+            <span>👤 Eric Pan</span>
+        </div>
+    </section>
+
+    <article class="blog-article-body">
+        <section class="detail-section reveal" id="wish">
+            <h2 data-i18n="baeb_s1">万能 AI 不是可交付需求</h2>
+            <p data-i18n="baeb_p1">企业做 AI 项目时，最容易出现的误解不是低估 AI，而是高估 AI。很多客户第一次看到大模型能力后，会自然想象：既然它能写文章、总结资料、调用工具，那是不是也能自动管理项目、分析经营、回复客户，甚至自动做决策。</p>
+            <p data-i18n="baeb_p2">这个想法并不奇怪。每一次新技术出现，人们都会先想象它能不能替代一整套旧流程。但在真实工程里，AI 项目的难点往往不是让模型多做一点，而是判断哪些事情不该让模型做。</p>
+            <blockquote data-i18n="baeb_p3">成熟的 AI 工程，不是把模型包装成万能助手，而是把模型放进一个边界清晰、责任明确、风险可控的系统里。</blockquote>
+        </section>
+
+        <section class="detail-section reveal" id="scope">
+            <h2 data-i18n="baeb_s2">把愿望翻译成任务</h2>
+            <p data-i18n="baeb_p4">客户说“能不能让 AI 自动管理项目”，这不是一个可交付需求，而是一个目标想象。工程上要先把它拆成项目状态摘要、延期风险提示、阻塞项识别、周报草稿生成等具体任务。</p>
+            <p data-i18n="baeb_p5">客户说“能不能让 AI 替代客服”，也不能直接理解成全自动客服。它可以拆成 FAQ 检索、标准回复建议、工单分类、低风险问题自动回复、高风险问题转人工。</p>
+            <p data-i18n="baeb_p6">这道翻译过程，就是 AI 工程的第一道边界。客户描述的是目标状态，工程师要定义的是可执行范围。</p>
+        </section>
+
+        <section class="detail-section reveal" id="responsibility">
+            <h2 data-i18n="baeb_s3">AI 擅长语义处理，不擅长承担责任</h2>
+            <p data-i18n="baeb_p7">大模型擅长处理语言、上下文和语义关系，所以很适合做信息检索、文本总结、分类抽取、草稿生成、候选建议、异常提示和自然语言交互。</p>
+            <p data-i18n="baeb_p8">这些能力很有价值，但它们不等于 AI 可以承担最终责任。AI 可以总结合同风险，但不应该直接决定合同是否可以签；AI 可以分析生产异常，但自动停机、调度产线、修改关键参数必须有严格规则和人工确认。</p>
+            <p data-i18n="baeb_p9">企业 AI 系统的成熟度，不是看它能不能回答更多问题，而是看它能不能在正确的位置停下来。</p>
+        </section>
+
+        <section class="detail-section reveal" id="risk">
+            <h2 data-i18n="baeb_s4">没有边界，效率工具会变成风险系统</h2>
+            <p data-i18n="baeb_p10">很多 AI 项目在 Demo 阶段都很顺利，但进入真实业务后，旧文档、冲突口径、不完整数据和无标准答案的问题会一起出现。如果没有提前定义边界，AI 很容易从效率工具变成风险系统。</p>
+            <ul>
+                <li data-i18n-html="baeb_f1"><strong>事实风险</strong>：把历史版本当成现行规则。</li>
+                <li data-i18n-html="baeb_f2"><strong>权限风险</strong>：把分散在系统里的权限问题集中暴露。</li>
+                <li data-i18n-html="baeb_f3"><strong>执行风险</strong>：调用工具、修改数据、发送邮件后，错误直接进入流程。</li>
+                <li data-i18n-html="baeb_f4"><strong>责任风险</strong>：没有来源、上下文和执行链路，出错后难以追溯。</li>
+                <li data-i18n-html="baeb_f5"><strong>膨胀风险</strong>：客户看到 AI 能做一点，就不断要求它做更多。</li>
+            </ul>
+            <p data-i18n="baeb_p11">AI 项目不是越开放越先进，而是越接近生产环境，越需要收敛。</p>
+        </section>
+
+        <section class="detail-section reveal" id="guardrails">
+            <h2 data-i18n="baeb_s5">六类边界必须工程化</h2>
+            <p data-i18n="baeb_p12">AI 系统至少要定义六类边界：数据边界、任务边界、风险边界、权限边界、输出边界和责任边界。</p>
+            <p data-i18n="baeb_p13">数据边界回答哪些数据可以进知识库、哪些需要脱敏、哪些只能被特定角色访问；任务边界回答 AI 是搜索助手、草稿助手，还是自动执行器；风险边界回答错误是否可逆，是否涉及资金、合同、安全和合规。</p>
+            <p data-i18n="baeb_p14">权限边界不只是菜单权限，还包括自然语言权限。输出边界要求 AI 给出来源、适用范围、不确定性和人工确认提醒。责任边界则要把日志、审计和反馈机制保留下来。</p>
+            <p data-i18n="baeb_p15">边界不能只写在 PPT 里。它要落实到权限系统、知识库分区、工具调用权限、人工确认、回滚机制、低置信度拒答、引用来源和审计日志里。</p>
+        </section>
+
+        <section class="detail-section reveal" id="levels">
+            <h2 data-i18n="baeb_s6">分级自动化比一步到位更可靠</h2>
+            <p data-i18n="baeb_p16">很多企业一开始就希望全自动，但真实落地更合理的路径，是按照风险等级逐步提升自动化程度。</p>
+            <ul>
+                <li data-i18n-html="baeb_f6"><strong>L1：辅助检索</strong>，只帮人找资料。</li>
+                <li data-i18n-html="baeb_f7"><strong>L2：辅助总结</strong>，整理信息但不做最终判断。</li>
+                <li data-i18n-html="baeb_f8"><strong>L3：候选生成</strong>，产出报告、方案、代码或回复草稿，由人确认。</li>
+                <li data-i18n-html="baeb_f9"><strong>L4：低风险自动执行</strong>，在明确规则下处理可回滚任务。</li>
+                <li data-i18n-html="baeb_f10"><strong>L5：高风险决策支持</strong>，只提供建议，最终责任仍由人承担。</li>
+            </ul>
+            <p data-i18n="baeb_p17">很多时候，L1 到 L3 已经能创造明显价值，而且风险更可控。高风险场景不应该追求“全自动”，而应该追求“可追溯、可干预、可回滚”。</p>
+        </section>
+
+        <section class="detail-section reveal" id="engineer">
+            <h2 data-i18n="baeb_s7">工程师的价值是设计护栏</h2>
+            <p data-i18n="baeb_p18">AI 项目文档不只要写系统能做什么，还要写系统不能做什么。不能在没有来源的情况下回答制度类问题，不能自动修改合同、报价和财务数据，不能绕过人工审批执行高风险动作，不能访问用户无权限查看的数据。</p>
+            <p data-i18n="baeb_p19">在 AI 项目里，工程师不能只是实现者，还必须是边界设计者。因为客户对 AI 的需求往往不是精确需求，而是技术想象。</p>
+            <blockquote data-i18n="baeb_p20">真正成熟的 AI 工程师，不是把客户的每一句“能不能”都回答成“可以试试”，而是在关键位置知道该踩刹车。好的 AI 工程，不是把刹车拆掉，而是在加速之前先装好刹车。</blockquote>
+        </section>
+    </article>
+
+    <div class="detail-toc" id="detailToc">
+        <div class="detail-toc-item" data-target="wish" data-label="万能想象"></div>
+        <div class="detail-toc-item" data-target="scope" data-label="任务边界"></div>
+        <div class="detail-toc-item" data-target="responsibility" data-label="责任"></div>
+        <div class="detail-toc-item" data-target="risk" data-label="风险"></div>
+        <div class="detail-toc-item" data-target="guardrails" data-label="护栏"></div>
+        <div class="detail-toc-item" data-target="levels" data-label="分级"></div>
+        <div class="detail-toc-item" data-target="engineer" data-label="工程师"></div>
+    </div>
+
+    <footer class="detail-footer">
+        <div class="detail-footer-copy">&copy; 2026 Eric. Built with <span class="heart">♥</span> and too much coffee.</div>
+        <div class="detail-footer-links">
+            <a href="../index.html">← Back to Home</a>
+            <a href="https://github.com/powerpan" target="_blank">GitHub</a>
+        </div>
+    </footer>
+    <button class="back-to-top" id="backToTop" title="回到顶部" data-i18n-title="back_to_top">↑</button>
+    <script src="../js/i18n.js"></script>
+    <script src="../js/i18n/core.js"></script>
+    <script src="../js/i18n/articles/ai-engineering-boundaries.js"></script>
+    <script src="../js/detail.js"></script>
+</body>
+</html>
