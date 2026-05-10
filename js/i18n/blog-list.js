@@ -1,6 +1,9 @@
 /* i18n data: blog-list */
 window.registerI18nChunk({
   "zh": {
+    "blog26_title": "企业 AI 本地部署，第一步不是买 GPU，而是先洗数据",
+    "blog_card26_title": "企业 AI 本地部署，第一步不是买 GPU，而是先洗数据",
+    "blog_card26_desc": "企业 AI 真正的起点不是模型和算力，而是内部数据是否具备可检索、可引用、可追溯和可回答的知识质量。",
     "blog25_title": "U-Net 没有输给新模型：工业视觉里，先定义任务再选择模型",
     "blog_card25_title": "U-Net 没有输给新模型：工业视觉里，先定义任务再选择模型",
     "blog_card25_desc": "在单类细长区域分割任务里，模型有效性更多取决于任务结构与归纳偏置的匹配，而不是发布时间或预训练光环。",
@@ -48,7 +51,7 @@ window.registerI18nChunk({
     "blog_card11_desc": "Context Rot 的两种机制——注意力稀释与上下文中毒，以及行业正在给出的不同答案。为什么「清空重开」目前仍然是最有效的解法？",
     "blog_back": "← 返回首页",
     "blog_list_title": "// 全部文章",
-    "blog_list_sub": "All Posts — 25 articles and counting",
+    "blog_list_sub": "All Posts — 26 articles and counting",
     "blog_filter_kicker": "SIGNAL ROUTER",
     "blog_filter_title": "按主题轨道切换阅读流",
     "blog_filter_sub": "把文章列表切成不同信道，快速定位 AI 工程、Agent、视觉多模态、系统架构、技术观察和社会随笔内容。",
@@ -99,6 +102,9 @@ window.registerI18nChunk({
     "blog9_title": "「内卷」与「躺平」：一代人的焦虑与突围"
   },
   "en": {
+    "blog26_title": "For Enterprise AI On-Prem, Start by Cleaning Data, Not Buying GPUs",
+    "blog_card26_title": "For Enterprise AI On-Prem, Start by Cleaning Data, Not Buying GPUs",
+    "blog_card26_desc": "The real starting point is not model size or compute, but whether internal data is searchable, quotable, traceable, and answerable.",
     "blog25_title": "U-Net Did Not Lose to a Newer Model: Define the Task Before Choosing the Model",
     "blog_card25_title": "U-Net Did Not Lose to a Newer Model: Define the Task Before Choosing the Model",
     "blog_card25_desc": "For single-class thin-region segmentation, effectiveness depends more on task structure and inductive bias than on release date or pretraining aura.",
@@ -146,7 +152,7 @@ window.registerI18nChunk({
     "blog_card11_desc": "Two mechanisms behind Context Rot — attention dilution and context poisoning — and the different answers the industry is giving. Why is \"starting fresh\" still the most effective fix?",
     "blog_back": "← Back to Home",
     "blog_list_title": "// All Posts",
-    "blog_list_sub": "All Posts — 25 articles and counting",
+    "blog_list_sub": "All Posts — 26 articles and counting",
     "blog_filter_kicker": "SIGNAL ROUTER",
     "blog_filter_title": "Switch Reading Lanes by Topic",
     "blog_filter_sub": "Slice the archive into AI engineering, Agent automation, vision and multimodal work, system architecture, technical observation, and social essays.",

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>企业 AI 本地部署，第一步不是买 GPU，而是先洗数据 — Eric</title>
+    <meta name="description" content="企业 AI 本地部署真正的起点不是模型和算力，而是内部数据是否具备可检索、可引用、可追溯和可回答的知识质量。">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/detail.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body>
+    <div class="detail-scroll-progress" id="detailScrollProgress"></div>
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor-dot" id="cursorDot"></div>
+    <canvas id="particleCanvas"></canvas>
+
+    <nav id="nav">
+        <a href="../index.html" class="nav-logo magnetic" data-hover>ERIC<span class="dot">.</span></a>
+        <ul class="nav-center">
+            <li><a href="../index.html#about" data-hover data-i18n="nav_about">// 关于</a></li>
+            <li><a href="../index.html#projects" data-hover data-i18n="nav_projects">// 项目</a></li>
+            <li><a href="../index.html#blog" data-hover data-i18n="nav_blog">// 博客</a></li>
+            <li><a href="../index.html#contact" data-hover data-i18n="nav_contact">// 联系</a></li>
+        </ul>
+        <div class="nav-status"><span class="status-dot"></span>Open to work</div>
+        <button class="nav-hamburger" id="navHamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+    </nav>
+    <div class="mobile-nav" id="mobileNav">
+        <button class="mobile-nav-close" id="mobileNavClose" aria-label="Close menu">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+        <ul class="mobile-nav-links">
+            <li><a href="../index.html#about" data-i18n="nav_about">// 关于</a></li>
+            <li><a href="../index.html#projects" data-i18n="nav_projects">// 项目</a></li>
+            <li><a href="../index.html#blog" data-i18n="nav_blog">// 博客</a></li>
+            <li><a href="../index.html#contact" data-i18n="nav_contact">// 联系</a></li>
+            <li><button class="mobile-lang-btn" id="mobileLangBtn" onclick="toggleLang()" data-i18n="nav_lang">中 / EN</button></li>
+        </ul>
+    </div>
+
+    <section class="blog-article-hero">
+        <div class="detail-hero-bg"></div>
+        <a href="../index.html#blog" class="detail-back" data-hover>
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            <span data-i18n="detail_back_blog">返回博客</span>
+        </a>
+        <div class="blog-article-tag reveal" data-i18n="blog_tag_ai">AI 工程</div>
+        <h1 class="blog-article-title reveal reveal-d1" data-i18n-html="beadr_title">企业 AI 本地部署，第一步不是买 GPU，而是<span class="hl">先洗数据</span></h1>
+        <p class="detail-subtitle reveal reveal-d2" data-i18n="beadr_sub">企业 AI 真正的起点不是模型和算力，而是内部数据是否具备可检索、可引用、可追溯和可回答的知识质量。</p>
+        <div class="blog-article-meta reveal reveal-d2">
+            <span>📅 2026.05</span>
+            <span>⏱️ 7 min</span>
+            <span>👤 Eric Pan</span>
+        </div>
+    </section>
+
+    <article class="blog-article-body">
+        <section class="detail-section reveal" id="gpu">
+            <h2 data-i18n="beadr_s1">别把起点放在 GPU 上</h2>
+            <p data-i18n="beadr_p1">很多企业一提到 AI 本地部署，第一反应就是买服务器、上 GPU、选大模型、搭一个内部 ChatGPT。这个顺序看起来合理，但它把问题从第一步就带偏了。</p>
+            <p data-i18n="beadr_p2">企业 AI 真正的起点不是模型，也不是算力，而是企业内部那些数据到底有没有资格被 AI 使用。模型再强，也只能基于输入的信息工作；如果输入本身混乱、过期、冲突，AI 只会把这些问题包装成更流畅的答案。</p>
+            <blockquote data-i18n="beadr_p3">AI 不是企业知识管理的魔法补丁，它更像放大器。干净的数据会被放大成效率，混乱的数据也会被放大成风险。</blockquote>
+        </section>
+
+        <section class="detail-section reveal" id="asset">
+            <h2 data-i18n="beadr_s2">信息堆积不等于知识资产</h2>
+            <p data-i18n="beadr_p4">很多企业不是没有数据，而是数据太多、太散、太乱。同一个制度可能有三个版本，但没人知道哪个是现行版本；同一个指标在财务、运营、销售那里可能有三种口径；项目资料散落在聊天工具、邮件、共享盘、Word 和 Excel 里。</p>
+            <p data-i18n="beadr_p5">这时候企业拥有的不是知识资产，而只是信息堆积。信息要经过清洗、去重、归档、结构化、标注、版本管理和权限控制，才可能变成 AI 能够检索、理解、引用和复用的知识。</p>
+            <p data-i18n="beadr_p6">否则，所谓知识库只是把混乱换了一个入口。用户看起来是在问 AI，实际上是在向一堆没有治理过的文档抽签。</p>
+        </section>
+
+        <section class="detail-section reveal" id="rag">
+            <h2 data-i18n="beadr_s3">RAG 的上限取决于可回答性</h2>
+            <p data-i18n="beadr_p7">很多企业做 RAG 时，最容易犯的错误是以为只要文档切片、向量化、接上大模型，就能得到可靠的企业问答系统。上线之后回答不稳定、引用不准确、旧制度和新制度混在一起，才开始怀疑模型、Embedding、Rerank 或 Prompt。</p>
+            <p data-i18n="beadr_p8">这些技术环节当然重要，但很多问题并不在链路后半段，而在数据入口。Chunk 切分不能拯救逻辑混乱的文档，Embedding 不能判断资料是否仍然有效，Rerank 也不能把错误资料排成正确答案。</p>
+            <p data-i18n="beadr_p9">RAG 的上限不只取决于模型和检索算法，也取决于知识库本身是否具备“可回答性”。所谓可回答性，不是有没有文件，而是这些文件能不能支撑稳定、明确、可追溯的答案。</p>
+        </section>
+
+        <section class="detail-section reveal" id="context">
+            <h2 data-i18n="beadr_s4">企业问答需要上下文</h2>
+            <p data-i18n="beadr_p10">员工问“这个报销标准现在还适用吗”，AI 不仅要找到报销制度，还要知道版本、部门范围、生效时间、是否被后续通知覆盖，以及最终解释权归谁。</p>
+            <p data-i18n="beadr_p11">客户问“这个产品是否支持某个功能”，AI 不仅要找到产品说明，还要区分那是销售话术、技术文档、历史版本，还是当前正式承诺。</p>
+            <p data-i18n="beadr_p12">管理层问“这个项目为什么延期”，AI 不能只拼接几段会议纪要，而要理解任务变更、资源调整、风险记录和责任边界。</p>
+            <p data-i18n="beadr_p13">这些问题背后都不是单纯的模型能力问题，而是企业知识结构问题。企业 AI 本地部署的第一阶段，与其叫模型部署，不如叫知识资产整理。</p>
+        </section>
+
+        <section class="detail-section reveal" id="boundary">
+            <h2 data-i18n="beadr_s5">本地部署不等于可信</h2>
+            <p data-i18n="beadr_p14">很多企业选择本地部署，是因为担心数据安全。这个担心合理，但本地部署只能解决数据不出内网的问题，不能自动解决数据质量问题。</p>
+            <ul>
+                <li data-i18n-html="beadr_f1"><strong>模型在内网</strong>，不代表答案准确。</li>
+                <li data-i18n-html="beadr_f2"><strong>服务器在机房</strong>，不代表权限清楚。</li>
+                <li data-i18n-html="beadr_f3"><strong>数据没有外泄</strong>，也不代表知识系统可信。</li>
+            </ul>
+            <p data-i18n="beadr_p15">本地部署解决的是物理边界，数据治理解决的是认知边界。</p>
+            <p data-i18n="beadr_p16">企业真正需要的不是把 ChatGPT 搬进内网，而是把自己的知识系统重建一遍：让文档有版本，让制度有状态，让数据有口径，让流程有责任人，让答案有来源，让错误有反馈，让知识可以持续更新。</p>
+        </section>
+
+        <section class="detail-section reveal" id="readiness">
+            <h2 data-i18n="beadr_s6">先问数据有没有准备好</h2>
+            <p data-i18n="beadr_p17">AI 落地会反向暴露一家企业的管理水平。过去数据混乱可以靠老员工经验弥补，制度冲突可以靠会议协调，信息散落可以靠人到处问。AI 接入之后，这些混乱会被集中暴露。</p>
+            <p data-i18n="beadr_p18">企业给 AI 的是一套干净、稳定、结构化的知识系统，它才可能成为效率工具。企业给它的是一堆过期、冲突、无序的信息，它就会成为风险放大器。</p>
+            <blockquote data-i18n="beadr_p19">企业 AI 本地部署的第一步，不是急着买 GPU，也不是急着选哪个大模型，而是先问一个更基础的问题：我们的数据，真的准备好被 AI 使用了吗？</blockquote>
+            <p data-i18n="beadr_p20">模型能力决定的是 AI 能跑多快，数据质量决定的是它会不会跑偏。</p>
+        </section>
+    </article>
+
+    <div class="detail-toc" id="detailToc">
+        <div class="detail-toc-item" data-target="gpu" data-label="起点"></div>
+        <div class="detail-toc-item" data-target="asset" data-label="知识资产"></div>
+        <div class="detail-toc-item" data-target="rag" data-label="可回答性"></div>
+        <div class="detail-toc-item" data-target="context" data-label="上下文"></div>
+        <div class="detail-toc-item" data-target="boundary" data-label="可信边界"></div>
+        <div class="detail-toc-item" data-target="readiness" data-label="准备度"></div>
+    </div>
+
+    <footer class="detail-footer">
+        <div class="detail-footer-copy">&copy; 2026 Eric. Built with <span class="heart">♥</span> and too much coffee.</div>
+        <div class="detail-footer-links">
+            <a href="../index.html">← Back to Home</a>
+            <a href="https://github.com/powerpan" target="_blank">GitHub</a>
+        </div>
+    </footer>
+    <button class="back-to-top" id="backToTop" title="回到顶部" data-i18n-title="back_to_top">↑</button>
+    <script src="../js/i18n.js"></script>
+    <script src="../js/i18n/core.js"></script>
+    <script src="../js/i18n/articles/enterprise-ai-data-readiness.js"></script>
+    <script src="../js/detail.js"></script>
+</body>
+</html>
