@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /blog-drafts/
+Disallow: /rag-articles/
+Disallow: /transfer/
+
+Sitemap: https://erickk.site/sitemap.xml

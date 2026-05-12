@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>Eric Blog</title>
+    <link>https://erickk.site/blog/</link>
+    <description>Eric 的 AI 工程、计算机视觉、Agent 架构与系统设计技术博客。</description>
+    <language>zh-CN</language>
+    <lastBuildDate>Tue, 12 May 2026 00:00:00 GMT</lastBuildDate>
+    <item>
+      <title>我做了一次多 Agent 架构实验：复杂架构并不天然更聪明</title>
+      <link>https://erickk.site/blog/multi-agent-architecture-lab.html</link>
+      <guid>https://erickk.site/blog/multi-agent-architecture-lab.html</guid>
+      <pubDate>Tue, 12 May 2026 00:00:00 GMT</pubDate>
+      <category>Agent 自动化</category>
+      <description>一次小型 Agent Architecture Lab 实验显示，多 Agent 不是默认升级路线，而是需要用成本、边界和复盘价值证明自己的架构选择。</description>
+    </item>
+    <item>
+      <title>AI 工程的核心不是让模型万能，而是定义边界</title>
+      <link>https://erickk.site/blog/ai-engineering-boundaries.html</link>
+      <guid>https://erickk.site/blog/ai-engineering-boundaries.html</guid>
+      <pubDate>Sun, 10 May 2026 00:00:00 GMT</pubDate>
+      <category>AI 工程</category>
+      <description>成熟的 AI 工程不是把模型包装成万能助手，而是把模型放进边界清晰、责任明确、风险可控的系统里。</description>
+    </item>
+    <item>
+      <title>企业 AI 本地部署，第一步不是买 GPU，而是先洗数据</title>
+      <link>https://erickk.site/blog/enterprise-ai-data-readiness.html</link>
+      <guid>https://erickk.site/blog/enterprise-ai-data-readiness.html</guid>
+      <pubDate>Sun, 10 May 2026 00:00:00 GMT</pubDate>
+      <category>AI 工程</category>
+      <description>企业 AI 真正的起点不是模型和算力，而是内部数据是否具备可检索、可引用、可追溯和可回答的知识质量。</description>
+    </item>
+    <item>
+      <title>U-Net 没有输给新模型：工业视觉里，先定义任务再选择模型</title>
+      <link>https://erickk.site/blog/unet-industrial-segmentation.html</link>
+      <guid>https://erickk.site/blog/unet-industrial-segmentation.html</guid>
+      <pubDate>Thu, 07 May 2026 00:00:00 GMT</pubDate>
+      <category>视觉多模态</category>
+      <description>在单类细长区域分割任务里，模型有效性更多取决于任务结构与归纳偏置的匹配，而不是发布时间或预训练光环。</description>
+    </item>
+    <item>
+      <title>多 Agent 架构的真正问题：不是角色分工，而是上下文边界</title>
+      <link>https://erickk.site/blog/multi-agent-context-boundaries.html</link>
+      <guid>https://erickk.site/blog/multi-agent-context-boundaries.html</guid>
+      <pubDate>Fri, 01 May 2026 00:00:00 GMT</pubDate>
+      <category>Agent 自动化</category>
+      <description>多 Agent 的关键不是设计多少角色，而是判断上下文如何共享、隔离、压缩、传递和合并。</description>
+    </item>
+    <item>
+      <title>当真的需要多 Agent：如何拆分、协作与合并结果</title>
+      <link>https://erickk.site/blog/multi-agent-collaboration-results.html</link>
+      <guid>https://erickk.site/blog/multi-agent-collaboration-results.html</guid>
+      <pubDate>Fri, 01 May 2026 00:00:00 GMT</pubDate>
+      <category>Agent 自动化</category>
+      <description>多 Agent 的价值不在数量，而在能否把复杂任务拆成可控制、可追踪、可组合的协作单元。</description>
+    </item>
+    <item>
+      <title>工程师的成长本质是抽象层上移</title>
+      <link>https://erickk.site/blog/engineer-abstraction-layers.html</link>
+      <guid>https://erickk.site/blog/engineer-abstraction-layers.html</guid>
+      <pubDate>Fri, 01 May 2026 00:00:00 GMT</pubDate>
+      <category>技术观察</category>
+      <description>工程师真正的成长，不只是经验变多，而是能在代码、模块、系统、业务和组织之间不断切换。</description>
+    </item>
+    <item>
+      <title>AI Agent 正在重塑系统架构：从功能系统到任务系统</title>
+      <link>https://erickk.site/blog/agent-task-system-architecture.html</link>
+      <guid>https://erickk.site/blog/agent-task-system-architecture.html</guid>
+      <pubDate>Thu, 30 Apr 2026 00:00:00 GMT</pubDate>
+      <category>Agent 自动化</category>
+      <description>Agent 的价值不只是聊天或工具调用，而是把分散功能重新组织成围绕目标推进的任务系统。</description>
+    </item>
+    <item>
+      <title>如果没有数据库，系统如何设计？</title>
+      <link>https://erickk.site/blog/database-not-system-center.html</link>
+      <guid>https://erickk.site/blog/database-not-system-center.html</guid>
+      <pubDate>Wed, 29 Apr 2026 00:00:00 GMT</pubDate>
+      <category>系统架构</category>
+      <description>不是否定数据库，而是把系统设计的起点从表结构拉回业务事实、状态规则、查询视图和一致性协议。</description>
+    </item>
+    <item>
+      <title>技术债不是代码坏味道，而是组织对未来的定价</title>
+      <link>https://erickk.site/blog/technical-debt-org-game.html</link>
+      <guid>https://erickk.site/blog/technical-debt-org-game.html</guid>
+      <pubDate>Wed, 29 Apr 2026 00:00:00 GMT</pubDate>
+      <category>系统架构</category>
+      <description>技术债表现为代码和架构问题，但根源往往来自组织对时间、成本、风险和未来维护能力的连续选择。</description>
+    </item>
+    <item>
+      <title>视觉算法工程师，别把自己做成流程操作员</title>
+      <link>https://erickk.site/blog/vision-engineer-not-operator.html</link>
+      <guid>https://erickk.site/blog/vision-engineer-not-operator.html</guid>
+      <pubDate>Tue, 28 Apr 2026 00:00:00 GMT</pubDate>
+      <category>视觉多模态</category>
+      <description>开源模型和训练部署平台会继续降低门槛，视觉算法工程师真正的壁垒，是定义问题、设计数据闭环、诊断模型和系统落地。</description>
+    </item>
+    <item>
+      <title>别再把业务系统做成 CRUD 套壳：AI Agent 时代需要业务能力层</title>
+      <link>https://erickk.site/blog/agentic-business-systems.html</link>
+      <guid>https://erickk.site/blog/agentic-business-systems.html</guid>
+      <pubDate>Tue, 28 Apr 2026 00:00:00 GMT</pubDate>
+      <category>系统架构</category>
+      <description>CRUD 是基础能力，但复杂业务系统需要围绕业务动作、任务工作台、状态流转、事件协同和 Agent 工具边界重新设计。</description>
+    </item>
+    <item>
+      <title>AI Agent 架构：从会聊天到会执行，中间差了一套系统</title>
+      <link>https://erickk.site/blog/ai-agent-architecture.html</link>
+      <guid>https://erickk.site/blog/ai-agent-architecture.html</guid>
+      <pubDate>Mon, 27 Apr 2026 00:00:00 GMT</pubDate>
+      <category>Agent 自动化</category>
+      <description>AI Agent 不是更强的聊天框，而是一套由控制循环、工具调用、状态记忆和治理机制组成的执行系统。</description>
+    </item>
+    <item>
+      <title>AI 工作流争夺战：为什么真正的终局不是工具，而是工作代理层</title>
+      <link>https://erickk.site/blog/ai-workflow-agent-blog.html</link>
+      <guid>https://erickk.site/blog/ai-workflow-agent-blog.html</guid>
+      <pubDate>Mon, 27 Apr 2026 00:00:00 GMT</pubDate>
+      <category>Agent 自动化</category>
+      <description>AI 厂商争夺的不只是工作流入口，而是入口权、上下文权和执行权。真正更有价值的产品层，正在从工具位上移到工作代理层。</description>
+    </item>
+    <item>
+      <title>AI 周报｜Agent 平台化、模型继续升级，AI 硬件开始下沉到终端</title>
+      <link>https://erickk.site/blog/ai-weekly-agent-platform.html</link>
+      <guid>https://erickk.site/blog/ai-weekly-agent-platform.html</guid>
+      <pubDate>Mon, 27 Apr 2026 00:00:00 GMT</pubDate>
+      <category>技术观察</category>
+      <description>这一周的 AI 主线，不只是模型更强，而是工作模型、Agent 平台和端侧 AI 一起向产品化推进。</description>
+    </item>
+    <item>
+      <title>视觉模型上线后：别让 mAP 变成唯一答案</title>
+      <link>https://erickk.site/blog/vision-rollout-metrics.html</link>
+      <guid>https://erickk.site/blog/vision-rollout-metrics.html</guid>
+      <pubDate>Mon, 27 Apr 2026 00:00:00 GMT</pubDate>
+      <category>视觉多模态</category>
+      <description>视觉模型上线后，离线 mAP 只是起点。真正决定系统可靠性的，是线上漂移监控、灰度放量、回退阈值和数据闭环。</description>
+    </item>
+    <item>
+      <title>AI 编程时代的代码审查债务：为什么写得更快，反而更容易失控</title>
+      <link>https://erickk.site/blog/code-review-debt.html</link>
+      <guid>https://erickk.site/blog/code-review-debt.html</guid>
+      <pubDate>Sun, 26 Apr 2026 00:00:00 GMT</pubDate>
+      <category>AI 工程</category>
+      <description>AI coding 工具放大了代码生成速度，也放大了团队的审查压力。真正稀缺的不再是提交量，而是稳定理解和验证这些改动的能力。</description>
+    </item>
+    <item>
+      <title>上下文腐烂：大模型为什么会「越聊越笨」</title>
+      <link>https://erickk.site/blog/context-rot.html</link>
+      <guid>https://erickk.site/blog/context-rot.html</guid>
+      <pubDate>Sat, 25 Apr 2026 00:00:00 GMT</pubDate>
+      <category>AI 工程</category>
+      <description>Context Rot 的两种机制——注意力稀释与上下文中毒，以及行业正在给出的不同答案。为什么「清空重开」目前仍然是最有效的解法？</description>
+    </item>
+    <item>
+      <title>Token 经济学：当 AI 时代的「原材料」越来越贵</title>
+      <link>https://erickk.site/blog/token-economy.html</link>
+      <guid>https://erickk.site/blog/token-economy.html</guid>
+      <pubDate>Sat, 25 Apr 2026 00:00:00 GMT</pubDate>
+      <category>AI 工程</category>
+      <description>Token 正在成为这个时代的原材料，工作者如同工厂，购买原材料、加工、赋予附加值。理解这个逻辑，才能找到自己的核心竞争力。</description>
+    </item>
+    <item>
+      <title>AI Agent：重塑工作流的变革者，还是新一轮泡沫？</title>
+      <link>https://erickk.site/blog/ai-agent-thoughts.html</link>
+      <guid>https://erickk.site/blog/ai-agent-thoughts.html</guid>
+      <pubDate>Mon, 20 Apr 2026 00:00:00 GMT</pubDate>
+      <category>Agent 自动化</category>
+      <description>从个人开发者到企业级应用，AI Agent 正在改变我们的工作方式。但热潮之下，哪些是真实的变革，哪些又是过度的期待？</description>
+    </item>
+  </channel>
+</rss>

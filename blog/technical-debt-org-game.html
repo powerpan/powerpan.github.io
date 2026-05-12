@@ -4,7 +4,59 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>技术债不是代码坏味道，而是组织对未来的定价 — Eric</title>
+    <!-- SEO:START -->
     <meta name="description" content="技术债表现为代码和架构问题，但根源往往来自组织对时间、成本、风险和未来维护能力的连续选择。">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://erickk.site/blog/technical-debt-org-game.html">
+    <link rel="alternate" type="application/rss+xml" title="Eric Blog RSS" href="https://erickk.site/feed.xml">
+    <meta property="og:site_name" content="Eric">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="技术债不是代码坏味道，而是组织对未来的定价 — Eric">
+    <meta property="og:description" content="技术债表现为代码和架构问题，但根源往往来自组织对时间、成本、风险和未来维护能力的连续选择。">
+    <meta property="og:url" content="https://erickk.site/blog/technical-debt-org-game.html">
+    <meta property="og:image" content="https://erickk.site/assets/og-default.svg">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="技术债不是代码坏味道，而是组织对未来的定价 — Eric">
+    <meta name="twitter:description" content="技术债表现为代码和架构问题，但根源往往来自组织对时间、成本、风险和未来维护能力的连续选择。">
+    <meta name="twitter:image" content="https://erickk.site/assets/og-default.svg">
+    <meta property="article:published_time" content="2026-04-29">
+    <meta property="article:modified_time" content="2026-04-29">
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "技术债不是代码坏味道，而是组织对未来的定价",
+  "description": "技术债表现为代码和架构问题，但根源往往来自组织对时间、成本、风险和未来维护能力的连续选择。",
+  "url": "https://erickk.site/blog/technical-debt-org-game.html",
+  "mainEntityOfPage": "https://erickk.site/blog/technical-debt-org-game.html",
+  "datePublished": "2026-04-29",
+  "dateModified": "2026-04-29",
+  "author": {
+    "@type": "Person",
+    "name": "Eric Pan",
+    "url": "https://erickk.site",
+    "sameAs": [
+      "https://github.com/powerpan"
+    ]
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "Eric Pan",
+    "url": "https://erickk.site",
+    "sameAs": [
+      "https://github.com/powerpan"
+    ]
+  },
+  "image": "https://erickk.site/assets/og-default.svg",
+  "articleSection": "系统架构",
+  "keywords": [
+    "系统架构",
+    "architecture"
+  ],
+  "inLanguage": "zh-CN"
+}
+    </script>
+    <!-- SEO:END -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/base.css">
@@ -108,6 +160,33 @@
         </section>
     </article>
 
+    <!-- RELATED POSTS:START -->
+    <section class="related-posts reveal" aria-labelledby="relatedPostsTitle">
+        <div class="related-posts-kicker" data-i18n="related_posts_kicker">RELATED</div>
+        <h2 id="relatedPostsTitle" data-i18n="related_posts_title">相关文章</h2>
+        <div class="related-posts-grid">
+            <a href="database-not-system-center.html" class="related-post-card" data-hover>
+                <span class="related-post-tag" data-i18n="blog_tag_architecture">系统架构</span>
+                <h3 data-i18n="blog_card20_title">如果没有数据库，系统如何设计？</h3>
+                <p data-i18n="blog_card20_desc">不是否定数据库，而是把系统设计的起点从表结构拉回业务事实、状态规则、查询视图和一致性协议。</p>
+                <span class="related-post-more" data-i18n="related_posts_more">继续阅读</span>
+            </a>
+            <a href="agentic-business-systems.html" class="related-post-card" data-hover>
+                <span class="related-post-tag" data-i18n="blog_tag_architecture">系统架构</span>
+                <h3 data-i18n="blog_card17_title">别再把业务系统做成 CRUD 套壳：AI Agent 时代需要业务能力层</h3>
+                <p data-i18n="blog_card17_desc">CRUD 是基础能力，但复杂业务系统需要围绕业务动作、任务工作台、状态流转、事件协同和 Agent 工具边界重新设计。</p>
+                <span class="related-post-more" data-i18n="related_posts_more">继续阅读</span>
+            </a>
+            <a href="turborepo-trpc.html" class="related-post-card" data-hover>
+                <span class="related-post-tag" data-i18n="blog_tag_architecture">系统架构</span>
+                <h3 data-i18n="blog_card4_title">实时数据流架构：Flink + Kafka 构建毫秒级计算管道</h3>
+                <p data-i18n="blog_card4_desc">从零搭建一套 Flink + Kafka 的实时流式计算系统，覆盖 Exactly-Once 语义、窗口聚合、状态管理与生产级容错设计。</p>
+                <span class="related-post-more" data-i18n="related_posts_more">继续阅读</span>
+            </a>
+        </div>
+    </section>
+    <!-- RELATED POSTS:END -->
+
     <div class="detail-toc" id="detailToc">
         <div class="detail-toc-item" data-target="engineering" data-label="工程问题"></div>
         <div class="detail-toc-item" data-target="permission" data-label="组织许可"></div>
@@ -128,6 +207,7 @@
     <button class="back-to-top" id="backToTop" title="回到顶部" data-i18n-title="back_to_top">↑</button>
     <script src="../js/i18n.js"></script>
     <script src="../js/i18n/core.js"></script>
+    <script src="../js/i18n/blog-list.js"></script>
     <script src="../js/i18n/articles/technical-debt-org-game.js"></script>
     <script src="../js/detail.js"></script>
 </body>

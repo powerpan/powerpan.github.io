@@ -5,7 +5,7 @@
 Personal portfolio website for Eric (潘世聪), a full-stack & AI vision developer from Guangzhou, China. Currently studying Software Engineering at 华南理工大学 (South China University of Technology, 2022–2026). The site showcases projects, blog posts, and skills with a **dark hacker/terminal aesthetic**.
 
 - **Type:** Pure static website — HTML / CSS / JavaScript, no frameworks or build tools
-- **Hosting:** GitHub Pages via `powerpan.github.io`, with Cloudflare Pages deployment on custom domain `erickk.icu`
+- **Hosting:** GitHub Pages via `powerpan.github.io`, with Cloudflare Pages deployment on custom domain `erickk.site`
 - **Repo:** `https://github.com/powerpan/powerpan.github.io`
 - **Branch:** `main`
 
@@ -142,7 +142,7 @@ npx serve .
 ### Deployment
 - **Platform:** Cloudflare Pages (auto-deploys on push to `main`)
 - **GitHub repo:** `https://github.com/powerpan/powerpan.github.io`
-- **Custom domain:** `erickk.icu`
+- **Custom domain:** `erickk.site`
 - **Build command:** (none — static site)
 - **Output directory:** `/` (root)
 

@@ -14,6 +14,9 @@ window.registerI18nChunk({
     "blog_tag_observation": "技术观察",
     "blog_tag_essay": "社会随笔",
     "detail_back_blog": "返回博客",
+    "related_posts_kicker": "RELATED",
+    "related_posts_title": "相关文章",
+    "related_posts_more": "继续阅读",
     "back_to_top": "回到顶部"
   },
   "en": {
@@ -30,6 +33,9 @@ window.registerI18nChunk({
     "blog_tag_observation": "Tech Observation",
     "blog_tag_essay": "Social Essays",
     "detail_back_blog": "Back to Blog",
+    "related_posts_kicker": "RELATED",
+    "related_posts_title": "Related Posts",
+    "related_posts_more": "Continue Reading",
     "back_to_top": "Back to top"
   }
 });

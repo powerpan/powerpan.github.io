@@ -198,7 +198,33 @@ blog_list_sub: 'All Posts — {N} articles and counting',
 - [ ] `blog_list_sub` 计数 = 列表页实际卡片数
 - [ ] 详情页 CSS 加载顺序正确（base → components → detail → responsive）
 - [ ] 详情页包含 mobileLangBtn
+- [ ] 已运行 `node tools/update_seo.js`
+- [ ] 已运行 `node tools/update_seo.js --check`
 - [ ] 已运行 `node tools/check_i18n.js`
+
+---
+
+## 6.5. 同步 SEO 生成内容
+
+每次新增或调整文章后，都要在发布前运行：
+
+```bash
+cd /Users/ericpan/game_project/webblog
+node tools/update_seo.js
+node tools/update_seo.js --check
+node tools/check_i18n.js
+```
+
+这个脚本会根据 `blog/index.html` 的文章列表同步以下内容：
+
+- `robots.txt`
+- `sitemap.xml`
+- `feed.xml`
+- 文章页、项目页、首页和归档页的 SEO meta / canonical / JSON-LD
+- `blog/topics/*.html` 专题归档页
+- 文章底部的相关文章模块
+
+不要手工维护这些生成内容；如果页面展示或 SEO 信息不对，先修正文章详情页和 `blog/index.html` 的标题、摘要、日期、分类，再重新运行脚本。
 
 ---
 

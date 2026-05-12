@@ -654,6 +654,82 @@
     color: var(--text-secondary);
 }
 
+.related-posts {
+    max-width: 920px;
+    margin: -56px auto 96px;
+    padding: 0 48px;
+    position: relative;
+    z-index: 1;
+}
+
+.related-posts-kicker {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.14em;
+    color: var(--accent);
+    margin-bottom: 12px;
+}
+
+.related-posts h2 {
+    font-family: var(--font-display);
+    font-size: 1.45rem;
+    color: var(--text-primary);
+    margin-bottom: 22px;
+}
+
+.related-posts-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.related-post-card {
+    min-height: 210px;
+    padding: 20px;
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 8px;
+    background: rgba(255,255,255,0.025);
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    transition: transform 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+}
+
+.related-post-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(0,255,136,0.22);
+    background: rgba(0,255,136,0.045);
+}
+
+.related-post-tag,
+.related-post-more {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    color: var(--accent);
+}
+
+.related-post-card h3 {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    line-height: 1.45;
+    color: var(--text-primary);
+}
+
+.related-post-card p {
+    font-size: 0.78rem;
+    line-height: 1.75;
+    color: var(--text-muted);
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.related-post-more {
+    margin-top: auto;
+}
+
 /* ====== SCROLL PROGRESS BAR ====== */
 .detail-scroll-progress {
     position: fixed;
@@ -861,6 +937,15 @@
     
     .blog-article-body {
         padding: 40px 24px 80px;
+    }
+
+    .related-posts {
+        margin: -36px auto 72px;
+        padding: 0 24px;
+    }
+
+    .related-posts-grid {
+        grid-template-columns: 1fr;
     }
 
     .detail-footer {

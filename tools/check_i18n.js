@@ -126,10 +126,18 @@ function assertI18nScripts(file, rel, raw, issues) {
     return;
   }
 
+  if (rel.startsWith('blog/topics/') && rel.endsWith('.html')) {
+    missing('../../js/i18n.js', 'runtime');
+    missing('../../js/i18n/core.js', 'shared keys');
+    missing('../../js/i18n/blog-list.js', 'topic archive cards and filters');
+    return;
+  }
+
   if (rel.startsWith('blog/') && rel.endsWith('.html')) {
     const slug = path.basename(rel, '.html');
     missing('../js/i18n.js', 'runtime');
     missing('../js/i18n/core.js', 'shared keys');
+    missing('../js/i18n/blog-list.js', 'related post keys');
     missing(`../js/i18n/articles/${slug}.js`, 'article body keys');
     return;
   }
@@ -188,7 +196,7 @@ function main() {
       }
     }
 
-    if (rel.startsWith('blog/') && rel !== 'blog/index.html') {
+    if (rel.startsWith('blog/') && rel !== 'blog/index.html' && !rel.startsWith('blog/topics/')) {
       const backLink = html.match(/<a[^>]*class="[^"]*detail-back[^"]*"[\s\S]*?<\/a>/);
       if (!backLink || !/data-i18n="detail_back_blog"/.test(backLink[0])) {
         addIssue(issues, 'Detail back link issues', `${rel}: detail back link lacks detail_back_blog`);

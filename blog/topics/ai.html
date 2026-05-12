@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 工程 — Eric</title>
+    <!-- SEO:START -->
+    <meta name="description" content="Eric 的 AI 工程 专题归档，收录相关技术文章、工程复盘与观点笔记。">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://erickk.site/blog/topics/ai.html">
+    <link rel="alternate" type="application/rss+xml" title="Eric Blog RSS" href="https://erickk.site/feed.xml">
+    <meta property="og:site_name" content="Eric">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="AI 工程 — Eric">
+    <meta property="og:description" content="Eric 的 AI 工程 专题归档，收录相关技术文章、工程复盘与观点笔记。">
+    <meta property="og:url" content="https://erickk.site/blog/topics/ai.html">
+    <meta property="og:image" content="https://erickk.site/assets/og-default.svg">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="AI 工程 — Eric">
+    <meta name="twitter:description" content="Eric 的 AI 工程 专题归档，收录相关技术文章、工程复盘与观点笔记。">
+    <meta name="twitter:image" content="https://erickk.site/assets/og-default.svg">
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "name": "AI 工程 — Eric",
+  "description": "Eric 的 AI 工程 专题归档，收录相关技术文章、工程复盘与观点笔记。",
+  "url": "https://erickk.site/blog/topics/ai.html",
+  "inLanguage": [
+    "zh-CN",
+    "en"
+  ],
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "Eric",
+    "url": "https://erickk.site"
+  },
+  "mainEntity": {
+    "@type": "ItemList",
+    "numberOfItems": 6,
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "url": "https://erickk.site/blog/ai-engineering-boundaries.html",
+        "name": "AI 工程的核心不是让模型万能，而是定义边界"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "url": "https://erickk.site/blog/enterprise-ai-data-readiness.html",
+        "name": "企业 AI 本地部署，第一步不是买 GPU，而是先洗数据"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "url": "https://erickk.site/blog/code-review-debt.html",
+        "name": "AI 编程时代的代码审查债务：为什么写得更快，反而更容易失控"
+      },
+      {
+        "@type": "ListItem",
+        "position": 4,
+        "url": "https://erickk.site/blog/context-rot.html",
+        "name": "上下文腐烂：大模型为什么会「越聊越笨」"
+      },
+      {
+        "@type": "ListItem",
+        "position": 5,
+        "url": "https://erickk.site/blog/token-economy.html",
+        "name": "Token 经济学：当 AI 时代的「原材料」越来越贵"
+      },
+      {
+        "@type": "ListItem",
+        "position": 6,
+        "url": "https://erickk.site/blog/webgpu-dl.html",
+        "name": "WebGPU 浏览器端深度学习：从 WebNN 到实时推理"
+      }
+    ]
+  }
+}
+    </script>
+    <!-- SEO:END -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/base.css">
+    <link rel="stylesheet" href="../../css/components.css">
+    <link rel="stylesheet" href="../../css/detail.css">
+    <link rel="stylesheet" href="../../css/responsive.css">
+    <style>
+        /* ===== Blog Listing Page ===== */
+        .blog-listing {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 140px 24px 80px;
+        }
+        .blog-listing-header {
+            margin-bottom: 32px;
+        }
+        .blog-listing-header h1 {
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(2rem, 5vw, 3.2rem);
+            font-weight: 800;
+            color: var(--accent);
+            margin-bottom: 12px;
+        }
+        .blog-listing-header p {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--text-dim);
+        }
+        .blog-filter-panel {
+            position: relative;
+            margin-bottom: 34px;
+            padding: 22px 22px 18px;
+            border: 1px solid rgba(0,255,136,0.12);
+            border-radius: 22px;
+            background:
+                radial-gradient(circle at top right, rgba(0,255,136,0.12), transparent 34%),
+                radial-gradient(circle at bottom left, rgba(168,85,247,0.10), transparent 28%),
+                linear-gradient(135deg, rgba(10,14,20,0.94), rgba(7,11,16,0.82));
+            overflow: hidden;
+            box-shadow: 0 22px 70px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,255,255,0.02);
+        }
+        .blog-filter-panel::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+            background-size: 18px 18px;
+            mask-image: linear-gradient(to bottom, rgba(255,255,255,0.55), transparent 92%);
+            pointer-events: none;
+        }
+        .blog-filter-panel::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            border: 1px solid rgba(255,255,255,0.03);
+            pointer-events: none;
+        }
+        .blog-filter-top {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 18px;
+            margin-bottom: 18px;
+        }
+        .blog-filter-kicker {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.68rem;
+            text-transform: uppercase;
+            letter-spacing: 0.14em;
+            color: var(--accent);
+        }
+        .blog-filter-kicker::before {
+            content: '';
+            width: 30px;
+            height: 1px;
+            background: linear-gradient(90deg, var(--accent), transparent);
+            box-shadow: 0 0 12px rgba(0,255,136,0.45);
+        }
+        .blog-filter-stat {
+            position: relative;
+            min-width: 160px;
+            padding: 14px 16px;
+            border-radius: 16px;
+            background: rgba(0,0,0,0.18);
+            border: 1px solid rgba(0,255,136,0.12);
+            text-align: right;
+            backdrop-filter: blur(14px);
+        }
+        .blog-filter-stat-label {
+            display: block;
+            margin-bottom: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.64rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--text-dim);
+        }
+        .blog-filter-stat-value {
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(1.6rem, 4vw, 2.2rem);
+            font-weight: 800;
+            line-height: 1;
+            color: var(--accent);
+            text-shadow: 0 0 18px rgba(0,255,136,0.18);
+        }
+        .blog-filter-stat-meta {
+            margin-top: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.68rem;
+            color: var(--text-dim);
+        }
+        .blog-filter-chips {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+        .blog-filter-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 14px;
+            border-radius: 999px;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.06);
+            color: var(--text-dim);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            letter-spacing: 0.02em;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .blog-filter-chip::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(120deg, transparent, rgba(255,255,255,0.08), transparent);
+            transform: translateX(-120%);
+            transition: transform 0.45s ease;
+        }
+        .blog-filter-chip:hover::before,
+        .blog-filter-chip.active::before {
+            transform: translateX(120%);
+        }
+        .blog-filter-chip:hover {
+            border-color: rgba(0,255,136,0.18);
+            color: var(--text);
+            transform: translateY(-1px);
+        }
+        .blog-filter-chip.active {
+            color: #04110b;
+            background: linear-gradient(135deg, rgba(0,255,136,0.95), rgba(117,255,199,0.88));
+            border-color: rgba(0,255,136,0.7);
+            box-shadow: 0 0 0 1px rgba(0,255,136,0.18), 0 12px 30px rgba(0,255,136,0.18);
+        }
+        .blog-filter-chip-count {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 20px;
+            height: 20px;
+            padding: 0 6px;
+            border-radius: 999px;
+            font-size: 0.62rem;
+            background: rgba(255,255,255,0.08);
+            color: inherit;
+        }
+        .blog-filter-chip.active .blog-filter-chip-count {
+            background: rgba(4,17,11,0.14);
+        }
+        .blog-filter-summary {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            color: var(--text-dim);
+        }
+        .blog-filter-summary strong {
+            color: var(--text);
+            font-weight: 500;
+        }
+        .blog-filter-active {
+            color: var(--accent);
+        }
+        .blog-listing-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        .blog-list-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 24px 28px;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 0;
+            text-decoration: none;
+            color: var(--text);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .blog-list-card:first-child {
+            border-radius: 19px 19px 0 0;
+        }
+        .blog-list-card:last-child {
+            border-radius: 0 0 19px 19px;
+        }
+        .blog-list-card::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 0; bottom: 0;
+            width: 3px;
+            background: var(--accent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .blog-list-card:hover {
+            background: rgba(0,255,136,0.04);
+            border-color: rgba(0,255,136,0.15);
+            transform: translateX(4px);
+        }
+        .blog-list-card:hover::before {
+            opacity: 1;
+        }
+        .blog-list-card:hover .blog-list-arrow {
+            transform: translateX(4px);
+            color: var(--accent);
+        }
+        .blog-list-left {
+            flex: 1;
+            min-width: 0;
+        }
+        .blog-list-num {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            margin-bottom: 6px;
+            letter-spacing: 0.05em;
+        }
+        .blog-list-title {
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(1rem, 2.5vw, 1.3rem);
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 8px;
+            transition: color 0.3s ease;
+        }
+        .blog-list-card:hover .blog-list-title {
+            color: var(--accent);
+        }
+        .blog-list-desc {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.78rem;
+            color: var(--text-dim);
+            line-height: 1.6;
+            margin-bottom: 10px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .blog-list-meta {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            color: var(--text-dim);
+        }
+        .blog-list-tag {
+            padding: 2px 8px;
+            border-radius: 4px;
+            background: rgba(0,255,136,0.08);
+            color: var(--accent);
+            font-size: 0.68rem;
+        }
+        .blog-list-date {
+            color: var(--text-dim);
+        }
+        .blog-list-readtime {
+            color: var(--text-dim);
+        }
+        .blog-list-right {
+            margin-left: 24px;
+            flex-shrink: 0;
+        }
+        .blog-list-arrow {
+            font-size: 1.2rem;
+            color: var(--text-dim);
+            transition: all 0.3s ease;
+        }
+        .blog-list-card.hidden {
+            display: none;
+        }
+        .blog-listing-grid.filtered .blog-list-card:first-child,
+        .blog-listing-grid.filtered .blog-list-card:last-child {
+            border-radius: 0;
+        }
+        .blog-listing-grid.filtered .blog-list-card.visible-first {
+            border-radius: 19px 19px 0 0;
+        }
+        .blog-listing-grid.filtered .blog-list-card.visible-last {
+            border-radius: 0 0 19px 19px;
+        }
+        .blog-empty-state {
+            display: none;
+            position: relative;
+            padding: 40px 28px;
+            border: 1px dashed rgba(0,255,136,0.18);
+            border-radius: 22px;
+            background:
+                radial-gradient(circle at top left, rgba(0,255,136,0.09), transparent 34%),
+                rgba(10,14,20,0.7);
+            overflow: hidden;
+        }
+        .blog-empty-state::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(168,85,247,0.08), transparent 40%);
+            pointer-events: none;
+        }
+        .blog-empty-state.show {
+            display: block;
+        }
+        .blog-empty-icon {
+            position: relative;
+            z-index: 1;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 54px;
+            height: 54px;
+            margin-bottom: 16px;
+            border-radius: 16px;
+            border: 1px solid rgba(0,255,136,0.22);
+            background: rgba(0,255,136,0.08);
+            color: var(--accent);
+            font-family: 'Syne', sans-serif;
+            font-size: 1.3rem;
+            box-shadow: 0 0 24px rgba(0,255,136,0.14);
+        }
+        .blog-empty-title {
+            position: relative;
+            z-index: 1;
+            font-family: 'Syne', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 8px;
+        }
+        .blog-empty-text {
+            position: relative;
+            z-index: 1;
+            max-width: 460px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.78rem;
+            line-height: 1.7;
+            color: var(--text-dim);
+        }
+        /* Back link */
+        .blog-listing-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            text-decoration: none;
+            margin-bottom: 32px;
+            transition: color 0.3s ease;
+        }
+        .blog-listing-back:hover {
+            color: var(--accent);
+        }
+
+        @media (max-width: 768px) {
+            .blog-listing { padding: 120px 16px 60px; }
+            .blog-filter-panel { padding: 18px 16px 16px; border-radius: 18px; }
+            .blog-filter-top { flex-direction: column; margin-bottom: 16px; }
+            .blog-filter-stat {
+                width: 100%;
+                min-width: 0;
+                text-align: left;
+            }
+            .blog-filter-chips {
+                gap: 8px;
+                margin-right: -2px;
+            }
+            .blog-filter-chip {
+                padding: 9px 12px;
+                font-size: 0.69rem;
+            }
+            .blog-filter-summary {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 6px;
+            }
+            .blog-list-card { padding: 18px 16px; }
+            .blog-list-right { margin-left: 12px; }
+            .blog-list-desc { -webkit-line-clamp: 1; }
+        }
+        @media (max-width: 480px) {
+            .blog-empty-text {
+                font-size: 0.74rem;
+            }
+            .blog-list-meta {
+                flex-wrap: wrap;
+                gap: 6px 10px;
+            }
+        }
+    </style>
+</head>
+<body data-page-type="topic" data-initial-filter="ai">
+    <!-- ============ SCROLL PROGRESS ============ -->
+    <div class="detail-scroll-progress" id="detailScrollProgress"></div>
+
+    <!-- ============ CURSOR ============ -->
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor-dot" id="cursorDot"></div>
+
+    <!-- ============ PARTICLE CANVAS ============ -->
+    <canvas id="particleCanvas"></canvas>
+
+    <!-- ============ NAV ============ -->
+    <nav id="nav">
+        <a href="../../index.html" class="nav-logo magnetic" data-hover>ERIC<span class="dot">.</span></a>
+        <ul class="nav-center">
+            <li><a href="../../index.html#about" data-hover data-i18n="nav_about">// 关于</a></li>
+            <li><a href="../../index.html#projects" data-hover data-i18n="nav_projects">// 项目</a></li>
+            <li><a href="../../index.html#blog" data-hover data-i18n="nav_blog">// 博客</a></li>
+            <li><a href="../../index.html#contact" data-hover data-i18n="nav_contact">// 联系</a></li>
+        </ul>
+        <div class="nav-status">
+            <span class="status-dot"></span>
+            Open to work
+        </div>
+        <button class="nav-hamburger" id="navHamburger" aria-label="Menu">
+            <span></span><span></span><span></span>
+        </button>
+    </nav>
+    <div class="mobile-nav" id="mobileNav">
+        <button class="mobile-nav-close" id="mobileNavClose" aria-label="Close menu">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+        <ul class="mobile-nav-links">
+            <li><a href="../../index.html#about" data-i18n="nav_about">// 关于</a></li>
+            <li><a href="../../index.html#projects" data-hover data-i18n="nav_projects">// 项目</a></li>
+            <li><a href="../../index.html#blog" data-hover data-i18n="nav_blog">// 博客</a></li>
+            <li><a href="../../index.html#contact" data-hover data-i18n="nav_contact">// 联系</a></li>
+            <li><button class="mobile-lang-btn" id="mobileLangBtn" onclick="toggleLang()" data-i18n="nav_lang">中 / EN</button></li>
+        </ul>
+    </div>
+
+    <!-- ============ BLOG LISTING ============ -->
+    <main class="blog-listing">
+        <a href="../../index.html" class="blog-listing-back reveal" data-i18n="blog_back">← 返回首页</a>
+
+        <div class="blog-listing-header reveal">
+            <h1>// AI 工程</h1>
+            <p>Topic Archive — 6 articles</p>
+        </div>
+
+        <section class="blog-filter-panel reveal reveal-d1" aria-labelledby="blogFilterTitle">
+            <div class="blog-filter-top">
+                <div>
+                    <div class="blog-filter-kicker" data-i18n="blog_filter_kicker">SIGNAL ROUTER</div>
+                </div>
+                <div class="blog-filter-stat">
+                    <span class="blog-filter-stat-label" data-i18n="blog_filter_stat_label">Visible Posts</span>
+                    <div class="blog-filter-stat-value" id="blogFilterCount">6</div>
+                    <div class="blog-filter-stat-meta" id="blogFilterMeta">6 / 6</div>
+                </div>
+            </div>
+
+            <div class="blog-filter-chips" id="blogFilterChips" role="tablist" aria-label="Blog topic filters">
+                <a class="blog-filter-chip" href="../index.html" data-filter="all">
+                    <span data-i18n="blog_filter_all">全部</span>
+                    <span class="blog-filter-chip-count">28</span>
+                </a>
+                <a class="blog-filter-chip active" href="ai.html" data-filter="ai">
+                    <span data-i18n="blog_filter_ai">AI 工程</span>
+                    <span class="blog-filter-chip-count">6</span>
+                </a>
+                <a class="blog-filter-chip" href="agent.html" data-filter="agent">
+                    <span data-i18n="blog_filter_agent">Agent 自动化</span>
+                    <span class="blog-filter-chip-count">7</span>
+                </a>
+                <a class="blog-filter-chip" href="vision.html" data-filter="vision">
+                    <span data-i18n="blog_filter_vision">视觉多模态</span>
+                    <span class="blog-filter-chip-count">6</span>
+                </a>
+                <a class="blog-filter-chip" href="architecture.html" data-filter="architecture">
+                    <span data-i18n="blog_filter_architecture">系统架构</span>
+                    <span class="blog-filter-chip-count">4</span>
+                </a>
+                <a class="blog-filter-chip" href="observation.html" data-filter="observation">
+                    <span data-i18n="blog_filter_observation">技术观察</span>
+                    <span class="blog-filter-chip-count">3</span>
+                </a>
+                <a class="blog-filter-chip" href="essay.html" data-filter="essay">
+                    <span data-i18n="blog_filter_essay">社会随笔</span>
+                    <span class="blog-filter-chip-count">2</span>
+                </a>
+            </div>
+
+            <div class="blog-filter-summary">
+                <div id="blogFilterSummary"></div>
+                <div class="blog-filter-active" id="blogFilterActive"></div>
+            </div>
+        </section>
+
+        <div class="blog-listing-grid" id="blogListingGrid">
+
+            <!-- 1 -->
+            <a href="../ai-engineering-boundaries.html" class="blog-list-card reveal" data-hover data-category="ai">
+                <div class="blog-list-left">
+                    <div class="blog-list-num">01</div>
+                    <div class="blog-list-title" data-i18n="blog_card27_title">AI 工程的核心不是让模型万能，而是定义边界</div>
+                    <div class="blog-list-desc" data-i18n="blog_card27_desc">成熟的 AI 工程不是把模型包装成万能助手，而是把模型放进边界清晰、责任明确、风险可控的系统里。</div>
+                    <div class="blog-list-meta">
+                        <span class="blog-list-tag" data-i18n="blog_tag_ai">AI 工程</span>
+                        <span class="blog-list-date">2026.05.10</span>
+                        <span class="blog-list-readtime">8 min</span>
+                    </div>
+                </div>
+                <div class="blog-list-right">
+                    <span class="blog-list-arrow">→</span>
+                </div>
+            </a>
+
+            <!-- 2 -->
+            <a href="../enterprise-ai-data-readiness.html" class="blog-list-card reveal" data-hover data-category="ai">
+                <div class="blog-list-left">
+                    <div class="blog-list-num">02</div>
+                    <div class="blog-list-title" data-i18n="blog_card26_title">企业 AI 本地部署，第一步不是买 GPU，而是先洗数据</div>
+                    <div class="blog-list-desc" data-i18n="blog_card26_desc">企业 AI 真正的起点不是模型和算力，而是内部数据是否具备可检索、可引用、可追溯和可回答的知识质量。</div>
+                    <div class="blog-list-meta">
+                        <span class="blog-list-tag" data-i18n="blog_tag_ai">AI 工程</span>
+                        <span class="blog-list-date">2026.05.10</span>
+                        <span class="blog-list-readtime">7 min</span>
+                    </div>
+                </div>
+                <div class="blog-list-right">
+                    <span class="blog-list-arrow">→</span>
+                </div>
+            </a>
+
+            <!-- 3 -->
+            <a href="../code-review-debt.html" class="blog-list-card reveal" data-hover data-category="ai">
+                <div class="blog-list-left">
+                    <div class="blog-list-num">03</div>
+                    <div class="blog-list-title" data-i18n="blog_card12_title">AI 编程时代的代码审查债务：为什么写得更快，反而更容易失控</div>
+                    <div class="blog-list-desc" data-i18n="blog_card12_desc">AI coding 工具放大了代码生成速度，也放大了团队的审查压力。真正稀缺的不再是提交量，而是稳定理解和验证这些改动的能力。</div>
+                    <div class="blog-list-meta">
+                        <span class="blog-list-tag" data-i18n="blog_tag_ai">AI 工程</span>
+                        <span class="blog-list-date">2026.04.26</span>
+                        <span class="blog-list-readtime">9 min</span>
+                    </div>
+                </div>
+                <div class="blog-list-right">
+                    <span class="blog-list-arrow">→</span>
+                </div>
+            </a>
+
+            <!-- 4 -->
+            <a href="../context-rot.html" class="blog-list-card reveal" data-hover data-category="ai">
+                <div class="blog-list-left">
+                    <div class="blog-list-num">04</div>
+                    <div class="blog-list-title" data-i18n="blog_card11_title">上下文腐烂：大模型为什么会「越聊越笨」</div>
+                    <div class="blog-list-desc" data-i18n="blog_card11_desc">Context Rot 的两种机制——注意力稀释与上下文中毒，以及行业正在给出的不同答案。为什么「清空重开」目前仍然是最有效的解法？</div>
+                    <div class="blog-list-meta">
+                        <span class="blog-list-tag" data-i18n="blog_tag_ai">AI 工程</span>
+                        <span class="blog-list-date">2026.04.25</span>
+                        <span class="blog-list-readtime">10 min</span>
+                    </div>
+                </div>
+                <div class="blog-list-right">
+                    <span class="blog-list-arrow">→</span>
+                </div>
+            </a>
+
+            <!-- 5 -->
+            <a href="../token-economy.html" class="blog-list-card reveal" data-hover data-category="ai">
+                <div class="blog-list-left">
+                    <div class="blog-list-num">05</div>
+                    <div class="blog-list-title" data-i18n="blog_card10_title">Token 经济学：当 AI 时代的「原材料」越来越贵</div>
+                    <div class="blog-list-desc" data-i18n="blog_card10_desc">Token 正在成为这个时代的原材料，工作者如同工厂，购买原材料、加工、赋予附加值。理解这个逻辑，才能找到自己的核心竞争力。</div>
+                    <div class="blog-list-meta">
+                        <span class="blog-list-tag" data-i18n="blog_tag_ai">AI 工程</span>
+                        <span class="blog-list-date">2026.04.25</span>
+                        <span class="blog-list-readtime">8 min</span>
+                    </div>
+                </div>
+                <div class="blog-list-right">
+                    <span class="blog-list-arrow">→</span>
+                </div>
+            </a>
+
+            <!-- 6 -->
+            <a href="../webgpu-dl.html" class="blog-list-card reveal" data-hover data-category="ai">
+                <div class="blog-list-left">
+                    <div class="blog-list-num">06</div>
+                    <div class="blog-list-title" data-i18n="blog_card5_title">WebGPU 浏览器端深度学习：从 WebNN 到实时推理</div>
+                    <div class="blog-list-desc" data-i18n="blog_card5_desc">探索 WebGPU 在浏览器端运行深度学习模型的可能性，从 API 设计到 Shader 优化，实现浏览器内的实时推理引擎。</div>
+                    <div class="blog-list-meta">
+                        <span class="blog-list-tag" data-i18n="blog_tag_ai">AI 工程</span>
+                        <span class="blog-list-date">2025.11.10</span>
+                        <span class="blog-list-readtime">15 min</span>
+                    </div>
+                </div>
+                <div class="blog-list-right">
+                    <span class="blog-list-arrow">→</span>
+                </div>
+            </a>
+        <div class="blog-empty-state" id="blogEmptyState">
+            <div class="blog-empty-icon">Ø</div>
+            <div class="blog-empty-title" data-i18n="blog_filter_empty_title">当前信道暂无文章</div>
+            <div class="blog-empty-text" data-i18n="blog_filter_empty_text">换一个筛选主题，或者回到“全部”模式，继续浏览这份技术与观点混合的文章档案。</div>
+        </div>
+    </main>
+
+    <!-- ============ FOOTER ============ -->
+    <footer class="detail-footer">
+        <div class="detail-footer-copy">
+            &copy; 2026 Eric. Built with <span class="heart">♥</span> and too much coffee.
+        </div>
+        <div class="detail-footer-links">
+            <a href="../../index.html">← Back to Home</a>
+            <a href="https://github.com/powerpan" target="_blank">GitHub</a>
+        </div>
+    </footer>
+
+    <!-- ============ BACK TO TOP ============ -->
+    <button class="back-to-top" id="backToTop" title="回到顶部" data-i18n-title="back_to_top">↑</button>
+
+    <script src="../../js/i18n.js"></script>
+    <script src="../../js/i18n/core.js"></script>
+    <script src="../../js/i18n/blog-list.js"></script>
+    <script src="../../js/detail.js"></script>
+    <script>
+        (function() {
+            'use strict';
+
+            const cards = Array.from(document.querySelectorAll('.blog-list-card'));
+            const chips = Array.from(document.querySelectorAll('.blog-filter-chip'));
+            const grid = document.getElementById('blogListingGrid');
+            const emptyState = document.getElementById('blogEmptyState');
+            const countEl = document.getElementById('blogFilterCount');
+            const metaEl = document.getElementById('blogFilterMeta');
+            const summaryEl = document.getElementById('blogFilterSummary');
+            const activeEl = document.getElementById('blogFilterActive');
+
+            if (!cards.length || !chips.length || !grid) return;
+
+            const filterKeyMap = {
+                all: 'blog_filter_all',
+                ai: 'blog_filter_ai',
+                agent: 'blog_filter_agent',
+                vision: 'blog_filter_vision',
+                architecture: 'blog_filter_architecture',
+                observation: 'blog_filter_observation',
+                essay: 'blog_filter_essay'
+            };
+
+            const pageType = document.body?.dataset.pageType || '';
+            const initialFilter = document.body?.dataset.initialFilter || 'all';
+            let activeFilter = 'all';
+
+            function getTranslations() {
+                if (typeof I18N !== 'undefined' && typeof currentLang !== 'undefined' && I18N[currentLang]) {
+                    return I18N[currentLang];
+                }
+                return null;
+            }
+
+            function updateChipCounts() {
+                chips.forEach(chip => {
+                    const filter = chip.dataset.filter;
+                    const count = filter === 'all'
+                        ? cards.length
+                        : cards.filter(card => card.dataset.category === filter).length;
+                    const countNode = chip.querySelector('.blog-filter-chip-count');
+                    if (countNode) countNode.textContent = count;
+                });
+            }
+
+            function updateSummary(visibleCount) {
+                const t = getTranslations();
+                const activeKey = filterKeyMap[activeFilter] || filterKeyMap.all;
+                const activeChip = chips.find(chip => chip.dataset.filter === activeFilter);
+                const chipLabel = activeChip
+                    ? activeChip.querySelector('span[data-i18n]')?.textContent.trim()
+                    : '';
+                const activeLabel = t && t[activeKey]
+                    ? t[activeKey]
+                    : (chipLabel || activeFilter);
+
+                if (countEl) countEl.textContent = visibleCount;
+                if (metaEl) metaEl.textContent = visibleCount + ' / ' + cards.length;
+
+                if (summaryEl) {
+                    const left = t && t.blog_filter_summary
+                        ? t.blog_filter_summary
+                            .replace('{visible}', visibleCount)
+                            .replace('{total}', cards.length)
+                        : 'Showing ' + visibleCount + ' of ' + cards.length + ' posts';
+                    summaryEl.innerHTML = '<strong>' + left + '</strong>';
+                }
+
+                if (activeEl) {
+                    const right = t && t.blog_filter_active
+                        ? t.blog_filter_active.replace('{label}', activeLabel)
+                        : 'Channel: ' + activeLabel;
+                    activeEl.textContent = right;
+                }
+            }
+
+            function updateVisibleCorners(visibleCards) {
+                cards.forEach(card => {
+                    card.classList.remove('visible-first', 'visible-last');
+                });
+                if (!visibleCards.length) return;
+                visibleCards[0].classList.add('visible-first');
+                visibleCards[visibleCards.length - 1].classList.add('visible-last');
+            }
+
+            function applyFilter(filter) {
+                activeFilter = filter;
+                const visibleCards = [];
+
+                chips.forEach(chip => {
+                    chip.classList.toggle('active', chip.dataset.filter === filter);
+                });
+
+                cards.forEach(card => {
+                    const match = filter === 'all' || card.dataset.category === filter;
+                    card.classList.toggle('hidden', !match);
+                    if (match) visibleCards.push(card);
+                });
+
+                grid.classList.toggle('filtered', filter !== 'all');
+                updateVisibleCorners(visibleCards);
+                updateSummary(visibleCards.length);
+
+                if (emptyState) {
+                    emptyState.classList.toggle('show', visibleCards.length === 0);
+                }
+            }
+
+            chips.forEach(chip => {
+                chip.addEventListener('click', (event) => {
+                    if (pageType !== 'topic') {
+                        event.preventDefault();
+                        applyFilter(chip.dataset.filter);
+                    }
+                });
+            });
+
+            if (pageType !== 'topic') {
+                updateChipCounts();
+            }
+            applyFilter(filterKeyMap[initialFilter] ? initialFilter : 'all');
+
+            if (typeof setLang === 'function') {
+                const originalSetLang = setLang;
+                window.setLang = function(lang) {
+                    originalSetLang(lang);
+                    if (pageType !== 'topic') {
+                        updateChipCounts();
+                    }
+                    updateSummary(activeFilter === 'all'
+                        ? cards.length
+                        : cards.filter(card => !card.classList.contains('hidden')).length);
+                };
+            }
+
+            const langObserver = new MutationObserver(() => {
+                if (pageType !== 'topic') {
+                    updateChipCounts();
+                }
+                updateSummary(activeFilter === 'all'
+                    ? cards.length
+                    : cards.filter(card => !card.classList.contains('hidden')).length);
+            });
+            langObserver.observe(document.documentElement, {
+                attributes: true,
+                attributeFilter: ['lang']
+            });
+        })();
+    </script>
+</body>
+</html>

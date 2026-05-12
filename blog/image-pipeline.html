@@ -4,6 +4,59 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>设计可扩展的图像处理流水线：从 Python 脚本到 K8s 集群 — Eric</title>
+    <!-- SEO:START -->
+    <meta name="description" content="设计一套高性能图像处理流水线，覆盖预处理、增强、推理、后处理全链路，实现工业级视觉检测系统的端到端优化。">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://erickk.site/blog/image-pipeline.html">
+    <link rel="alternate" type="application/rss+xml" title="Eric Blog RSS" href="https://erickk.site/feed.xml">
+    <meta property="og:site_name" content="Eric">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="图像处理流水线设计：从像素到决策的全链路优化 — Eric">
+    <meta property="og:description" content="设计一套高性能图像处理流水线，覆盖预处理、增强、推理、后处理全链路，实现工业级视觉检测系统的端到端优化。">
+    <meta property="og:url" content="https://erickk.site/blog/image-pipeline.html">
+    <meta property="og:image" content="https://erickk.site/assets/og-default.svg">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="图像处理流水线设计：从像素到决策的全链路优化 — Eric">
+    <meta name="twitter:description" content="设计一套高性能图像处理流水线，覆盖预处理、增强、推理、后处理全链路，实现工业级视觉检测系统的端到端优化。">
+    <meta name="twitter:image" content="https://erickk.site/assets/og-default.svg">
+    <meta property="article:published_time" content="2025-09-05">
+    <meta property="article:modified_time" content="2025-09-05">
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "图像处理流水线设计：从像素到决策的全链路优化",
+  "description": "设计一套高性能图像处理流水线，覆盖预处理、增强、推理、后处理全链路，实现工业级视觉检测系统的端到端优化。",
+  "url": "https://erickk.site/blog/image-pipeline.html",
+  "mainEntityOfPage": "https://erickk.site/blog/image-pipeline.html",
+  "datePublished": "2025-09-05",
+  "dateModified": "2025-09-05",
+  "author": {
+    "@type": "Person",
+    "name": "Eric Pan",
+    "url": "https://erickk.site",
+    "sameAs": [
+      "https://github.com/powerpan"
+    ]
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "Eric Pan",
+    "url": "https://erickk.site",
+    "sameAs": [
+      "https://github.com/powerpan"
+    ]
+  },
+  "image": "https://erickk.site/assets/og-default.svg",
+  "articleSection": "视觉多模态",
+  "keywords": [
+    "视觉多模态",
+    "vision"
+  ],
+  "inLanguage": "zh-CN"
+}
+    </script>
+    <!-- SEO:END -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/base.css">
@@ -217,6 +270,33 @@
         </section>
     </article>
 
+    <!-- RELATED POSTS:START -->
+    <section class="related-posts reveal" aria-labelledby="relatedPostsTitle">
+        <div class="related-posts-kicker" data-i18n="related_posts_kicker">RELATED</div>
+        <h2 id="relatedPostsTitle" data-i18n="related_posts_title">相关文章</h2>
+        <div class="related-posts-grid">
+            <a href="unet-industrial-segmentation.html" class="related-post-card" data-hover>
+                <span class="related-post-tag" data-i18n="blog_tag_vision">视觉多模态</span>
+                <h3 data-i18n="blog_card25_title">U-Net 没有输给新模型：工业视觉里，先定义任务再选择模型</h3>
+                <p data-i18n="blog_card25_desc">在单类细长区域分割任务里，模型有效性更多取决于任务结构与归纳偏置的匹配，而不是发布时间或预训练光环。</p>
+                <span class="related-post-more" data-i18n="related_posts_more">继续阅读</span>
+            </a>
+            <a href="vision-engineer-not-operator.html" class="related-post-card" data-hover>
+                <span class="related-post-tag" data-i18n="blog_tag_vision">视觉多模态</span>
+                <h3 data-i18n="blog_card18_title">视觉算法工程师，别把自己做成流程操作员</h3>
+                <p data-i18n="blog_card18_desc">开源模型和训练部署平台会继续降低门槛，视觉算法工程师真正的壁垒，是定义问题、设计数据闭环、诊断模型和系统落地。</p>
+                <span class="related-post-more" data-i18n="related_posts_more">继续阅读</span>
+            </a>
+            <a href="vision-rollout-metrics.html" class="related-post-card" data-hover>
+                <span class="related-post-tag" data-i18n="blog_tag_vision">视觉多模态</span>
+                <h3 data-i18n="blog_card13_title">视觉模型上线后：别让 mAP 变成唯一答案</h3>
+                <p data-i18n="blog_card13_desc">视觉模型上线后，离线 mAP 只是起点。真正决定系统可靠性的，是线上漂移监控、灰度放量、回退阈值和数据闭环。</p>
+                <span class="related-post-more" data-i18n="related_posts_more">继续阅读</span>
+            </a>
+        </div>
+    </section>
+    <!-- RELATED POSTS:END -->
+
     <!-- ============ TABLE OF CONTENTS ============ -->
     <div class="detail-toc">
         <div class="detail-toc-item" data-target="architecture" data-label="架构概述"></div>
@@ -245,6 +325,7 @@
 
     <script src="../js/i18n.js"></script>
     <script src="../js/i18n/core.js"></script>
+    <script src="../js/i18n/blog-list.js"></script>
     <script src="../js/i18n/articles/image-pipeline.js"></script>
     <script src="../js/detail.js"></script>
 </body>
