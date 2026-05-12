@@ -1,0 +1,11 @@
+{
+  "private": true,
+  "scripts": {
+    "seo": "node tools/update_seo.js",
+    "seo:check": "node tools/update_seo.js --check",
+    "i18n:check": "node tools/check_i18n.js",
+    "build": "node tools/build_site.js",
+    "build:check": "node tools/build_site.js --check",
+    "check": "node tools/update_seo.js --check && node tools/check_i18n.js && node tools/build_site.js --check"
+  }
+}

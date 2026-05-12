@@ -8,6 +8,7 @@ const root = path.resolve(__dirname, '..');
 const blogCategories = ['ai', 'agent', 'vision', 'architecture', 'observation', 'essay'];
 const filterCategories = ['all', ...blogCategories];
 const i18nAttrs = ['data-i18n', 'data-i18n-html', 'data-i18n-placeholder', 'data-i18n-title'];
+const ignoredDirs = new Set(['.git', '.qwen', '_site']);
 
 function loadI18n() {
   const noop = () => {};
@@ -40,7 +41,7 @@ function walkHtml(dir) {
 function walkFiles(dir, extension) {
   return fs.readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
     const file = path.join(dir, entry.name);
-    if (entry.isDirectory()) return entry.name.startsWith('.') ? [] : walkFiles(file, extension);
+    if (entry.isDirectory()) return ignoredDirs.has(entry.name) || entry.name.startsWith('.') ? [] : walkFiles(file, extension);
     return entry.isFile() && file.endsWith(extension) ? [file] : [];
   });
 }

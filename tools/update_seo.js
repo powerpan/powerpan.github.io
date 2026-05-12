@@ -453,7 +453,14 @@ Allow: /
 Disallow: /admin/
 Disallow: /blog-drafts/
 Disallow: /rag-articles/
+Disallow: /tools/
 Disallow: /transfer/
+Disallow: /BLOG_TOPIC_POOL.md
+Disallow: /NEW_BLOG_POST.md
+Disallow: /PROJECT_ASSET.md
+Disallow: /PROJECT_ASSET_PROMPT.md
+Disallow: /QWEN.md
+Disallow: /RAG_BLOG_WORKFLOW.md
 
 Sitemap: ${SITE_ORIGIN}/sitemap.xml
 `;

@@ -1,0 +1,21 @@
+# These headers are a safety net if the repository root is ever served directly.
+/tools/*
+  X-Robots-Tag: noindex, nofollow, noarchive
+
+/admin/*
+  X-Robots-Tag: noindex, nofollow, noarchive
+
+/blog-drafts/*
+  X-Robots-Tag: noindex, nofollow, noarchive
+
+/rag-articles/*
+  X-Robots-Tag: noindex, nofollow, noarchive
+
+/transfer/*
+  X-Robots-Tag: noindex, nofollow, noarchive
+
+/*.md
+  X-Robots-Tag: noindex, nofollow, noarchive
+
+/package.json
+  X-Robots-Tag: noindex, nofollow, noarchive

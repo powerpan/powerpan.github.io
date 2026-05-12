@@ -1,0 +1,13 @@
+# Safety redirects for source-only files if the repository root is served by mistake.
+/tools/* /
+/admin/* /
+/blog-drafts/* /
+/rag-articles/* /
+/transfer/* /
+/BLOG_TOPIC_POOL.md /
+/NEW_BLOG_POST.md /
+/PROJECT_ASSET.md /
+/PROJECT_ASSET_PROMPT.md /
+/QWEN.md /
+/RAG_BLOG_WORKFLOW.md /
+/package.json /

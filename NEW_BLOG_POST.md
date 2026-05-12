@@ -201,10 +201,12 @@ blog_list_sub: 'All Posts — {N} articles and counting',
 - [ ] 已运行 `node tools/update_seo.js`
 - [ ] 已运行 `node tools/update_seo.js --check`
 - [ ] 已运行 `node tools/check_i18n.js`
+- [ ] 已运行 `node tools/build_site.js`
+- [ ] 已运行 `node tools/build_site.js --check`
 
 ---
 
-## 6.5. 同步 SEO 生成内容
+## 6.5. 同步 SEO 生成内容和发布目录
 
 每次新增或调整文章后，都要在发布前运行：
 
@@ -213,9 +215,11 @@ cd /Users/ericpan/game_project/webblog
 node tools/update_seo.js
 node tools/update_seo.js --check
 node tools/check_i18n.js
+node tools/build_site.js
+node tools/build_site.js --check
 ```
 
-这个脚本会根据 `blog/index.html` 的文章列表同步以下内容：
+`tools/update_seo.js` 会根据 `blog/index.html` 的文章列表同步以下内容：
 
 - `robots.txt`
 - `sitemap.xml`
@@ -223,6 +227,8 @@ node tools/check_i18n.js
 - 文章页、项目页、首页和归档页的 SEO meta / canonical / JSON-LD
 - `blog/topics/*.html` 专题归档页
 - 文章底部的相关文章模块
+
+`tools/build_site.js` 会把公开站点文件复制到 `_site/`。Cloudflare Pages 应发布 `_site/`，不要直接发布仓库根目录；`tools/`、`admin/`、`transfer/`、`rag-articles/`、`blog-drafts/` 和根目录 Markdown 文档都不应进入线上静态文件。
 
 不要手工维护这些生成内容；如果页面展示或 SEO 信息不对，先修正文章详情页和 `blog/index.html` 的标题、摘要、日期、分类，再重新运行脚本。
 
