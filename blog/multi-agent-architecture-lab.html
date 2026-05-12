@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我做了一次多 Agent 架构实验：复杂架构并不天然更聪明 — Eric</title>
+    <meta name="description" content="一次小型 Agent Architecture Lab 实验显示，多 Agent 不是默认升级路线，而是需要用成本、边界和复盘价值证明自己的架构选择。">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/detail.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body>
+    <div class="detail-scroll-progress" id="detailScrollProgress"></div>
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor-dot" id="cursorDot"></div>
+    <canvas id="particleCanvas"></canvas>
+
+    <nav id="nav">
+        <a href="../index.html" class="nav-logo magnetic" data-hover>ERIC<span class="dot">.</span></a>
+        <ul class="nav-center">
+            <li><a href="../index.html#about" data-hover data-i18n="nav_about">// 关于</a></li>
+            <li><a href="../index.html#projects" data-hover data-i18n="nav_projects">// 项目</a></li>
+            <li><a href="../index.html#blog" data-hover data-i18n="nav_blog">// 博客</a></li>
+            <li><a href="../index.html#contact" data-hover data-i18n="nav_contact">// 联系</a></li>
+        </ul>
+        <div class="nav-status"><span class="status-dot"></span>Open to work</div>
+        <button class="nav-hamburger" id="navHamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+    </nav>
+    <div class="mobile-nav" id="mobileNav">
+        <button class="mobile-nav-close" id="mobileNavClose" aria-label="Close menu">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+        <ul class="mobile-nav-links">
+            <li><a href="../index.html#about" data-i18n="nav_about">// 关于</a></li>
+            <li><a href="../index.html#projects" data-i18n="nav_projects">// 项目</a></li>
+            <li><a href="../index.html#blog" data-i18n="nav_blog">// 博客</a></li>
+            <li><a href="../index.html#contact" data-i18n="nav_contact">// 联系</a></li>
+            <li><button class="mobile-lang-btn" id="mobileLangBtn" onclick="toggleLang()" data-i18n="nav_lang">中 / EN</button></li>
+        </ul>
+    </div>
+
+    <section class="blog-article-hero">
+        <div class="detail-hero-bg"></div>
+        <a href="../index.html#blog" class="detail-back" data-hover>
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            <span data-i18n="detail_back_blog">返回博客</span>
+        </a>
+        <div class="blog-article-tag reveal" data-i18n="blog_tag_agent">Agent 自动化</div>
+        <h1 class="blog-article-title reveal reveal-d1" data-i18n-html="bmaal_title">我做了一次多 Agent 架构实验：复杂架构并不天然<span class="hl">更聪明</span></h1>
+        <div class="blog-article-meta reveal reveal-d2">
+            <span>📅 2026.05</span>
+            <span>⏱️ 8 min</span>
+            <span>👤 Eric Pan</span>
+        </div>
+    </section>
+
+    <article class="blog-article-body">
+        <section class="detail-section reveal" id="intro">
+            <p data-i18n="bmaal_p1">之前关于多 Agent 架构，我更多是在讲边界、上下文和协作方式。这次我做了一个小型实验平台 Agent Architecture Lab，把不同 Agent 架构放到同一批任务下面跑了一遍。</p>
+            <p data-i18n="bmaal_p2">实验规模不大，但结论很明确：复杂架构不是质量放大器，而是成本、上下文和失败面的放大器。只有当任务确实需要拆解、审查或多立场权衡时，多 Agent 才可能值得。</p>
+        </section>
+
+        <section class="detail-section reveal" id="setup">
+            <h2 data-i18n="bmaal_s1">实验怎么做</h2>
+            <p data-i18n="bmaal_p3">实验任务分成四类：生成平台方案、扩展详细设计、审查详细设计，以及从审查报告里选择一个最有取舍的问题给出技术判断。</p>
+            <p data-i18n-html="bmaal_p4">我比较了四种架构：<code>single</code>、<code>planner_executor</code>、<code>planner_executor_reviewer</code> 和 <code>debate</code>。观察指标包括耗时、token 消耗、估算成本、是否截断、最终答案可用性，以及中间过程是否有复盘价值。</p>
+            <p data-i18n="bmaal_p5">这不是严格的大样本实验，但它足够暴露工程运行中的典型问题。</p>
+        </section>
+
+        <section class="detail-section reveal" id="single">
+            <h2 data-i18n="bmaal_s2">Single Agent 仍然是强基线</h2>
+            <p data-i18n-html="bmaal_p6">实验里，<code>single</code> 是成本和延迟最低的架构，稳定性也最好。四个任务都没有截断，在简单方案和明确技术取舍任务中，输出质量并不弱。</p>
+            <p data-i18n="bmaal_p7">这说明 Single Agent 不是过时方案，而是所有复杂架构必须证明自己值得超过的基线。如果任务边界清楚、输入充分、输出结构明确，引入多个 Agent 很可能只是增加过程成本。</p>
+        </section>
+
+        <section class="detail-section reveal" id="planner">
+            <h2 data-i18n="bmaal_s3">Planner 有用，但要管住输出</h2>
+            <p data-i18n-html="bmaal_p8"><code>planner_executor</code> 在审查类任务中效果不错，因为审查天然需要覆盖多个维度。Planner 先拆检查项，Executor 再逐项执行，确实有助于提高覆盖度。</p>
+            <p data-i18n-html="bmaal_p9">但 Planner 也会制造输出膨胀。在详细设计任务中，它推动 Executor 覆盖更多章节，最终出现 <code>finish_reason=length</code>。Planner 不应该只是让模型多想一点，还应该管理章节预算、长度约束和输出边界。</p>
+        </section>
+
+        <section class="detail-section reveal" id="reviewer">
+            <h2 data-i18n="bmaal_s4">Reviewer 的价值必须被看见</h2>
+            <p data-i18n-html="bmaal_p10"><code>planner_executor_reviewer</code> 成本最高、延迟最高，但这次没有带来稳定的质量跃迁。即使引入 Reviewer，详细设计任务仍然截断。</p>
+            <p data-i18n="bmaal_p11">Reviewer 的价值不在于多一次模型调用，而在于能留下证据链：草稿是什么，审查意见是什么，最终答案改了什么。如果这些信息没有被结构化呈现，用户只能看到最终答案，那 Reviewer 就只是昂贵的形式主义。</p>
+        </section>
+
+        <section class="detail-section reveal" id="debate">
+            <h2 data-i18n="bmaal_s5">Debate 只适合真实取舍</h2>
+            <p data-i18n-html="bmaal_p12"><code>debate</code> 在技术取舍判断中最有意义。比如 Snapshot Mode vs Chain Mode，一个强调公平、隔离和可复现，另一个强调连续性、状态传递和真实工作流，这种任务天然适合多立场辩论。</p>
+            <p data-i18n="bmaal_p13">但 Debate 不适合所有任务。没有真实分歧的任务里，它往往退化成一个 Agent 给方案、另一个 Agent 补风险、Judge 做汇总，成本增加了，但不一定带来真正的对抗性思考。</p>
+        </section>
+
+        <section class="detail-section reveal" id="cost">
+            <h2 data-i18n="bmaal_s6">复杂架构的代价很具体</h2>
+            <p data-i18n-html="bmaal_p14">这次实验里，<code>planner_executor</code> 的成本约为 <code>single</code> 的 2.42 倍，<code>debate</code> 约为 3.90 倍，<code>planner_executor_reviewer</code> 约为 6.17 倍。</p>
+            <p data-i18n="bmaal_p15">这还只是模型调用成本。实际工程里，还要考虑结果存储、中间过程展示、失败重试、超时处理、前端可视化、人工复盘成本和更复杂的调试路径。</p>
+        </section>
+
+        <section class="detail-section reveal" id="takeaway">
+            <h2 data-i18n="bmaal_s7">写在最后</h2>
+            <p data-i18n="bmaal_p16">多 Agent 架构的价值不是让模型突然变强，而是把复杂任务里的不确定性组织起来。Planner 组织任务结构，Reviewer 组织质量反馈，Debate 组织立场冲突，Judge 组织最终合并。</p>
+            <p data-i18n="bmaal_p17">但这些结构都有成本，也都有失败方式。真正的工程判断不是能不能加 Agent，而是加了以后，系统是否真的更可控、更可靠、更值得。</p>
+        </section>
+    </article>
+
+    <div class="detail-toc" id="detailToc">
+        <div class="detail-toc-item" data-target="setup" data-label="实验"></div>
+        <div class="detail-toc-item" data-target="single" data-label="基线"></div>
+        <div class="detail-toc-item" data-target="planner" data-label="Planner"></div>
+        <div class="detail-toc-item" data-target="reviewer" data-label="Reviewer"></div>
+        <div class="detail-toc-item" data-target="debate" data-label="Debate"></div>
+        <div class="detail-toc-item" data-target="cost" data-label="成本"></div>
+        <div class="detail-toc-item" data-target="takeaway" data-label="结语"></div>
+    </div>
+
+    <footer class="detail-footer">
+        <div class="detail-footer-copy">&copy; 2026 Eric. Built with <span class="heart">♥</span> and too much coffee.</div>
+        <div class="detail-footer-links">
+            <a href="../index.html">← Back to Home</a>
+            <a href="https://github.com/powerpan" target="_blank">GitHub</a>
+        </div>
+    </footer>
+    <button class="back-to-top" id="backToTop" title="回到顶部" data-i18n-title="back_to_top">↑</button>
+    <script src="../js/i18n.js"></script>
+    <script src="../js/i18n/core.js"></script>
+    <script src="../js/i18n/articles/multi-agent-architecture-lab.js"></script>
+    <script src="../js/detail.js"></script>
+</body>
+</html>
