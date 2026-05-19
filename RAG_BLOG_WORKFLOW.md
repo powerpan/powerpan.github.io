@@ -21,6 +21,92 @@
 
 ---
 
+## 0.2 线上中转仓库与取稿边界
+
+当用户说“去中转仓库 / 中转文件夹获取最新文章 / 处理线上中转稿件”时，默认指线上 handoff 仓库，而不是本地 `webblog/transfer/` 目录本身。
+
+线上中转仓库信息：
+
+```text
+GitHub 仓库：powerpan/gpt-codex-workspace
+主要目录：transfer/YYYY-MM-DD/
+常见稿件：Markdown 草稿，文件名通常是中文文章标题
+辅助索引：BLOG_ARTICLE_INDEX.md（如存在，用于检查已发布文章和避免重复选题）
+辅助说明：README.md、docs/CONTEXT.md（如存在，用于理解 handoff 规则）
+```
+
+正式站点仓库仍然是：
+
+```text
+GitHub 仓库：powerpan/powerpan.github.io
+本地路径：/Users/ericpan/game_project/webblog
+线上站点：https://erickk.site/
+```
+
+线上中转稿件进入本地发布流程时，先把选中的远程草稿归档到本地：
+
+```text
+transfer/{YYYY-MM-DD}/{原始文件名}.md
+```
+
+然后再按本文档生成或更新：
+
+```text
+rag-articles/{slug}.md
+blog-drafts/{slug}.md
+blog/{slug}.html
+js/i18n/articles/{slug}.js
+js/i18n/blog-list.js
+index.html
+blog/index.html
+BLOG_TOPIC_POOL.md
+```
+
+给 Codex / Agent 的交叉验证要求：
+
+- 处理线上中转稿件前，应优先检查当前项目文档中的本节说明。
+- 如果 Codex 有历史记忆或会话记录，也可以用关键词 `powerpan/gpt-codex-workspace`、`BLOG_ARTICLE_INDEX.md`、`transfer/YYYY-MM-DD/` 进行交叉验证。
+- 如果项目文档、Codex 记忆、GitHub 实际返回结果之间存在冲突，不要自行猜测；必须报告冲突来源、证据路径或远程路径，并等待用户确认。
+- 不得把 Codex 记忆当成唯一事实来源；最终以当前项目文档和实际 GitHub 查询结果为准。
+
+---
+
+## 0.3 未处理稿件判定与空队列处理
+
+目前线上中转仓库没有独立的 `processed` 标记、状态文件或 manifest。因此，“是否未处理”只能通过标题、文件名、slug 和正文相似度做保守判断。
+
+处理线上中转仓库时，按下面顺序判断：
+
+1. 到 `powerpan/gpt-codex-workspace` 的 `transfer/YYYY-MM-DD/` 中，从最新日期开始查找 Markdown 草稿。
+2. 对候选稿件提取标题、文件名、可能的 slug、正文核心主题。
+3. 在本地 `webblog` 项目中检查是否已有标题或内容相符的文章痕迹，重点检查：
+
+```text
+transfer/
+rag-articles/
+blog-drafts/
+blog/
+js/i18n/articles/
+blog/index.html
+js/i18n/blog-list.js
+```
+
+4. 如果本地已经存在标题、slug 或内容明显相符的 `rag-articles`、`blog-drafts`、`blog/*.html`、i18n 或列表页记录，应视为已处理，不要重复发布。
+5. 如果远程候选稿件在本地上述位置都没有相符记录，才可视为“可能未处理稿件”，然后继续按本文档流程处理。
+
+如果在线上中转仓库没有找到未处理文章：
+
+- 必须立即停止发文流程。
+- 不要从 `BLOG_TOPIC_POOL.md` 自行选题原创。
+- 不要复用旧的 transfer 草稿。
+- 不要凭空生成新文章。
+- 不要修改 `blog/`、`rag-articles/`、`blog-drafts/`、`js/i18n/`、`index.html` 或 `blog/index.html`。
+- 直接向用户报告：`线上中转仓库没有找到未处理文章`。
+- 报告时说明已检查的远程目录范围，以及用于判定“已处理”的本地目录范围。
+- 只有用户明确指定某个草稿、重新提供文章内容，或明确要求“从主题池原创生成”，才能继续。
+
+---
+
 ## 0.5 固定输入输出目录
 
 每一次文章任务都必须使用下面的固定目录，不要临时发明新位置。
@@ -232,7 +318,8 @@ NEW_BLOG_POST.md
 
 ## 6. 推荐执行顺序
 
-每次用户给新文章草稿时，按这个顺序执行：
+每次用户直接给新文章草稿，或已经从线上中转仓库确认存在未处理稿件时，按这个顺序执行。
+如果任务来源是线上中转仓库，必须先执行 `0.2` 和 `0.3` 的取稿、交叉验证和空队列判断；没有未处理稿件时不得进入下面的发布步骤：
 
 1. 选定 slug 和文章主题。
 2. 写入或更新 `rag-articles/{slug}.md`。
@@ -242,9 +329,20 @@ NEW_BLOG_POST.md
 6. 更新 `index.html` 最新 6 篇。
 7. 更新 `blog/index.html` 全量列表和计数。
 8. 更新 `BLOG_TOPIC_POOL.md` 使用日期。
-9. 运行必要校验。
-10. 默认只留在工作区，除非用户明确要求提交或推送。
-11. 如果用户明确要求提交并推送远程，推送完成后必须提醒用户：把本次新增或更新的 `rag-articles/{slug}.md` 放入实际 RAG 系统。
+9. 同步 SEO 生成内容和 `_site/` 发布目录。
+10. 运行发布前校验。
+11. 默认只留在工作区，除非用户明确要求提交或推送。
+12. 如果用户明确要求提交并推送远程，推送完成后必须提醒用户：把本次新增或更新的 `rag-articles/{slug}.md` 放入实际 RAG 系统。
+
+发布前固定命令：
+
+```bash
+node tools/update_seo.js
+node tools/update_seo.js --check
+node tools/check_i18n.js
+node tools/build_site.js
+node tools/build_site.js --check
+```
 
 ---
 
@@ -255,7 +353,11 @@ NEW_BLOG_POST.md
 - [ ] Markdown 标题和正文结构清晰
 - [ ] 博客 HTML 已按站点模板创建
 - [ ] 对应 i18n 分块中英文 key 齐全
+- [ ] `node tools/update_seo.js` 已同步 sitemap、RSS、SEO meta、专题页和相关文章
+- [ ] `node tools/update_seo.js --check` 通过
 - [ ] `node tools/check_i18n.js` 严格项通过
+- [ ] `node tools/build_site.js` 已生成 `_site/` 发布目录
+- [ ] `node tools/build_site.js --check` 通过
 - [ ] 首页最新 6 篇规则正确
 - [ ] 列表页包含全部文章，排序和编号正确
 - [ ] `blog_list_sub` 计数正确
