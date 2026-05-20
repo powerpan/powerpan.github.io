@@ -2,11 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://erickk.site/</loc>
-    <lastmod>2026-05-12</lastmod>
+    <lastmod>2026-05-20</lastmod>
   </url>
   <url>
     <loc>https://erickk.site/blog/</loc>
-    <lastmod>2026-05-12</lastmod>
+    <lastmod>2026-05-20</lastmod>
   </url>
   <url>
     <loc>https://erickk.site/blog/topics/ai.html</loc>
@@ -26,11 +26,15 @@
   </url>
   <url>
     <loc>https://erickk.site/blog/topics/observation.html</loc>
-    <lastmod>2026-05-01</lastmod>
+    <lastmod>2026-05-20</lastmod>
   </url>
   <url>
     <loc>https://erickk.site/blog/topics/essay.html</loc>
     <lastmod>2025-10-20</lastmod>
+  </url>
+  <url>
+    <loc>https://erickk.site/blog/google-io-ai-workflow-control.html</loc>
+    <lastmod>2026-05-20</lastmod>
   </url>
   <url>
     <loc>https://erickk.site/blog/multi-agent-architecture-lab.html</loc>

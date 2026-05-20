@@ -5,7 +5,15 @@
     <link>https://erickk.site/blog/</link>
     <description>Eric 的 AI 工程、计算机视觉、Agent 架构与系统设计技术博客。</description>
     <language>zh-CN</language>
-    <lastBuildDate>Tue, 12 May 2026 00:00:00 GMT</lastBuildDate>
+    <lastBuildDate>Wed, 20 May 2026 00:00:00 GMT</lastBuildDate>
+    <item>
+      <title>Google I/O 之后：AI 竞争正在从模型能力转向工作流控制权</title>
+      <link>https://erickk.site/blog/google-io-ai-workflow-control.html</link>
+      <guid>https://erickk.site/blog/google-io-ai-workflow-control.html</guid>
+      <pubDate>Wed, 20 May 2026 00:00:00 GMT</pubDate>
+      <category>技术观察</category>
+      <description>Google I/O 2026 的核心信号不是单个模型升级，而是 Gemini 正在被推向搜索、办公、个人任务和应用入口背后的任务操作层。</description>
+    </item>
     <item>
       <title>我做了一次多 Agent 架构实验：复杂架构并不天然更聪明</title>
       <link>https://erickk.site/blog/multi-agent-architecture-lab.html</link>
@@ -157,14 +165,6 @@
       <pubDate>Sat, 25 Apr 2026 00:00:00 GMT</pubDate>
       <category>AI 工程</category>
       <description>Token 正在成为这个时代的原材料，工作者如同工厂，购买原材料、加工、赋予附加值。理解这个逻辑，才能找到自己的核心竞争力。</description>
-    </item>
-    <item>
-      <title>AI Agent：重塑工作流的变革者，还是新一轮泡沫？</title>
-      <link>https://erickk.site/blog/ai-agent-thoughts.html</link>
-      <guid>https://erickk.site/blog/ai-agent-thoughts.html</guid>
-      <pubDate>Mon, 20 Apr 2026 00:00:00 GMT</pubDate>
-      <category>Agent 自动化</category>
-      <description>从个人开发者到企业级应用，AI Agent 正在改变我们的工作方式。但热潮之下，哪些是真实的变革，哪些又是过度的期待？</description>
     </item>
   </channel>
 </rss>

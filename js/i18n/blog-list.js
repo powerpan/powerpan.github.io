@@ -1,6 +1,9 @@
 /* i18n data: blog-list */
 window.registerI18nChunk({
   "zh": {
+    "blog29_title": "Google I/O 之后：AI 竞争正在从模型能力转向工作流控制权",
+    "blog_card29_title": "Google I/O 之后：AI 竞争正在从模型能力转向工作流控制权",
+    "blog_card29_desc": "Google I/O 2026 的核心信号不是单个模型升级，而是 Gemini 正在被推向搜索、办公、个人任务和应用入口背后的任务操作层。",
     "blog28_title": "我做了一次多 Agent 架构实验：复杂架构并不天然更聪明",
     "blog_card28_title": "我做了一次多 Agent 架构实验：复杂架构并不天然更聪明",
     "blog_card28_desc": "一次小型 Agent Architecture Lab 实验显示，多 Agent 不是默认升级路线，而是需要用成本、边界和复盘价值证明自己的架构选择。",
@@ -57,7 +60,7 @@ window.registerI18nChunk({
     "blog_card11_desc": "Context Rot 的两种机制——注意力稀释与上下文中毒，以及行业正在给出的不同答案。为什么「清空重开」目前仍然是最有效的解法？",
     "blog_back": "← 返回首页",
     "blog_list_title": "// 全部文章",
-    "blog_list_sub": "All Posts — 28 articles and counting",
+    "blog_list_sub": "All Posts — 29 articles and counting",
     "blog_filter_kicker": "SIGNAL ROUTER",
     "blog_filter_title": "按主题轨道切换阅读流",
     "blog_filter_sub": "把文章列表切成不同信道，快速定位 AI 工程、Agent、视觉多模态、系统架构、技术观察和社会随笔内容。",
@@ -108,6 +111,9 @@ window.registerI18nChunk({
     "blog9_title": "「内卷」与「躺平」：一代人的焦虑与突围"
   },
   "en": {
+    "blog29_title": "After Google I/O, AI Competition Is Shifting From Model Capability to Workflow Control",
+    "blog_card29_title": "After Google I/O, AI Competition Is Shifting From Model Capability to Workflow Control",
+    "blog_card29_desc": "The core signal from Google I/O 2026 is not a single model upgrade. It is Gemini being pushed into the task operating layer behind search, work, personal agents, and app entry points.",
     "blog28_title": "I Ran a Multi-Agent Architecture Experiment: Complex Systems Are Not Automatically Smarter",
     "blog_card28_title": "I Ran a Multi-Agent Architecture Experiment: Complex Systems Are Not Automatically Smarter",
     "blog_card28_desc": "A small Agent Architecture Lab experiment shows that multi-agent design is not a default upgrade path. It has to earn its place through cost, boundaries, and review value.",
@@ -164,7 +170,7 @@ window.registerI18nChunk({
     "blog_card11_desc": "Two mechanisms behind Context Rot — attention dilution and context poisoning — and the different answers the industry is giving. Why is \"starting fresh\" still the most effective fix?",
     "blog_back": "← Back to Home",
     "blog_list_title": "// All Posts",
-    "blog_list_sub": "All Posts — 28 articles and counting",
+    "blog_list_sub": "All Posts — 29 articles and counting",
     "blog_filter_kicker": "SIGNAL ROUTER",
     "blog_filter_title": "Switch Reading Lanes by Topic",
     "blog_filter_sub": "Slice the archive into AI engineering, Agent automation, vision and multimodal work, system architecture, technical observation, and social essays.",
