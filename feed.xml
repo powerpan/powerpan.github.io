@@ -5,7 +5,15 @@
     <link>https://erickk.site/blog/</link>
     <description>Eric 的 AI 工程、计算机视觉、Agent 架构与系统设计技术博客。</description>
     <language>zh-CN</language>
-    <lastBuildDate>Wed, 20 May 2026 00:00:00 GMT</lastBuildDate>
+    <lastBuildDate>Fri, 22 May 2026 00:00:00 GMT</lastBuildDate>
+    <item>
+      <title>AI 不会消灭白领，但会消灭白领岗位的虚假安全感</title>
+      <link>https://erickk.site/blog/ai-white-collar-false-security.html</link>
+      <guid>https://erickk.site/blog/ai-white-collar-false-security.html</guid>
+      <pubDate>Fri, 22 May 2026 00:00:00 GMT</pubDate>
+      <category>技术观察</category>
+      <description>AI 对白领岗位的冲击不是简单替代人，而是拆开岗位，重新定价流程化、模板化、低责任判断的劳动。</description>
+    </item>
     <item>
       <title>Google I/O 之后：AI 竞争正在从模型能力转向工作流控制权</title>
       <link>https://erickk.site/blog/google-io-ai-workflow-control.html</link>
@@ -157,14 +165,6 @@
       <pubDate>Sat, 25 Apr 2026 00:00:00 GMT</pubDate>
       <category>AI 工程</category>
       <description>Context Rot 的两种机制——注意力稀释与上下文中毒，以及行业正在给出的不同答案。为什么「清空重开」目前仍然是最有效的解法？</description>
-    </item>
-    <item>
-      <title>Token 经济学：当 AI 时代的「原材料」越来越贵</title>
-      <link>https://erickk.site/blog/token-economy.html</link>
-      <guid>https://erickk.site/blog/token-economy.html</guid>
-      <pubDate>Sat, 25 Apr 2026 00:00:00 GMT</pubDate>
-      <category>AI 工程</category>
-      <description>Token 正在成为这个时代的原材料，工作者如同工厂，购买原材料、加工、赋予附加值。理解这个逻辑，才能找到自己的核心竞争力。</description>
     </item>
   </channel>
 </rss>

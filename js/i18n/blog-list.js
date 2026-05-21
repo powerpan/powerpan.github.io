@@ -1,6 +1,9 @@
 /* i18n data: blog-list */
 window.registerI18nChunk({
   "zh": {
+    "blog30_title": "AI 不会消灭白领，但会消灭白领岗位的虚假安全感",
+    "blog_card30_title": "AI 不会消灭白领，但会消灭白领岗位的虚假安全感",
+    "blog_card30_desc": "AI 对白领岗位的冲击不是简单替代人，而是拆开岗位，重新定价流程化、模板化、低责任判断的劳动。",
     "blog29_title": "Google I/O 之后：AI 竞争正在从模型能力转向工作流控制权",
     "blog_card29_title": "Google I/O 之后：AI 竞争正在从模型能力转向工作流控制权",
     "blog_card29_desc": "Google I/O 2026 的核心信号不是单个模型升级，而是 Gemini 正在被推向搜索、办公、个人任务和应用入口背后的任务操作层。",
@@ -60,7 +63,7 @@ window.registerI18nChunk({
     "blog_card11_desc": "Context Rot 的两种机制——注意力稀释与上下文中毒，以及行业正在给出的不同答案。为什么「清空重开」目前仍然是最有效的解法？",
     "blog_back": "← 返回首页",
     "blog_list_title": "// 全部文章",
-    "blog_list_sub": "All Posts — 29 articles and counting",
+    "blog_list_sub": "All Posts — 30 articles and counting",
     "blog_filter_kicker": "SIGNAL ROUTER",
     "blog_filter_title": "按主题轨道切换阅读流",
     "blog_filter_sub": "把文章列表切成不同信道，快速定位 AI 工程、Agent、视觉多模态、系统架构、技术观察和社会随笔内容。",
@@ -111,6 +114,9 @@ window.registerI18nChunk({
     "blog9_title": "「内卷」与「躺平」：一代人的焦虑与突围"
   },
   "en": {
+    "blog30_title": "AI Will Not Erase White-Collar Workers, but It Will Erase Their False Security",
+    "blog_card30_title": "AI Will Not Erase White-Collar Workers, but It Will Erase Their False Security",
+    "blog_card30_desc": "AI is not simply replacing white-collar workers. It is breaking jobs apart and repricing routine, template-based, low-responsibility judgment work.",
     "blog29_title": "After Google I/O, AI Competition Is Shifting From Model Capability to Workflow Control",
     "blog_card29_title": "After Google I/O, AI Competition Is Shifting From Model Capability to Workflow Control",
     "blog_card29_desc": "The core signal from Google I/O 2026 is not a single model upgrade. It is Gemini being pushed into the task operating layer behind search, work, personal agents, and app entry points.",
@@ -170,7 +176,7 @@ window.registerI18nChunk({
     "blog_card11_desc": "Two mechanisms behind Context Rot — attention dilution and context poisoning — and the different answers the industry is giving. Why is \"starting fresh\" still the most effective fix?",
     "blog_back": "← Back to Home",
     "blog_list_title": "// All Posts",
-    "blog_list_sub": "All Posts — 29 articles and counting",
+    "blog_list_sub": "All Posts — 30 articles and counting",
     "blog_filter_kicker": "SIGNAL ROUTER",
     "blog_filter_title": "Switch Reading Lanes by Topic",
     "blog_filter_sub": "Slice the archive into AI engineering, Agent automation, vision and multimodal work, system architecture, technical observation, and social essays.",
