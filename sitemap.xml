@@ -2,11 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://erickk.site/</loc>
-    <lastmod>2026-05-22</lastmod>
+    <lastmod>2026-05-25</lastmod>
   </url>
   <url>
     <loc>https://erickk.site/blog/</loc>
-    <lastmod>2026-05-22</lastmod>
+    <lastmod>2026-05-25</lastmod>
   </url>
   <url>
     <loc>https://erickk.site/blog/topics/ai.html</loc>
@@ -30,7 +30,11 @@
   </url>
   <url>
     <loc>https://erickk.site/blog/topics/essay.html</loc>
-    <lastmod>2025-10-20</lastmod>
+    <lastmod>2026-05-25</lastmod>
+  </url>
+  <url>
+    <loc>https://erickk.site/blog/family-risk-architecture.html</loc>
+    <lastmod>2026-05-25</lastmod>
   </url>
   <url>
     <loc>https://erickk.site/blog/ai-white-collar-false-security.html</loc>

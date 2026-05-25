@@ -5,7 +5,15 @@
     <link>https://erickk.site/blog/</link>
     <description>Eric 的 AI 工程、计算机视觉、Agent 架构与系统设计技术博客。</description>
     <language>zh-CN</language>
-    <lastBuildDate>Fri, 22 May 2026 00:00:00 GMT</lastBuildDate>
+    <lastBuildDate>Mon, 25 May 2026 00:00:00 GMT</lastBuildDate>
+    <item>
+      <title>把家庭当成一个系统：中产返贫背后的风险架构问题</title>
+      <link>https://erickk.site/blog/family-risk-architecture.html</link>
+      <guid>https://erickk.site/blog/family-risk-architecture.html</guid>
+      <pubDate>Mon, 25 May 2026 00:00:00 GMT</pubDate>
+      <category>社会随笔</category>
+      <description>中产家庭真正的风险，不是收入低，而是高杠杆、单点收入、教育焦虑和外部冲击同时挤压家庭系统的冗余。</description>
+    </item>
     <item>
       <title>AI 不会消灭白领，但会消灭白领岗位的虚假安全感</title>
       <link>https://erickk.site/blog/ai-white-collar-false-security.html</link>
@@ -157,14 +165,6 @@
       <pubDate>Sun, 26 Apr 2026 00:00:00 GMT</pubDate>
       <category>AI 工程</category>
       <description>AI coding 工具放大了代码生成速度，也放大了团队的审查压力。真正稀缺的不再是提交量，而是稳定理解和验证这些改动的能力。</description>
-    </item>
-    <item>
-      <title>上下文腐烂：大模型为什么会「越聊越笨」</title>
-      <link>https://erickk.site/blog/context-rot.html</link>
-      <guid>https://erickk.site/blog/context-rot.html</guid>
-      <pubDate>Sat, 25 Apr 2026 00:00:00 GMT</pubDate>
-      <category>AI 工程</category>
-      <description>Context Rot 的两种机制——注意力稀释与上下文中毒，以及行业正在给出的不同答案。为什么「清空重开」目前仍然是最有效的解法？</description>
     </item>
   </channel>
 </rss>
