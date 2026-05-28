@@ -1,6 +1,9 @@
 /* i18n data: blog-list */
 window.registerI18nChunk({
   "zh": {
+    "blog32_title": "中国具身智能的真正考验：不是会不会翻跟头，而是能不能形成商业闭环",
+    "blog_card32_title": "中国具身智能的真正考验：不是会不会翻跟头，而是能不能形成商业闭环",
+    "blog_card32_desc": "具身智能公司的真正考验，不是演示视频多震撼，而是能否跑通低成本本体、真实场景、数据回流、模型提升和客户复购的商业闭环。",
     "blog31_title": "把家庭当成一个系统：中产返贫背后的风险架构问题",
     "blog_card31_title": "把家庭当成一个系统：中产返贫背后的风险架构问题",
     "blog_card31_desc": "中产家庭真正的风险，不是收入低，而是高杠杆、单点收入、教育焦虑和外部冲击同时挤压家庭系统的冗余。",
@@ -66,7 +69,7 @@ window.registerI18nChunk({
     "blog_card11_desc": "Context Rot 的两种机制——注意力稀释与上下文中毒，以及行业正在给出的不同答案。为什么「清空重开」目前仍然是最有效的解法？",
     "blog_back": "← 返回首页",
     "blog_list_title": "// 全部文章",
-    "blog_list_sub": "All Posts — 31 articles and counting",
+    "blog_list_sub": "All Posts — 32 articles and counting",
     "blog_filter_kicker": "SIGNAL ROUTER",
     "blog_filter_title": "按主题轨道切换阅读流",
     "blog_filter_sub": "把文章列表切成不同信道，快速定位 AI 工程、Agent、视觉多模态、系统架构、技术观察和社会随笔内容。",
@@ -117,6 +120,9 @@ window.registerI18nChunk({
     "blog9_title": "「内卷」与「躺平」：一代人的焦虑与突围"
   },
   "en": {
+    "blog32_title": "The Real Test for Embodied AI in China Is Not Acrobatics, but a Commercial Loop",
+    "blog_card32_title": "The Real Test for Embodied AI in China Is Not Acrobatics, but a Commercial Loop",
+    "blog_card32_desc": "The real test is not how impressive a demo video looks, but whether a company can close the loop across low-cost hardware, real scenarios, data feedback, model improvement, and customer repurchase.",
     "blog31_title": "Treat the Family as a System: The Risk Architecture Behind Middle-Class Decline",
     "blog_card31_title": "Treat the Family as a System: The Risk Architecture Behind Middle-Class Decline",
     "blog_card31_desc": "The real risk is not low income alone. It is leverage, single income, education anxiety, and external shocks squeezing redundancy out of the family system.",
@@ -182,7 +188,7 @@ window.registerI18nChunk({
     "blog_card11_desc": "Two mechanisms behind Context Rot — attention dilution and context poisoning — and the different answers the industry is giving. Why is \"starting fresh\" still the most effective fix?",
     "blog_back": "← Back to Home",
     "blog_list_title": "// All Posts",
-    "blog_list_sub": "All Posts — 31 articles and counting",
+    "blog_list_sub": "All Posts — 32 articles and counting",
     "blog_filter_kicker": "SIGNAL ROUTER",
     "blog_filter_title": "Switch Reading Lanes by Topic",
     "blog_filter_sub": "Slice the archive into AI engineering, Agent automation, vision and multimodal work, system architecture, technical observation, and social essays.",
