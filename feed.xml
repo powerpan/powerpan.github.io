@@ -7,6 +7,14 @@
     <language>zh-CN</language>
     <lastBuildDate>Thu, 28 May 2026 00:00:00 GMT</lastBuildDate>
     <item>
+      <title>当技术路线被包装成“定律”：理性看待华为韬定律的媒体叙事</title>
+      <link>https://erickk.site/blog/huawei-tau-law-media-narrative.html</link>
+      <guid>https://erickk.site/blog/huawei-tau-law-media-narrative.html</guid>
+      <pubDate>Thu, 28 May 2026 00:00:00 GMT</pubDate>
+      <category>技术观察</category>
+      <description>韬定律背后指向后摩尔时代的真实工程问题，但媒体叙事容易把系统级优化包装成从零发明的新神话。</description>
+    </item>
+    <item>
       <title>中国具身智能的真正考验：不是会不会翻跟头，而是能不能形成商业闭环</title>
       <link>https://erickk.site/blog/embodied-ai-commercial-loop.html</link>
       <guid>https://erickk.site/blog/embodied-ai-commercial-loop.html</guid>
@@ -157,14 +165,6 @@
       <pubDate>Mon, 27 Apr 2026 00:00:00 GMT</pubDate>
       <category>技术观察</category>
       <description>这一周的 AI 主线，不只是模型更强，而是工作模型、Agent 平台和端侧 AI 一起向产品化推进。</description>
-    </item>
-    <item>
-      <title>视觉模型上线后：别让 mAP 变成唯一答案</title>
-      <link>https://erickk.site/blog/vision-rollout-metrics.html</link>
-      <guid>https://erickk.site/blog/vision-rollout-metrics.html</guid>
-      <pubDate>Mon, 27 Apr 2026 00:00:00 GMT</pubDate>
-      <category>视觉多模态</category>
-      <description>视觉模型上线后，离线 mAP 只是起点。真正决定系统可靠性的，是线上漂移监控、灰度放量、回退阈值和数据闭环。</description>
     </item>
   </channel>
 </rss>
