@@ -1,6 +1,9 @@
 /* i18n data: blog-list */
 window.registerI18nChunk({
   "zh": {
+    "blog34_title": "Mac 正在成为个人 AI 应用的理想运行时",
+    "blog_card34_title": "Mac 正在成为个人 AI 应用的理想运行时",
+    "blog_card34_desc": "个人 AI 的关键不只是本地模型，而是把上下文、模型路由、工具执行、长期状态与用户控制组织在同一台设备上。",
     "blog33_title": "当技术路线被包装成“定律”：理性看待华为韬定律的媒体叙事",
     "blog_card33_title": "当技术路线被包装成“定律”：理性看待华为韬定律的媒体叙事",
     "blog_card33_desc": "韬定律背后指向后摩尔时代的真实工程问题，但媒体叙事容易把系统级优化包装成从零发明的新神话。",
@@ -72,7 +75,7 @@ window.registerI18nChunk({
     "blog_card11_desc": "Context Rot 的两种机制——注意力稀释与上下文中毒，以及行业正在给出的不同答案。为什么「清空重开」目前仍然是最有效的解法？",
     "blog_back": "← 返回首页",
     "blog_list_title": "// 全部文章",
-    "blog_list_sub": "All Posts — 33 articles and counting",
+    "blog_list_sub": "All Posts — 34 articles and counting",
     "blog_filter_kicker": "SIGNAL ROUTER",
     "blog_filter_title": "按主题轨道切换阅读流",
     "blog_filter_sub": "把文章列表切成不同信道，快速定位 AI 工程、Agent、视觉多模态、系统架构、技术观察和社会随笔内容。",
@@ -123,6 +126,9 @@ window.registerI18nChunk({
     "blog9_title": "「内卷」与「躺平」：一代人的焦虑与突围"
   },
   "en": {
+    "blog34_title": "Mac Is Becoming the Ideal Runtime for Personal AI Apps",
+    "blog_card34_title": "Mac Is Becoming the Ideal Runtime for Personal AI Apps",
+    "blog_card34_desc": "Personal AI is not just about local models. It is about organizing context, model routing, tool execution, persistent state, and user control on one device.",
     "blog33_title": "When a Technology Roadmap Becomes a “Law”: A Rational Look at Huawei's Tau Law Narrative",
     "blog_card33_title": "When a Technology Roadmap Becomes a “Law”: A Rational Look at Huawei's Tau Law Narrative",
     "blog_card33_desc": "Huawei's Tau Law points to real post-Moore engineering problems, but media narratives can turn system-level optimization into a myth of invention from scratch.",
@@ -194,7 +200,7 @@ window.registerI18nChunk({
     "blog_card11_desc": "Two mechanisms behind Context Rot — attention dilution and context poisoning — and the different answers the industry is giving. Why is \"starting fresh\" still the most effective fix?",
     "blog_back": "← Back to Home",
     "blog_list_title": "// All Posts",
-    "blog_list_sub": "All Posts — 33 articles and counting",
+    "blog_list_sub": "All Posts — 34 articles and counting",
     "blog_filter_kicker": "SIGNAL ROUTER",
     "blog_filter_title": "Switch Reading Lanes by Topic",
     "blog_filter_sub": "Slice the archive into AI engineering, Agent automation, vision and multimodal work, system architecture, technical observation, and social essays.",

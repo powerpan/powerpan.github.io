@@ -2,11 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://erickk.site/</loc>
-    <lastmod>2026-05-28</lastmod>
+    <lastmod>2026-07-20</lastmod>
   </url>
   <url>
     <loc>https://erickk.site/blog/</loc>
-    <lastmod>2026-05-28</lastmod>
+    <lastmod>2026-07-20</lastmod>
   </url>
   <url>
     <loc>https://erickk.site/blog/topics/ai.html</loc>
@@ -22,7 +22,7 @@
   </url>
   <url>
     <loc>https://erickk.site/blog/topics/architecture.html</loc>
-    <lastmod>2026-04-29</lastmod>
+    <lastmod>2026-07-20</lastmod>
   </url>
   <url>
     <loc>https://erickk.site/blog/topics/observation.html</loc>
@@ -31,6 +31,10 @@
   <url>
     <loc>https://erickk.site/blog/topics/essay.html</loc>
     <lastmod>2026-05-25</lastmod>
+  </url>
+  <url>
+    <loc>https://erickk.site/blog/mac-personal-ai-runtime.html</loc>
+    <lastmod>2026-07-20</lastmod>
   </url>
   <url>
     <loc>https://erickk.site/blog/huawei-tau-law-media-narrative.html</loc>

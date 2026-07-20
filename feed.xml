@@ -5,7 +5,15 @@
     <link>https://erickk.site/blog/</link>
     <description>Eric 的 AI 工程、计算机视觉、Agent 架构与系统设计技术博客。</description>
     <language>zh-CN</language>
-    <lastBuildDate>Thu, 28 May 2026 00:00:00 GMT</lastBuildDate>
+    <lastBuildDate>Mon, 20 Jul 2026 00:00:00 GMT</lastBuildDate>
+    <item>
+      <title>Mac 正在成为个人 AI 应用的理想运行时</title>
+      <link>https://erickk.site/blog/mac-personal-ai-runtime.html</link>
+      <guid>https://erickk.site/blog/mac-personal-ai-runtime.html</guid>
+      <pubDate>Mon, 20 Jul 2026 00:00:00 GMT</pubDate>
+      <category>系统架构</category>
+      <description>个人 AI 的关键不只是本地模型，而是把上下文、模型路由、工具执行、长期状态与用户控制组织在同一台设备上。</description>
+    </item>
     <item>
       <title>当技术路线被包装成“定律”：理性看待华为韬定律的媒体叙事</title>
       <link>https://erickk.site/blog/huawei-tau-law-media-narrative.html</link>
@@ -157,14 +165,6 @@
       <pubDate>Mon, 27 Apr 2026 00:00:00 GMT</pubDate>
       <category>Agent 自动化</category>
       <description>AI 厂商争夺的不只是工作流入口，而是入口权、上下文权和执行权。真正更有价值的产品层，正在从工具位上移到工作代理层。</description>
-    </item>
-    <item>
-      <title>AI 周报｜Agent 平台化、模型继续升级，AI 硬件开始下沉到终端</title>
-      <link>https://erickk.site/blog/ai-weekly-agent-platform.html</link>
-      <guid>https://erickk.site/blog/ai-weekly-agent-platform.html</guid>
-      <pubDate>Mon, 27 Apr 2026 00:00:00 GMT</pubDate>
-      <category>技术观察</category>
-      <description>这一周的 AI 主线，不只是模型更强，而是工作模型、Agent 平台和端侧 AI 一起向产品化推进。</description>
     </item>
   </channel>
 </rss>
