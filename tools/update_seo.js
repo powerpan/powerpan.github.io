@@ -297,6 +297,8 @@ function seoMetaForPage(rel, kind, override = {}) {
     jsonLd = collectionSchema(title, description, canonical, currentPosts);
   } else if (kind === 'topic') {
     jsonLd = collectionSchema(title, description, canonical, override.posts || []);
+  } else if (kind === 'collection') {
+    jsonLd = collectionSchema(title, description, canonical, override.items || []);
   } else if (kind === 'article') {
     const post = currentPosts.find((item) => item.rel === rel);
     const published = post?.isoDate || override.isoDate || '2026-01-01';
@@ -593,9 +595,27 @@ function main() {
   }
 
   const projectPages = listHtmlFiles('projects');
+  const projectArchive = read('projects/index.html');
+  const projectArchiveOrder = [...projectArchive.matchAll(/<a href="([^"]+\.html)" class="project-list-card\b/g)]
+    .map((match) => `projects/${match[1]}`);
+  const projectDetailPages = projectPages.filter((rel) => rel !== 'projects/index.html');
+  const orderedProjectPages = [
+    ...projectArchiveOrder.filter((rel) => projectDetailPages.includes(rel)),
+    ...projectDetailPages.filter((rel) => !projectArchiveOrder.includes(rel)),
+  ];
+  const projectItems = orderedProjectPages
+    .map((rel) => {
+      const metadata = readHeadMetadata(rel);
+      return {
+        title: metadata.title.replace(/\s+—\s+Eric(?:'s Project)?$/, ''),
+        url: canonicalFor(rel),
+      };
+    });
   for (const rel of projectPages) {
     let html = read(rel);
-    html = injectSeoBlock(html, seoMetaForPage(rel, 'project'));
+    const kind = rel === 'projects/index.html' ? 'collection' : 'project';
+    const override = kind === 'collection' ? { items: projectItems } : {};
+    html = injectSeoBlock(html, seoMetaForPage(rel, kind, override));
     write(rel, html);
   }
 

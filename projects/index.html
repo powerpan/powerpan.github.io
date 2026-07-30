@@ -22,23 +22,61 @@
     <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "CreativeWork",
+  "@type": "CollectionPage",
   "name": "全部项目",
   "description": "Eric 的项目作品集，涵盖 AI 视觉、大数据、全栈开发等领域。",
   "url": "https://erickk.site/projects/",
-  "author": {
-    "@type": "Person",
-    "name": "Eric Pan",
-    "url": "https://erickk.site",
-    "sameAs": [
-      "https://github.com/powerpan"
-    ]
-  },
-  "image": "https://erickk.site/assets/og-default.svg",
   "inLanguage": [
     "zh-CN",
     "en"
-  ]
+  ],
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "Eric",
+    "url": "https://erickk.site"
+  },
+  "mainEntity": {
+    "@type": "ItemList",
+    "numberOfItems": 6,
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "url": "https://erickk.site/projects/yolo26-multimodal.html",
+        "name": "YOLO26 Multimodal"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "url": "https://erickk.site/projects/metro-gate.html",
+        "name": "Metro Gate Detection"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "url": "https://erickk.site/projects/neural-vision.html",
+        "name": "NeuralVision Pro"
+      },
+      {
+        "@type": "ListItem",
+        "position": 4,
+        "url": "https://erickk.site/projects/dataflow.html",
+        "name": "DataFlow Pipeline"
+      },
+      {
+        "@type": "ListItem",
+        "position": 5,
+        "url": "https://erickk.site/projects/pixelmind.html",
+        "name": "PixelMind SDK"
+      },
+      {
+        "@type": "ListItem",
+        "position": 6,
+        "url": "https://erickk.site/projects/stackforge.html",
+        "name": "StackForge CLI"
+      }
+    ]
+  }
 }
     </script>
     <!-- SEO:END -->
@@ -205,7 +243,7 @@
         <a href="../index.html" class="project-listing-back reveal" data-i18n="proj_back">← 返回首页</a>
         <div class="project-listing-header reveal">
             <h1 data-i18n="proj_list_title">// 全部项目</h1>
-            <p data-i18n="proj_list_sub">All Projects — 6 projects and counting</p>
+            <p data-i18n="proj_list_sub">全部项目 — 共 6 个项目，持续更新中</p>
         </div>
         <div class="project-listing-grid">
             <!-- 1: YOLO26 Multimodal -->
@@ -253,7 +291,7 @@
             <!-- 4: DataFlow -->
             <a href="dataflow.html" class="project-list-card reveal" data-hover>
                 <div class="project-list-num">04</div>
-                <div class="project-list-title">DataFlow Engine</div>
+                <div class="project-list-title">DataFlow Pipeline</div>
                 <div class="project-list-desc" data-i18n="proj_card4_desc">基于 Flink + Kafka 的实时流式计算引擎，支持 Exactly-Once 语义与毫秒级窗口聚合，面向大数据场景。</div>
                 <div class="project-list-footer">
                     <div class="project-list-tags">
@@ -267,7 +305,7 @@
             <!-- 5: PixelMind -->
             <a href="pixelmind.html" class="project-list-card reveal" data-hover>
                 <div class="project-list-num">05</div>
-                <div class="project-list-title">PixelMind Engine</div>
+                <div class="project-list-title">PixelMind SDK</div>
                 <div class="project-list-desc" data-i18n="proj_card5_desc">轻量级视觉模型推理引擎，支持模型量化与剪枝优化，面向边缘设备部署场景。</div>
                 <div class="project-list-footer">
                     <div class="project-list-tags">
@@ -281,7 +319,7 @@
             <!-- 6: StackForge -->
             <a href="stackforge.html" class="project-list-card reveal" data-hover>
                 <div class="project-list-num">06</div>
-                <div class="project-list-title">StackForge</div>
+                <div class="project-list-title">StackForge CLI</div>
                 <div class="project-list-desc" data-i18n="proj_card6_desc">基于 Vue + PHP 的全栈脚手架工具，一键生成前后端项目模板，集成权限管理与数据可视化。</div>
                 <div class="project-list-footer">
                     <div class="project-list-tags">
