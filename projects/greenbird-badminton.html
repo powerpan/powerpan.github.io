@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Greenbird Badminton Platform — Eric's Project</title>
+    <!-- SEO:START -->
+    <meta name="description" content="面向高并发预订的羽毛球馆全栈运营平台，以 Tornado 异步服务、Redis 分布式锁和 MySQL 事务防止场地重复预约，并整合会员、商城、赛事和运营统计。">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://erickk.site/projects/greenbird-badminton.html">
+    <link rel="alternate" type="application/rss+xml" title="Eric Blog RSS" href="https://erickk.site/feed.xml">
+    <meta property="og:site_name" content="Eric">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Greenbird Badminton Platform">
+    <meta property="og:description" content="面向高并发预订的羽毛球馆全栈运营平台，以 Tornado 异步服务、Redis 分布式锁和 MySQL 事务防止场地重复预约，并整合会员、商城、赛事和运营统计。">
+    <meta property="og:url" content="https://erickk.site/projects/greenbird-badminton.html">
+    <meta property="og:image" content="https://erickk.site/assets/og-default.svg">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Greenbird Badminton Platform">
+    <meta name="twitter:description" content="面向高并发预订的羽毛球馆全栈运营平台，以 Tornado 异步服务、Redis 分布式锁和 MySQL 事务防止场地重复预约，并整合会员、商城、赛事和运营统计。">
+    <meta name="twitter:image" content="https://erickk.site/assets/og-default.svg">
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "CreativeWork",
+  "name": "Greenbird Badminton Platform",
+  "description": "面向高并发预订的羽毛球馆全栈运营平台，以 Tornado 异步服务、Redis 分布式锁和 MySQL 事务防止场地重复预约，并整合会员、商城、赛事和运营统计。",
+  "url": "https://erickk.site/projects/greenbird-badminton.html",
+  "author": {
+    "@type": "Person",
+    "name": "Eric Pan",
+    "url": "https://erickk.site",
+    "sameAs": [
+      "https://github.com/powerpan"
+    ]
+  },
+  "image": "https://erickk.site/assets/og-default.svg",
+  "inLanguage": [
+    "zh-CN",
+    "en"
+  ]
+}
+    </script>
+    <!-- SEO:END -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/detail.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+    <style>
+        .greenbird-hero-image {
+            height: auto;
+            aspect-ratio: 2474 / 1474;
+            background: #f5f7f5;
+        }
+
+        .greenbird-hero-image img,
+        .greenbird-figure img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .greenbird-figure {
+            margin: 32px 0;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 8px;
+            background: #f5f7f5;
+            box-shadow: 0 24px 48px rgba(0,0,0,0.28);
+        }
+
+        .greenbird-figure img {
+            height: auto;
+        }
+
+        .greenbird-caption {
+            padding: 14px 16px;
+            border-top: 1px solid rgba(255,255,255,0.06);
+            background: var(--bg-elevated);
+            color: var(--text-muted);
+            font-size: 0.72rem;
+            line-height: 1.6;
+        }
+
+        .greenbird-concurrency {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-top: 28px;
+        }
+
+        .greenbird-concurrency-step {
+            min-height: 150px;
+            padding: 18px;
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 8px;
+            background: var(--bg-elevated);
+        }
+
+        .greenbird-concurrency-index {
+            margin-bottom: 18px;
+            color: var(--accent);
+            font-size: 0.68rem;
+        }
+
+        .greenbird-concurrency-title {
+            margin-bottom: 8px;
+            color: var(--text-primary);
+            font-size: 0.82rem;
+            font-weight: 500;
+        }
+
+        .greenbird-concurrency-desc {
+            color: var(--text-muted);
+            font-size: 0.7rem;
+            line-height: 1.6;
+        }
+
+        .greenbird-note {
+            margin-top: 22px;
+            padding: 14px 16px;
+            border-left: 2px solid var(--accent);
+            background: rgba(0,255,136,0.04);
+            color: var(--text-muted);
+            font-size: 0.72rem;
+            line-height: 1.7;
+        }
+
+        @media (max-width: 768px) {
+            .greenbird-concurrency {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .greenbird-hero-image {
+                aspect-ratio: 16 / 10;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .greenbird-concurrency {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="detail-scroll-progress" id="detailScrollProgress"></div>
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor-dot" id="cursorDot"></div>
+    <canvas id="particleCanvas"></canvas>
+
+    <nav id="nav">
+        <a href="../index.html" class="nav-logo magnetic" data-hover>ERIC<span class="dot">.</span></a>
+        <ul class="nav-center">
+            <li><a href="../index.html#about" data-hover data-i18n="nav_about">// 关于</a></li>
+            <li><a href="../index.html#projects" data-hover data-i18n="nav_projects">// 项目</a></li>
+            <li><a href="../index.html#blog" data-hover data-i18n="nav_blog">// 博客</a></li>
+            <li><a href="../index.html#contact" data-hover data-i18n="nav_contact">// 联系</a></li>
+        </ul>
+        <div class="nav-status">
+            <span class="status-dot"></span>
+            Open to work
+        </div>
+        <button class="nav-hamburger" id="navHamburger" aria-label="Menu">
+            <span></span><span></span><span></span>
+        </button>
+    </nav>
+
+    <div class="mobile-nav" id="mobileNav">
+        <button class="mobile-nav-close" id="mobileNavClose" aria-label="Close menu">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+        <ul class="mobile-nav-links">
+            <li><a href="../index.html#about" data-i18n="nav_about">// 关于</a></li>
+            <li><a href="../index.html#projects" data-i18n="nav_projects">// 项目</a></li>
+            <li><a href="../index.html#blog" data-i18n="nav_blog">// 博客</a></li>
+            <li><a href="../index.html#contact" data-i18n="nav_contact">// 联系</a></li>
+            <li><button class="mobile-lang-btn" id="mobileLangBtn" onclick="toggleLang()" data-i18n="nav_lang">中 / EN</button></li>
+        </ul>
+    </div>
+
+    <div class="detail-toc" id="detailToc">
+        <div class="detail-toc-item" data-target="overview" data-label="Overview"></div>
+        <div class="detail-toc-item" data-target="concurrency" data-label="Concurrency"></div>
+        <div class="detail-toc-item" data-target="reservation" data-label="Reservation"></div>
+        <div class="detail-toc-item" data-target="membership" data-label="Membership"></div>
+        <div class="detail-toc-item" data-target="commerce" data-label="Commerce"></div>
+        <div class="detail-toc-item" data-target="operations" data-label="Operations"></div>
+    </div>
+
+    <section class="detail-hero">
+        <div class="detail-hero-bg"></div>
+        <a href="index.html" class="detail-back magnetic" data-hover>
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            BACK
+        </a>
+        <div class="detail-tag">High-Concurrency Booking · Tornado · Redis</div>
+        <h1 class="detail-title" data-i18n-html="greenbird_title">Greenbird <span class="hl">Badminton</span></h1>
+        <p class="detail-subtitle" data-i18n="greenbird_sub">面向羽毛球馆高峰预订场景的全栈运营平台，以异步 I/O、分布式锁和数据库事务控制预约冲突，并连接会员、支付、商城、赛事与后台运营。</p>
+        <div class="detail-meta">
+            <div class="detail-meta-item"><span class="detail-meta-label">Role</span><span class="detail-meta-value" data-i18n="greenbird_role">全栈开发者</span></div>
+            <div class="detail-meta-item"><span class="detail-meta-label">Focus</span><span class="detail-meta-value" data-i18n="greenbird_focus">并发预约安全</span></div>
+            <div class="detail-meta-item"><span class="detail-meta-label">Stack</span><span class="detail-meta-value">Tornado / Vue 3 / Redis</span></div>
+        </div>
+    </section>
+
+    <div class="detail-image-section reveal">
+        <div class="detail-image-wrap">
+            <div class="detail-image greenbird-hero-image">
+                <img src="../assets/projects/greenbird-badminton/reservation.jpg" alt="Greenbird 羽毛球馆场地与时段预订界面">
+            </div>
+            <div class="detail-image-overlay"></div>
+            <div class="detail-image-dots">
+                <div class="detail-image-dot" style="background:#ff5f57"></div>
+                <div class="detail-image-dot" style="background:#febc2e"></div>
+                <div class="detail-image-dot" style="background:#28c840"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="detail-content">
+        <div class="detail-section reveal" id="overview">
+            <div class="detail-section-label">Overview</div>
+            <h2 class="detail-section-title" data-i18n="greenbird_s1">从“抢场地”出发设计完整运营系统</h2>
+            <p class="detail-text" data-i18n-html="greenbird_p1">Greenbird 以最容易产生竞争条件的<strong>场地时段预订</strong>为核心，向外连接会员账户、余额支付、预约订单、商城库存、赛事报名、球友社区、通知和运营统计。用户侧与管理侧共享同一套业务状态，避免前台显示、资金流水和后台处理互相脱节。</p>
+            <p class="detail-text" data-i18n="greenbird_p2">前端使用 Vue 3、TypeScript、Pinia 与 Element Plus，后端采用 Tornado 异步请求模型，通过 aiomysql 连接池和异步 Redis 客户端处理网络与数据库 I/O。</p>
+            <div class="detail-tech-grid">
+                <div class="detail-tech-badge">Python Tornado</div>
+                <div class="detail-tech-badge">Vue 3</div>
+                <div class="detail-tech-badge">TypeScript</div>
+                <div class="detail-tech-badge">Pinia</div>
+                <div class="detail-tech-badge">MySQL 8</div>
+                <div class="detail-tech-badge">Redis 6</div>
+                <div class="detail-tech-badge">JWT</div>
+                <div class="detail-tech-badge">Nginx</div>
+            </div>
+        </div>
+
+        <div class="detail-section reveal" id="concurrency">
+            <div class="detail-section-label">Concurrency Control</div>
+            <h2 class="detail-section-title" data-i18n="greenbird_s2">四层保护，避免高峰期重复占用同一时段</h2>
+            <p class="detail-text" data-i18n-html="greenbird_p3">同一场地和起止时间首先通过 Redis <code>SET NX EX</code> 获取带 TTL 的分布式锁；释放时执行 Lua 脚本校验锁持有者，避免一个请求误删另一个请求的锁。进入持久化阶段后，MySQL 事务通过 <code>FOR UPDATE</code> 锁定用户、场地、会员账户与冲突预约，再原子创建预约和待支付订单。</p>
+            <div class="greenbird-concurrency">
+                <div class="greenbird-concurrency-step">
+                    <div class="greenbird-concurrency-index">01 / ASYNC I/O</div>
+                    <div class="greenbird-concurrency-title" data-i18n="greenbird_cc1_title">异步接入</div>
+                    <div class="greenbird-concurrency-desc" data-i18n="greenbird_cc1_desc">Tornado 协程配合异步 MySQL 与 Redis 客户端，减少 I/O 等待造成的线程阻塞。</div>
+                </div>
+                <div class="greenbird-concurrency-step">
+                    <div class="greenbird-concurrency-index">02 / DISTRIBUTED LOCK</div>
+                    <div class="greenbird-concurrency-title" data-i18n="greenbird_cc2_title">快速拒绝竞争</div>
+                    <div class="greenbird-concurrency-desc" data-i18n="greenbird_cc2_desc">Redis 原子加锁让同一时段只有一个请求进入核心创建流程，并通过 TTL 自动兜底。</div>
+                </div>
+                <div class="greenbird-concurrency-step">
+                    <div class="greenbird-concurrency-index">03 / TRANSACTION</div>
+                    <div class="greenbird-concurrency-title" data-i18n="greenbird_cc3_title">数据库最终校验</div>
+                    <div class="greenbird-concurrency-desc" data-i18n="greenbird_cc3_desc">事务内复核场地状态、交叉时段、每日上限、余额和会员折扣，失败整体回滚。</div>
+                </div>
+                <div class="greenbird-concurrency-step">
+                    <div class="greenbird-concurrency-index">04 / EXPIRATION</div>
+                    <div class="greenbird-concurrency-title" data-i18n="greenbird_cc4_title">超时释放容量</div>
+                    <div class="greenbird-concurrency-desc" data-i18n="greenbird_cc4_desc">待支付订单到期后同步标记预约失效，使占用时段重新回到可预订状态。</div>
+                </div>
+            </div>
+            <div class="greenbird-note" data-i18n="greenbird_concurrency_note">该架构面向高并发预约冲突设计；项目目前未提供公开压测报告，因此不展示未经验证的 QPS 或吞吐量数字。</div>
+        </div>
+
+        <div class="detail-section reveal" id="reservation">
+            <div class="detail-section-label">Reservation Lifecycle</div>
+            <h2 class="detail-section-title" data-i18n="greenbird_s3">从实时可用状态到支付、取消和退款</h2>
+            <p class="detail-text" data-i18n-html="greenbird_p4">场地页按日期、营业时间和配置化时间粒度生成时段状态，并把 Redis 临时锁与数据库有效预约合并为<strong>可预订、锁定、已预订、不可用</strong>四类结果。选择场地和时段后，系统即时计算时长、会员折扣、应付金额及可用余额。</p>
+            <p class="detail-text" data-i18n="greenbird_p5">创建后的预约进入待支付订单，支付成功后同步扣减会员余额、记录资金流水并发送通知；取消、超时和管理员退款分别进入对应事务流程，保证预约状态、订单状态和余额变化一致。</p>
+        </div>
+
+        <div class="detail-section reveal" id="membership">
+            <div class="detail-section-label">Membership & Community</div>
+            <h2 class="detail-section-title" data-i18n="greenbird_s4">会员账户不只是一个折扣标签</h2>
+            <p class="detail-text" data-i18n="greenbird_p6">会员中心统一管理等级、有效期、余额、积分与完整流水。预约消费、取消退款、商城购买和商城退款都会写入同一账本，保留变更前后余额、积分、原因和操作人，便于用户核对和管理员审计。</p>
+            <p class="detail-text" data-i18n="greenbird_p7">平台还提供活动赛事报名、球友圈、公告和通知中心，使场馆系统同时覆盖交易、组织与社群触达，而不是停留在单一预约工具。</p>
+        </div>
+
+        <div class="detail-section reveal" id="commerce">
+            <div class="detail-section-label">Club Commerce</div>
+            <h2 class="detail-section-title" data-i18n="greenbird_s5">把会员余额延伸到场馆零售</h2>
+            <p class="detail-text" data-i18n-html="greenbird_p8">商城支持商品搜索、购物车、余额支付、到店领取、订单查询和退款申请。下单事务按固定顺序锁定商品，复核库存后原子扣减<strong>库存、会员余额</strong>并生成订单明细，降低并发购买下的超卖和账实不一致风险。</p>
+            <figure class="greenbird-figure">
+                <img src="../assets/projects/greenbird-badminton/shop.jpg" alt="Greenbird 羽毛球馆会员商城界面" loading="lazy">
+                <figcaption class="greenbird-caption" data-i18n="greenbird_shop_caption">场馆商城：商品库存、会员余额、购物车和订单入口集中在同一工作区，支持球馆用品到店领取。</figcaption>
+            </figure>
+        </div>
+
+        <div class="detail-section reveal" id="operations">
+            <div class="detail-section-label">Operations</div>
+            <h2 class="detail-section-title" data-i18n="greenbird_s6">把用户服务与后台运维放在同一数据闭环</h2>
+            <p class="detail-text" data-i18n="greenbird_p9">管理员可以管理用户角色、会员账户、场地状态、预约与退款、商品库存、赛事、公告、通知和社区内容。统计模块按日期聚合预约状态、活跃用户、场地使用率和热门时段，健康检查同时覆盖应用、MySQL 与 Redis。</p>
+            <div class="detail-features">
+                <div class="detail-feature" data-hover>
+                    <div class="detail-feature-icon">01</div>
+                    <div class="detail-feature-title" data-i18n="greenbird_f1_title">并发安全预约</div>
+                    <div class="detail-feature-desc" data-i18n="greenbird_f1_desc">分布式锁、事务复核和超时释放共同保护场地时段。</div>
+                </div>
+                <div class="detail-feature" data-hover>
+                    <div class="detail-feature-icon">02</div>
+                    <div class="detail-feature-title" data-i18n="greenbird_f2_title">会员资金账本</div>
+                    <div class="detail-feature-desc" data-i18n="greenbird_f2_desc">余额、积分、折扣与每笔交易变更都可追踪。</div>
+                </div>
+                <div class="detail-feature" data-hover>
+                    <div class="detail-feature-icon">03</div>
+                    <div class="detail-feature-title" data-i18n="greenbird_f3_title">事务化商城</div>
+                    <div class="detail-feature-desc" data-i18n="greenbird_f3_desc">库存、支付、订单、退款和通知形成一致状态流。</div>
+                </div>
+                <div class="detail-feature" data-hover>
+                    <div class="detail-feature-icon">04</div>
+                    <div class="detail-feature-title" data-i18n="greenbird_f4_title">赛事与社区</div>
+                    <div class="detail-feature-desc" data-i18n="greenbird_f4_desc">支持赛事报名、球友内容、公告和站内通知。</div>
+                </div>
+                <div class="detail-feature" data-hover>
+                    <div class="detail-feature-icon">05</div>
+                    <div class="detail-feature-title" data-i18n="greenbird_f5_title">运营统计</div>
+                    <div class="detail-feature-desc" data-i18n="greenbird_f5_desc">按场地、时段和用户分析预约量与使用率。</div>
+                </div>
+                <div class="detail-feature" data-hover>
+                    <div class="detail-feature-icon">06</div>
+                    <div class="detail-feature-title" data-i18n="greenbird_f6_title">可配置规则</div>
+                    <div class="detail-feature-desc" data-i18n="greenbird_f6_desc">营业时间、预约粒度、每日上限和超时策略均可调整。</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="detail-footer">
+        <div class="detail-footer-copy">&copy; 2026 Eric. Built with <span class="heart">♥</span> and too much coffee.</div>
+        <div class="detail-footer-links">
+            <a href="index.html">← All Projects</a>
+            <a href="https://github.com/powerpan" target="_blank" rel="noopener noreferrer">GitHub</a>
+        </div>
+    </footer>
+
+    <button class="back-to-top" id="backToTop" title="回到顶部" data-i18n-title="back_to_top">↑</button>
+    <script src="../js/i18n.js"></script>
+    <script src="../js/i18n/core.js"></script>
+    <script src="../js/i18n/projects.js"></script>
+    <script src="../js/detail.js"></script>
+</body>
+</html>

@@ -55,14 +55,19 @@ webblog/
 │   ├── interactions.js     # Main page interactivity: marquee, terminal JSON, orbit rings, typing, command palette
 │   ├── features.js         # Main page features: section reveals, 3D cards, counters, TOC dots, scroll handlers
 │   └── detail.js           # Shared detail page logic (cursor, particles, scroll, TOC, back-to-top, reveals, code copy)
-├── projects/                    # Project archive + 6 detail pages
+├── projects/                    # Project archive + 11 detail pages
 │   ├── index.html               # All projects archive
 │   ├── yolo26-multimodal.html   # Multi-head vision detection
 │   ├── metro-gate.html          # RK3588 metro gate detection
 │   ├── neural-vision.html       # YOLO+SAM industrial inspection
 │   ├── dataflow.html            # Flink+Kafka streaming pipeline
 │   ├── pixelmind.html           # Lightweight vision model inference engine
-│   └── stackforge.html          # Vue+PHP scaffolding tool
+│   ├── stackforge.html          # Vue+PHP scaffolding tool
+│   ├── local-rag.html           # Local-first RAG knowledge assistant
+│   ├── moyu-night-library.html  # Full-stack web fiction platform
+│   ├── greenbird-badminton.html # Concurrent badminton venue operations
+│   ├── trading-simulator.html   # Native macOS market simulation game
+│   └── classbridge-suite.html   # Three-product native learning suite
 ├── blog/                   # Blog detail pages (5 files)
 │   ├── transformer-detection.html  # DETR → YOLOv8 演进
 │   ├── turborepo-trpc.html         # Flink+Kafka 流式计算（文件名保留旧名）

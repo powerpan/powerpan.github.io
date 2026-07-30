@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Local Knowledge Assistant — Eric's Project</title>
+    <!-- SEO:START -->
+    <meta name="description" content="本地优先的个人知识库 RAG 系统，集成本地向量检索、CrossEncoder 精排、答案生成、Notion 同步与知识图谱治理。">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://erickk.site/projects/local-rag.html">
+    <link rel="alternate" type="application/rss+xml" title="Eric Blog RSS" href="https://erickk.site/feed.xml">
+    <meta property="og:site_name" content="Eric">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Local Knowledge Assistant">
+    <meta property="og:description" content="本地优先的个人知识库 RAG 系统，集成本地向量检索、CrossEncoder 精排、答案生成、Notion 同步与知识图谱治理。">
+    <meta property="og:url" content="https://erickk.site/projects/local-rag.html">
+    <meta property="og:image" content="https://erickk.site/assets/og-default.svg">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Local Knowledge Assistant">
+    <meta name="twitter:description" content="本地优先的个人知识库 RAG 系统，集成本地向量检索、CrossEncoder 精排、答案生成、Notion 同步与知识图谱治理。">
+    <meta name="twitter:image" content="https://erickk.site/assets/og-default.svg">
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "CreativeWork",
+  "name": "Local Knowledge Assistant",
+  "description": "本地优先的个人知识库 RAG 系统，集成本地向量检索、CrossEncoder 精排、答案生成、Notion 同步与知识图谱治理。",
+  "url": "https://erickk.site/projects/local-rag.html",
+  "author": {
+    "@type": "Person",
+    "name": "Eric Pan",
+    "url": "https://erickk.site",
+    "sameAs": [
+      "https://github.com/powerpan"
+    ]
+  },
+  "image": "https://erickk.site/assets/og-default.svg",
+  "inLanguage": [
+    "zh-CN",
+    "en"
+  ]
+}
+    </script>
+    <!-- SEO:END -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/detail.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+    <style>
+        .rag-hero-image {
+            height: auto;
+            aspect-ratio: 2456 / 1192;
+            background: #0f1117;
+        }
+
+        .rag-hero-image img,
+        .rag-figure img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .rag-figure {
+            margin: 32px 0;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 8px;
+            background: #0f1117;
+            box-shadow: 0 24px 48px rgba(0,0,0,0.28);
+        }
+
+        .rag-figure img {
+            height: auto;
+        }
+
+        .rag-caption {
+            padding: 14px 16px;
+            border-top: 1px solid rgba(255,255,255,0.06);
+            color: var(--text-muted);
+            font-size: 0.72rem;
+            line-height: 1.6;
+        }
+
+        .rag-pipeline {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-top: 28px;
+        }
+
+        .rag-pipeline-step {
+            min-height: 120px;
+            padding: 18px;
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 8px;
+            background: var(--bg-elevated);
+        }
+
+        .rag-pipeline-index {
+            margin-bottom: 18px;
+            color: var(--accent);
+            font-size: 0.68rem;
+        }
+
+        .rag-pipeline-title {
+            margin-bottom: 8px;
+            color: var(--text-primary);
+            font-size: 0.82rem;
+            font-weight: 500;
+        }
+
+        .rag-pipeline-desc {
+            color: var(--text-muted);
+            font-size: 0.7rem;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            .rag-pipeline {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .rag-hero-image {
+                aspect-ratio: 16 / 10;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .rag-pipeline {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="detail-scroll-progress" id="detailScrollProgress"></div>
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor-dot" id="cursorDot"></div>
+    <canvas id="particleCanvas"></canvas>
+
+    <nav id="nav">
+        <a href="../index.html" class="nav-logo magnetic" data-hover>ERIC<span class="dot">.</span></a>
+        <ul class="nav-center">
+            <li><a href="../index.html#about" data-hover data-i18n="nav_about">// 关于</a></li>
+            <li><a href="../index.html#projects" data-hover data-i18n="nav_projects">// 项目</a></li>
+            <li><a href="../index.html#blog" data-hover data-i18n="nav_blog">// 博客</a></li>
+            <li><a href="../index.html#contact" data-hover data-i18n="nav_contact">// 联系</a></li>
+        </ul>
+        <div class="nav-status">
+            <span class="status-dot"></span>
+            Open to work
+        </div>
+        <button class="nav-hamburger" id="navHamburger" aria-label="Menu">
+            <span></span><span></span><span></span>
+        </button>
+    </nav>
+
+    <div class="mobile-nav" id="mobileNav">
+        <button class="mobile-nav-close" id="mobileNavClose" aria-label="Close menu">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+        <ul class="mobile-nav-links">
+            <li><a href="../index.html#about" data-i18n="nav_about">// 关于</a></li>
+            <li><a href="../index.html#projects" data-i18n="nav_projects">// 项目</a></li>
+            <li><a href="../index.html#blog" data-i18n="nav_blog">// 博客</a></li>
+            <li><a href="../index.html#contact" data-i18n="nav_contact">// 联系</a></li>
+            <li><button class="mobile-lang-btn" id="mobileLangBtn" onclick="toggleLang()" data-i18n="nav_lang">中 / EN</button></li>
+        </ul>
+    </div>
+
+    <div class="detail-toc" id="detailToc">
+        <div class="detail-toc-item" data-target="overview" data-label="Overview"></div>
+        <div class="detail-toc-item" data-target="retrieval" data-label="Retrieval"></div>
+        <div class="detail-toc-item" data-target="governance" data-label="Governance"></div>
+        <div class="detail-toc-item" data-target="notion" data-label="Notion"></div>
+        <div class="detail-toc-item" data-target="graph" data-label="Graph"></div>
+        <div class="detail-toc-item" data-target="capabilities" data-label="Capabilities"></div>
+    </div>
+
+    <section class="detail-hero">
+        <div class="detail-hero-bg"></div>
+        <a href="index.html" class="detail-back magnetic" data-hover>
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            BACK
+        </a>
+        <div class="detail-tag">Local AI · RAG · Knowledge Graph</div>
+        <h1 class="detail-title" data-i18n-html="rag_title">Local <span class="hl">Knowledge</span> Assistant</h1>
+        <p class="detail-subtitle" data-i18n="rag_sub">面向个人长期知识资产的本地优先 RAG 系统，把 Markdown、检索、答案生成、Notion 同步与知识图谱治理整合为一个可持续维护的工作台。</p>
+        <div class="detail-meta">
+            <div class="detail-meta-item"><span class="detail-meta-label">Role</span><span class="detail-meta-value" data-i18n="rag_role">独立开发者</span></div>
+            <div class="detail-meta-item"><span class="detail-meta-label">Status</span><span class="detail-meta-value" data-i18n="rag_status">持续迭代</span></div>
+            <div class="detail-meta-item"><span class="detail-meta-label">Stack</span><span class="detail-meta-value">Python / FastAPI / Vue 3</span></div>
+        </div>
+    </section>
+
+    <div class="detail-image-section reveal">
+        <div class="detail-image-wrap">
+            <div class="detail-image rag-hero-image">
+                <img src="../assets/projects/local-rag/query-workbench.png" alt="本地知识库助手的问答与检索工作台">
+            </div>
+            <div class="detail-image-overlay"></div>
+            <div class="detail-image-dots">
+                <div class="detail-image-dot" style="background:#ff5f57"></div>
+                <div class="detail-image-dot" style="background:#febc2e"></div>
+                <div class="detail-image-dot" style="background:#28c840"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="detail-content">
+        <div class="detail-section reveal" id="overview">
+            <div class="detail-section-label">Overview</div>
+            <h2 class="detail-section-title" data-i18n="rag_s1">把个人知识库做成可查询、可治理的系统</h2>
+            <p class="detail-text" data-i18n-html="rag_p1">这个项目以<strong>本地 Markdown</strong> 为知识源，围绕个人长期知识资产建立完整闭环：内容入库、元数据标准化、向量索引、检索精排、答案生成、关系维护与图谱浏览都在同一工作区内完成。</p>
+            <p class="detail-text" data-i18n-html="rag_p2">系统默认优先在本机完成索引和检索；生成答案时可调用 DeepSeek，并在不可用时回退到本地 Ollama。敏感问题也可以关闭云端模型，保持<strong>本地生成</strong>。</p>
+            <div class="detail-tech-grid">
+                <div class="detail-tech-badge">Python</div>
+                <div class="detail-tech-badge">Streamlit</div>
+                <div class="detail-tech-badge">FastAPI</div>
+                <div class="detail-tech-badge">Vue 3</div>
+                <div class="detail-tech-badge">Element Plus</div>
+                <div class="detail-tech-badge">Sentence Transformers</div>
+                <div class="detail-tech-badge">Ollama</div>
+            </div>
+        </div>
+
+        <div class="detail-section reveal" id="retrieval">
+            <div class="detail-section-label">Retrieval Pipeline</div>
+            <h2 class="detail-section-title" data-i18n="rag_s2">从本地文档到可引用答案</h2>
+            <p class="detail-text" data-i18n="rag_p3">检索链路按职责拆分，既保证 Apple Silicon 上的安装稳定性，也保留后续替换索引或模型的空间。</p>
+            <div class="rag-pipeline">
+                <div class="rag-pipeline-step">
+                    <div class="rag-pipeline-index">01 / INGEST</div>
+                    <div class="rag-pipeline-title" data-i18n="rag_pipe1_title">内容切分</div>
+                    <div class="rag-pipeline-desc" data-i18n="rag_pipe1_desc">读取 Markdown 与结构化元数据，按可配置窗口生成文本片段。</div>
+                </div>
+                <div class="rag-pipeline-step">
+                    <div class="rag-pipeline-index">02 / EMBED</div>
+                    <div class="rag-pipeline-title" data-i18n="rag_pipe2_title">本地向量化</div>
+                    <div class="rag-pipeline-desc" data-i18n="rag_pipe2_desc">使用多语言 Sentence Transformer，在本机生成并复用向量。</div>
+                </div>
+                <div class="rag-pipeline-step">
+                    <div class="rag-pipeline-index">03 / RERANK</div>
+                    <div class="rag-pipeline-title" data-i18n="rag_pipe3_title">召回与精排</div>
+                    <div class="rag-pipeline-desc" data-i18n="rag_pipe3_desc">NumPy 余弦召回后使用 CrossEncoder 重排，控制来源分布。</div>
+                </div>
+                <div class="rag-pipeline-step">
+                    <div class="rag-pipeline-index">04 / ANSWER</div>
+                    <div class="rag-pipeline-title" data-i18n="rag_pipe4_title">生成与引用</div>
+                    <div class="rag-pipeline-desc" data-i18n="rag_pipe4_desc">组合相关片段生成答案，并保留来源供核对与继续探索。</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="detail-section reveal" id="governance">
+            <div class="detail-section-label">Knowledge Governance</div>
+            <h2 class="detail-section-title" data-i18n="rag_s3">检索之外，更重要的是知识治理</h2>
+            <p class="detail-text" data-i18n-html="rag_p4">系统把文档类型、状态、scope、summary、普通标签、Wiki 标签和强关系统一进 front matter。内容入库和关系维护都先生成<strong>预览</strong>，确认后才写回文件，避免自动化直接污染知识源。</p>
+            <p class="detail-text" data-i18n-html="rag_p5">多 Workspace 机制让不同知识域共享同一套能力但保持数据隔离；索引重建会复用未变化片段的向量，只处理新增或正文发生变化的内容。</p>
+        </div>
+
+        <div class="detail-section reveal" id="notion">
+            <div class="detail-section-label">Notion Integration</div>
+            <h2 class="detail-section-title" data-i18n="rag_s4">让本地知识与 Notion 保持可控同步</h2>
+            <p class="detail-text" data-i18n-html="rag_p6">项目支持 Notion 导入与同步，后台任务展示实时进度、重试日志和失败原因。同步状态会记录断点，内容哈希用于跳过没有变化的条目；项目与长期问题之间的双向关系也会同步为数据库属性。</p>
+            <p class="detail-text" data-i18n-html="rag_p7">所有写入动作都遵循“预览、确认、执行”的边界，密钥只保存在本地环境文件中，不进入仓库。</p>
+        </div>
+
+        <div class="detail-section reveal" id="graph">
+            <div class="detail-section-label">Knowledge Graph</div>
+            <h2 class="detail-section-title" data-i18n="rag_s5">把分散文档变成可探索的关系网络</h2>
+            <p class="detail-text" data-i18n="rag_p8">知识图谱区分人工确认的强关系、由 scope 和 Wiki 标签形成的弱关系，以及待确认的候选关系。用户可以按文档类型、目录、scope、标签和关键词筛选，也可以聚焦某一节点的一跳关系。</p>
+            <figure class="rag-figure">
+                <img src="../assets/projects/local-rag/knowledge-graph.png" alt="本地知识库助手的知识图谱浏览界面" loading="lazy">
+                <figcaption class="rag-caption" data-i18n="rag_graph_caption">图谱浏览：在同一视图中查看文档节点、强弱关系、筛选统计与节点详情。</figcaption>
+            </figure>
+        </div>
+
+        <div class="detail-section reveal" id="capabilities">
+            <div class="detail-section-label">Capabilities</div>
+            <h2 class="detail-section-title" data-i18n="rag_s6">覆盖知识资产的完整维护流程</h2>
+            <div class="detail-features">
+                <div class="detail-feature" data-hover>
+                    <div class="detail-feature-icon">01</div>
+                    <div class="detail-feature-title" data-i18n="rag_f1_title">问答与检索</div>
+                    <div class="detail-feature-desc" data-i18n="rag_f1_desc">可选检索范围、scope、返回数量、来源上限与精排策略，并决定是否生成答案。</div>
+                </div>
+                <div class="detail-feature" data-hover>
+                    <div class="detail-feature-icon">02</div>
+                    <div class="detail-feature-title" data-i18n="rag_f2_title">内容与索引</div>
+                    <div class="detail-feature-desc" data-i18n="rag_f2_desc">从粘贴文本或本地文件生成规范文档，按需重建索引和知识图谱。</div>
+                </div>
+                <div class="detail-feature" data-hover>
+                    <div class="detail-feature-icon">03</div>
+                    <div class="detail-feature-title" data-i18n="rag_f3_title">标签与关系</div>
+                    <div class="detail-feature-desc" data-i18n="rag_f3_desc">辅助分析标签和候选关系，但把最终写入决定保留给用户。</div>
+                </div>
+                <div class="detail-feature" data-hover>
+                    <div class="detail-feature-icon">04</div>
+                    <div class="detail-feature-title" data-i18n="rag_f4_title">Notion 工作流</div>
+                    <div class="detail-feature-desc" data-i18n="rag_f4_desc">支持导入、后台同步、失败重试、断点恢复和手动上传回退。</div>
+                </div>
+                <div class="detail-feature" data-hover>
+                    <div class="detail-feature-icon">05</div>
+                    <div class="detail-feature-title" data-i18n="rag_f5_title">多工作区</div>
+                    <div class="detail-feature-desc" data-i18n="rag_f5_desc">在一个应用中切换不同知识域，保持索引、配置与状态互相隔离。</div>
+                </div>
+                <div class="detail-feature" data-hover>
+                    <div class="detail-feature-icon">06</div>
+                    <div class="detail-feature-title" data-i18n="rag_f6_title">本地优先</div>
+                    <div class="detail-feature-desc" data-i18n="rag_f6_desc">检索与治理默认留在设备上，云端生成可选，并提供 Ollama 本地回退。</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="detail-footer">
+        <div class="detail-footer-copy">&copy; 2026 Eric. Built with <span class="heart">♥</span> and too much coffee.</div>
+        <div class="detail-footer-links">
+            <a href="index.html">← All Projects</a>
+            <a href="https://github.com/powerpan" target="_blank" rel="noopener noreferrer">GitHub</a>
+        </div>
+    </footer>
+
+    <button class="back-to-top" id="backToTop" title="回到顶部" data-i18n-title="back_to_top">↑</button>
+    <script src="../js/i18n.js"></script>
+    <script src="../js/i18n/core.js"></script>
+    <script src="../js/i18n/projects.js"></script>
+    <script src="../js/detail.js"></script>
+</body>
+</html>

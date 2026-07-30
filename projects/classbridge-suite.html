@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClassBridge Product Suite — Eric's Project</title>
+    <!-- SEO:START -->
+    <meta name="description" content="共享原生 macOS 客户端与云端平台的三条独立学习产品线：ClassBridge Kids、IELTS Speaking Coach 与 Cantonese Speaking Coach。">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://erickk.site/projects/classbridge-suite.html">
+    <link rel="alternate" type="application/rss+xml" title="Eric Blog RSS" href="https://erickk.site/feed.xml">
+    <meta property="og:site_name" content="Eric">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="ClassBridge Product Suite">
+    <meta property="og:description" content="共享原生 macOS 客户端与云端平台的三条独立学习产品线：ClassBridge Kids、IELTS Speaking Coach 与 Cantonese Speaking Coach。">
+    <meta property="og:url" content="https://erickk.site/projects/classbridge-suite.html">
+    <meta property="og:image" content="https://erickk.site/assets/og-default.svg">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="ClassBridge Product Suite">
+    <meta name="twitter:description" content="共享原生 macOS 客户端与云端平台的三条独立学习产品线：ClassBridge Kids、IELTS Speaking Coach 与 Cantonese Speaking Coach。">
+    <meta name="twitter:image" content="https://erickk.site/assets/og-default.svg">
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "CreativeWork",
+  "name": "ClassBridge Product Suite",
+  "description": "共享原生 macOS 客户端与云端平台的三条独立学习产品线：ClassBridge Kids、IELTS Speaking Coach 与 Cantonese Speaking Coach。",
+  "url": "https://erickk.site/projects/classbridge-suite.html",
+  "author": {
+    "@type": "Person",
+    "name": "Eric Pan",
+    "url": "https://erickk.site",
+    "sameAs": [
+      "https://github.com/powerpan"
+    ]
+  },
+  "image": "https://erickk.site/assets/og-default.svg",
+  "inLanguage": [
+    "zh-CN",
+    "en"
+  ]
+}
+    </script>
+    <!-- SEO:END -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/detail.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+    <style>
+        .suite-visual-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 12px;
+        }
+
+        .suite-visual {
+            position: relative;
+            overflow: hidden;
+            aspect-ratio: 3 / 2;
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 8px;
+            background: #f5f5f5;
+        }
+
+        .suite-visual img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .suite-visual-label {
+            position: absolute;
+            left: 12px;
+            bottom: 12px;
+            padding: 7px 10px;
+            border: 1px solid rgba(255,255,255,0.18);
+            border-radius: 6px;
+            background: rgba(8,10,12,0.84);
+            color: #fff;
+            font-size: 0.64rem;
+            line-height: 1;
+            backdrop-filter: blur(10px);
+        }
+
+        .suite-visual-kids {
+            box-shadow: inset 0 -2px 0 #1877f2;
+        }
+
+        .suite-visual-ielts {
+            box-shadow: inset 0 -2px 0 #ff8a35;
+        }
+
+        .suite-visual-cantonese {
+            box-shadow: inset 0 -2px 0 #00b8a9;
+        }
+
+        .suite-identity-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 12px;
+            margin-top: 30px;
+        }
+
+        .suite-identity {
+            min-height: 184px;
+            padding: 20px;
+            border-top: 2px solid var(--product-color);
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .suite-identity-index {
+            margin-bottom: 22px;
+            color: var(--product-color);
+            font-size: 0.68rem;
+        }
+
+        .suite-identity-name {
+            margin-bottom: 8px;
+            color: var(--text-primary);
+            font-family: 'Syne', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+        }
+
+        .suite-identity-target {
+            margin-bottom: 14px;
+            color: var(--product-color);
+            font-size: 0.66rem;
+            line-height: 1.5;
+        }
+
+        .suite-identity-desc {
+            color: var(--text-muted);
+            font-size: 0.7rem;
+            line-height: 1.65;
+        }
+
+        .suite-product-heading {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .suite-product-number {
+            display: grid;
+            width: 40px;
+            height: 40px;
+            place-items: center;
+            flex: 0 0 auto;
+            border: 1px solid var(--product-color);
+            border-radius: 50%;
+            color: var(--product-color);
+            font-size: 0.68rem;
+        }
+
+        .suite-product-name {
+            color: var(--text-primary);
+            font-family: 'Syne', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+        }
+
+        .suite-product-id {
+            margin-top: 4px;
+            color: var(--text-dim);
+            font-size: 0.62rem;
+        }
+
+        .suite-capabilities {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 10px 24px;
+            margin-top: 24px;
+        }
+
+        .suite-capability {
+            position: relative;
+            padding: 12px 0 12px 18px;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            color: var(--text-muted);
+            font-size: 0.69rem;
+            line-height: 1.55;
+        }
+
+        .suite-capability::before {
+            content: '';
+            position: absolute;
+            top: 19px;
+            left: 0;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--product-color);
+        }
+
+        .suite-platform-flow {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 12px;
+            margin-top: 28px;
+        }
+
+        .suite-platform-step {
+            min-height: 156px;
+            padding: 18px;
+            border: 1px solid rgba(255,255,255,0.07);
+            border-radius: 8px;
+            background: var(--bg-elevated);
+        }
+
+        .suite-platform-index {
+            margin-bottom: 20px;
+            color: var(--accent);
+            font-size: 0.65rem;
+        }
+
+        .suite-platform-title {
+            margin-bottom: 8px;
+            color: var(--text-primary);
+            font-size: 0.78rem;
+            font-weight: 500;
+        }
+
+        .suite-platform-desc {
+            color: var(--text-muted);
+            font-size: 0.68rem;
+            line-height: 1.65;
+        }
+
+        .suite-guardrail {
+            margin-top: 24px;
+            padding: 16px 18px;
+            border-left: 2px solid #00b8a9;
+            background: rgba(0,184,169,0.06);
+            color: var(--text-muted);
+            font-size: 0.7rem;
+            line-height: 1.7;
+        }
+
+        @media (max-width: 900px) {
+            .suite-visual-grid,
+            .suite-identity-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .suite-visual {
+                aspect-ratio: 16 / 10;
+            }
+
+            .suite-platform-flow {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 540px) {
+            .detail-title {
+                font-size: 36px;
+                line-height: 1.12;
+            }
+
+            .suite-capabilities,
+            .suite-platform-flow {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="detail-scroll-progress" id="detailScrollProgress"></div>
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor-dot" id="cursorDot"></div>
+    <canvas id="particleCanvas"></canvas>
+
+    <nav id="nav">
+        <a href="../index.html" class="nav-logo magnetic" data-hover>ERIC<span class="dot">.</span></a>
+        <ul class="nav-center">
+            <li><a href="../index.html#about" data-hover data-i18n="nav_about">// 关于</a></li>
+            <li><a href="../index.html#projects" data-hover data-i18n="nav_projects">// 项目</a></li>
+            <li><a href="../index.html#blog" data-hover data-i18n="nav_blog">// 博客</a></li>
+            <li><a href="../index.html#contact" data-hover data-i18n="nav_contact">// 联系</a></li>
+        </ul>
+        <div class="nav-status">
+            <span class="status-dot"></span>
+            Open to work
+        </div>
+        <button class="nav-hamburger" id="navHamburger" aria-label="Menu">
+            <span></span><span></span><span></span>
+        </button>
+    </nav>
+
+    <div class="mobile-nav" id="mobileNav">
+        <button class="mobile-nav-close" id="mobileNavClose" aria-label="Close menu">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+        <ul class="mobile-nav-links">
+            <li><a href="../index.html#about" data-i18n="nav_about">// 关于</a></li>
+            <li><a href="../index.html#projects" data-i18n="nav_projects">// 项目</a></li>
+            <li><a href="../index.html#blog" data-i18n="nav_blog">// 博客</a></li>
+            <li><a href="../index.html#contact" data-i18n="nav_contact">// 联系</a></li>
+            <li><button class="mobile-lang-btn" id="mobileLangBtn" onclick="toggleLang()" data-i18n="nav_lang">中 / EN</button></li>
+        </ul>
+    </div>
+
+    <div class="detail-toc" id="detailToc">
+        <div class="detail-toc-item" data-target="overview" data-label="Overview"></div>
+        <div class="detail-toc-item" data-target="kids" data-label="Kids"></div>
+        <div class="detail-toc-item" data-target="ielts" data-label="IELTS"></div>
+        <div class="detail-toc-item" data-target="cantonese" data-label="Cantonese"></div>
+        <div class="detail-toc-item" data-target="platform" data-label="Platform"></div>
+        <div class="detail-toc-item" data-target="isolation" data-label="Isolation"></div>
+    </div>
+
+    <section class="detail-hero">
+        <div class="detail-hero-bg"></div>
+        <a href="index.html" class="detail-back magnetic" data-hover>
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            BACK
+        </a>
+        <div class="detail-tag">Native macOS · Multi-Product Platform · AI Speech</div>
+        <h1 class="detail-title" data-i18n-html="classbridge_title">ClassBridge <span class="hl">Product Suite</span></h1>
+        <p class="detail-subtitle" data-i18n="classbridge_sub">一个项目体系，三个独立产品：ClassBridge Kids、IELTS Speaking Coach 与 Cantonese Speaking Coach。它们共享工程平台，但拥有不同用户、学习流程和数据边界。</p>
+        <div class="detail-meta">
+            <div class="detail-meta-item"><span class="detail-meta-label">Role</span><span class="detail-meta-value" data-i18n="classbridge_role">独立开发者</span></div>
+            <div class="detail-meta-item"><span class="detail-meta-label">Products</span><span class="detail-meta-value">Kids / IELTS / Cantonese</span></div>
+            <div class="detail-meta-item"><span class="detail-meta-label">Stack</span><span class="detail-meta-value">SwiftUI / FastAPI / React</span></div>
+        </div>
+    </section>
+
+    <div class="detail-image-section reveal">
+        <div class="suite-visual-grid">
+            <figure class="suite-visual suite-visual-kids">
+                <img src="../assets/projects/classbridge-suite/kids-dashboard.jpg" alt="ClassBridge Kids 儿童英语学习首页">
+                <figcaption class="suite-visual-label">01 / CLASSBRIDGE KIDS</figcaption>
+            </figure>
+            <figure class="suite-visual suite-visual-ielts">
+                <img src="../assets/projects/classbridge-suite/ielts-part-training.jpg" alt="IELTS Speaking Coach Part 训练工作台">
+                <figcaption class="suite-visual-label">02 / IELTS SPEAKING</figcaption>
+            </figure>
+            <figure class="suite-visual suite-visual-cantonese">
+                <img src="../assets/projects/classbridge-suite/cantonese-shadowing.jpg" alt="Cantonese Speaking Coach 粤语跟读练习">
+                <figcaption class="suite-visual-label">03 / CANTONESE SPEAKING</figcaption>
+            </figure>
+        </div>
+    </div>
+
+    <div class="detail-content">
+        <div class="detail-section reveal" id="overview">
+            <div class="detail-section-label">Product Boundaries</div>
+            <h2 class="detail-section-title" data-i18n="classbridge_s1">共享代码不等于共享产品</h2>
+            <p class="detail-text" data-i18n-html="classbridge_p1">ClassBridge 采用“<strong>共享平台 + 独立产品上下文</strong>”的结构。三个产品可以在同一个 macOS App 中切换，也复用同一套 Cloud Gateway 和 Admin Web，但每次请求都携带明确的产品身份。</p>
+            <p class="detail-text" data-i18n="classbridge_p2">产品选择会同时决定导航、可见内容、账号授权、调用额度、模型配置、用量日志和业务数据。Kids 的学习进度不会进入 IELTS 报告，IELTS 题库不会出现在粤语课程中。</p>
+            <div class="suite-identity-grid">
+                <div class="suite-identity" style="--product-color:#1877f2">
+                    <div class="suite-identity-index">01 / classbridge_kids</div>
+                    <div class="suite-identity-name">ClassBridge Kids</div>
+                    <div class="suite-identity-target" data-i18n="classbridge_identity1_target">准备进入美国学校的儿童</div>
+                    <div class="suite-identity-desc" data-i18n="classbridge_identity1_desc">围绕年级、校园场景、学科词汇、复习和口语建立分级学习闭环。</div>
+                </div>
+                <div class="suite-identity" style="--product-color:#ff8a35">
+                    <div class="suite-identity-index">02 / ielts_speaking</div>
+                    <div class="suite-identity-name">IELTS Speaking Coach</div>
+                    <div class="suite-identity-target" data-i18n="classbridge_identity2_target">成人 IELTS 口语备考者</div>
+                    <div class="suite-identity-desc" data-i18n="classbridge_identity2_desc">按 Part 1 / 2 / 3 组织录音、转写、AI 反馈、历史洞察和模拟练习。</div>
+                </div>
+                <div class="suite-identity" style="--product-color:#00b8a9">
+                    <div class="suite-identity-index">03 / cantonese_speaking</div>
+                    <div class="suite-identity-name">Cantonese Speaking Coach</div>
+                    <div class="suite-identity-target" data-i18n="classbridge_identity3_target">普通话或英语背景的粤语学习者</div>
+                    <div class="suite-identity-desc" data-i18n="classbridge_identity3_desc">以标准音、粤拼、跟读录音、ASR 对照和实用表达反馈训练粤语听说。</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="detail-section reveal" id="kids" style="--product-color:#1877f2">
+            <div class="detail-section-label">Product 01 · Kids</div>
+            <div class="suite-product-heading">
+                <div class="suite-product-number">01</div>
+                <div>
+                    <div class="suite-product-name">ClassBridge Kids</div>
+                    <div class="suite-product-id">app_id = classbridge_kids</div>
+                </div>
+            </div>
+            <h2 class="detail-section-title" data-i18n="classbridge_kids_s">面向儿童适应新学校环境的分级英语产品</h2>
+            <p class="detail-text" data-i18n="classbridge_kids_p1">Kids 不是通用背词工具，而是把日常对话、课堂用语、学科内容和语音练习放进年级化学习池。首页根据当前等级、待复习内容和已掌握状态决定下一步入口。</p>
+            <p class="detail-text" data-i18n="classbridge_kids_p2">学习引擎通过多轮练习、错题追加和复习日程维护掌握度；标准发音、录音测评、查词和 AI 问答由云端能力支持，正式试用模式不会用本地规则答案伪装成功。</p>
+            <div class="suite-capabilities">
+                <div class="suite-capability" data-i18n="classbridge_kids_f1">按年级组织日常场景与学科内容</div>
+                <div class="suite-capability" data-i18n="classbridge_kids_f2">多轮学习、错题重试与到期复习</div>
+                <div class="suite-capability" data-i18n="classbridge_kids_f3">标准发音、录音测评与词级诊断</div>
+                <div class="suite-capability" data-i18n="classbridge_kids_f4">学习进度、掌握状态与 AI 问答</div>
+            </div>
+        </div>
+
+        <div class="detail-section reveal" id="ielts" style="--product-color:#ff8a35">
+            <div class="detail-section-label">Product 02 · IELTS</div>
+            <div class="suite-product-heading">
+                <div class="suite-product-number">02</div>
+                <div>
+                    <div class="suite-product-name">IELTS Speaking Coach</div>
+                    <div class="suite-product-id">app_id = ielts_speaking</div>
+                </div>
+            </div>
+            <h2 class="detail-section-title" data-i18n="classbridge_ielts_s">把完整口语流程做成可重复训练的工作台</h2>
+            <p class="detail-text" data-i18n="classbridge_ielts_p1">IELTS 产品围绕 Part 1、Part 2 和 Part 3 建立独立题库与练习状态。原生录音、实时波形、Part 2 准备与作答计时、题目语音、ASR 转写和报告生成形成连续闭环。</p>
+            <p class="detail-text" data-i18n="classbridge_ielts_p2">结构化题库按 120 套主题组织 1,200 道题，支持单 Part 训练、整组练习和模考规划。反馈围绕流利与连贯、词汇、语法和发音四个维度，并明确标记为 AI estimated band，而非官方成绩。</p>
+            <div class="suite-capabilities">
+                <div class="suite-capability" data-i18n="classbridge_ielts_f1">Part 1 / 2 / 3 题库与主题套题</div>
+                <div class="suite-capability" data-i18n="classbridge_ielts_f2">原生录音、波形、计时与自动提交</div>
+                <div class="suite-capability" data-i18n="classbridge_ielts_f3">ASR、四维反馈与中英文报告</div>
+                <div class="suite-capability" data-i18n="classbridge_ielts_f4">历史筛选、趋势洞察与模考规划</div>
+            </div>
+        </div>
+
+        <div class="detail-section reveal" id="cantonese" style="--product-color:#00b8a9">
+            <div class="detail-section-label">Product 03 · Cantonese</div>
+            <div class="suite-product-heading">
+                <div class="suite-product-number">03</div>
+                <div>
+                    <div class="suite-product-name">Cantonese Speaking Coach</div>
+                    <div class="suite-product-id">app_id = cantonese_speaking</div>
+                </div>
+            </div>
+            <h2 class="detail-section-title" data-i18n="classbridge_cantonese_s">从听标准音到录音反馈的实用粤语训练</h2>
+            <p class="detail-text" data-i18n="classbridge_cantonese_p1">粤语产品按模块、课程和字词句组织内容，同时展示繁体文本、粤拼和释义。学习者先听粤语标准音，再录音提交，系统依次完成 ASR 转写、目标文本对照和 AI 参考反馈。</p>
+            <p class="detail-text" data-i18n="classbridge_cantonese_p2">反馈报告保留 transcript、疑似问题、自然度建议和下一步练习任务，历史记录可回看。产品聚焦实用跟读与表达，不把当前模型能力包装成精确的六声、声母、韵母或懒音客观评分。</p>
+            <div class="suite-capabilities">
+                <div class="suite-capability" data-i18n="classbridge_cantonese_f1">模块、课程、字词句与粤拼内容</div>
+                <div class="suite-capability" data-i18n="classbridge_cantonese_f2">粤语标准音播放与跟读录音</div>
+                <div class="suite-capability" data-i18n="classbridge_cantonese_f3">ASR transcript 对照与 AI 参考反馈</div>
+                <div class="suite-capability" data-i18n="classbridge_cantonese_f4">历史报告、疑似问题与练习建议</div>
+            </div>
+            <div class="suite-guardrail" data-i18n="classbridge_cantonese_guardrail">能力边界：当前反馈用于辅助学习，不宣称提供粤语六声或声韵母的客观精确评分。</div>
+        </div>
+
+        <div class="detail-section reveal" id="platform">
+            <div class="detail-section-label">Shared Platform</div>
+            <h2 class="detail-section-title" data-i18n="classbridge_platform_s">复用基础设施，把差异留在产品层</h2>
+            <p class="detail-text" data-i18n="classbridge_platform_p1">SwiftUI App 提供原生桌面交互和产品切换，FastAPI Gateway 统一处理账号、内容发布、TTS、ASR、AI、额度和用量，React Admin Web 管理用户、内容、模型 Profile 与运营配置。</p>
+            <p class="detail-text" data-i18n="classbridge_platform_p2">共享服务只负责通用能力。Kids 学习会话、IELTS 题库与报告、粤语课程与反馈分别进入独立领域接口和数据表，避免以大量条件分支把三个业务流程硬塞进同一模型。</p>
+            <div class="suite-platform-flow">
+                <div class="suite-platform-step">
+                    <div class="suite-platform-index">01 / CLIENT</div>
+                    <div class="suite-platform-title" data-i18n="classbridge_arch1_title">原生产品上下文</div>
+                    <div class="suite-platform-desc" data-i18n="classbridge_arch1_desc">产品选择器决定当前导航、工作台、账号和 API 路由。</div>
+                </div>
+                <div class="suite-platform-step">
+                    <div class="suite-platform-index">02 / IDENTITY</div>
+                    <div class="suite-platform-title" data-i18n="classbridge_arch2_title">显式 App ID</div>
+                    <div class="suite-platform-desc" data-i18n="classbridge_arch2_desc">请求携带产品 ID 与版本，令牌和会员关系绑定具体产品。</div>
+                </div>
+                <div class="suite-platform-step">
+                    <div class="suite-platform-index">03 / GATEWAY</div>
+                    <div class="suite-platform-title" data-i18n="classbridge_arch3_title">共享能力路由</div>
+                    <div class="suite-platform-desc" data-i18n="classbridge_arch3_desc">Gateway 按产品选择模型 Profile、Prompt、额度和功能开关。</div>
+                </div>
+                <div class="suite-platform-step">
+                    <div class="suite-platform-index">04 / DOMAIN</div>
+                    <div class="suite-platform-title" data-i18n="classbridge_arch4_title">独立业务数据</div>
+                    <div class="suite-platform-desc" data-i18n="classbridge_arch4_desc">学习进度、题库、课程、报告和状态机保持产品级隔离。</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="detail-section reveal" id="isolation">
+            <div class="detail-section-label">Isolation & Operations</div>
+            <h2 class="detail-section-title" data-i18n="classbridge_isolation_s">一个后台可以运营三种产品，但不能混淆三种用户体验</h2>
+            <p class="detail-text" data-i18n="classbridge_isolation_p">多产品设计覆盖客户端、接口、数据和运营四层。管理端可以统一查看系统健康与成本，但内容审核、模型策略、用户授权和报告质量仍按产品筛选和配置。</p>
+            <div class="detail-features">
+                <div class="detail-feature" data-hover>
+                    <div class="detail-feature-icon">01</div>
+                    <div class="detail-feature-title" data-i18n="classbridge_iso1_title">导航隔离</div>
+                    <div class="detail-feature-desc" data-i18n="classbridge_iso1_desc">切换产品后只显示对应学习入口和工作台。</div>
+                </div>
+                <div class="detail-feature" data-hover>
+                    <div class="detail-feature-icon">02</div>
+                    <div class="detail-feature-title" data-i18n="classbridge_iso2_title">账号与令牌</div>
+                    <div class="detail-feature-desc" data-i18n="classbridge_iso2_desc">会员关系和访问令牌绑定 app_id，不能跨产品复用权限。</div>
+                </div>
+                <div class="detail-feature" data-hover>
+                    <div class="detail-feature-icon">03</div>
+                    <div class="detail-feature-title" data-i18n="classbridge_iso3_title">内容与进度</div>
+                    <div class="detail-feature-desc" data-i18n="classbridge_iso3_desc">学习内容、题库、课程和进度采用各自的数据语义。</div>
+                </div>
+                <div class="detail-feature" data-hover>
+                    <div class="detail-feature-icon">04</div>
+                    <div class="detail-feature-title" data-i18n="classbridge_iso4_title">模型与 Prompt</div>
+                    <div class="detail-feature-desc" data-i18n="classbridge_iso4_desc">每个产品配置独立模型 Profile、反馈政策和功能开关。</div>
+                </div>
+                <div class="detail-feature" data-hover>
+                    <div class="detail-feature-icon">05</div>
+                    <div class="detail-feature-title" data-i18n="classbridge_iso5_title">额度与成本</div>
+                    <div class="detail-feature-desc" data-i18n="classbridge_iso5_desc">TTS、ASR、AI 和报告调用按产品记录额度与用量。</div>
+                </div>
+                <div class="detail-feature" data-hover>
+                    <div class="detail-feature-icon">06</div>
+                    <div class="detail-feature-title" data-i18n="classbridge_iso6_title">内容运营</div>
+                    <div class="detail-feature-desc" data-i18n="classbridge_iso6_desc">Admin Web 按产品管理发布、审核、用户和报告质量。</div>
+                </div>
+            </div>
+            <div class="detail-tech-grid">
+                <div class="detail-tech-badge">SwiftUI</div>
+                <div class="detail-tech-badge">SwiftPM</div>
+                <div class="detail-tech-badge">FastAPI</div>
+                <div class="detail-tech-badge">SQLite</div>
+                <div class="detail-tech-badge">React</div>
+                <div class="detail-tech-badge">Vite</div>
+                <div class="detail-tech-badge">TTS</div>
+                <div class="detail-tech-badge">ASR</div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="detail-footer">
+        <div class="detail-footer-copy">&copy; 2026 Eric. Built with <span class="heart">♥</span> and too much coffee.</div>
+        <div class="detail-footer-links">
+            <a href="index.html">← All Projects</a>
+            <a href="https://github.com/powerpan" target="_blank" rel="noopener noreferrer">GitHub</a>
+        </div>
+    </footer>
+
+    <button class="back-to-top" id="backToTop" title="回到顶部" data-i18n-title="back_to_top">↑</button>
+    <script src="../js/i18n.js"></script>
+    <script src="../js/i18n/core.js"></script>
+    <script src="../js/i18n/projects.js"></script>
+    <script src="../js/detail.js"></script>
+</body>
+</html>

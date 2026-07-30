@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trading Simulator — Eric's Project</title>
+    <!-- SEO:START -->
+    <meta name="description" content="原生 macOS A 股风格模拟交易游戏，具备自研多周期 K 线、分钟级行情、事件链与行业轮动、T+1 交易规则、多存档和挑战评分。">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://erickk.site/projects/trading-simulator.html">
+    <link rel="alternate" type="application/rss+xml" title="Eric Blog RSS" href="https://erickk.site/feed.xml">
+    <meta property="og:site_name" content="Eric">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Trading Simulator">
+    <meta property="og:description" content="原生 macOS A 股风格模拟交易游戏，具备自研多周期 K 线、分钟级行情、事件链与行业轮动、T+1 交易规则、多存档和挑战评分。">
+    <meta property="og:url" content="https://erickk.site/projects/trading-simulator.html">
+    <meta property="og:image" content="https://erickk.site/assets/og-default.svg">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Trading Simulator">
+    <meta name="twitter:description" content="原生 macOS A 股风格模拟交易游戏，具备自研多周期 K 线、分钟级行情、事件链与行业轮动、T+1 交易规则、多存档和挑战评分。">
+    <meta name="twitter:image" content="https://erickk.site/assets/og-default.svg">
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "CreativeWork",
+  "name": "Trading Simulator",
+  "description": "原生 macOS A 股风格模拟交易游戏，具备自研多周期 K 线、分钟级行情、事件链与行业轮动、T+1 交易规则、多存档和挑战评分。",
+  "url": "https://erickk.site/projects/trading-simulator.html",
+  "author": {
+    "@type": "Person",
+    "name": "Eric Pan",
+    "url": "https://erickk.site",
+    "sameAs": [
+      "https://github.com/powerpan"
+    ]
+  },
+  "image": "https://erickk.site/assets/og-default.svg",
+  "inLanguage": [
+    "zh-CN",
+    "en"
+  ]
+}
+    </script>
+    <!-- SEO:END -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/detail.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+    <style>
+        .trading-hero-image {
+            height: auto;
+            aspect-ratio: 2762 / 1636;
+            background: #1c1e1f;
+        }
+
+        .trading-hero-image img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .trading-engine {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-top: 28px;
+        }
+
+        .trading-engine-step {
+            min-height: 148px;
+            padding: 18px;
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 8px;
+            background: var(--bg-elevated);
+        }
+
+        .trading-engine-index {
+            margin-bottom: 18px;
+            color: var(--accent);
+            font-size: 0.68rem;
+        }
+
+        .trading-engine-title {
+            margin-bottom: 8px;
+            color: var(--text-primary);
+            font-size: 0.82rem;
+            font-weight: 500;
+        }
+
+        .trading-engine-desc {
+            color: var(--text-muted);
+            font-size: 0.7rem;
+            line-height: 1.6;
+        }
+
+        .trading-stat-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-top: 28px;
+        }
+
+        .trading-stat {
+            padding: 20px 16px;
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 8px;
+            background: var(--bg-elevated);
+        }
+
+        .trading-stat-value {
+            margin-bottom: 8px;
+            color: var(--accent);
+            font-family: 'Syne', sans-serif;
+            font-size: 1.65rem;
+            font-weight: 700;
+        }
+
+        .trading-stat-label {
+            color: var(--text-muted);
+            font-size: 0.68rem;
+            line-height: 1.5;
+        }
+
+        .trading-note {
+            margin-top: 24px;
+            padding: 14px 16px;
+            border-left: 2px solid var(--accent);
+            background: rgba(0,255,136,0.04);
+            color: var(--text-muted);
+            font-size: 0.72rem;
+            line-height: 1.7;
+        }
+
+        @media (max-width: 768px) {
+            .trading-engine,
+            .trading-stat-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .trading-hero-image {
+                aspect-ratio: 16 / 10;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .trading-engine,
+            .trading-stat-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="detail-scroll-progress" id="detailScrollProgress"></div>
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor-dot" id="cursorDot"></div>
+    <canvas id="particleCanvas"></canvas>
+
+    <nav id="nav">
+        <a href="../index.html" class="nav-logo magnetic" data-hover>ERIC<span class="dot">.</span></a>
+        <ul class="nav-center">
+            <li><a href="../index.html#about" data-hover data-i18n="nav_about">// 关于</a></li>
+            <li><a href="../index.html#projects" data-hover data-i18n="nav_projects">// 项目</a></li>
+            <li><a href="../index.html#blog" data-hover data-i18n="nav_blog">// 博客</a></li>
+            <li><a href="../index.html#contact" data-hover data-i18n="nav_contact">// 联系</a></li>
+        </ul>
+        <div class="nav-status">
+            <span class="status-dot"></span>
+            Open to work
+        </div>
+        <button class="nav-hamburger" id="navHamburger" aria-label="Menu">
+            <span></span><span></span><span></span>
+        </button>
+    </nav>
+
+    <div class="mobile-nav" id="mobileNav">
+        <button class="mobile-nav-close" id="mobileNavClose" aria-label="Close menu">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+        <ul class="mobile-nav-links">
+            <li><a href="../index.html#about" data-i18n="nav_about">// 关于</a></li>
+            <li><a href="../index.html#projects" data-i18n="nav_projects">// 项目</a></li>
+            <li><a href="../index.html#blog" data-i18n="nav_blog">// 博客</a></li>
+            <li><a href="../index.html#contact" data-i18n="nav_contact">// 联系</a></li>
+            <li><button class="mobile-lang-btn" id="mobileLangBtn" onclick="toggleLang()" data-i18n="nav_lang">中 / EN</button></li>
+        </ul>
+    </div>
+
+    <div class="detail-toc" id="detailToc">
+        <div class="detail-toc-item" data-target="overview" data-label="Overview"></div>
+        <div class="detail-toc-item" data-target="market" data-label="Market"></div>
+        <div class="detail-toc-item" data-target="chart" data-label="Chart"></div>
+        <div class="detail-toc-item" data-target="trading" data-label="Trading"></div>
+        <div class="detail-toc-item" data-target="challenge" data-label="Challenge"></div>
+        <div class="detail-toc-item" data-target="architecture" data-label="Architecture"></div>
+    </div>
+
+    <section class="detail-hero">
+        <div class="detail-hero-bg"></div>
+        <a href="index.html" class="detail-back magnetic" data-hover>
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            BACK
+        </a>
+        <div class="detail-tag">Native macOS · Market Engine · Simulation Game</div>
+        <h1 class="detail-title" data-i18n-html="trading_title">Trading <span class="hl">Simulator</span></h1>
+        <p class="detail-subtitle" data-i18n="trading_sub">“股海新手村”是一款原生 macOS 模拟交易游戏，以确定性市场生成、A 股风格交易规则、事件驱动行情和挑战评分构成可重复推演的单机交易体验。</p>
+        <div class="detail-meta">
+            <div class="detail-meta-item"><span class="detail-meta-label">Role</span><span class="detail-meta-value" data-i18n="trading_role">独立开发者</span></div>
+            <div class="detail-meta-item"><span class="detail-meta-label">Platform</span><span class="detail-meta-value">macOS 13+</span></div>
+            <div class="detail-meta-item"><span class="detail-meta-label">Stack</span><span class="detail-meta-value">SwiftUI / Fastify / SQLite</span></div>
+        </div>
+    </section>
+
+    <div class="detail-image-section reveal">
+        <div class="detail-image-wrap">
+            <div class="detail-image trading-hero-image">
+                <img src="../assets/projects/trading-simulator/trading-terminal.jpg" alt="股海新手村原生 macOS 模拟交易终端">
+            </div>
+            <div class="detail-image-overlay"></div>
+            <div class="detail-image-dots">
+                <div class="detail-image-dot" style="background:#ff5f57"></div>
+                <div class="detail-image-dot" style="background:#febc2e"></div>
+                <div class="detail-image-dot" style="background:#28c840"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="detail-content">
+        <div class="detail-section reveal" id="overview">
+            <div class="detail-section-label">Overview</div>
+            <h2 class="detail-section-title" data-i18n="trading_s1">不接真实行情，也能形成可信的交易决策环境</h2>
+            <p class="detail-text" data-i18n-html="trading_p1">项目将界面、市场生成和交易结算分成清晰边界：SwiftUI 原生 App 负责多窗口终端体验，Fastify 服务端负责<strong>行情、持仓、费用、事件、挑战和存档</strong>等权威状态，SQLite 保存每局游戏的完整进度。</p>
+            <p class="detail-text" data-i18n="trading_p2">玩家可以在沙盒模式自由推进市场，也可以进入固定交易日挑战，在资产目标、最大回撤和交易次数之间做风险权衡。所有股票、价格、新闻和事件均为虚构内容。</p>
+            <div class="detail-tech-grid">
+                <div class="detail-tech-badge">SwiftUI</div>
+                <div class="detail-tech-badge">Swift Canvas</div>
+                <div class="detail-tech-badge">Node.js</div>
+                <div class="detail-tech-badge">Fastify</div>
+                <div class="detail-tech-badge">TypeScript</div>
+                <div class="detail-tech-badge">SQLite</div>
+                <div class="detail-tech-badge">React</div>
+                <div class="detail-tech-badge">Vitest</div>
+            </div>
+        </div>
+
+        <div class="detail-section reveal" id="market">
+            <div class="detail-section-label">Market Simulation</div>
+            <h2 class="detail-section-title" data-i18n="trading_s2">行情不是随机游走，而是多个市场因子的叠加</h2>
+            <p class="detail-text" data-i18n-html="trading_p3">每个存档保存独立的市场种子、市场环境与难度快照。行情生成同时考虑大盘情绪、资金风格、成交热度、行业轮动、个股波动、事件影响和事件链延续，并在不同板块上应用 10% 或 20% 的涨跌停边界。</p>
+            <div class="trading-engine">
+                <div class="trading-engine-step">
+                    <div class="trading-engine-index">01 / REGIME</div>
+                    <div class="trading-engine-title" data-i18n="trading_engine1_title">市场环境</div>
+                    <div class="trading-engine-desc" data-i18n="trading_engine1_desc">趋势漂移、波动、相关性、流动性和正负事件偏置共同定义一局市场。</div>
+                </div>
+                <div class="trading-engine-step">
+                    <div class="trading-engine-index">02 / SECTOR</div>
+                    <div class="trading-engine-title" data-i18n="trading_engine2_title">行业结构</div>
+                    <div class="trading-engine-desc" data-i18n="trading_engine2_desc">行业指数跟踪涨跌、情绪、成交热度和事件冲击，形成轮动线索。</div>
+                </div>
+                <div class="trading-engine-step">
+                    <div class="trading-engine-index">03 / EVENT</div>
+                    <div class="trading-engine-title" data-i18n="trading_engine3_title">事件驱动</div>
+                    <div class="trading-engine-desc" data-i18n="trading_engine3_desc">市场、行业和个股事件带有方向、强度与持续天数，并可形成事件链和预期反转。</div>
+                </div>
+                <div class="trading-engine-step">
+                    <div class="trading-engine-index">04 / PRICE</div>
+                    <div class="trading-engine-title" data-i18n="trading_engine4_title">价格与成交量</div>
+                    <div class="trading-engine-desc" data-i18n="trading_engine4_desc">分钟价格受日 K 约束，成交量体现开收盘活跃、午间回流与事件脉冲。</div>
+                </div>
+            </div>
+            <div class="trading-stat-grid">
+                <div class="trading-stat">
+                    <div class="trading-stat-value">120</div>
+                    <div class="trading-stat-label" data-i18n="trading_stat1">虚拟股票</div>
+                </div>
+                <div class="trading-stat">
+                    <div class="trading-stat-value">40</div>
+                    <div class="trading-stat-label" data-i18n="trading_stat2">行业分类</div>
+                </div>
+                <div class="trading-stat">
+                    <div class="trading-stat-value">180+</div>
+                    <div class="trading-stat-label" data-i18n="trading_stat3">事件模板</div>
+                </div>
+                <div class="trading-stat">
+                    <div class="trading-stat-value">240</div>
+                    <div class="trading-stat-label" data-i18n="trading_stat4">每日分钟线</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="detail-section reveal" id="chart">
+            <div class="detail-section-label">Native Charting</div>
+            <h2 class="detail-section-title" data-i18n="trading_s3">为桌面终端自绘多周期 K 线</h2>
+            <p class="detail-text" data-i18n-html="trading_p4">K 线图由 SwiftUI Canvas 绘制，支持 1、5、15、30、60 分钟以及日、周、月周期。界面同步呈现蜡烛、MA5 / MA10 / MA20、成交量、成交量均线、价格轴、时间轴、最新价线和十字光标读数。</p>
+            <p class="detail-text" data-i18n="trading_p5">1 分钟线只暴露模拟时钟已经走过的数据，其他分钟周期由可见分钟线聚合，周 K 和月 K 则由日 K 聚合。玩家可以切换 30、45、60 根范围，并进行平移、缩放和自动播放。</p>
+        </div>
+
+        <div class="detail-section reveal" id="trading">
+            <div class="detail-section-label">Trading Integrity</div>
+            <h2 class="detail-section-title" data-i18n="trading_s4">交易规则和多窗口一致性由服务端统一保证</h2>
+            <p class="detail-text" data-i18n-html="trading_p6">交易引擎执行 100 股整数手、T+1、现金与可卖持仓校验、佣金、印花税以及涨跌停方向限制。买卖在 SQLite 事务中更新账户、持仓和交易记录，随后重算市值、总资产、收益率与最大回撤。</p>
+            <p class="detail-text" data-i18n-html="trading_p7">每个交易请求带有<strong>幂等键</strong>，重复提交只返回已有成交；写操作同时校验 <code>expectedStateVersion</code>，过期窗口不能覆盖较新的游戏状态。主窗口与持仓、下单、图表等独立窗口因此可以共享同一权威状态。</p>
+        </div>
+
+        <div class="detail-section reveal" id="challenge">
+            <div class="detail-section-label">Challenge & Saves</div>
+            <h2 class="detail-section-title" data-i18n="trading_s5">让策略在不同市场环境下接受可比较的挑战</h2>
+            <p class="detail-text" data-i18n="trading_p8">系统提供 20 日热身、60 日新手和 120 日稳健成长挑战，综合资产目标、最大回撤和最低交易次数进行结算，输出分数与 S、A、B、C 评级。挑战目标会随存档难度调整，沙盒模式则不受强制结束条件约束。</p>
+            <p class="detail-text" data-i18n="trading_p9">多存档支持创建、载入、重命名和删除。相同内容包在不同市场种子、市场环境和难度下会生成不同的行情路径，同时保持同一存档可重复推进和验证。</p>
+        </div>
+
+        <div class="detail-section reveal" id="architecture">
+            <div class="detail-section-label">Architecture & Content</div>
+            <h2 class="detail-section-title" data-i18n="trading_s6">原生终端、领域引擎和可维护内容包</h2>
+            <p class="detail-text" data-i18n="trading_p10">原生 App 的 ObservableObject Store 连接 Fastify API，服务端领域层统一处理市场、订单、组合、事件、挑战和存档，再写入本地 SQLite。旧 React 前端保留为调试入口，不承担默认交付。</p>
+            <p class="detail-text" data-i18n="trading_p11">行业、股票、市场环境、难度和事件模板存放在 CSV 内容包中。后端启动时验证表头、唯一 ID、行业引用、枚举值和数量下限，使扩充内容不需要修改核心交易代码。</p>
+            <div class="detail-features">
+                <div class="detail-feature" data-hover>
+                    <div class="detail-feature-icon">01</div>
+                    <div class="detail-feature-title" data-i18n="trading_f1_title">原生多窗口</div>
+                    <div class="detail-feature-desc" data-i18n="trading_f1_desc">主终端与图表、持仓、交易、新闻、事件和存档窗口共享状态。</div>
+                </div>
+                <div class="detail-feature" data-hover>
+                    <div class="detail-feature-icon">02</div>
+                    <div class="detail-feature-title" data-i18n="trading_f2_title">多周期行情</div>
+                    <div class="detail-feature-desc" data-i18n="trading_f2_desc">分钟、日、周、月 K 线遵循统一价格与成交量约束。</div>
+                </div>
+                <div class="detail-feature" data-hover>
+                    <div class="detail-feature-icon">03</div>
+                    <div class="detail-feature-title" data-i18n="trading_f3_title">事件链</div>
+                    <div class="detail-feature-desc" data-i18n="trading_f3_desc">虚构新闻影响市场、行业和个股，并随交易日衰减或反转。</div>
+                </div>
+                <div class="detail-feature" data-hover>
+                    <div class="detail-feature-icon">04</div>
+                    <div class="detail-feature-title" data-i18n="trading_f4_title">交易一致性</div>
+                    <div class="detail-feature-desc" data-i18n="trading_f4_desc">事务、幂等键和状态版本共同保护账户与多窗口操作。</div>
+                </div>
+                <div class="detail-feature" data-hover>
+                    <div class="detail-feature-icon">05</div>
+                    <div class="detail-feature-title" data-i18n="trading_f5_title">挑战评分</div>
+                    <div class="detail-feature-desc" data-i18n="trading_f5_desc">同时衡量收益、回撤和交易完成度，而非只看最终资产。</div>
+                </div>
+                <div class="detail-feature" data-hover>
+                    <div class="detail-feature-icon">06</div>
+                    <div class="detail-feature-title" data-i18n="trading_f6_title">本地存档</div>
+                    <div class="detail-feature-desc" data-i18n="trading_f6_desc">游戏数据仅保存在本地 SQLite，不采集真实身份信息。</div>
+                </div>
+            </div>
+            <div class="trading-note" data-i18n="trading_compliance">本项目仅用于游戏和学习，不接入真实行情、真实交易或证券账户，也不提供投资建议或收益承诺。</div>
+        </div>
+    </div>
+
+    <footer class="detail-footer">
+        <div class="detail-footer-copy">&copy; 2026 Eric. Built with <span class="heart">♥</span> and too much coffee.</div>
+        <div class="detail-footer-links">
+            <a href="index.html">← All Projects</a>
+            <a href="https://github.com/powerpan" target="_blank" rel="noopener noreferrer">GitHub</a>
+        </div>
+    </footer>
+
+    <button class="back-to-top" id="backToTop" title="回到顶部" data-i18n-title="back_to_top">↑</button>
+    <script src="../js/i18n.js"></script>
+    <script src="../js/i18n/core.js"></script>
+    <script src="../js/i18n/projects.js"></script>
+    <script src="../js/detail.js"></script>
+</body>
+</html>

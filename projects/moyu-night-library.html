@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moyu Night Library — Eric's Project</title>
+    <!-- SEO:START -->
+    <meta name="description" content="墨语是一套基于 RuoYi 的网络文学全栈平台，覆盖读者发现与阅读、作者创作投稿、内容审核治理及 Docker 部署。">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://erickk.site/projects/moyu-night-library.html">
+    <link rel="alternate" type="application/rss+xml" title="Eric Blog RSS" href="https://erickk.site/feed.xml">
+    <meta property="og:site_name" content="Eric">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Moyu Night Library">
+    <meta property="og:description" content="墨语是一套基于 RuoYi 的网络文学全栈平台，覆盖读者发现与阅读、作者创作投稿、内容审核治理及 Docker 部署。">
+    <meta property="og:url" content="https://erickk.site/projects/moyu-night-library.html">
+    <meta property="og:image" content="https://erickk.site/assets/og-default.svg">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Moyu Night Library">
+    <meta name="twitter:description" content="墨语是一套基于 RuoYi 的网络文学全栈平台，覆盖读者发现与阅读、作者创作投稿、内容审核治理及 Docker 部署。">
+    <meta name="twitter:image" content="https://erickk.site/assets/og-default.svg">
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "CreativeWork",
+  "name": "Moyu Night Library",
+  "description": "墨语是一套基于 RuoYi 的网络文学全栈平台，覆盖读者发现与阅读、作者创作投稿、内容审核治理及 Docker 部署。",
+  "url": "https://erickk.site/projects/moyu-night-library.html",
+  "author": {
+    "@type": "Person",
+    "name": "Eric Pan",
+    "url": "https://erickk.site",
+    "sameAs": [
+      "https://github.com/powerpan"
+    ]
+  },
+  "image": "https://erickk.site/assets/og-default.svg",
+  "inLanguage": [
+    "zh-CN",
+    "en"
+  ]
+}
+    </script>
+    <!-- SEO:END -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/detail.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+    <style>
+        .moyu-hero-image {
+            height: auto;
+            aspect-ratio: 2454 / 1452;
+            background: #0b1020;
+        }
+
+        .moyu-hero-image img,
+        .moyu-figure img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .moyu-figure {
+            margin: 32px 0;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 8px;
+            background: #0b1020;
+            box-shadow: 0 24px 48px rgba(0,0,0,0.28);
+        }
+
+        .moyu-figure img {
+            height: auto;
+        }
+
+        .moyu-caption {
+            padding: 14px 16px;
+            border-top: 1px solid rgba(255,255,255,0.06);
+            color: var(--text-muted);
+            font-size: 0.72rem;
+            line-height: 1.6;
+        }
+
+        .moyu-flow {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-top: 28px;
+        }
+
+        .moyu-flow-step {
+            min-height: 132px;
+            padding: 18px;
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 8px;
+            background: var(--bg-elevated);
+        }
+
+        .moyu-flow-index {
+            margin-bottom: 18px;
+            color: var(--accent);
+            font-size: 0.68rem;
+        }
+
+        .moyu-flow-title {
+            margin-bottom: 8px;
+            color: var(--text-primary);
+            font-size: 0.82rem;
+            font-weight: 500;
+        }
+
+        .moyu-flow-desc {
+            color: var(--text-muted);
+            font-size: 0.7rem;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            .moyu-flow {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .moyu-hero-image {
+                aspect-ratio: 16 / 10;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .moyu-flow {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="detail-scroll-progress" id="detailScrollProgress"></div>
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor-dot" id="cursorDot"></div>
+    <canvas id="particleCanvas"></canvas>
+
+    <nav id="nav">
+        <a href="../index.html" class="nav-logo magnetic" data-hover>ERIC<span class="dot">.</span></a>
+        <ul class="nav-center">
+            <li><a href="../index.html#about" data-hover data-i18n="nav_about">// 关于</a></li>
+            <li><a href="../index.html#projects" data-hover data-i18n="nav_projects">// 项目</a></li>
+            <li><a href="../index.html#blog" data-hover data-i18n="nav_blog">// 博客</a></li>
+            <li><a href="../index.html#contact" data-hover data-i18n="nav_contact">// 联系</a></li>
+        </ul>
+        <div class="nav-status">
+            <span class="status-dot"></span>
+            Open to work
+        </div>
+        <button class="nav-hamburger" id="navHamburger" aria-label="Menu">
+            <span></span><span></span><span></span>
+        </button>
+    </nav>
+
+    <div class="mobile-nav" id="mobileNav">
+        <button class="mobile-nav-close" id="mobileNavClose" aria-label="Close menu">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+        <ul class="mobile-nav-links">
+            <li><a href="../index.html#about" data-i18n="nav_about">// 关于</a></li>
+            <li><a href="../index.html#projects" data-i18n="nav_projects">// 项目</a></li>
+            <li><a href="../index.html#blog" data-i18n="nav_blog">// 博客</a></li>
+            <li><a href="../index.html#contact" data-i18n="nav_contact">// 联系</a></li>
+            <li><button class="mobile-lang-btn" id="mobileLangBtn" onclick="toggleLang()" data-i18n="nav_lang">中 / EN</button></li>
+        </ul>
+    </div>
+
+    <div class="detail-toc" id="detailToc">
+        <div class="detail-toc-item" data-target="overview" data-label="Overview"></div>
+        <div class="detail-toc-item" data-target="reader" data-label="Reader"></div>
+        <div class="detail-toc-item" data-target="author" data-label="Author"></div>
+        <div class="detail-toc-item" data-target="governance" data-label="Governance"></div>
+        <div class="detail-toc-item" data-target="experience" data-label="Experience"></div>
+        <div class="detail-toc-item" data-target="architecture" data-label="Architecture"></div>
+    </div>
+
+    <section class="detail-hero">
+        <div class="detail-hero-bg"></div>
+        <a href="index.html" class="detail-back magnetic" data-hover>
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            BACK
+        </a>
+        <div class="detail-tag">Content Platform · RuoYi · Full-stack</div>
+        <h1 class="detail-title" data-i18n-html="moyu_title">Moyu <span class="hl">Night Library</span></h1>
+        <p class="detail-subtitle" data-i18n="moyu_sub">以“夜书阁”为视觉主题的网络文学全栈平台，把读者发现与阅读、作者创作投稿、内容审核治理连接成一条完整业务链路。</p>
+        <div class="detail-meta">
+            <div class="detail-meta-item"><span class="detail-meta-label">Role</span><span class="detail-meta-value" data-i18n="moyu_role">全栈开发者</span></div>
+            <div class="detail-meta-item"><span class="detail-meta-label">Status</span><span class="detail-meta-value" data-i18n="moyu_status">功能迭代中</span></div>
+            <div class="detail-meta-item"><span class="detail-meta-label">Stack</span><span class="detail-meta-value">Spring Boot / Vue 2 / MySQL</span></div>
+        </div>
+    </section>
+
+    <div class="detail-image-section reveal">
+        <div class="detail-image-wrap">
+            <div class="detail-image moyu-hero-image">
+                <img src="../assets/projects/moyu-night-library/home.jpg" alt="墨语夜书阁首页与书籍展示">
+            </div>
+            <div class="detail-image-overlay"></div>
+            <div class="detail-image-dots">
+                <div class="detail-image-dot" style="background:#ff5f57"></div>
+                <div class="detail-image-dot" style="background:#febc2e"></div>
+                <div class="detail-image-dot" style="background:#28c840"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="detail-content">
+        <div class="detail-section reveal" id="overview">
+            <div class="detail-section-label">Overview</div>
+            <h2 class="detail-section-title" data-i18n="moyu_s1">让创作、审核与阅读形成同一套内容闭环</h2>
+            <p class="detail-text" data-i18n-html="moyu_p1">墨语不是单一的阅读页面，而是一套覆盖内容生产、平台治理与读者消费的<strong>网络文学业务系统</strong>。读者端和作者工作台由 <code>novel-app</code> 承载，运营管理端由 <code>ruoyi-ui</code> 提供，二者共享 Spring Boot API 与统一权限体系。</p>
+            <p class="detail-text" data-i18n="moyu_p2">平台围绕书籍、章节、草稿、书架、订阅、评论、评分、举报、审核和通知等核心对象组织功能，使每一次内容变化都能进入后续的审核、分发和反馈流程。</p>
+            <div class="detail-tech-grid">
+                <div class="detail-tech-badge">Spring Boot 2.5</div>
+                <div class="detail-tech-badge">RuoYi 3.8.7</div>
+                <div class="detail-tech-badge">Vue 2</div>
+                <div class="detail-tech-badge">Element UI</div>
+                <div class="detail-tech-badge">MyBatis</div>
+                <div class="detail-tech-badge">MySQL</div>
+                <div class="detail-tech-badge">Redis</div>
+                <div class="detail-tech-badge">Docker</div>
+            </div>
+        </div>
+
+        <div class="detail-section reveal" id="reader">
+            <div class="detail-section-label">Reader Journey</div>
+            <h2 class="detail-section-title" data-i18n="moyu_s2">从发现一本书到持续追读</h2>
+            <p class="detail-text" data-i18n="moyu_p3">读者可以通过推荐、题材、榜单、搜索和历史记录发现内容，再进入书籍详情与阅读器。书架、订阅、阅读进度、阅读历史和通知共同维持跨会话的连续阅读体验；评分、点赞、评论和举报则把反馈带回平台治理流程。</p>
+            <figure class="moyu-figure">
+                <img src="../assets/projects/moyu-night-library/login.jpg" alt="墨语登录与注册界面" loading="lazy">
+                <figcaption class="moyu-caption" data-i18n="moyu_login_caption">统一身份入口：登录与注册沿用夜书阁视觉语言，并作为书架、订阅、创作和通知等个性化能力的起点。</figcaption>
+            </figure>
+        </div>
+
+        <div class="detail-section reveal" id="author">
+            <div class="detail-section-label">Author Workflow</div>
+            <h2 class="detail-section-title" data-i18n="moyu_s3">把写作过程做成可恢复、可追踪的工作流</h2>
+            <p class="detail-text" data-i18n-html="moyu_p4">作者侧覆盖资料、作品、封面、章节和草稿管理，并支持 TXT、DOCX 章节导入。编辑器包含<strong>自动保存、版本历史与敏感内容预览</strong>，降低长篇创作时因页面中断、误操作或内容规则不明确带来的损失。</p>
+            <p class="detail-text" data-i18n="moyu_p5">书籍与章节提交后进入审核状态，作者可以持续查看处理结果和通知；被退回的内容保留原因与修改入口，使创作和平台规则之间形成明确反馈。</p>
+        </div>
+
+        <div class="detail-section reveal" id="governance">
+            <div class="detail-section-label">Content Governance</div>
+            <h2 class="detail-section-title" data-i18n="moyu_s4">敏感提醒优先，关键决定保留人工审核</h2>
+            <p class="detail-text" data-i18n-html="moyu_p6">治理端提供书籍与章节审核、批量处理、驳回原因模板、敏感词命中上下文、风险排序和运营看板。敏感内容采用<strong>提醒加人工复核</strong>策略，而不是简单自动拒绝；词库、白名单、命中记录和审核快照为决策提供依据。</p>
+            <p class="detail-text" data-i18n="moyu_p7">举报流程支持聚合查看、隐藏与恢复内容、结果通知及操作留痕，让读者反馈能够进入可审计的治理闭环。</p>
+        </div>
+
+        <div class="detail-section reveal" id="experience">
+            <div class="detail-section-label">Product Experience</div>
+            <h2 class="detail-section-title" data-i18n="moyu_s5">用“夜读”主题统一发现、阅读与榜单</h2>
+            <p class="detail-text" data-i18n="moyu_p8">界面以深色夜景、暖金色书页和实体书封为核心视觉信号，同时把搜索、题材导航、书架和创作入口放在稳定位置。榜单采用星座式陈列强化名次与书籍的视觉关联，但不改变常规筛选和列表操作。</p>
+            <figure class="moyu-figure">
+                <img src="../assets/projects/moyu-night-library/ranking.jpg" alt="墨语夜读榜单与星座式书籍排名" loading="lazy">
+                <figcaption class="moyu-caption" data-i18n="moyu_ranking_caption">夜读榜单：人气、新书、字数和章节四类视图，通过书籍封面与金银铜排名节点建立清晰层级。</figcaption>
+            </figure>
+        </div>
+
+        <div class="detail-section reveal" id="architecture">
+            <div class="detail-section-label">Architecture & Delivery</div>
+            <h2 class="detail-section-title" data-i18n="moyu_s6">双前端、统一 API 与可复现部署</h2>
+            <p class="detail-text" data-i18n="moyu_p9">系统沿用 RuoYi 的模块边界，把读者与作者体验、运营管理、领域业务、认证授权和基础设施分层。MySQL 保存业务数据，Redis 承担会话与热点状态，JWT 连接前后端身份；Docker Compose 用于组合后端、数据库与前端运行环境。</p>
+            <div class="moyu-flow">
+                <div class="moyu-flow-step">
+                    <div class="moyu-flow-index">01 / EXPERIENCE</div>
+                    <div class="moyu-flow-title" data-i18n="moyu_layer1_title">读者与作者应用</div>
+                    <div class="moyu-flow-desc" data-i18n="moyu_layer1_desc">发现、阅读、书架、订阅、创作、草稿和投稿集中在 novel-app。</div>
+                </div>
+                <div class="moyu-flow-step">
+                    <div class="moyu-flow-index">02 / OPERATIONS</div>
+                    <div class="moyu-flow-title" data-i18n="moyu_layer2_title">运营管理端</div>
+                    <div class="moyu-flow-desc" data-i18n="moyu_layer2_desc">审核、敏感词、举报、通知与看板通过 ruoyi-ui 管理。</div>
+                </div>
+                <div class="moyu-flow-step">
+                    <div class="moyu-flow-index">03 / DOMAIN API</div>
+                    <div class="moyu-flow-title" data-i18n="moyu_layer3_title">小说领域服务</div>
+                    <div class="moyu-flow-desc" data-i18n="moyu_layer3_desc">novel-system 管理书籍、章节、草稿、互动和治理规则。</div>
+                </div>
+                <div class="moyu-flow-step">
+                    <div class="moyu-flow-index">04 / PLATFORM</div>
+                    <div class="moyu-flow-title" data-i18n="moyu_layer4_title">基础平台</div>
+                    <div class="moyu-flow-desc" data-i18n="moyu_layer4_desc">Spring Boot、MySQL、Redis、JWT 与 Docker 提供运行基础。</div>
+                </div>
+            </div>
+            <div class="detail-features">
+                <div class="detail-feature" data-hover>
+                    <div class="detail-feature-icon">01</div>
+                    <div class="detail-feature-title" data-i18n="moyu_f1_title">内容发现</div>
+                    <div class="detail-feature-desc" data-i18n="moyu_f1_desc">推荐、题材、榜单、搜索、热词和历史记录共同支持找书。</div>
+                </div>
+                <div class="detail-feature" data-hover>
+                    <div class="detail-feature-icon">02</div>
+                    <div class="detail-feature-title" data-i18n="moyu_f2_title">持续阅读</div>
+                    <div class="detail-feature-desc" data-i18n="moyu_f2_desc">书架、订阅、进度、历史和通知保持阅读状态连续。</div>
+                </div>
+                <div class="detail-feature" data-hover>
+                    <div class="detail-feature-icon">03</div>
+                    <div class="detail-feature-title" data-i18n="moyu_f3_title">作者工作台</div>
+                    <div class="detail-feature-desc" data-i18n="moyu_f3_desc">管理作品与章节，支持批量导入、草稿、自动保存和版本历史。</div>
+                </div>
+                <div class="detail-feature" data-hover>
+                    <div class="detail-feature-icon">04</div>
+                    <div class="detail-feature-title" data-i18n="moyu_f4_title">内容审核</div>
+                    <div class="detail-feature-desc" data-i18n="moyu_f4_desc">书籍和章节分层审核，支持批量操作、原因模板和结果通知。</div>
+                </div>
+                <div class="detail-feature" data-hover>
+                    <div class="detail-feature-icon">05</div>
+                    <div class="detail-feature-title" data-i18n="moyu_f5_title">风险治理</div>
+                    <div class="detail-feature-desc" data-i18n="moyu_f5_desc">敏感词上下文、白名单、举报聚合和审计记录辅助人工决策。</div>
+                </div>
+                <div class="detail-feature" data-hover>
+                    <div class="detail-feature-icon">06</div>
+                    <div class="detail-feature-title" data-i18n="moyu_f6_title">部署交付</div>
+                    <div class="detail-feature-desc" data-i18n="moyu_f6_desc">提供数据库脚本、分阶段升级文件和 Docker 运行配置。</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="detail-footer">
+        <div class="detail-footer-copy">&copy; 2026 Eric. Built with <span class="heart">♥</span> and too much coffee.</div>
+        <div class="detail-footer-links">
+            <a href="index.html">← All Projects</a>
+            <a href="https://github.com/powerpan" target="_blank" rel="noopener noreferrer">GitHub</a>
+        </div>
+    </footer>
+
+    <button class="back-to-top" id="backToTop" title="回到顶部" data-i18n-title="back_to_top">↑</button>
+    <script src="../js/i18n.js"></script>
+    <script src="../js/i18n/core.js"></script>
+    <script src="../js/i18n/projects.js"></script>
+    <script src="../js/detail.js"></script>
+</body>
+</html>
