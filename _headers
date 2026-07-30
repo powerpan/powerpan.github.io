@@ -19,3 +19,10 @@
 
 /package.json
   X-Robots-Tag: noindex, nofollow, noarchive
+
+# Translation dictionaries change with content and must be revalidated.
+/js/i18n.js
+  Cache-Control: public, max-age=0, must-revalidate
+
+/js/i18n/*
+  Cache-Control: public, max-age=0, must-revalidate

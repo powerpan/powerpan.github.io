@@ -53,6 +53,13 @@ function setLang(lang) {
     if (t[key] !== undefined) el.title = t[key];
   });
 
+  // Alt text is part of the language experience for assistive technology
+  // and remains visible when an image cannot be loaded.
+  document.querySelectorAll('[data-i18n-alt]').forEach((el) => {
+    const key = el.getAttribute('data-i18n-alt');
+    if (t[key] !== undefined) el.alt = t[key];
+  });
+
   // Article pages derive head metadata from the translated on-page content.
   const articleTitle = document.querySelector('.blog-article-title');
   if (articleTitle) {

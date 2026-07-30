@@ -83,7 +83,7 @@
 
     <a href="../index.html#projects" class="detail-back magnetic" data-hover>
         <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
-        返回项目
+        <span data-i18n="detail_back_projects">返回项目</span>
     </a>
 
     <div class="detail-toc">
@@ -101,7 +101,7 @@
         <p class="detail-subtitle" data-i18n="pm_sub">面向边缘设备的轻量级视觉模型推理引擎，支持 PyTorch/ONNX 多后端与 Docker 容器化部署，让 AI 模型轻松落地。</p>
         <div class="detail-meta">
             <div class="detail-meta-item"><div class="detail-meta-label">Type</div><div class="detail-meta-value">Open Source SDK</div></div>
-            <div class="detail-meta-item"><div class="detail-meta-label">Role</div><div class="detail-meta-value">独立开发者</div></div>
+            <div class="detail-meta-item"><div class="detail-meta-label">Role</div><div class="detail-meta-value" data-i18n="pm_role">独立开发者</div></div>
             <div class="detail-meta-item"><div class="detail-meta-label">License</div><div class="detail-meta-value">MIT</div></div>
             <div class="detail-meta-item"><div class="detail-meta-label">Status</div><div class="detail-meta-value" style="color:var(--accent)">Active</div></div>
         </div>
@@ -147,22 +147,22 @@
             <div class="detail-features">
                 <div class="detail-feature" data-hover>
                     <div class="detail-feature-icon">🔌</div>
-                    <div class="detail-feature-title">多后端支持</div>
+                    <div class="detail-feature-title" data-i18n="pm_f1_title">多后端支持</div>
                     <div class="detail-feature-desc" data-i18n="pm_f1">统一 Python API，支持 PyTorch 和 ONNX Runtime 两种推理后端，根据硬件自动选择最优方案。</div>
                 </div>
                 <div class="detail-feature" data-hover>
                     <div class="detail-feature-icon">🐳</div>
-                    <div class="detail-feature-title">Docker 部署</div>
+                    <div class="detail-feature-title" data-i18n="pm_f2_title">Docker 部署</div>
                     <div class="detail-feature-desc" data-i18n="pm_f2">内置 Dockerfile 和 docker-compose 配置，一键构建推理服务镜像，支持 GPU 和 CPU 两种运行模式。</div>
                 </div>
                 <div class="detail-feature" data-hover>
                     <div class="detail-feature-icon">🚀</div>
-                    <div class="detail-feature-title">简洁 API</div>
+                    <div class="detail-feature-title" data-i18n="pm_f3_title">简洁 API</div>
                     <div class="detail-feature-desc" data-i18n="pm_f3">三行代码即可完成模型加载、推理、结果解析。提供 RESTful API 接口，方便前后端集成。</div>
                 </div>
                 <div class="detail-feature" data-hover>
                     <div class="detail-feature-icon">⚙️</div>
-                    <div class="detail-feature-title">模型转换</div>
+                    <div class="detail-feature-title" data-i18n="pm_f4_title">模型转换</div>
                     <div class="detail-feature-desc" data-i18n="pm_f4">内置 PyTorch → ONNX 转换工具，支持 YOLO、SAM 等主流视觉模型的格式转换与验证。</div>
                 </div>
             </div>
@@ -225,7 +225,7 @@
     <button class="back-to-top" id="backToTop" title="回到顶部" data-i18n-title="back_to_top">↑</button>
     <script src="../js/i18n.js"></script>
     <script src="../js/i18n/core.js"></script>
-    <script src="../js/i18n/projects.js"></script>
+    <script src="../js/i18n/projects.js?v=20260730-i18n2"></script>
     <script src="../js/detail.js"></script>
 </body>
 </html>

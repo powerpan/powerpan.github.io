@@ -7,7 +7,7 @@ const vm = require('vm');
 const root = path.resolve(__dirname, '..');
 const blogCategories = ['ai', 'agent', 'vision', 'architecture', 'observation', 'essay'];
 const filterCategories = ['all', ...blogCategories];
-const i18nAttrs = ['data-i18n', 'data-i18n-html', 'data-i18n-placeholder', 'data-i18n-title'];
+const i18nAttrs = ['data-i18n', 'data-i18n-html', 'data-i18n-placeholder', 'data-i18n-title', 'data-i18n-alt'];
 const ignoredDirs = new Set(['.git', '.qwen', '_site']);
 
 function loadI18n() {
@@ -88,11 +88,11 @@ function printGroup(title, items) {
 
 function scriptPathExists(htmlFile, src) {
   const base = path.dirname(htmlFile);
-  return fs.existsSync(path.resolve(base, src));
+  return fs.existsSync(path.resolve(base, src.replace(/[?#].*$/, '')));
 }
 
 function i18nScriptSrcs(raw) {
-  return Array.from(raw.matchAll(/<script src="([^"]*js\/i18n(?:\/[^"]+)?\.js)"><\/script>/g))
+  return Array.from(raw.matchAll(/<script src="([^"]*js\/i18n(?:\/[^"]+)?\.js(?:[?#][^"]*)?)"><\/script>/g))
     .map((match) => match[1]);
 }
 
@@ -100,7 +100,8 @@ function assertI18nScripts(file, rel, raw, issues) {
   if (rel === 'admin/editor.html') return;
 
   const srcs = i18nScriptSrcs(raw);
-  const has = (src) => srcs.includes(src);
+  const normalizedSrcs = srcs.map((src) => src.replace(/[?#].*$/, ''));
+  const has = (src) => normalizedSrcs.includes(src);
   const missing = (src, reason) => {
     if (!has(src)) addIssue(issues, 'I18n script reference issues', `${rel}: missing ${src} (${reason})`);
   };
@@ -224,7 +225,14 @@ function main() {
 
     const visibleText = stripI18nManagedVisibleText(raw);
     const staticChinese = visibleText.match(/[\u4e00-\u9fff][\u4e00-\u9fff\s，。！？、：“”‘’（）《》·—\-A-Za-z0-9+/.]{0,80}/g) || [];
-    if (staticChinese.length) {
+    if (staticChinese.length && rel.startsWith('projects/')) {
+      const samples = staticChinese.slice(0, 3).map((text) => text.trim()).join(' | ');
+      addIssue(
+        issues,
+        'Project visible text outside i18n',
+        `${rel}: ${staticChinese.length} segment(s): ${samples}`
+      );
+    } else if (staticChinese.length) {
       addIssue(
         warnings,
         'Static visible Chinese outside i18n-managed elements',
@@ -262,6 +270,7 @@ function main() {
     'Category/filter issues',
     'Escaped script closer issues',
     'I18n script reference issues',
+    'Project visible text outside i18n',
   ];
 
   let failed = false;

@@ -100,7 +100,7 @@
         <h1 class="detail-title" data-i18n-html="yolo26_title">YOLO26 <span class="hl">Multimodal</span></h1>
         <p class="detail-subtitle" data-i18n="yolo26_sub">基于 YOLO26 的多模态视觉检测系统，通过可复用的 Backbone 与 Neck 架构，设计三个独立检测头，在单次前向推理中同时输出目标检测、关键点定位与实例分割三类结果。</p>
         <div class="detail-meta">
-            <div class="detail-meta-item"><span class="detail-meta-label">Role</span><span class="detail-meta-value">独立开发者</span></div>
+            <div class="detail-meta-item"><span class="detail-meta-label">Role</span><span class="detail-meta-value" data-i18n="yolo26_role">独立开发者</span></div>
             <div class="detail-meta-item"><span class="detail-meta-label">Duration</span><span class="detail-meta-value">3 months</span></div>
             <div class="detail-meta-item"><span class="detail-meta-label">Stack</span><span class="detail-meta-value">YOLO26 / PyTorch</span></div>
         </div>
@@ -155,7 +155,7 @@
         <!-- Backbone & Neck -->
         <div class="detail-section reveal" id="backbone">
             <div class="detail-section-label">Backbone & Neck</div>
-            <h2 class="detail-section-label">可复用的特征提取基座</h2>
+            <h2 class="detail-section-title" data-i18n="yolo26_s_backbone">可复用的特征提取基座</h2>
             <p class="detail-text" data-i18n="yolo26_p5">
                 YOLO26 的 Backbone 基于 CSP（Cross Stage Partial）架构，采用 CBS（Conv + BN + SiLU）模块作为基础构建单元，
                 通过 C2f 模块实现跨阶段的特征融合。Neck 部分使用 PAN-FPN（Path Aggregation Network + Feature Pyramid Network）结构，
@@ -324,7 +324,7 @@
     <button class="back-to-top" id="backToTop" title="回到顶部" data-i18n-title="back_to_top">↑</button>
     <script src="../js/i18n.js"></script>
     <script src="../js/i18n/core.js"></script>
-    <script src="../js/i18n/projects.js"></script>
+    <script src="../js/i18n/projects.js?v=20260730-i18n2"></script>
     <script src="../js/detail.js"></script>
 </body>
 </html>
