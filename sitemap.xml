@@ -2,11 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://erickk.site/</loc>
-    <lastmod>2026-07-20</lastmod>
+    <lastmod>2026-08-23</lastmod>
   </url>
   <url>
     <loc>https://erickk.site/blog/</loc>
-    <lastmod>2026-07-20</lastmod>
+    <lastmod>2026-08-23</lastmod>
   </url>
   <url>
     <loc>https://erickk.site/blog/topics/ai.html</loc>
@@ -26,11 +26,15 @@
   </url>
   <url>
     <loc>https://erickk.site/blog/topics/observation.html</loc>
-    <lastmod>2026-05-28</lastmod>
+    <lastmod>2026-08-23</lastmod>
   </url>
   <url>
     <loc>https://erickk.site/blog/topics/essay.html</loc>
     <lastmod>2026-05-25</lastmod>
+  </url>
+  <url>
+    <loc>https://erickk.site/blog/robot-three-clocks.html</loc>
+    <lastmod>2026-08-23</lastmod>
   </url>
   <url>
     <loc>https://erickk.site/blog/mac-personal-ai-runtime.html</loc>
