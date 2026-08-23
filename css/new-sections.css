@@ -486,7 +486,8 @@
         }
         .form-input::placeholder,
         .form-textarea::placeholder {
-            color: var(--text-dim);
+            color: var(--text-secondary);
+            opacity: 0.72;
         }
         .form-label {
             position: absolute; top: -8px; left: 16px;
