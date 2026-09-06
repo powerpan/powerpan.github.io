@@ -128,9 +128,10 @@
     .mobile-nav { display: flex; }
 
     /* Hero */
-    .hero { padding: 0 24px; }
+    .hero { padding: 120px 24px 145px; }
     .hero-grid-bg { display: none; }
-    .hero-name { font-size: clamp(3.5rem, 14vw, 8rem); }
+    .hero-name { font-size: clamp(5.5rem, 17vw, 9rem); }
+    .motion-toggle { right: 24px; }
 
     /* About */
     .about {
@@ -140,7 +141,8 @@
     .stats { grid-template-columns: repeat(2, 1fr); }
 
     /* Orbit / Tech */
-    .orbit-container { width: 280px; height: 280px; }
+    .orbit-container { width: min(440px, 100%); height: auto; aspect-ratio: 1; }
+    .orbit-center { width: 36px; height: 36px; font-size: 0.5rem; }
     .orbit-item { font-size: 0.55rem; padding: 4px 8px; }
 
     /* Projects */
@@ -262,9 +264,14 @@
    SMALL PHONES (max-width: 480px)
 ======================================== */
 @media (max-width: 480px) {
-    .hero-name { font-size: clamp(2.8rem, 16vw, 5rem); }
-    .hero-badge { font-size: 0.6rem; padding: 6px 14px; }
+    .hero-name { font-size: clamp(5rem, 23vw, 7rem); }
+    .hero-badge { font-size: 0.56rem; padding: 6px 0; letter-spacing: 0.04em; margin-bottom: 22px; }
     .hero-typing { font-size: 0.75rem; }
+    .hero-actions { gap: 8px; }
+    .hero-action { padding: 12px 14px; gap: 14px; font-size: 0.64rem; }
+    .motion-toggle { right: 16px; bottom: 20px; font-size: 0.58rem; }
+    .hero-scroll { left: 24px; bottom: 28px; transform: none; flex-direction: row; }
+    .hero-scroll-line { width: 26px; height: 1px; }
 
     .about { padding: 60px 16px; gap: 32px; }
     .about-heading { font-size: clamp(1.5rem, 6vw, 2rem); }
@@ -278,6 +285,11 @@
 
     .projects, .blog { padding: 60px 16px; }
     .project-card-content { padding: 16px; }
+    .home-page .project-card {
+        display: flex; flex-direction: column; justify-content: flex-end;
+        aspect-ratio: auto; min-height: 250px;
+    }
+    .home-page .project-card-content { position: relative; padding: 88px 20px 24px; }
     .project-title { font-size: 1.1rem; }
     .project-desc { font-size: 0.68rem; }
     .blog-item { padding: 20px 0; }
@@ -324,4 +336,13 @@
     .footer-copy { font-size: 0.6rem; }
     .footer-links { gap: 16px; }
     .footer-links a { font-size: 0.6rem; }
+}
+
+@media (max-height: 540px) and (orientation: landscape) {
+    .hero { min-height: 540px; padding: 100px 24px 120px; }
+    .hero-name { font-size: clamp(5rem, 12vw, 8rem); }
+    .hero-badge { margin-bottom: 18px; }
+    .hero-typing { margin-bottom: 20px; }
+    .hero-scroll { left: 24px; transform: none; flex-direction: row; }
+    .hero-scroll-line { width: 26px; height: 1px; }
 }

@@ -8,9 +8,9 @@
         window.addEventListener('scroll', () => {
             const scrollTop = window.pageYOffset;
             const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-            const scrollPercent = (scrollTop / docHeight) * 100;
+            const scrollPercent = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
             scrollProgress.style.width = scrollPercent + '%';
-        });
+        }, { passive: true });
 
         /* ========================================
            SKILLS BAR ANIMATION + COUNTER
@@ -33,7 +33,7 @@
                         const start = performance.now();
                         const animate = now => {
                             const elapsed = now - start;
-                            const progress = Math.min(elapsed / duration, 1);
+                            const progress = SiteMotion.enabled ? Math.min(elapsed / duration, 1) : 1;
                             const eased = 1 - Math.pow(1 - progress, 3);
                             pctEl.textContent = Math.round(eased * width) + '%';
                             if (progress < 1) requestAnimationFrame(animate);
@@ -58,6 +58,7 @@
                         codeObs.unobserve(entry.target);
                         const lines = codeWindow.querySelectorAll('.code-line');
                         const body = codeWindow.querySelector('.code-window-body');
+                        if (!SiteMotion.enabled) return;
 
                         // Create blinking cursor
                         const cursor = document.createElement('span');
@@ -69,6 +70,11 @@
 
                         let lineIdx = 0;
                         function typeLine() {
+                            if (!SiteMotion.enabled) {
+                                lines.forEach(line => { line.style.opacity = '1'; });
+                                cursor.remove();
+                                return;
+                            }
                             if (lineIdx >= lines.length) {
                                 cursor.remove();
                                 return;
@@ -82,6 +88,12 @@
 
                             let charIdx = 0;
                             function typeChar() {
+                                if (!SiteMotion.enabled) {
+                                    line.innerHTML = html;
+                                    lines.forEach(item => { item.style.opacity = '1'; });
+                                    cursor.remove();
+                                    return;
+                                }
                                 if (charIdx < text.length) {
                                     // Rebuild with syntax highlighting up to current char
                                     const partial = html.substring(0, charIdx + 1);
@@ -300,7 +312,7 @@
                         const duration = 2000;
                         const step = target / (duration / 16);
                         const counter = setInterval(() => {
-                            current += step;
+                            current = SiteMotion.enabled ? current + step : target;
                             if (current >= target) {
                                 current = target;
                                 clearInterval(counter);

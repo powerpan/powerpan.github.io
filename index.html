@@ -62,13 +62,13 @@
     <link rel="stylesheet" href="css/new-sections.css">
     <link rel="stylesheet" href="css/responsive.css">
 </head>
-<body>
+<body class="home-page">
 
     <!-- ============ SCROLL PROGRESS ============ -->
     <div class="scroll-progress" id="scrollProgress"></div>
 
     <!-- ============ LOADER ============ -->
-    <div class="loader" id="loader">
+    <div class="loader" id="loader" aria-hidden="true">
         <div class="loader-terminal">
             <div class="loader-terminal-header">
                 <div class="loader-terminal-dot" style="background:#ff5f57"></div>
@@ -82,11 +82,8 @@
     </div>
 
     <!-- ============ CURSOR ============ -->
-    <div class="cursor" id="cursor"></div>
-    <div class="cursor-dot" id="cursorDot"></div>
-
-    <!-- ============ PARTICLE CANVAS ============ -->
-    <canvas id="particleCanvas"></canvas>
+    <div class="cursor" id="cursor" aria-hidden="true"></div>
+    <div class="cursor-dot" id="cursorDot" aria-hidden="true"></div>
 
     <!-- ============ NAV ============ -->
     <nav id="nav">
@@ -121,21 +118,30 @@
 
     <!-- ============ HERO ============ -->
     <section class="hero" id="hero">
-        <div class="hero-grid-bg"></div>
+        <div class="hero-grid-bg" aria-hidden="true"></div>
+        <canvas id="particleCanvas" aria-hidden="true"></canvas>
         <div class="hero-badge">
             <span class="hero-badge-dot"></span>
             <span data-i18n="hero_badge">Full-Stack &amp; AI Vision Developer</span>
         </div>
         <h1 class="hero-name">
-            <span class="glitch" data-text="Eric">Eric</span>
+            <span class="hero-wordmark">Eric<span class="hero-period">.</span></span>
         </h1>
         <div class="hero-typing">
-            <span id="typingText"></span><span class="typing-cursor">|</span>
+            <span id="typingText">Full-Stack Developer</span><span class="typing-cursor" aria-hidden="true">|</span>
         </div>
-        <div class="hero-scroll">
-            <div class="hero-scroll-line"></div>
+        <div class="hero-actions">
+            <a class="hero-action hero-action-primary magnetic" href="#projects" data-hover><span data-i18n="hero_projects">探索项目</span><span aria-hidden="true">↗</span></a>
+            <a class="hero-action" href="blog/index.html" data-hover><span data-i18n="hero_articles">阅读文章</span><span aria-hidden="true">→</span></a>
+        </div>
+        <a class="hero-scroll" href="#about" data-hover>
+            <div class="hero-scroll-line" aria-hidden="true"></div>
             <span data-i18n="hero_scroll">SCROLL</span>
-        </div>
+        </a>
+        <button class="motion-toggle" id="motionToggle" type="button" aria-pressed="false" hidden>
+            <span class="motion-toggle-icon" aria-hidden="true"><i></i><i></i><i></i></span>
+            <span data-i18n="motion_label">动态效果</span>
+        </button>
     </section>
 
     <!-- ============ MARQUEE ============ -->
@@ -827,7 +833,7 @@
     <!-- ============ FOOTER ============ -->
     <footer>
         <div class="footer-copy" data-i18n-html="footer_copy">
-            &copy; 2026 Eric. Built with kk's <span class="heart">♥</span> love and too much coffee.
+            &copy; 2026 Eric. Built with too much coffee.
         </div>
         <div class="footer-links">
             <a href="https://github.com/powerpan" target="_blank" rel="noopener" data-hover>GitHub</a>
@@ -872,6 +878,7 @@
     <script src="js/i18n/home.js"></script>
     <script src="js/i18n/projects.js?v=20260730-i18n2"></script>
     <script src="js/i18n/blog-list.js"></script>
+    <script src="js/motion.js"></script>
     <script src="js/loader.js"></script>
     <script src="js/particles.js"></script>
     <script src="js/cursor.js"></script>

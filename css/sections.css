@@ -3,33 +3,35 @@
 ======================================== */
         .hero {
             min-height: 100vh;
+            min-height: 100svh;
             display: flex; flex-direction: column;
             justify-content: center; align-items: center;
             text-align: center;
             position: relative; z-index: 1;
-            padding: 0 48px;
+            padding: 130px 48px 160px;
+            overflow: hidden;
+            isolation: isolate;
+            background: radial-gradient(ellipse at 50% 42%, rgba(0, 255, 136, 0.025), transparent 60%);
         }
         .hero-grid-bg {
-            position: absolute; inset: -20px;
+            position: absolute; inset: 0;
             background-image:
-                linear-gradient(rgba(var(--accent-rgb), 0.15) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(var(--accent-rgb), 0.15) 1px, transparent 1px);
-            background-size: 60px 60px;
-            mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
-            -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
-            transition: transform 0.3s ease-out;
-            will-change: transform;
+                linear-gradient(rgba(var(--accent-rgb), 0.045) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(var(--accent-rgb), 0.045) 1px, transparent 1px);
+            background-size: 88px 88px;
+            mask-image: radial-gradient(ellipse at center, transparent 22%, black 58%, transparent 80%);
+            -webkit-mask-image: radial-gradient(ellipse at center, transparent 22%, black 58%, transparent 80%);
+            pointer-events: none;
+            z-index: -2;
         }
 
         .hero-badge {
             display: inline-flex; align-items: center; gap: 10px;
-            padding: 8px 20px;
-            background: rgba(var(--accent-rgb), 0.06);
-            border: 1px solid rgba(var(--accent-rgb), 0.15);
-            border-radius: 100px;
+            padding: 8px 0;
             font-size: 0.68rem; color: var(--accent);
             letter-spacing: 0.08em; text-transform: uppercase;
-            margin-bottom: 40px;
+            margin-bottom: 28px;
+            position: relative;
             opacity: 0; animation: fadeUp 0.8s ease 0.3s forwards;
         }
         .hero-badge-dot {
@@ -41,49 +43,30 @@
         .hero-name {
             font-family: var(--font-display);
             font-weight: 800;
-            font-size: clamp(5rem, 15vw, 14rem);
+            font-size: clamp(6rem, 16vw, 15rem);
             line-height: 0.9;
             letter-spacing: -0.05em;
-            margin-bottom: 24px;
+            margin-bottom: 22px;
             position: relative;
+            animation: wordmarkIn 1.25s cubic-bezier(0.16,1,0.3,1) both;
         }
 
-        /* Glitch Effect */
-        .glitch {
-            position: relative;
+        .hero-wordmark {
             display: inline-block;
+            color: var(--text-primary);
+            background: linear-gradient(165deg, #fffdf7 15%, #e8e4dc 52%, #8b9f95 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 8px 22px rgba(5, 5, 8, 0.8));
         }
-        .glitch::before,
-        .glitch::after {
-            content: attr(data-text);
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            pointer-events: none;
-        }
-        .glitch::before {
-            color: var(--pink);
-            animation: glitch-1 4s infinite linear alternate-reverse;
-            clip-path: polygon(0 0, 100% 0, 100% 33%, 0 33%);
-        }
-        .glitch::after {
+        .hero-period {
             color: var(--accent);
-            animation: glitch-2 4s infinite linear alternate-reverse;
-            clip-path: polygon(0 67%, 100% 67%, 100% 100%, 0 100%);
+            -webkit-text-fill-color: var(--accent);
         }
-        @keyframes glitch-1 {
-            0%, 93% { transform: translate(0); }
-            94% { transform: translate(-4px, -2px); }
-            95% { transform: translate(4px, 1px); }
-            96% { transform: translate(-2px, 3px); }
-            97% { transform: translate(0); }
-        }
-        @keyframes glitch-2 {
-            0%, 90% { transform: translate(0); }
-            91% { transform: translate(3px, 2px); }
-            92% { transform: translate(-3px, -1px); }
-            93% { transform: translate(5px, -2px); }
-            94% { transform: translate(0); }
+        @keyframes wordmarkIn {
+            from { opacity: 0; transform: translateY(24px) scale(0.96); filter: blur(10px); }
+            to { opacity: 1; transform: none; filter: blur(0); }
         }
 
         .hero-typing {
@@ -91,8 +74,10 @@
             font-size: clamp(0.85rem, 1.3vw, 1.1rem);
             font-weight: 300;
             color: var(--text-secondary);
-            margin-bottom: 56px;
+            margin-bottom: 30px;
             min-height: 1.6em;
+            position: relative;
+            text-shadow: 0 2px 12px var(--bg);
             opacity: 0; animation: fadeUp 0.8s ease 0.6s forwards;
         }
         .typing-cursor {
@@ -106,13 +91,32 @@
             50% { opacity: 0; }
         }
 
+        .hero-actions {
+            display: flex; align-items: center; justify-content: center; gap: 12px;
+            position: relative;
+            animation: fadeUp 0.9s 0.25s both;
+        }
+        .hero-action {
+            display: inline-flex; align-items: center; justify-content: center; gap: 24px;
+            min-height: 46px; padding: 12px 20px;
+            font-size: 0.7rem; letter-spacing: 0.04em;
+            color: var(--text-primary);
+            background: rgba(5, 5, 8, 0.7);
+            border: 1px solid rgba(232, 228, 220, 0.16);
+            border-radius: 6px;
+            transition: border-color 0.25s ease, background 0.25s ease, transform 0.25s ease;
+        }
+        .hero-action-primary { border-color: rgba(var(--accent-rgb), 0.45); }
+        .hero-action > span:last-child { color: var(--accent); font-size: 1rem; }
+        .hero-action:hover { border-color: var(--accent); background: #10261c; }
+
         .hero-scroll {
-            position: absolute; bottom: 40px;
+            position: absolute; bottom: 28px; left: 50%;
             display: flex; flex-direction: column; align-items: center; gap: 12px;
-            opacity: 0; animation: fadeUp 0.8s ease 1s forwards;
+            transform: translateX(-50%);
         }
         .hero-scroll-line {
-            width: 1px; height: 48px;
+            width: 1px; height: 36px;
             background: var(--text-dim);
             position: relative; overflow: hidden;
         }
@@ -129,10 +133,29 @@
             100% { top: 100%; }
         }
         .hero-scroll span {
-            font-size: 0.6rem; color: var(--text-muted);
+            font-size: 0.6rem; color: var(--text-secondary);
             letter-spacing: 0.2em; text-transform: uppercase;
-            writing-mode: vertical-rl;
         }
+
+        .motion-toggle {
+            position: absolute; bottom: 28px; right: 48px;
+            display: inline-flex; align-items: center; gap: 10px;
+            min-height: 44px; padding: 8px 12px;
+            border: 1px solid rgba(232, 228, 220, 0.12); border-radius: 6px;
+            color: var(--text-secondary); background: rgba(5, 5, 8, 0.6);
+            font-size: 0.62rem; letter-spacing: 0.06em;
+            cursor: pointer;
+        }
+        .motion-toggle[hidden] { display: none; }
+        .motion-toggle:hover { border-color: rgba(var(--accent-rgb), 0.4); }
+        .motion-toggle:disabled { opacity: 0.55; cursor: default; }
+        .motion-toggle-icon { display: flex; gap: 3px; align-items: center; height: 15px; }
+        .motion-toggle-icon i { width: 2px; height: 4px; background: currentColor; border-radius: 2px; }
+        .motion-toggle[aria-pressed="true"] .motion-toggle-icon { color: var(--accent); }
+        .motion-toggle[aria-pressed="true"] i { animation: motionWave 1.2s ease-in-out infinite alternate; }
+        .motion-toggle i:nth-child(2) { animation-delay: -0.4s; }
+        .motion-toggle i:nth-child(3) { animation-delay: -0.8s; }
+        @keyframes motionWave { to { height: 14px; } }
 
         @keyframes fadeUp {
             from { opacity: 0; transform: translateY(24px); }

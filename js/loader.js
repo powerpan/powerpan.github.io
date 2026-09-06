@@ -1,54 +1,46 @@
 /* ========================================
-   LOADER
+   LOADER — Brief intro, once per session
 ======================================== */
-const loaderBody = document.getElementById('loaderBody');
-const loaderEl = document.getElementById('loader');
-const loaderLines = [
-    { text: 'initializing system...', delay: 200 },
-    { text: 'loading modules ████████████ 100%', delay: 600 },
-    { text: 'compiling shaders... done.', delay: 400 },
-    { text: 'mounting neural weights... done.', delay: 500 },
-    { text: 'ready. welcome, visitor.', delay: 300 },
-];
+function sleep(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
 
-async function runLoader() {
-    for (let i = 0; i < loaderLines.length; i++) {
-        const line = loaderLines[i];
-        const el = document.createElement('div');
-        el.className = 'loader-line';
-        el.innerHTML = `<span class="prompt">❯ </span><span class="cmd"></span>`;
-        el.style.animationDelay = '0s';
-        loaderBody.appendChild(el);
+(() => {
+    const loader = document.getElementById('loader');
+    const body = document.getElementById('loaderBody');
+    if (!loader || !body) return;
+    let seen = false;
+    let finished = false;
+    try { seen = sessionStorage.getItem('intro-seen') === 'yes'; } catch (_) {}
 
-        const cmdEl = el.querySelector('.cmd');
-        for (let c = 0; c < line.text.length; c++) {
-            cmdEl.textContent += line.text[c];
-            await sleep(18 + Math.random() * 12);
-        }
-        el.classList.add('done');
-        await sleep(line.delay);
+    function dismiss() {
+        finished = true;
+        loader.classList.add('done');
+        loader.classList.remove('active');
+        loader.setAttribute('aria-hidden', 'true');
+        if (loader.contains(document.activeElement)) document.activeElement.blur();
+        try { sessionStorage.setItem('intro-seen', 'yes'); } catch (_) {}
     }
-    await sleep(400);
-    loaderEl.classList.add('done');
-}
 
-function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+    document.getElementById('loaderSkip')?.addEventListener('click', dismiss);
+    if (seen || location.hash || !SiteMotion.enabled) {
+        dismiss();
+        return;
+    }
 
-let loaderSkipped = false;
-const loaderSkipBtn = document.getElementById('loaderSkip');
+    loader.classList.add('active');
+    loader.setAttribute('aria-hidden', 'false');
+    SiteMotion.subscribe(active => { if (!active) dismiss(); });
 
-function dismissLoader() {
-    if (loaderEl.classList.contains('done')) return;
-    loaderEl.classList.add('done');
-}
-
-if (loaderSkipBtn) {
-    loaderSkipBtn.addEventListener('click', () => {
-        loaderSkipped = true;
-        dismissLoader();
-    });
-}
-
-runLoader().then(() => {
-    if (!loaderSkipped) dismissLoader();
-});
+    (async () => {
+        const lines = ['hello, visitor.', 'code. vision. possibility.', 'welcome to my corner of the web.'];
+        for (const text of lines) {
+            if (finished) return;
+            const line = document.createElement('div');
+            line.className = 'loader-line done';
+            line.textContent = '> ' + text;
+            body.appendChild(line);
+            await sleep(180);
+        }
+        await sleep(150);
+        dismiss();
+    })();
+})();

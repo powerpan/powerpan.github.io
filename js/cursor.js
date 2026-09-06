@@ -1,52 +1,49 @@
 /* ========================================
-   CUSTOM CURSOR + TRAIL
+   CURSOR — A quiet, demand-driven pointer halo
 ======================================== */
-const cursorEl = document.getElementById('cursor');
-const dotEl = document.getElementById('cursorDot');
-let mx = -100, my = -100, cx = -100, cy = -100;
+(() => {
+    const cursor = document.getElementById('cursor');
+    const dot = document.getElementById('cursorDot');
+    const finePointer = window.matchMedia('(hover: hover) and (pointer: fine) and (min-width: 901px)');
+    if (!cursor || !dot) return;
+    let x = 0, y = 0, targetX = 0, targetY = 0;
+    let frame = 0;
+    let visible = false;
 
-document.addEventListener('mousemove', e => {
-    mx = e.clientX; my = e.clientY;
-    dotEl.style.left = mx + 'px';
-    dotEl.style.top = my + 'px';
-});
+    function hide() {
+        visible = false;
+        cancelAnimationFrame(frame);
+        frame = 0;
+        document.body.classList.remove('custom-cursor-active');
+    }
 
-/* Cursor lerp */
-(function loop() {
-    cx += (mx - cx) * 0.12;
-    cy += (my - cy) * 0.12;
-    cursorEl.style.left = cx + 'px';
-    cursorEl.style.top = cy + 'px';
-    requestAnimationFrame(loop);
-})();
+    function tick() {
+        x += (targetX - x) * 0.22;
+        y += (targetY - y) * 0.22;
+        cursor.style.transform = `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%)`;
+        frame = Math.abs(targetX - x) + Math.abs(targetY - y) > 0.15
+            ? requestAnimationFrame(tick) : 0;
+    }
 
-/* Hover state */
-document.querySelectorAll('[data-hover]').forEach(el => {
-    el.addEventListener('mouseenter', () => cursorEl.classList.add('hovering'));
-    el.addEventListener('mouseleave', () => cursorEl.classList.remove('hovering'));
-});
+    document.addEventListener('pointermove', event => {
+        if (!finePointer.matches || !SiteMotion.enabled || event.pointerType === 'touch') return hide();
+        // Keep the familiar text caret while editing or selecting form content.
+        if (event.target.closest('input, textarea, [contenteditable="true"]')) return hide();
+        targetX = event.clientX;
+        targetY = event.clientY;
+        if (!visible) {
+            x = targetX; y = targetY; visible = true;
+            document.body.classList.add('custom-cursor-active');
+        }
+        dot.style.transform = `translate3d(${targetX}px, ${targetY}px, 0) translate(-50%, -50%)`;
+        cursor.classList.toggle('hovering', !!event.target.closest('a, button, [data-hover], [role="button"]'));
+        if (!frame) frame = requestAnimationFrame(tick);
+    }, { passive: true });
 
-/* Trail dots */
-const TRAIL_N = 6;
-const trailDots = [];
-for (let i = 0; i < TRAIL_N; i++) {
-    const d = document.createElement('div');
-    d.className = 'cursor-trail';
-    const size = Math.max(2, 5 - i * 0.6);
-    d.style.width = size + 'px';
-    d.style.height = size + 'px';
-    d.style.opacity = (1 - i / TRAIL_N) * 0.35;
-    document.body.appendChild(d);
-    trailDots.push({ el: d, x: -100, y: -100 });
-}
-
-(function trailLoop() {
-    trailDots.forEach((d, i) => {
-        const target = i === 0 ? { x: mx, y: my } : trailDots[i - 1];
-        d.x += (target.x - d.x) * (0.35 - i * 0.03);
-        d.y += (target.y - d.y) * (0.35 - i * 0.03);
-        d.el.style.left = d.x + 'px';
-        d.el.style.top = d.y + 'px';
-    });
-    requestAnimationFrame(trailLoop);
+    document.documentElement.addEventListener('pointerleave', hide);
+    document.addEventListener('keydown', event => { if (event.key === 'Tab') hide(); });
+    document.addEventListener('visibilitychange', hide);
+    window.addEventListener('blur', hide);
+    finePointer.addEventListener('change', hide);
+    SiteMotion.subscribe(hide);
 })();

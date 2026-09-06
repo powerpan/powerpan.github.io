@@ -3,27 +3,17 @@
 ======================================== */
 
         /* ========================================
-           HERO PARALLAX — mousemove shifts grid
+           POINTER CAPABILITY
         ======================================== */
-        const heroSection = document.getElementById('hero');
-        const heroGrid = document.querySelector('.hero-grid-bg');
-        if (heroSection && heroGrid) {
-            heroSection.addEventListener('mousemove', e => {
-                const rect = heroSection.getBoundingClientRect();
-                const x = (e.clientX - rect.left) / rect.width - 0.5;
-                const y = (e.clientY - rect.top) / rect.height - 0.5;
-                heroGrid.style.transform = `translate(${x * -20}px, ${y * -20}px) scale(1.1)`;
-            });
-            heroSection.addEventListener('mouseleave', () => {
-                heroGrid.style.transform = 'translate(0, 0) scale(1)';
-            });
-        }
+        const fineMotionPointer = window.matchMedia('(hover: hover) and (pointer: fine)');
 
         /* ========================================
            TYPING EFFECT (Hero) — i18n aware
         ======================================== */
         const typingEl = document.getElementById('typingText');
         let roleIdx = 0, charIdx = 0, deleting = false;
+        let typingTimer = 0;
+        let typingVisible = false;
 
         function getRoles() {
             return (typeof I18N !== 'undefined' && I18N[currentLang])
@@ -32,26 +22,32 @@
         }
 
         function typeLoop() {
+            clearTimeout(typingTimer);
             const roles = getRoles();
             const current = roles[roleIdx % roles.length];
+            if (!SiteMotion.enabled) {
+                typingEl.textContent = roles[0];
+                return;
+            }
+            if (!typingVisible || document.hidden) return;
             if (!deleting) {
                 typingEl.textContent = current.substring(0, charIdx + 1);
                 charIdx++;
                 if (charIdx === current.length) {
-                    setTimeout(() => { deleting = true; typeLoop(); }, 2000);
+                    typingTimer = setTimeout(() => { deleting = true; typeLoop(); }, 2400);
                     return;
                 }
-                setTimeout(typeLoop, 60 + Math.random() * 40);
+                typingTimer = setTimeout(typeLoop, 70);
             } else {
                 typingEl.textContent = current.substring(0, charIdx - 1);
                 charIdx--;
                 if (charIdx === 0) {
                     deleting = false;
                     roleIdx = (roleIdx + 1) % roles.length;
-                    setTimeout(typeLoop, 400);
+                    typingTimer = setTimeout(typeLoop, 400);
                     return;
                 }
-                setTimeout(typeLoop, 30);
+                typingTimer = setTimeout(typeLoop, 30);
             }
         }
 
@@ -60,8 +56,22 @@
             roleIdx = 0;
             charIdx = 0;
             deleting = false;
+            clearTimeout(typingTimer);
+            typingEl.textContent = getRoles()[0];
+            charIdx = getRoles()[0].length;
+            deleting = true;
+            typingTimer = setTimeout(typeLoop, 2400);
         };
-        setTimeout(typeLoop, 1800);
+        new IntersectionObserver(entries => {
+            typingVisible = entries[0].isIntersecting;
+            if (typingVisible) typeLoop();
+            else clearTimeout(typingTimer);
+        }).observe(typingEl);
+        document.addEventListener('visibilitychange', () => {
+            clearTimeout(typingTimer);
+            if (!document.hidden) typeLoop();
+        });
+        SiteMotion.subscribe(() => window.restartTyping());
 
         /* ========================================
            MARQUEE
@@ -89,6 +99,7 @@
             item.style.minWidth = item.offsetWidth + 'px';
             item.style.textAlign = 'center';
             item.addEventListener('mouseenter', () => {
+                if (!SiteMotion.enabled || !fineMotionPointer.matches) return;
                 let iterations = 0;
                 const iv = setInterval(() => {
                     item.textContent = original.split('').map((ch, i) =>
@@ -125,9 +136,9 @@
             const cmd = 'cat ~/.ericrc';
             for (const ch of cmd) {
                 termCmd.textContent += ch;
-                await sleep(70 + Math.random() * 50);
+                if (SiteMotion.enabled) await sleep(70 + Math.random() * 50);
             }
-            await sleep(500);
+            if (SiteMotion.enabled) await sleep(300);
             termCursor.style.display = 'none';
 
             const json = [
@@ -155,13 +166,13 @@
                 line.innerHTML = json[i];
                 line.style.opacity = '0';
                 termOutput.appendChild(line);
-                await sleep(60);
+                if (SiteMotion.enabled) await sleep(45);
                 line.style.transition = 'opacity 0.3s ease';
                 line.style.opacity = '1';
             }
 
             /* New prompt line */
-            await sleep(400);
+            if (SiteMotion.enabled) await sleep(250);
             const newLine = document.createElement('div');
             newLine.className = 'term-line';
             newLine.style.marginTop = '8px';
@@ -204,35 +215,68 @@
             });
         });
 
-        let orbitAngle = 0;
-        function animateOrbit() {
-            orbitAngle += 1;
-            orbitElements.forEach(o => {
-                const angle = o.baseAngle + orbitAngle * o.speed;
-                const x = Math.cos(angle) * o.radius;
-                const y = Math.sin(angle) * o.radius;
-                o.el.style.left = `calc(50% + ${x}px)`;
-                o.el.style.top = `calc(50% + ${y}px)`;
-            });
-            requestAnimationFrame(animateOrbit);
+        let orbitScale = 1;
+        let orbitTime = 0;
+        function orbitRadius(index) {
+            return orbitScale < 0.8
+                ? 240 * orbitScale * [0.56, 0.8, 1][index]
+                : orbitRings[index].radius * orbitScale;
         }
-        animateOrbit();
+        function resizeOrbit() {
+            orbitScale = Math.min(1, Math.max(0.25, (orbitContainer.clientWidth - 80) / 480));
+            orbitContainer.querySelectorAll('.orbit-ring').forEach((ring, i) => {
+                ring.style.width = ring.style.height = orbitRadius(i) * 2 + 'px';
+            });
+            renderOrbit(orbitTime);
+        }
+        new ResizeObserver(resizeOrbit).observe(orbitContainer);
+        resizeOrbit();
+        function renderOrbit(time) {
+            orbitTime = time;
+            orbitElements.forEach(o => {
+                const angle = o.baseAngle + o.ri * 0.4 + time * 35 * o.speed;
+                const x = Math.cos(angle) * orbitRadius(o.ri);
+                const y = Math.sin(angle) * orbitRadius(o.ri);
+                o.el.style.left = '50%';
+                o.el.style.top = '50%';
+                o.el.style.transform = `translate(-50%, -50%) translate3d(${x}px, ${y}px, 0)`;
+            });
+        }
+        SiteMotion.animate(orbitContainer, renderOrbit);
 
         /* ========================================
            3D CARD TILT
         ======================================== */
         document.querySelectorAll('.project-card').forEach(card => {
-            card.addEventListener('mousemove', e => {
-                const rect = card.getBoundingClientRect();
-                const x = (e.clientX - rect.left) / rect.width - 0.5;
-                const y = (e.clientY - rect.top) / rect.height - 0.5;
-                card.style.transform = `perspective(900px) rotateY(${x * 8}deg) rotateX(${-y * 8}deg) scale(1.01)`;
-                card.style.transition = 'transform 0.1s ease';
+            let frame = 0;
+            let pointerX = 0, pointerY = 0;
+            function resetCard() {
+                cancelAnimationFrame(frame);
+                frame = 0;
+                card.style.removeProperty('--tilt-x');
+                card.style.removeProperty('--tilt-y');
+                card.style.removeProperty('--light-x');
+                card.style.removeProperty('--light-y');
+            }
+            card.addEventListener('pointermove', e => {
+                if (!SiteMotion.enabled || !fineMotionPointer.matches || e.pointerType === 'touch') return;
+                pointerX = e.clientX;
+                pointerY = e.clientY;
+                if (frame) return;
+                frame = requestAnimationFrame(() => {
+                    frame = 0;
+                    const rect = card.getBoundingClientRect();
+                    const x = (pointerX - rect.left) / rect.width;
+                    const y = (pointerY - rect.top) / rect.height;
+                    card.style.setProperty('--light-x', `${x * 100}%`);
+                    card.style.setProperty('--light-y', `${y * 100}%`);
+                    card.style.setProperty('--tilt-x', `${(0.5 - y) * 3}deg`);
+                    card.style.setProperty('--tilt-y', `${(x - 0.5) * 3}deg`);
+                });
             });
-            card.addEventListener('mouseleave', () => {
-                card.style.transform = 'perspective(900px) rotateY(0) rotateX(0) scale(1)';
-                card.style.transition = 'transform 0.5s ease';
-            });
+            card.addEventListener('pointerleave', resetCard);
+            fineMotionPointer.addEventListener('change', resetCard);
+            SiteMotion.subscribe(resetCard);
         });
 
         /* ========================================
@@ -241,7 +285,10 @@
         const revealEls = document.querySelectorAll('.reveal');
         const revealObs = new IntersectionObserver(entries => {
             entries.forEach(e => {
-                if (e.isIntersecting) e.target.classList.add('visible');
+                if (e.isIntersecting) {
+                    e.target.classList.add('visible');
+                    revealObs.unobserve(e.target);
+                }
             });
         }, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
         revealEls.forEach(el => revealObs.observe(el));
@@ -258,7 +305,7 @@
                 const duration = target > 100 ? 2200 : 1600;
                 const startTime = performance.now();
                 function tick(now) {
-                    const progress = Math.min((now - startTime) / duration, 1);
+                    const progress = SiteMotion.enabled ? Math.min((now - startTime) / duration, 1) : 1;
                     const eased = 1 - Math.pow(1 - progress, 3);
                     const val = Math.floor(eased * target);
                     el.textContent = val.toLocaleString() + '+';
@@ -274,15 +321,17 @@
            MAGNETIC BUTTONS
         ======================================== */
         document.querySelectorAll('.magnetic').forEach(btn => {
-            btn.addEventListener('mousemove', e => {
+            const resetButton = () => { btn.style.translate = ''; };
+            btn.addEventListener('pointermove', e => {
+                if (!SiteMotion.enabled || !fineMotionPointer.matches || e.pointerType === 'touch') return;
                 const rect = btn.getBoundingClientRect();
-                const x = (e.clientX - rect.left - rect.width / 2) * 0.3;
-                const y = (e.clientY - rect.top - rect.height / 2) * 0.3;
-                btn.style.transform = `translate(${x}px, ${y}px)`;
+                const x = Math.max(-5, Math.min(5, (e.clientX - rect.left - rect.width / 2) * 0.12));
+                const y = Math.max(-4, Math.min(4, (e.clientY - rect.top - rect.height / 2) * 0.12));
+                btn.style.translate = `${x}px ${y}px`;
             });
-            btn.addEventListener('mouseleave', () => {
-                btn.style.transform = 'translate(0, 0)';
-            });
+            btn.addEventListener('pointerleave', resetButton);
+            fineMotionPointer.addEventListener('change', resetButton);
+            SiteMotion.subscribe(resetButton);
         });
 
         /* ========================================
@@ -313,7 +362,7 @@
                 });
                 ticking = true;
             }
-        });
+        }, { passive: true });
 
         /* ========================================
            FLOAT / MORPH KEYFRAMES (injected)
@@ -342,13 +391,17 @@
         const mobileNavClose = document.getElementById('mobileNavClose');
         const closeMobileNav = () => {
             hamburger && hamburger.classList.remove('active');
+            hamburger && hamburger.setAttribute('aria-expanded', 'false');
             mobileNav && mobileNav.classList.remove('open');
             document.body.style.overflow = '';
         };
         if (hamburger && mobileNav) {
+            hamburger.setAttribute('aria-controls', 'mobileNav');
+            hamburger.setAttribute('aria-expanded', 'false');
             hamburger.addEventListener('click', () => {
                 hamburger.classList.toggle('active');
                 mobileNav.classList.toggle('open');
+                hamburger.setAttribute('aria-expanded', String(mobileNav.classList.contains('open')));
                 document.body.style.overflow = mobileNav.classList.contains('open') ? 'hidden' : '';
             });
             mobileNav.querySelectorAll('a').forEach(link => {
@@ -358,3 +411,9 @@
         if (mobileNavClose) {
             mobileNavClose.addEventListener('click', closeMobileNav);
         }
+        document.addEventListener('keydown', event => {
+            if (event.key === 'Escape' && mobileNav?.classList.contains('open')) {
+                closeMobileNav();
+                hamburger.focus();
+            }
+        });

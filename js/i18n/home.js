@@ -3,6 +3,11 @@ window.registerI18nChunk({
   "zh": {
     "hero_badge": "Full-Stack & AI Vision Developer",
     "hero_scroll": "SCROLL",
+    "hero_projects": "探索项目",
+    "hero_articles": "阅读文章",
+    "motion_label": "动态效果",
+    "motion_hint": "暂停或恢复装饰动画",
+    "motion_system": "已根据系统的减少动态效果偏好暂停动画",
     "typing_roles": [
       "视觉模型开发者",
       "全栈工程师",
@@ -119,7 +124,7 @@ window.registerI18nChunk({
     "contact_subject": "主题",
     "contact_message": "想聊些什么？",
     "contact_submit": "发送消息 →",
-    "footer_copy": "&copy; 2026 Eric. Built with kk's <span class=\"heart\">♥</span> love and too much coffee.",
+    "footer_copy": "&copy; 2026 Eric. Built with too much coffee.",
     "cmdk_placeholder": "输入命令或搜索...",
     "cmdk_toggle_theme": "切换主题",
     "cmdk_goto_about": "关于我",
@@ -141,6 +146,11 @@ window.registerI18nChunk({
   "en": {
     "hero_badge": "Full-Stack & AI Vision Developer",
     "hero_scroll": "SCROLL",
+    "hero_projects": "Explore projects",
+    "hero_articles": "Read the journal",
+    "motion_label": "Motion",
+    "motion_hint": "Pause or resume decorative animation",
+    "motion_system": "Animations paused to respect your reduced motion preference",
     "typing_roles": [
       "Vision Model Developer",
       "Full-Stack Engineer",
@@ -257,7 +267,7 @@ window.registerI18nChunk({
     "contact_subject": "Subject",
     "contact_message": "What's on your mind?",
     "contact_submit": "Send Message →",
-    "footer_copy": "&copy; 2026 Eric. Built with kk's <span class=\"heart\">♥</span> love and too much coffee.",
+    "footer_copy": "&copy; 2026 Eric. Built with too much coffee.",
     "cmdk_placeholder": "Type a command or search...",
     "cmdk_toggle_theme": "Toggle Theme",
     "cmdk_goto_about": "About Me",
