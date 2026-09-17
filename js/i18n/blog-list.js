@@ -1,6 +1,9 @@
 /* i18n data: blog-list */
 window.registerI18nChunk({
   "zh": {
+    "blog36_title": "谁有权训练谁？Kimi–Claude 争议中的蒸馏与数据边界",
+    "blog_card36_title": "谁有权训练谁？Kimi–Claude 争议中的蒸馏与数据边界",
+    "blog_card36_desc": "模型蒸馏本身不是罪名，但访问方式、合同边界和用户数据必须分别审查。真正的问题不是能不能学，而是谁承担学习的代价。",
     "blog35_title": "机器人的三个时钟：从 Demo 到生产力，差的不只是模型",
     "blog_card35_title": "机器人的三个时钟：从 Demo 到生产力，差的不只是模型",
     "blog_card35_desc": "硬件、智能与资本沿着不同速度前进。机器人真正进入生产力阶段，要靠长期可靠运行和一组比出货量更硬的指标来证明。",
@@ -78,7 +81,7 @@ window.registerI18nChunk({
     "blog_card11_desc": "Context Rot 的两种机制——注意力稀释与上下文中毒，以及行业正在给出的不同答案。为什么「清空重开」目前仍然是最有效的解法？",
     "blog_back": "← 返回首页",
     "blog_list_title": "// 全部文章",
-    "blog_list_sub": "All Posts — 35 articles and counting",
+    "blog_list_sub": "All Posts — 36 articles and counting",
     "blog_filter_kicker": "SIGNAL ROUTER",
     "blog_filter_title": "按主题轨道切换阅读流",
     "blog_filter_sub": "把文章列表切成不同信道，快速定位 AI 工程、Agent、视觉多模态、系统架构、技术观察和社会随笔内容。",
@@ -129,6 +132,9 @@ window.registerI18nChunk({
     "blog9_title": "「内卷」与「躺平」：一代人的焦虑与突围"
   },
   "en": {
+    "blog36_title": "Who Gets to Train on Whom? Distillation and Data Boundaries in the Kimi–Claude Dispute",
+    "blog_card36_title": "Who Gets to Train on Whom? Distillation and Data Boundaries in the Kimi–Claude Dispute",
+    "blog_card36_desc": "Model distillation is not itself an offense, but access methods, contractual boundaries, and user data require separate scrutiny. The real question is who bears the cost of learning.",
     "blog35_title": "The Three Clocks of Robotics: The Gap From Demo to Productivity Is More Than a Model",
     "blog_card35_title": "The Three Clocks of Robotics: The Gap From Demo to Productivity Is More Than a Model",
     "blog_card35_desc": "Hardware, intelligence, and capital move at different speeds. Robotics becomes productive only when long-term reliability and operating metrics prove it.",
@@ -206,7 +212,7 @@ window.registerI18nChunk({
     "blog_card11_desc": "Two mechanisms behind Context Rot — attention dilution and context poisoning — and the different answers the industry is giving. Why is \"starting fresh\" still the most effective fix?",
     "blog_back": "← Back to Home",
     "blog_list_title": "// All Posts",
-    "blog_list_sub": "All Posts — 35 articles and counting",
+    "blog_list_sub": "All Posts — 36 articles and counting",
     "blog_filter_kicker": "SIGNAL ROUTER",
     "blog_filter_title": "Switch Reading Lanes by Topic",
     "blog_filter_sub": "Slice the archive into AI engineering, Agent automation, vision and multimodal work, system architecture, technical observation, and social essays.",

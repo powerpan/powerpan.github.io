@@ -5,7 +5,15 @@
     <link>https://erickk.site/blog/</link>
     <description>Eric 的 AI 工程、计算机视觉、Agent 架构与系统设计技术博客。</description>
     <language>zh-CN</language>
-    <lastBuildDate>Sun, 23 Aug 2026 00:00:00 GMT</lastBuildDate>
+    <lastBuildDate>Thu, 17 Sep 2026 00:00:00 GMT</lastBuildDate>
+    <item>
+      <title>谁有权训练谁？Kimi–Claude 争议中的蒸馏与数据边界</title>
+      <link>https://erickk.site/blog/kimi-claude-distillation-rights.html</link>
+      <guid>https://erickk.site/blog/kimi-claude-distillation-rights.html</guid>
+      <pubDate>Thu, 17 Sep 2026 00:00:00 GMT</pubDate>
+      <category>技术观察</category>
+      <description>模型蒸馏本身不是罪名，但访问方式、合同边界和用户数据必须分别审查。真正的问题不是能不能学，而是谁承担学习的代价。</description>
+    </item>
     <item>
       <title>机器人的三个时钟：从 Demo 到生产力，差的不只是模型</title>
       <link>https://erickk.site/blog/robot-three-clocks.html</link>
@@ -157,14 +165,6 @@
       <pubDate>Tue, 28 Apr 2026 00:00:00 GMT</pubDate>
       <category>系统架构</category>
       <description>CRUD 是基础能力，但复杂业务系统需要围绕业务动作、任务工作台、状态流转、事件协同和 Agent 工具边界重新设计。</description>
-    </item>
-    <item>
-      <title>AI Agent 架构：从会聊天到会执行，中间差了一套系统</title>
-      <link>https://erickk.site/blog/ai-agent-architecture.html</link>
-      <guid>https://erickk.site/blog/ai-agent-architecture.html</guid>
-      <pubDate>Mon, 27 Apr 2026 00:00:00 GMT</pubDate>
-      <category>Agent 自动化</category>
-      <description>AI Agent 不是更强的聊天框，而是一套由控制循环、工具调用、状态记忆和治理机制组成的执行系统。</description>
     </item>
   </channel>
 </rss>

@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>谁有权训练谁？Kimi–Claude 争议中的蒸馏与数据边界 — Eric</title>
+    <!-- SEO:START -->
+    <meta name="description" content="模型蒸馏本身不是罪名，但访问方式、合同边界和用户数据必须分别审查。真正的问题不是能不能学，而是谁承担学习的代价。">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://erickk.site/blog/kimi-claude-distillation-rights.html">
+    <link rel="alternate" type="application/rss+xml" title="Eric Blog RSS" href="https://erickk.site/feed.xml">
+    <meta property="og:site_name" content="Eric">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="谁有权训练谁？Kimi–Claude 争议中的蒸馏与数据边界 — Eric">
+    <meta property="og:description" content="模型蒸馏本身不是罪名，但访问方式、合同边界和用户数据必须分别审查。真正的问题不是能不能学，而是谁承担学习的代价。">
+    <meta property="og:url" content="https://erickk.site/blog/kimi-claude-distillation-rights.html">
+    <meta property="og:image" content="https://erickk.site/assets/og-default.svg">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="谁有权训练谁？Kimi–Claude 争议中的蒸馏与数据边界 — Eric">
+    <meta name="twitter:description" content="模型蒸馏本身不是罪名，但访问方式、合同边界和用户数据必须分别审查。真正的问题不是能不能学，而是谁承担学习的代价。">
+    <meta name="twitter:image" content="https://erickk.site/assets/og-default.svg">
+    <meta property="article:published_time" content="2026-09-17">
+    <meta property="article:modified_time" content="2026-09-17">
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "谁有权训练谁？Kimi–Claude 争议中的蒸馏与数据边界",
+  "description": "模型蒸馏本身不是罪名，但访问方式、合同边界和用户数据必须分别审查。真正的问题不是能不能学，而是谁承担学习的代价。",
+  "url": "https://erickk.site/blog/kimi-claude-distillation-rights.html",
+  "mainEntityOfPage": "https://erickk.site/blog/kimi-claude-distillation-rights.html",
+  "datePublished": "2026-09-17",
+  "dateModified": "2026-09-17",
+  "author": {
+    "@type": "Person",
+    "name": "Eric Pan",
+    "url": "https://erickk.site",
+    "sameAs": [
+      "https://github.com/powerpan"
+    ]
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "Eric Pan",
+    "url": "https://erickk.site",
+    "sameAs": [
+      "https://github.com/powerpan"
+    ]
+  },
+  "image": "https://erickk.site/assets/og-default.svg",
+  "articleSection": "技术观察",
+  "keywords": [
+    "技术观察",
+    "observation"
+  ],
+  "inLanguage": "zh-CN"
+}
+    </script>
+    <!-- SEO:END -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/detail.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body>
+    <div class="detail-scroll-progress" id="detailScrollProgress"></div>
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor-dot" id="cursorDot"></div>
+    <canvas id="particleCanvas"></canvas>
+
+    <nav id="nav">
+        <a href="../index.html" class="nav-logo magnetic" data-hover>ERIC<span class="dot">.</span></a>
+        <ul class="nav-center">
+            <li><a href="../index.html#about" data-hover data-i18n="nav_about">// 关于</a></li>
+            <li><a href="../index.html#projects" data-hover data-i18n="nav_projects">// 项目</a></li>
+            <li><a href="../index.html#blog" data-hover data-i18n="nav_blog">// 博客</a></li>
+            <li><a href="../index.html#contact" data-hover data-i18n="nav_contact">// 联系</a></li>
+        </ul>
+        <div class="nav-status"><span class="status-dot"></span>Open to work</div>
+        <button class="nav-hamburger" id="navHamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+    </nav>
+    <div class="mobile-nav" id="mobileNav">
+        <button class="mobile-nav-close" id="mobileNavClose" aria-label="Close menu">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+        <ul class="mobile-nav-links">
+            <li><a href="../index.html#about" data-i18n="nav_about">// 关于</a></li>
+            <li><a href="../index.html#projects" data-i18n="nav_projects">// 项目</a></li>
+            <li><a href="../index.html#blog" data-i18n="nav_blog">// 博客</a></li>
+            <li><a href="../index.html#contact" data-i18n="nav_contact">// 联系</a></li>
+            <li><button class="mobile-lang-btn" id="mobileLangBtn" onclick="toggleLang()" data-i18n="nav_lang">中 / EN</button></li>
+        </ul>
+    </div>
+
+    <section class="blog-article-hero">
+        <div class="detail-hero-bg"></div>
+        <a href="../index.html#blog" class="detail-back" data-hover>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            <span data-i18n="detail_back_blog">返回博客</span>
+        </a>
+        <div class="blog-article-tag reveal" data-i18n="blog_tag_observation">技术观察</div>
+        <h1 class="blog-article-title reveal reveal-d1" data-i18n-html="bkcd_title">谁有权<span class="hl">训练谁</span>？</h1>
+        <div class="blog-article-meta reveal reveal-d2">
+            <span>📅 2026.09</span>
+            <span>⏱️ 8 min</span>
+            <span>👤 Eric Pan</span>
+        </div>
+        <p class="detail-subtitle reveal reveal-d3" data-i18n="bkcd_sub">Kimi–Claude 争议背后，真正需要拆开的是模型蒸馏、合同边界与用户数据三套不同的权利关系。</p>
+    </section>
+
+    <article class="blog-article-body">
+        <section class="detail-section reveal" id="intro">
+            <p data-i18n="bkcd_p1">Anthropic 在 2026 年 9 月的一份威胁情报报告中指控，Moonshot 将部分 Kimi 客户请求转发给 Claude，并保存部分交互用于提取推理轨迹和训练模型。报告同时明确表示，它不知道 Moonshot 是否告知了相关用户。</p>
+            <p data-i18n="bkcd_p2">这使争议不能只被压缩成一句“Kimi 有没有偷 Claude”。真正交叠的是三种不同权利：源模型提供者保护研发成果的空间，蒸馏方观察和学习竞争产品的空间，以及用户决定自己数据如何被处理的权利。</p>
+            <p><em data-i18n="bkcd_p3">资料核验截至 2026 年 9 月 17 日。本文讨论技术、合同与数据治理问题，不构成针对具体当事人的法律意见。</em></p>
+        </section>
+
+        <section class="detail-section reveal" id="claims">
+            <h2 data-i18n="bkcd_s1">先把指控、事实和判断分开</h2>
+            <p data-i18n="bkcd_p4">报告提到两组不能混用的数据：一个十天窗口内约 30 万条客户请求被转发；另有 2026 年 5 至 7 月归因于 Moonshot 的超过 2300 万次蒸馏交互。后者不是“被转发用户”的数量，更不能由此推出 2300 万名用户的数据都被转交。</p>
+            <p data-i18n="bkcd_p5">报告是利益相关方给出的技术归因，不是司法判决。访问方式、账户关系、用户是否知情、训练数据如何形成，都需要分别举证。合理的讨论既不能把报告当成终局结论，也不能因为它来自竞争对手就忽略其中可核验的技术证据。</p>
+        </section>
+
+        <section class="detail-section reveal" id="distillation">
+            <h2 data-i18n="bkcd_s2">蒸馏是一种方法，不是一项罪名</h2>
+            <p data-i18n="bkcd_p6">知识蒸馏让学生模型学习教师模型提供的输出、解释或其他训练信号。它可以发生在同一家公司内部，也可以发生在明确授权的合作里。技术有正当用途，不代表每一批训练数据来源都正当；存在一个“学生”，也不等于“老师”天然受到了侵害。</p>
+            <p data-i18n="bkcd_p7">推理轨迹之所以有价值，是因为它不只给出答案，还展示任务拆解、验证和修正的样例。但拿到一段 reasoning，不等于拿到模型权重，更不等于复制了完整智能。输出、公开可观察的行为和受到保护的内部信息，必须分开判断。</p>
+            <p data-i18n="bkcd_p8">“Claude 可以学习互联网，Kimi 为什么不能学习 Claude”是一个有效追问，却不是免责答案。上游训练要说明数据来源和法律依据，下游蒸馏也要说明访问许可与使用边界。不能把所有上游训练都美化成学习，再把所有下游复用都概括成窃取；反过来也一样。</p>
+        </section>
+
+        <section class="detail-section reveal" id="contracts">
+            <h2 data-i18n="bkcd_s3">输出、合同与竞争不是同一个问题</h2>
+            <p data-i18n="bkcd_p9">Anthropic 商业条款一方面约定客户在适用法律允许范围内拥有输出，另一方面限制利用服务开发竞争产品或训练竞争模型。这不必然矛盾，因为“输出可能归谁”“合同承诺允许怎么用”“法律是否赋予排他权”本来就是三条不同路径。</p>
+            <p data-i18n="bkcd_p10">AI 输出也并非天然都受完整版权保护。人类创作部分、输出中已有作品的表达、纯机器生成部分可能处于不同状态。即使某段输出缺乏版权，也不能自动抹去有效合同；而一家公司的服务条款，也不能不经分析就变成约束所有市场参与者的普遍法律。</p>
+            <p data-i18n="bkcd_p11">真正需要追问的是：谁接受了哪一版合同，通过什么账户和渠道取得输出，限制条款能否有效纳入，以及具体行为能否归责于相关主体。</p>
+        </section>
+
+        <section class="detail-section reveal" id="users">
+            <h2 data-i18n="bkcd_s4">两家模型公司的许可，不等于用户许可</h2>
+            <p data-i18n="bkcd_p12">即使源模型提供者明确允许蒸馏，真实用户的任务仍可能沿着另一条链路流动：</p>
+            <pre><code data-i18n="bkcd_l1">用户内容 → 前端 AI 产品 → 第三方模型 → 保存与整理 → 学生模型</code></pre>
+            <p data-i18n="bkcd_p13">这条链路中的提示词可能包含个人信息、雇主内部代码或第三方作品。上传者能够粘贴内容，不等于有权替所有相关主体作出无限授权；用户同意完成当前任务，也不等于同意所有接收方、保留期限和后续训练用途。</p>
+            <p data-i18n="bkcd_p14">因此，数据治理必须单独回答：实际接收方是谁，处理目的是什么，是否只按委托执行，数据保留多久，能否进入训练，以及用户如何查询、限制或删除。源模型与蒸馏方之间的许可，不能代替用户对数据处理的授权。</p>
+        </section>
+
+        <section class="detail-section reveal" id="framework">
+            <h2 data-i18n="bkcd_s5">用四个问题拆开治理</h2>
+            <p data-i18n="bkcd_p15">与其给所有行为排一条从“正常学习”到“盗窃”的情绪阶梯，不如独立检查四个维度：</p>
+            <ul>
+                <li data-i18n-html="bkcd_f1"><strong>访问是否正当。</strong>公开观察、经许可调用、使用未经授权的身份或绕过控制，不是同一件事。</li>
+                <li data-i18n-html="bkcd_f2"><strong>模型信号允许怎样使用。</strong>展示、保存、评估和训练竞争模型需要分别约定。</li>
+                <li data-i18n-html="bkcd_f3"><strong>复用的目的与影响是什么。</strong>研究、压缩、互操作与直接商业替代涉及不同利益。</li>
+                <li data-i18n-html="bkcd_f4"><strong>第三方数据是否被妥善处理。</strong>即使模型公司之间已经授权，用户告知、合法依据、用途和保留期限仍要单独成立。</li>
+            </ul>
+            <p data-i18n="bkcd_p16">产品可以先做几件具体的事：清楚披露是否调用第三方模型；允许企业管理员限制供应商；把完成当前任务与后续训练分开说明；记录数据来源和允许用途；用最小化的路由审计记录接收方、用途和授权状态，而不是再复制一份完整对话。</p>
+        </section>
+
+        <section class="detail-section reveal" id="takeaway">
+            <h2 data-i18n="bkcd_s6">写在最后</h2>
+            <p data-i18n="bkcd_p17">AI 时代确实需要保留学习和竞争的空间，否则模型能力会被少数服务商永久封闭。但“学习的自由”不是一张覆盖访问方式、合同承诺和用户数据的通行证。</p>
+            <p data-i18n="bkcd_p18">谁主张学习的自由，谁就应说明尊重了哪些边界；谁主张排除别人学习，也应说明控制建立在哪项权利上。最不能被省略的，是最初提交问题的那个人。</p>
+            <blockquote data-i18n-html="bkcd_p19"><strong>技术进步可以来自相互学习，但不应把某一方失去控制的代价，隐藏在另一方模型变强的成绩里。</strong></blockquote>
+            <p data-i18n-html="bkcd_p20">主要资料：<a href="https://www.anthropic.com/threat-intelligence-report-september-2026" target="_blank" rel="noopener">Anthropic 2026 年 9 月威胁情报报告</a>、<a href="https://www.anthropic.com/legal/commercial-terms" target="_blank" rel="noopener">Anthropic 商业条款</a>、<a href="https://www.copyright.gov/newsnet/2025/1060.html" target="_blank" rel="noopener">美国版权局 AI 输出说明</a>、<a href="https://en.spp.gov.cn/2021-12/29/c_948419.htm" target="_blank" rel="noopener">《中华人民共和国个人信息保护法》</a>及 <a href="https://www.ftc.gov/policy/advocacy-research/tech-at-ftc/2024/01/ai-companies-uphold-your-privacy-confidentiality-commitments" target="_blank" rel="noopener">FTC 关于 AI 隐私与保密承诺的说明</a>。</p>
+        </section>
+    </article>
+
+    <!-- RELATED POSTS:START -->
+    <section class="related-posts reveal" aria-labelledby="relatedPostsTitle">
+        <div class="related-posts-kicker" data-i18n="related_posts_kicker">RELATED</div>
+        <h2 id="relatedPostsTitle" data-i18n="related_posts_title">相关文章</h2>
+        <div class="related-posts-grid">
+            <a href="robot-three-clocks.html" class="related-post-card" data-hover>
+                <span class="related-post-tag" data-i18n="blog_tag_observation">技术观察</span>
+                <h3 data-i18n="blog_card35_title">机器人的三个时钟：从 Demo 到生产力，差的不只是模型</h3>
+                <p data-i18n="blog_card35_desc">硬件、智能与资本沿着不同速度前进。机器人真正进入生产力阶段，要靠长期可靠运行和一组比出货量更硬的指标来证明。</p>
+                <span class="related-post-more" data-i18n="related_posts_more">继续阅读</span>
+            </a>
+            <a href="huawei-tau-law-media-narrative.html" class="related-post-card" data-hover>
+                <span class="related-post-tag" data-i18n="blog_tag_observation">技术观察</span>
+                <h3 data-i18n="blog_card33_title">当技术路线被包装成“定律”：理性看待华为韬定律的媒体叙事</h3>
+                <p data-i18n="blog_card33_desc">韬定律背后指向后摩尔时代的真实工程问题，但媒体叙事容易把系统级优化包装成从零发明的新神话。</p>
+                <span class="related-post-more" data-i18n="related_posts_more">继续阅读</span>
+            </a>
+            <a href="embodied-ai-commercial-loop.html" class="related-post-card" data-hover>
+                <span class="related-post-tag" data-i18n="blog_tag_observation">技术观察</span>
+                <h3 data-i18n="blog_card32_title">中国具身智能的真正考验：不是会不会翻跟头，而是能不能形成商业闭环</h3>
+                <p data-i18n="blog_card32_desc">具身智能公司的真正考验，不是演示视频多震撼，而是能否跑通低成本本体、真实场景、数据回流、模型提升和客户复购的商业闭环。</p>
+                <span class="related-post-more" data-i18n="related_posts_more">继续阅读</span>
+            </a>
+        </div>
+    </section>
+    <!-- RELATED POSTS:END -->
+
+    <div class="detail-toc" id="detailToc">
+        <div class="detail-toc-item" data-target="claims" data-label="指控"></div>
+        <div class="detail-toc-item" data-target="distillation" data-label="蒸馏"></div>
+        <div class="detail-toc-item" data-target="contracts" data-label="合同"></div>
+        <div class="detail-toc-item" data-target="users" data-label="用户"></div>
+        <div class="detail-toc-item" data-target="framework" data-label="治理"></div>
+        <div class="detail-toc-item" data-target="takeaway" data-label="结语"></div>
+    </div>
+
+    <footer class="detail-footer">
+        <div class="detail-footer-copy">&copy; 2026 Eric. Built with <span class="heart">♥</span> and too much coffee.</div>
+        <div class="detail-footer-links">
+            <a href="../index.html">← Back to Home</a>
+            <a href="https://github.com/powerpan" target="_blank">GitHub</a>
+        </div>
+    </footer>
+    <button class="back-to-top" id="backToTop" title="回到顶部" data-i18n-title="back_to_top">↑</button>
+    <script src="../js/i18n.js"></script>
+    <script src="../js/i18n/core.js"></script>
+    <script src="../js/i18n/blog-list.js"></script>
+    <script src="../js/i18n/articles/kimi-claude-distillation-rights.js"></script>
+    <script src="../js/detail.js"></script>
+</body>
+</html>
