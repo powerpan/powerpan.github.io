@@ -156,6 +156,13 @@ python3 -m http.server 8080
 - **Output directory:** `_site`
 - **Do not publish:** `tools/`, `admin/`, `transfer/`, `rag-articles/`, `blog-drafts/`, root Markdown docs
 
+### Retired Domain Redirect
+- Since 2026-09-28, `erickk.site` is a redirect-only alias, not a Pages custom domain.
+- Its Cloudflare zone has a Single Redirect named `Migrate erickk.site to erichz.site`: match `(http.host eq "erickk.site")`, target `concat("https://erichz.site", http.request.uri.path)`, status `301`, preserve query string enabled.
+- The old root DNS record is a proxied `A` record pointing to `192.0.2.1`, Cloudflare's redirect-only placeholder. It no longer points to Pages; keep the zone, DNS proxy, certificate, redirect rule, and existing verification TXT record while old links must work.
+- This redirect is managed in Cloudflare, not `_redirects`. Do not remove the old zone or restore its Pages binding as routine cleanup.
+- Canonical URLs, RSS, sitemap, and generated social preview metadata use `https://erichz.site`; `tools/update_seo.js` and `admin/editor.html` must use the same origin.
+
 ### Git Workflow
 ```bash
 node tools/update_seo.js --check
