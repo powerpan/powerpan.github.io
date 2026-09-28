@@ -2,11 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://erichz.site/</loc>
-    <lastmod>2026-09-17</lastmod>
+    <lastmod>2026-09-28</lastmod>
   </url>
   <url>
     <loc>https://erichz.site/blog/</loc>
-    <lastmod>2026-09-17</lastmod>
+    <lastmod>2026-09-28</lastmod>
   </url>
   <url>
     <loc>https://erichz.site/blog/topics/ai.html</loc>
@@ -14,7 +14,7 @@
   </url>
   <url>
     <loc>https://erichz.site/blog/topics/agent.html</loc>
-    <lastmod>2026-05-12</lastmod>
+    <lastmod>2026-09-28</lastmod>
   </url>
   <url>
     <loc>https://erichz.site/blog/topics/vision.html</loc>
@@ -31,6 +31,10 @@
   <url>
     <loc>https://erichz.site/blog/topics/essay.html</loc>
     <lastmod>2026-05-25</lastmod>
+  </url>
+  <url>
+    <loc>https://erichz.site/blog/agent-goals-permission-boundaries.html</loc>
+    <lastmod>2026-09-28</lastmod>
   </url>
   <url>
     <loc>https://erichz.site/blog/kimi-claude-distillation-rights.html</loc>

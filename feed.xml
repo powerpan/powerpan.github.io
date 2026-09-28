@@ -5,7 +5,15 @@
     <link>https://erichz.site/blog/</link>
     <description>Eric 的 AI 工程、计算机视觉、Agent 架构与系统设计技术博客。</description>
     <language>zh-CN</language>
-    <lastBuildDate>Thu, 17 Sep 2026 00:00:00 GMT</lastBuildDate>
+    <lastBuildDate>Mon, 28 Sep 2026 00:00:00 GMT</lastBuildDate>
+    <item>
+      <title>AI 不需要恶意，也能越过权限边界</title>
+      <link>https://erichz.site/blog/agent-goals-permission-boundaries.html</link>
+      <guid>https://erichz.site/blog/agent-goals-permission-boundaries.html</guid>
+      <pubDate>Mon, 28 Sep 2026 00:00:00 GMT</pubDate>
+      <category>Agent 自动化</category>
+      <description>一个找资料的任务，为什么会走到 DNS 出网、未经授权访问？几起公开事件把 Agent 的重试、权限和停机问题摆在了一起。</description>
+    </item>
     <item>
       <title>谁有权训练谁？Kimi–Claude 争议中的蒸馏与数据边界</title>
       <link>https://erichz.site/blog/kimi-claude-distillation-rights.html</link>
@@ -157,14 +165,6 @@
       <pubDate>Tue, 28 Apr 2026 00:00:00 GMT</pubDate>
       <category>视觉多模态</category>
       <description>开源模型和训练部署平台会继续降低门槛，视觉算法工程师真正的壁垒，是定义问题、设计数据闭环、诊断模型和系统落地。</description>
-    </item>
-    <item>
-      <title>别再把业务系统做成 CRUD 套壳：AI Agent 时代需要业务能力层</title>
-      <link>https://erichz.site/blog/agentic-business-systems.html</link>
-      <guid>https://erichz.site/blog/agentic-business-systems.html</guid>
-      <pubDate>Tue, 28 Apr 2026 00:00:00 GMT</pubDate>
-      <category>系统架构</category>
-      <description>CRUD 是基础能力，但复杂业务系统需要围绕业务动作、任务工作台、状态流转、事件协同和 Agent 工具边界重新设计。</description>
     </item>
   </channel>
 </rss>

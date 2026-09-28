@@ -2,6 +2,8 @@
 
 每次创建新博客文章时，需要按顺序完成以下步骤。
 
+正文编辑先遵守 `RAG_BLOG_WORKFLOW.md` 第 4 节：深度稿不能只剩提纲式摘要。详情页应保留关键案例的经过、证据出处和结论边界，中文与英文要承载同一组事实；小节标题用具体内容命名，阅读时长按最终正文重新核对。
+
 ---
 
 ## 1. 创建详情页 HTML
@@ -26,7 +28,7 @@
 - `<head>` 中的 CSS 引用顺序：`base.css` → `components.css` → `detail.css` → `responsive.css`
 - Nav 结构、scroll progress、cursor、particle canvas
 - Footer（`.detail-footer`）、back-to-top 按钮
-- 底部 `<script>` 引用：`i18n.js` → `i18n/core.js` → `i18n/articles/{slug}.js` → `detail.js`
+- 底部 `<script>` 引用：`i18n.js` → `i18n/core.js` → `i18n/blog-list.js` → `i18n/articles/{slug}.js` → `detail.js`
 - Mobile hamburger menu + `mobileLangBtn`
 
 ---
@@ -37,7 +39,7 @@
 
 使用规则如下：
 
-- 先随机挑选一行作为本次文章的大方向
+- 处理用户提供或线上中转的稿件时，按文章内容确定分类；只有原创选题才从主题池挑选方向
 - 这一行只代表“大主题”，不要直接照抄成具体小标题
 - 具体内容仍然由当前文章情况、近期技术趋势和站点已有内容共同决定
 - 站点当前使用 6 个主分类：`AI 工程`、`Agent 自动化`、`视觉多模态`、`系统架构`、`技术观察`、`社会随笔`
@@ -136,7 +138,7 @@ i18n 运行逻辑保留在 `js/i18n.js`，不要把新翻译继续塞回这个�
 - `reveal-d{N}` 从 `d0` 开始递增（第一篇无 class，第二篇 `d1`，以此类推）
 - 如果新文章是最新的，插入到第一位，原有卡片的 `d` 值全部 +1
 - 如果新文章不是最新的（不应该出现在主页），不要添加到主页
-- **不要删除或移除已有的卡片**
+- 新文章进入最新 6 篇时，将原第 6 篇从首页移出；它仍保留在归档页和详情页，不删除文章
 
 ---
 
@@ -198,6 +200,8 @@ blog_list_sub: 'All Posts — {N} articles and counting',
 - [ ] `blog_list_sub` 计数 = 列表页实际卡片数
 - [ ] 详情页 CSS 加载顺序正确（base → components → detail → responsive）
 - [ ] 详情页包含 mobileLangBtn
+- [ ] 正文不是提纲式缩写，案例过程、出处和证据限制完整
+- [ ] 中英文译文事实对齐，标题自然，阅读时长在详情页与卡片一致
 - [ ] 已运行 `node tools/update_seo.js`
 - [ ] 已运行 `node tools/update_seo.js --check`
 - [ ] 已运行 `node tools/check_i18n.js`
@@ -235,6 +239,8 @@ node tools/build_site.js --check
 ---
 
 ## 7. 提交
+
+默认留在工作区供审阅。只有用户明确要求提交或推送时，才执行 Git 操作；新文章成功推送后，按 `RAG_BLOG_WORKFLOW.md` 提醒用户将 `rag-articles/{slug}.md` 放入实际 RAG 系统。
 
 ```bash
 git add -A

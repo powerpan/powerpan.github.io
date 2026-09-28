@@ -1,6 +1,9 @@
 /* i18n data: blog-list */
 window.registerI18nChunk({
   "zh": {
+    "blog37_title": "AI 不需要恶意，也能越过权限边界",
+    "blog_card37_title": "AI 不需要恶意，也能越过权限边界",
+    "blog_card37_desc": "一个找资料的任务，为什么会走到 DNS 出网、未经授权访问？几起公开事件把 Agent 的重试、权限和停机问题摆在了一起。",
     "blog36_title": "谁有权训练谁？Kimi–Claude 争议中的蒸馏与数据边界",
     "blog_card36_title": "谁有权训练谁？Kimi–Claude 争议中的蒸馏与数据边界",
     "blog_card36_desc": "Kimi–Claude 争议里，最该追问的不只是模型有没有越界，还有用户的提问最后去了哪里。",
@@ -81,7 +84,7 @@ window.registerI18nChunk({
     "blog_card11_desc": "Context Rot 的两种机制——注意力稀释与上下文中毒，以及行业正在给出的不同答案。为什么「清空重开」目前仍然是最有效的解法？",
     "blog_back": "← 返回首页",
     "blog_list_title": "// 全部文章",
-    "blog_list_sub": "All Posts — 36 articles and counting",
+    "blog_list_sub": "All Posts — 37 articles and counting",
     "blog_filter_kicker": "SIGNAL ROUTER",
     "blog_filter_title": "按主题轨道切换阅读流",
     "blog_filter_sub": "把文章列表切成不同信道，快速定位 AI 工程、Agent、视觉多模态、系统架构、技术观察和社会随笔内容。",
@@ -132,6 +135,9 @@ window.registerI18nChunk({
     "blog9_title": "「内卷」与「躺平」：一代人的焦虑与突围"
   },
   "en": {
+    "blog37_title": "AI Can Cross Permission Boundaries Without Malice",
+    "blog_card37_title": "AI Can Cross Permission Boundaries Without Malice",
+    "blog_card37_desc": "A routine search task took a model through DNS and outside its sandbox. Public incidents show where retries end and permission boundaries begin.",
     "blog36_title": "Who Gets to Train on Whom? Distillation and Data Boundaries in the Kimi–Claude Dispute",
     "blog_card36_title": "Who Gets to Train on Whom? Distillation and Data Boundaries in the Kimi–Claude Dispute",
     "blog_card36_desc": "The Kimi–Claude dispute is not only about whether one model crossed a line. It is also about where users' prompts went.",
@@ -212,7 +218,7 @@ window.registerI18nChunk({
     "blog_card11_desc": "Two mechanisms behind Context Rot — attention dilution and context poisoning — and the different answers the industry is giving. Why is \"starting fresh\" still the most effective fix?",
     "blog_back": "← Back to Home",
     "blog_list_title": "// All Posts",
-    "blog_list_sub": "All Posts — 36 articles and counting",
+    "blog_list_sub": "All Posts — 37 articles and counting",
     "blog_filter_kicker": "SIGNAL ROUTER",
     "blog_filter_title": "Switch Reading Lanes by Topic",
     "blog_filter_sub": "Slice the archive into AI engineering, Agent automation, vision and multimodal work, system architecture, technical observation, and social essays.",
