@@ -3,6 +3,7 @@
 const fs = require('fs');
 const path = require('path');
 const { spawnSync } = require('child_process');
+const { rewritePublicLinks } = require('./site_urls');
 
 const root = path.resolve(__dirname, '..');
 const outDirName = '_site';
@@ -115,21 +116,32 @@ function runSeoCheckOrUpdate() {
   }
 }
 
-function copyFile(source) {
+function publicContent(source, htmlFiles) {
+  const content = fs.readFileSync(source);
+  if (!source.endsWith('.html')) return content;
+  return Buffer.from(rewritePublicLinks(content.toString('utf8'), relPath(source), htmlFiles));
+}
+
+function copyFile(source, htmlFiles) {
   const rel = relPath(source);
   const destination = path.join(outDir, rel);
   fs.mkdirSync(path.dirname(destination), { recursive: true });
-  fs.copyFileSync(source, destination);
+  if (source.endsWith('.html')) {
+    fs.writeFileSync(destination, publicContent(source, htmlFiles));
+  } else {
+    fs.copyFileSync(source, destination);
+  }
 }
 
 function build() {
   const sources = expectedSourceFiles();
+  const htmlFiles = new Set(sources.map(relPath).filter((rel) => rel.endsWith('.html')));
   fs.rmSync(outDir, { recursive: true, force: true });
   fs.mkdirSync(outDir, { recursive: true });
 
   for (const source of sources) {
     assertRegularSource(source);
-    copyFile(source);
+    copyFile(source, htmlFiles);
   }
 
   assertNoForbiddenOutput();
@@ -149,6 +161,7 @@ function assertNoForbiddenOutput() {
 
 function checkOutput() {
   const sources = expectedSourceFiles();
+  const htmlFiles = new Set(sources.map(relPath).filter((rel) => rel.endsWith('.html')));
   if (!fs.existsSync(outDir)) {
     throw new Error(`${outDirName}/ does not exist. Run node tools/build_site.js first.`);
   }
@@ -168,7 +181,7 @@ function checkOutput() {
       problems.push(`missing ${rel}`);
       continue;
     }
-    if (!fs.readFileSync(source).equals(fs.readFileSync(built))) {
+    if (!publicContent(source, htmlFiles).equals(fs.readFileSync(built))) {
       problems.push(`out of date ${rel}`);
     }
   }
@@ -200,6 +213,11 @@ try {
   } else {
     build();
   }
+  const urlCheck = spawnSync(process.execPath, [path.join('tools', 'check_urls.js')], {
+    cwd: root,
+    stdio: 'inherit',
+  });
+  if (urlCheck.status !== 0) throw new Error('Published URL validation failed.');
 } catch (error) {
   console.error(error.message);
   process.exit(1);

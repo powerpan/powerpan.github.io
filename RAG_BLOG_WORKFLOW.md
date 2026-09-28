@@ -330,6 +330,7 @@ node tools/update_seo.js --check
 node tools/check_i18n.js
 node tools/build_site.js
 node tools/build_site.js --check
+npm run check
 ```
 
 ---
@@ -349,6 +350,7 @@ node tools/build_site.js --check
 - [ ] `node tools/check_i18n.js` 严格项通过
 - [ ] `node tools/build_site.js` 已生成 `_site/` 发布目录
 - [ ] `node tools/build_site.js --check` 通过
+- [ ] `npm run check` 通过（包括公开网址、站内链接及旧链接兼容测试）；发布版使用 `npm run preview` 预览
 - [ ] 首页最新 6 篇规则正确
 - [ ] 列表页包含全部文章，排序和编号正确
 - [ ] `blog_list_sub` 计数正确

@@ -221,6 +221,7 @@ node tools/update_seo.js --check
 node tools/check_i18n.js
 node tools/build_site.js
 node tools/build_site.js --check
+npm run check
 ```
 
 `tools/update_seo.js` 会根据 `blog/index.html` 的文章列表同步以下内容：
@@ -233,6 +234,10 @@ node tools/build_site.js --check
 - 文章底部的相关文章模块
 
 `tools/build_site.js` 会把公开站点文件复制到 `_site/`。Cloudflare Pages 应发布 `_site/`，不要直接发布仓库根目录；`tools/`、`admin/`、`transfer/`、`rag-articles/`、`blog-drafts/` 和根目录 Markdown 文档都不应进入线上静态文件。
+
+源码文件和文章卡片链接仍使用 `.html`，供编辑器、导入工具及直接打开文件预览使用。发布时构建脚本会把指向公开 HTML 页面的链接转换为无扩展名网址，目录首页则使用尾部 `/`；canonical、sitemap、RSS 链接及 JSON-LD 使用相同规范。不要手工重命名文章文件，也不要添加把无扩展名网址跳回 `.html` 的规则。RSS 的 GUID 保留既有标识，不当作访问网址修改。
+
+检查发布版请运行 `npm run preview` 并打开 `http://127.0.0.1:4173/`，该预览服务支持无扩展名访问。完成构建后运行 `npm run check`，确认所有公开页的 canonical、站内链接、sitemap、RSS 及网址兼容测试通过。
 
 不要手工维护这些生成内容；如果页面展示或 SEO 信息不对，先修正文章详情页和 `blog/index.html` 的标题、摘要、日期、分类，再重新运行脚本。
 

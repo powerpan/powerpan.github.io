@@ -2,11 +2,11 @@
 
 const fs = require('fs');
 const path = require('path');
+const { SITE_ORIGIN, canonicalFor } = require('./site_urls');
 
 const root = path.resolve(__dirname, '..');
 const checkOnly = process.argv.includes('--check');
 
-const SITE_ORIGIN = 'https://erichz.site';
 const SITE_NAME = 'Eric';
 const AUTHOR_NAME = 'Eric Pan';
 const DEFAULT_DESCRIPTION = 'Eric 的 AI 工程、计算机视觉、Agent 架构与系统设计技术博客。';
@@ -96,17 +96,6 @@ function toIsoDate(dateText) {
 
 function toRssDate(dateText) {
   return new Date(`${toIsoDate(dateText)}T00:00:00Z`).toUTCString();
-}
-
-function canonicalFor(rel) {
-  if (rel === 'index.html') return `${SITE_ORIGIN}/`;
-  if (rel === 'blog/index.html') return `${SITE_ORIGIN}/blog/`;
-  if (rel === 'projects/index.html') return `${SITE_ORIGIN}/projects/`;
-  return `${SITE_ORIGIN}/${rel.replace(/\\/g, '/')}`;
-}
-
-function pathForUrl(rel) {
-  return new URL(canonicalFor(rel)).pathname;
 }
 
 function readHeadMetadata(rel) {
@@ -415,7 +404,7 @@ function buildTopicPage(blogIndexHtml, category) {
   html = injectSeoBlock(html, seoMetaForPage('blog/index.html', 'topic', {
     title: `${category.label} — Eric`,
     description: `Eric 的 ${category.label} 专题归档，收录相关技术文章、工程复盘与观点笔记。`,
-    canonical: `${SITE_ORIGIN}/blog/topics/${category.id}.html`,
+    canonical: canonicalFor(`blog/topics/${category.id}.html`),
     posts: topicPosts,
   }));
 
@@ -470,7 +459,7 @@ Sitemap: ${SITE_ORIGIN}/sitemap.xml
 
 function generateSitemap(projectPages) {
   const topicEntries = categories.map((category) => ({
-    loc: `${SITE_ORIGIN}/blog/topics/${category.id}.html`,
+    loc: canonicalFor(`blog/topics/${category.id}.html`),
     lastmod: currentPosts.find((post) => post.category === category.id)?.isoDate,
   }));
 
@@ -496,10 +485,11 @@ ${entries.map((entry) => `  <url>
 }
 
 function generateFeed() {
+  // Preserve published item identities when changing their navigation URLs.
   const items = currentPosts.slice(0, RSS_LIMIT).map((post) => `    <item>
       <title>${escapeXml(post.title)}</title>
       <link>${escapeXml(post.url)}</link>
-      <guid>${escapeXml(post.url)}</guid>
+      <guid isPermaLink="false">${escapeXml(`${SITE_ORIGIN}/${post.rel}`)}</guid>
       <pubDate>${toRssDate(post.date)}</pubDate>
       <category>${escapeXml(post.tag)}</category>
       <description>${escapeXml(post.description)}</description>

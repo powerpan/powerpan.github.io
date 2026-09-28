@@ -707,7 +707,7 @@
 
     function generateSeoHead(d, type) {
         const slug = d.slug || (type === 'blog' ? 'article-slug' : 'project-slug');
-        const pathName = type === 'blog' ? `/blog/${slug}.html` : `/projects/${slug}.html`;
+        const pathName = type === 'blog' ? `/blog/${slug}` : `/projects/${slug}`;
         const canonical = `${SEO_SITE_ORIGIN}${pathName}`;
         const title = type === 'blog'
             ? `${d.titleZh || '新文章'} — Eric`

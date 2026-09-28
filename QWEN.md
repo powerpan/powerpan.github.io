@@ -141,12 +141,21 @@ This is a **static site** — no framework and no bundler. Deployment uses `tool
 ### Local Development
 ```bash
 node tools/build_site.js
-python3 -m http.server 8080 -d _site
-# Then open http://localhost:8080
+npm run preview
+# Then open http://127.0.0.1:4173 (or set PORT=8080)
 
 # For source-level local editing, serving the repo root is also OK:
 python3 -m http.server 8080
 ```
+
+### Public URL Convention
+- Keep source filenames and source navigation links as `.html` so direct file previews and article import/generation tools continue to work.
+- Published detail pages use extensionless URLs (`/blog/article-slug`); index pages use a trailing slash (`/blog/`, `/projects/`). Cloudflare Pages already redirects the old `.html` URLs to these routes. Do not add a reverse redirect.
+- `tools/site_urls.js` defines canonical URLs. `tools/update_seo.js` uses them for canonical tags, Open Graph, JSON-LD, sitemap and RSS links; `admin/editor.html` must emit the same URL format.
+- `tools/build_site.js` normalizes links to known public HTML pages when writing `_site/`, preserving query strings, fragments, external URLs and download links. It does not rewrite source navigation or article text.
+- RSS GUIDs retain their existing values with `isPermaLink="false"`; they are stable identifiers, not navigation URLs.
+- Preview the published output with `npm run preview`, which supports clean URLs and legacy redirects. A plain file server for `_site/` does not implement extensionless routing.
+- Run `npm run check` after building. URL regression tests cover the editor, preview routing, canonical metadata, sitemap, RSS and all published internal links.
 
 ### Deployment
 - **Platform:** Cloudflare Pages (auto-deploys on push to `main`)
