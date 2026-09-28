@@ -6,7 +6,7 @@ const path = require('path');
 const root = path.resolve(__dirname, '..');
 const checkOnly = process.argv.includes('--check');
 
-const SITE_ORIGIN = 'https://erickk.site';
+const SITE_ORIGIN = 'https://erichz.site';
 const SITE_NAME = 'Eric';
 const AUTHOR_NAME = 'Eric Pan';
 const DEFAULT_DESCRIPTION = 'Eric 的 AI 工程、计算机视觉、Agent 架构与系统设计技术博客。';
@@ -563,7 +563,7 @@ function main() {
   <text x="120" y="315" fill="#f5f7fb" font-family="Arial, Helvetica, sans-serif" font-size="76" font-weight="700">AI Engineering Notes</text>
   <text x="120" y="390" fill="#9fb2c7" font-family="Arial, Helvetica, sans-serif" font-size="34">Vision · Agent Architecture · System Design</text>
   <rect x="120" y="455" width="310" height="54" rx="10" fill="url(#accent)" opacity="0.92"/>
-  <text x="148" y="491" fill="#03100a" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="700">erickk.site</text>
+  <text x="148" y="491" fill="#03100a" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="700">${new URL(SITE_ORIGIN).hostname}</text>
 </svg>
 `);
 

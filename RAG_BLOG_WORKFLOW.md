@@ -40,7 +40,7 @@ GitHub 仓库：powerpan/gpt-codex-workspace
 ```text
 GitHub 仓库：powerpan/powerpan.github.io
 本地路径：/Users/ericpan/game_project/webblog
-线上站点：https://erickk.site/
+线上站点：https://erichz.site/
 ```
 
 线上中转稿件进入本地发布流程时，先把选中的远程草稿归档到本地：

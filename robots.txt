@@ -12,4 +12,4 @@ Disallow: /PROJECT_ASSET_PROMPT.md
 Disallow: /QWEN.md
 Disallow: /RAG_BLOG_WORKFLOW.md
 
-Sitemap: https://erickk.site/sitemap.xml
+Sitemap: https://erichz.site/sitemap.xml
