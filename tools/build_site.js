@@ -3,7 +3,7 @@
 const fs = require('fs');
 const path = require('path');
 const { spawnSync } = require('child_process');
-const { rewritePublicLinks } = require('./site_urls');
+const { createLocalizedPages } = require('./localize_site');
 
 const root = path.resolve(__dirname, '..');
 const outDirName = '_site';
@@ -116,36 +116,33 @@ function runSeoCheckOrUpdate() {
   }
 }
 
-function publicContent(source, htmlFiles) {
-  const content = fs.readFileSync(source);
-  if (!source.endsWith('.html')) return content;
-  return Buffer.from(rewritePublicLinks(content.toString('utf8'), relPath(source), htmlFiles));
-}
-
-function copyFile(source, htmlFiles) {
-  const rel = relPath(source);
-  const destination = path.join(outDir, rel);
-  fs.mkdirSync(path.dirname(destination), { recursive: true });
-  if (source.endsWith('.html')) {
-    fs.writeFileSync(destination, publicContent(source, htmlFiles));
-  } else {
-    fs.copyFileSync(source, destination);
+function expectedOutput() {
+  const entries = [];
+  const output = new Map();
+  for (const source of expectedSourceFiles()) {
+    assertRegularSource(source);
+    const rel = relPath(source);
+    if (rel.endsWith('.html')) entries.push({ rel, html: fs.readFileSync(source, 'utf8') });
+    else output.set(rel, source);
   }
+  for (const [rel, content] of createLocalizedPages(entries)) output.set(rel, content);
+  return output;
 }
 
 function build() {
-  const sources = expectedSourceFiles();
-  const htmlFiles = new Set(sources.map(relPath).filter((rel) => rel.endsWith('.html')));
+  const output = expectedOutput();
   fs.rmSync(outDir, { recursive: true, force: true });
   fs.mkdirSync(outDir, { recursive: true });
 
-  for (const source of sources) {
-    assertRegularSource(source);
-    copyFile(source, htmlFiles);
+  for (const [rel, content] of output) {
+    const destination = path.join(outDir, rel);
+    fs.mkdirSync(path.dirname(destination), { recursive: true });
+    if (Buffer.isBuffer(content)) fs.writeFileSync(destination, content);
+    else fs.copyFileSync(content, destination);
   }
 
   assertNoForbiddenOutput();
-  console.log(`Built ${outDirName}/ with ${sources.length} public files.`);
+  console.log(`Built ${outDirName}/ with ${output.size} public files.`);
 }
 
 function assertNoForbiddenOutput() {
@@ -160,16 +157,11 @@ function assertNoForbiddenOutput() {
 }
 
 function checkOutput() {
-  const sources = expectedSourceFiles();
-  const htmlFiles = new Set(sources.map(relPath).filter((rel) => rel.endsWith('.html')));
   if (!fs.existsSync(outDir)) {
     throw new Error(`${outDirName}/ does not exist. Run node tools/build_site.js first.`);
   }
 
-  const expected = new Map();
-  for (const source of sources) {
-    expected.set(relPath(source), source);
-  }
+  const expected = expectedOutput();
 
   const actual = walkFiles(outDir).map((file) => path.relative(outDir, file).split(path.sep).join('/'));
   const actualSet = new Set(actual);
@@ -181,7 +173,8 @@ function checkOutput() {
       problems.push(`missing ${rel}`);
       continue;
     }
-    if (!publicContent(source, htmlFiles).equals(fs.readFileSync(built))) {
+    const content = Buffer.isBuffer(source) ? source : fs.readFileSync(source);
+    if (!content.equals(fs.readFileSync(built))) {
       problems.push(`out of date ${rel}`);
     }
   }
@@ -213,11 +206,10 @@ try {
   } else {
     build();
   }
-  const urlCheck = spawnSync(process.execPath, [path.join('tools', 'check_urls.js')], {
-    cwd: root,
-    stdio: 'inherit',
-  });
-  if (urlCheck.status !== 0) throw new Error('Published URL validation failed.');
+  for (const check of ['check_urls.js', 'check_locales.js']) {
+    const result = spawnSync(process.execPath, [path.join('tools', check)], { cwd: root, stdio: 'inherit' });
+    if (result.status !== 0) throw new Error(`Published validation failed: ${check}`);
+  }
 } catch (error) {
   console.error(error.message);
   process.exit(1);

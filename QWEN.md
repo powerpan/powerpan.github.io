@@ -4,7 +4,7 @@
 
 Personal portfolio website for Eric (潘世聪), a full-stack & AI vision developer from Guangzhou, China. Currently studying Software Engineering at 华南理工大学 (South China University of Technology, 2022–2026). The site showcases projects, blog posts, and skills with a **dark hacker/terminal aesthetic**.
 
-- **Type:** Pure static website — HTML / CSS / JavaScript, no framework or bundler; deployment uses a small Node allowlist copy step
+- **Type:** Pure static website — HTML / CSS / JavaScript, no frontend framework; Node/Cheerio generates bilingual static HTML at build time
 - **Hosting:** GitHub Pages via `powerpan.github.io`, with Cloudflare Pages deployment on custom domain `erichz.site`
 - **Repo:** `https://github.com/powerpan/powerpan.github.io`
 - **Branch:** `main`
@@ -108,7 +108,7 @@ Project pages load `i18n.js`, `i18n/core.js`, `i18n/projects.js`, then `detail.j
   - `data-i18n-html="key"` → sets `innerHTML` (for formatted text with `<span class="outline">` etc.)
   - `data-i18n-placeholder="key"` → sets `placeholder`
   - `data-i18n-title="key"` → sets `title`
-- **Language toggle:** `<button id="langToggle">` in nav, persists to `localStorage` key `'lang'`, defaults to `'zh'`.
+- **Language toggle:** Published HTML has real `langToggle`/`mobileLangBtn` links to the equivalent language page. `data-site-lang` fixes the language regardless of localStorage. Source previews retain the original in-place toggle and optional localStorage preference.
 - **Validation:** run `node tools/check_i18n.js` after i18n or page changes.
 
 ## Key Technical Details
@@ -136,10 +136,11 @@ All detail pages (`projects/*.html`, `blog/*.html`) share:
 
 ## Building & Running
 
-This is a **static site** — no framework and no bundler. Deployment uses `tools/build_site.js` to copy only public files into `_site/`, so source-only folders are not published.
+This is a **static site** with a build-time HTML transform, not a client-side framework. Use Node 22.16+ (`.node-version` selects Node 22), then `npm ci`. Deployment uses `tools/build_site.js` to copy public assets and generate both language versions in `_site/`; source-only folders are never published.
 
 ### Local Development
 ```bash
+npm ci
 node tools/build_site.js
 npm run preview
 # Then open http://127.0.0.1:4173 (or set PORT=8080)
@@ -156,6 +157,15 @@ python3 -m http.server 8080
 - RSS GUIDs retain their existing values with `isPermaLink="false"`; they are stable identifiers, not navigation URLs.
 - Preview the published output with `npm run preview`, which supports clean URLs and legacy redirects. A plain file server for `_site/` does not implement extensionless routing.
 - Run `npm run check` after building. URL regression tests cover the editor, preview routing, canonical metadata, sitemap, RSS and all published internal links.
+
+### Indexable English Pages
+- Chinese URLs stay unchanged. English equivalents use `/en/`, `/en/blog/`, `/en/blog/slug`, `/en/blog/topics/category`, `/en/projects/`, and `/en/projects/slug`.
+- `tools/localize_site.js` reads each page's declared dictionary chunks and translates both initial HTML documents at build time. Maintain the existing source HTML and `js/i18n/` only; never hand-edit or commit `_site/en/`.
+- URL language takes precedence over saved preferences. Published pages do not replay DOM translations on load, which protects localized links and metadata. Source/file previews still use runtime translation.
+- Each language has its own canonical, title, description, social metadata and JSON-LD, plus reciprocal `zh-CN`/`en` hreflang. Root sitemap lists both versions. Chinese RSS and existing GUIDs remain unchanged; no English RSS is advertised.
+- English navigation stays in `/en/`; shared CSS/JS/images retain root asset paths. Language links preserve query/hash with JS and remain ordinary working links without JS.
+- `npm run locales:check` checks every bilingual pair, resource paths, metadata, hreflang and untranslated visible text. It is also a deployment build gate. Native school names and explicitly explained Chinese terms in the involution essay are intentional exceptions, not missing translations.
+- Adding a page requires its declared translation chunks to contain all referenced keys. Add i18n markers for visible prose, quotations and code comments rather than relying on untranslated HTML fallbacks.
 
 ### Deployment
 - **Platform:** Cloudflare Pages (auto-deploys on push to `main`)

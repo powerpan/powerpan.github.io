@@ -1,6 +1,9 @@
 /* i18n data: articles / image-pipeline */
 window.registerI18nChunk({
   "zh": {
+    "bi_quote1": "流水线的价值不在于单个环节的高效，而在于整体的协调与平衡。一个瓶颈节点会拖慢整条链路。",
+    "bi_quote2": "经验教训：Kafka 消息体越小，吞吐量越高。将大块数据（如图像）放入对象存储，Kafka 只传递元数据和指针，是一个经过验证的最佳实践。",
+    "bi_deployment": "每个流水线阶段作为一个独立的 Kubernetes Deployment 运行，通过 HPA（Horizontal Pod Autoscaler）根据队列深度自动扩缩容。以下是 Inference Worker 的部署配置：",
     "bi_p1": "在构建实时图像处理系统时，传统的请求-响应模式往往无法满足高吞吐量和低延迟的双重需求。我们需要一种事件驱动的流水线架构，将图像处理拆分为多个独立的阶段，每个阶段可以独立扩展和优化。",
     "bi_p2": "核心设计原则：<strong>解耦、可扩展、容错</strong>。每个处理阶段都是一个独立的服务，通过消息队列进行通信，支持水平扩展和故障隔离。",
     "bi_p3": "我们将图像处理拆分为 5 个核心阶段，每个阶段对应一个独立的微服务：",
@@ -58,6 +61,9 @@ window.registerI18nChunk({
     "bi_s8": "总结与经验"
   },
   "en": {
+    "bi_quote1": "A pipeline's value lies not in the speed of any single stage, but in the coordination and balance of the whole. One bottleneck can slow down the entire chain.",
+    "bi_quote2": "Lesson learned: smaller Kafka messages enable higher throughput. A proven approach is to keep large payloads, such as images, in object storage and pass only metadata and references through Kafka.",
+    "bi_deployment": "Each pipeline stage runs as an independent Kubernetes Deployment. An HPA (Horizontal Pod Autoscaler) scales it according to queue depth. Here is the deployment configuration for the Inference Worker:",
     "bi_p1": "When building real-time image processing systems, traditional request-response patterns often can't meet the dual demands of high throughput and low latency. We need an event-driven pipeline architecture that splits image processing into multiple independent stages, each independently scalable and optimizable.",
     "bi_p2": "Core design principles: <strong>decouple, scale, fault-tolerant</strong>. Each processing stage is an independent service communicating through message queues, supporting horizontal scaling and fault isolation.",
     "bi_p3": "We split image processing into 5 core stages, each corresponding to an independent microservice:",

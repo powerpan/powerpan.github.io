@@ -15,20 +15,18 @@ function registerI18nChunk(chunk) {
 window.registerI18nChunk = registerI18nChunk;
 
 /* ---------- State ---------- */
-var currentLang = localStorage.getItem('lang') || 'zh';
+var staticLang = document.documentElement.getAttribute('data-site-lang');
+function readLanguagePreference() {
+  try { return localStorage.getItem('lang') === 'en' ? 'en' : 'zh'; }
+  catch { return 'zh'; }
+}
+var currentLang = staticLang || readLanguagePreference();
 
 function getCurrentTranslations() {
   return I18N[currentLang] || I18N.zh || {};
 }
 
-/* ---------- Core switch ---------- */
-function setLang(lang) {
-  currentLang = lang;
-  localStorage.setItem('lang', lang);
-  document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
-
-  const t = getCurrentTranslations();
-
+function translateSourcePage(t) {
   // Simple text replacements
   document.querySelectorAll('[data-i18n]').forEach((el) => {
     const key = el.getAttribute('data-i18n');
@@ -72,6 +70,26 @@ function setLang(lang) {
     const descText = firstArticleParagraph.textContent.trim().replace(/\s+/g, ' ');
     if (descText) articleDescription.setAttribute('content', descText.slice(0, 180));
   }
+}
+
+/* ---------- Core switch ---------- */
+function setLang(lang) {
+  if (lang !== 'zh' && lang !== 'en') return;
+  if (staticLang && lang !== staticLang) {
+    const alternate = document.querySelector('link[hreflang="' + (lang === 'en' ? 'en' : 'zh-CN') + '"]');
+    if (alternate) {
+      const target = new URL(alternate.href);
+      window.location.assign(target.pathname + window.location.search + window.location.hash);
+    }
+    return;
+  }
+  currentLang = lang;
+  try { localStorage.setItem('lang', lang); } catch { /* Storage is optional. */ }
+  document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
+
+  const t = getCurrentTranslations();
+  // Replaying source translations would undo published locale-aware links.
+  if (!staticLang) translateSourcePage(t);
 
   if (typeof window.updateDetailTocLabels === 'function') {
     window.updateDetailTocLabels();
@@ -101,7 +119,7 @@ window.toggleLang = toggleLang;
 document.addEventListener('DOMContentLoaded', () => {
   // Create lang toggle button in nav
   const nav = document.getElementById('nav');
-  if (nav) {
+  if (nav && !document.getElementById('langToggle')) {
     const langBtn = document.createElement('button');
     langBtn.id = 'langToggle';
     langBtn.className = 'lang-toggle magnetic';
@@ -115,6 +133,18 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
       nav.appendChild(langBtn);
     }
+  }
+
+  if (staticLang) {
+    ['langToggle', 'mobileLangBtn'].forEach((id) => {
+      const link = document.getElementById(id);
+      if (!link || !link.getAttribute('href')) return;
+      const pathname = new URL(link.href).pathname;
+      const updateLink = () => { link.href = pathname + window.location.search + window.location.hash; };
+      updateLink();
+      link.addEventListener('click', updateLink);
+      window.addEventListener('hashchange', updateLink);
+    });
   }
 
   // Apply initial language

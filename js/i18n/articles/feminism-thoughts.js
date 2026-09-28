@@ -40,7 +40,7 @@ window.registerI18nChunk({
     "bfem_p1": "Feminism is probably one of the most controversy-prone topics on today's internet. Whether on Weibo, Zhihu, or Bilibili, the moment the word \"feminism\" appears, the comment section inevitably becomes a battlefield. Supporters and opponents each hold their ground, and emotions often run ahead of reason.",
     "bfem_p2": "As a male STEM student, I admit writing about this topic comes with pressure. But I believe the more emotionally charged a topic is, the more someone needs to step back and try to lay things out clearly. This article isn't about taking sides — it's an attempt to sort out what feminism is, what it isn't, and how our generation can think about it from as objective a perspective as possible.",
     "bfem_s2": "What Does Feminism Actually Say?",
-    "bfem_p3": "Academically, feminism's core主张 is <strong>pursuing equal rights and opportunities between genders</strong>. It's not \"women are superior to men\" nor \"women should rule the world\" — it seeks to eliminate discrimination and inequality based on gender.",
+    "bfem_p3": "Academically, feminism's core principle is <strong>pursuing equal rights and opportunities between genders</strong>. It's not \"women are superior to men\" nor \"women should rule the world\" — it seeks to eliminate discrimination and inequality based on gender.",
     "bfem_p4": "Feminism has evolved through several waves:",
     "bfem_f1": "<strong>First Wave (late 19th – early 20th century)</strong> — Fighting for suffrage, education rights, property rights, and other basic legal rights",
     "bfem_f2": "<strong>Second Wave (1960s–1980s)</strong> — Focusing on workplace equality, reproductive rights, domestic violence, and other social issues",
@@ -54,7 +54,7 @@ window.registerI18nChunk({
     "bfem_p9": "<strong>Misconception 2: \"Chinese women are already equal enough — feminism isn't needed\"</strong>",
     "bfem_p10": "Legally, Chinese women do have many rights. But legal equality doesn't equal factual equality. The invisible glass ceiling at work, disproportionate household labor allocation, asymmetric career impact of childbirth, gender-based online harassment — these problems still exist.",
     "bfem_p11": "<strong>Misconception 3: \"Radical rhetoric = all of feminism\"</strong>",
-    "bfem_p12": "The internet amplifies the most extreme voices. The \"all men are trash\" type of rhetoric you see on social media doesn't represent the mainstream of feminism. Just as you wouldn't否定 an entire sport because of a few extreme fans, it's unfair to define the entire feminist movement by its most radical cases.",
+    "bfem_p12": "The internet amplifies the most extreme voices. The \"all men are trash\" type of rhetoric you see on social media doesn't represent the mainstream of feminism. Just as you wouldn't dismiss an entire sport because of a few extreme fans, it's unfair to define the entire feminist movement by its most radical cases.",
     "bfem_s4": "A Technologist's Perspective",
     "bfem_p13": "As a computer science student, I particularly want to discuss gender equality from a technology angle:",
     "bfem_f5": "<strong>Algorithmic Bias</strong> — Many AI systems have gender bias. Hiring AI discriminates against female resumes; language models associate \"nurse\" with women and \"engineer\" with men. This isn't a technology problem — it's a data and design problem",
@@ -64,7 +64,7 @@ window.registerI18nChunk({
     "bfem_s5": "What Should Our Generation Do?",
     "bfem_p15": "I believe our generation needs two abilities most when facing the topic of feminism: <strong>empathy</strong> and <strong>discernment</strong>.",
     "bfem_p16": "<strong>Empathy</strong> means being able to stand in the other person's shoes and understand why they think the way they do. When a woman says \"I'm afraid to walk at night,\" don't rush to say \"men are afraid too\" — first understand that the sense of insecurity she describes is real.",
-    "bfem_p17": "<strong>Discernment</strong> means being able to distinguish between \"legitimate demands\" and \"extreme rhetoric.\" Don't否定 an entire movement because of a few extreme cases, and don't abandon independent thinking because of \"political correctness.\"",
+    "bfem_p17": "<strong>Discernment</strong> means being able to distinguish between \"legitimate demands\" and \"extreme rhetoric.\" Don't dismiss an entire movement because of a few extreme cases, and don't abandon independent thinking because of \"political correctness.\"",
     "bfem_p18": "Gender equality is not a zero-sum game. Women gaining more rights doesn't mean men lose anything. It's like giving glasses to someone who's nearsighted — it doesn't make people with normal vision go blind.",
     "bfem_p19": "Finally, I want to say: viewing feminism objectively doesn't mean \"sitting on the fence\" or \"both sides are right.\" Some things are black and white — gender discrimination is wrong, workplace harassment is wrong, and expressing demands through violence and hatred is also wrong. Above these basic principles, we can absolutely maintain rationality, goodwill, and dialogue."
   }

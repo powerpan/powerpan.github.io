@@ -4,6 +4,11 @@
         /* ========================================
            LOADER
         ======================================== */
+        a.lang-toggle,
+        a.mobile-lang-btn {
+            text-decoration: none;
+        }
+
         .loader {
             position: fixed; inset: 0;
             background: var(--bg);

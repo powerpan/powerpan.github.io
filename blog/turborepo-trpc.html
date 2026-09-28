@@ -131,7 +131,7 @@
             <h2 data-i18n="bf_s1">为什么要用流式计算</h2>
             <p data-i18n="bf_p1">在大数据时代，传统的批处理模式已经无法满足业务对实时性的要求。用户行为分析、实时风控、IoT 数据监控等场景要求数据从产生到产生洞察的延迟控制在秒级甚至毫秒级。Apache Flink 和 Apache Kafka 的组合，为构建高吞吐、低延迟、Exactly-Once 语义的实时数据处理管道提供了成熟的技术方案。</p>
             <p data-i18n="bf_p2">本文将从架构设计、核心概念、代码实现和生产部署四个层面，分享我在课程项目和实习中使用 Flink + Kafka 构建实时数据处理系统的实践经验。</p>
-            <blockquote>流式计算的本质不是"更快的批处理"，而是一种完全不同的数据处理范式——数据到达即处理，而非攒够一批再处理。</blockquote>
+            <blockquote data-i18n="bf_quote1">流式计算的本质不是"更快的批处理"，而是一种完全不同的数据处理范式——数据到达即处理，而非攒够一批再处理。</blockquote>
         </section>
 
         <!-- Section 2: 架构概述 -->
@@ -171,7 +171,7 @@
                 <li data-i18n-html="bf_f12"><strong>Checkpoint</strong> — Flink 的容错机制，定期将作业状态快照持久化到 HDFS/S3。作业失败时从最近的 Checkpoint 恢复，实现 Exactly-Once 语义</li>
                 <li data-i18n-html="bf_f13"><strong>State</strong> — Flink 提供了丰富的状态后端（RocksDB、Heap），支持 Keyed State 和 Operator State，是实现复杂流处理逻辑的基础</li>
             </ul>
-            <blockquote>Watermark 的设置是一门艺术：设太小会导致迟到数据被丢弃，设太大会增加计算延迟。建议从数据的实际乱序程度出发，通过实验找到最优值。</blockquote>
+            <blockquote data-i18n="bf_quote2">Watermark 的设置是一门艺术：设太小会导致迟到数据被丢弃，设太大会增加计算延迟。建议从数据的实际乱序程度出发，通过实验找到最优值。</blockquote>
         </section>
 
         <!-- Section 5: 代码实现 -->
@@ -192,7 +192,7 @@
                     <div class="line"><span class="line-content">            StreamExecutionEnvironment.<span style="color:#61afef">getExecutionEnvironment</span>();</span></div>
                     <div class="line"><span class="line-content">        env.<span style="color:#61afef">enableCheckpointing</span>(<span style="color:#d19a66">60000</span>); <span style="color:#5c6370">// 60s checkpoint</span></span></div>
                     <div class="line"><span class="line-content"></span></div>
-                    <div class="line"><span class="line-content">        <span style="color:#5c6370">// 从 Kafka 读取用户行为事件</span></span></div>
+                    <div class="line"><span class="line-content">        <span style="color:#5c6370" data-i18n="bf_code_source">// 从 Kafka 读取用户行为事件</span></span></div>
                     <div class="line"><span class="line-content">        KafkaSource&lt;UserEvent&gt; source = KafkaSource.&lt;UserEvent&gt;<span style="color:#61afef">builder</span>()</span></div>
                     <div class="line"><span class="line-content">            .<span style="color:#61afef">setBootstrapServers</span>(<span style="color:#98c379">"kafka:9092"</span>)</span></div>
                     <div class="line"><span class="line-content">            .<span style="color:#61afef">setTopics</span>(<span style="color:#98c379">"user.events"</span>)</span></div>
@@ -200,7 +200,7 @@
                     <div class="line"><span class="line-content">            .<span style="color:#61afef">setValueOnlyDeserializer</span>(<span style="color:#c678dd">new</span> UserEventDeserializer())</span></div>
                     <div class="line"><span class="line-content">            .<span style="color:#61afef">build</span>();</span></div>
                     <div class="line"><span class="line-content"></span></div>
-                    <div class="line"><span class="line-content">        <span style="color:#5c6370">// 5 分钟滚动窗口聚合</span></span></div>
+                    <div class="line"><span class="line-content">        <span style="color:#5c6370" data-i18n="bf_code_window">// 5 分钟滚动窗口聚合</span></span></div>
                     <div class="line"><span class="line-content">        env.<span style="color:#61afef">fromSource</span>(source, WatermarkStrategy</span></div>
                     <div class="line"><span class="line-content">            .&lt;UserEvent&gt;<span style="color:#61afef">forBoundedOutOfOrderness</span>(Duration.<span style="color:#61afef">ofSeconds</span>(<span style="color:#d19a66">10</span>))</span></div>
                     <div class="line"><span class="line-content">            .<span style="color:#61afef">withTimestampAssigner</span>((e, t) -&gt; e.<span style="color:#61afef">getTimestamp</span>()),</span></div>
@@ -232,7 +232,7 @@
                 <li data-i18n-html="bf_l3">Kafka Consumer 设置 <code>isolation.level=read_committed</code></li>
                 <li data-i18n-html="bf_l4">Checkpoint 间隔不宜过长（建议 30s-60s），否则恢复时间会很长</li>
             </ul>
-            <blockquote>Exactly-Once 的代价是性能。在我们的测试中，开启 Exactly-Once 后吞吐量下降约 15%，但对于金融、风控等场景，数据准确性远比吞吐量重要。</blockquote>
+            <blockquote data-i18n="bf_quote3">Exactly-Once 的代价是性能。在我们的测试中，开启 Exactly-Once 后吞吐量下降约 15%，但对于金融、风控等场景，数据准确性远比吞吐量重要。</blockquote>
         </section>
 
         <!-- Section 7: 状态管理 -->

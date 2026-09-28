@@ -7,8 +7,11 @@
     "build": "node tools/build_site.js",
     "build:check": "node tools/build_site.js --check",
     "preview": "node tools/preview_site.js",
-    "test": "node --test tools/site_urls.test.js",
+    "test": "node --test tools/*.test.js",
     "urls:check": "node tools/check_urls.js",
+    "locales:check": "node tools/check_locales.js",
     "check": "npm test && node tools/update_seo.js --check && node tools/check_i18n.js && node tools/build_site.js --check"
-  }
+  },
+  "engines": { "node": ">=22.16.0" },
+  "devDependencies": { "cheerio": "1.2.0" }
 }

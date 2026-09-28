@@ -1,6 +1,11 @@
 /* i18n data: articles / turborepo-trpc */
 window.registerI18nChunk({
   "zh": {
+    "bf_quote1": "流式计算的本质不是\"更快的批处理\"，而是一种完全不同的数据处理范式——数据到达即处理，而非攒够一批再处理。",
+    "bf_quote2": "Watermark 的设置是一门艺术：设太小会导致迟到数据被丢弃，设太大会增加计算延迟。建议从数据的实际乱序程度出发，通过实验找到最优值。",
+    "bf_quote3": "Exactly-Once 的代价是性能。在我们的测试中，开启 Exactly-Once 后吞吐量下降约 15%，但对于金融、风控等场景，数据准确性远比吞吐量重要。",
+    "bf_code_source": "// 从 Kafka 读取用户行为事件",
+    "bf_code_window": "// 5 分钟滚动窗口聚合",
     "bf_p1": "在大数据时代，传统的批处理模式已经无法满足业务对实时性的要求。用户行为分析、实时风控、IoT 数据监控等场景要求数据从产生到产生洞察的延迟控制在秒级甚至毫秒级。Apache Flink 和 Apache Kafka 的组合，为构建高吞吐、低延迟、Exactly-Once 语义的实时数据处理管道提供了成熟的技术方案。",
     "bf_p2": "本文将从架构设计、核心概念、代码实现和生产部署四个层面，分享我在课程项目和实习中使用 Flink + Kafka 构建实时数据处理系统的实践经验。",
     "bf_p3": "一个典型的 Flink + Kafka 实时数据处理架构包含以下核心组件：",
@@ -69,6 +74,11 @@ window.registerI18nChunk({
     "bf_s9": "总结"
   },
   "en": {
+    "bf_quote1": "Stream processing is not merely faster batch processing. It is a different data-processing paradigm: process data as it arrives, rather than waiting for a batch to accumulate.",
+    "bf_quote2": "Choosing a watermark is a balancing act. Too small an allowance drops late data; too large an allowance increases latency. Start with the actual degree of out-of-order arrival and find the right value through experiments.",
+    "bf_quote3": "Exactly-once processing has a performance cost. In our tests, enabling it reduced throughput by about 15%, but for finance and risk-control workloads, data accuracy matters much more than throughput.",
+    "bf_code_source": "// Read user activity events from Kafka",
+    "bf_code_window": "// Aggregate over five-minute tumbling windows",
     "bf_p1": "In the era of big data, traditional batch processing can no longer meet business requirements for real-time analytics. User behavior analysis, real-time risk control, and IoT data monitoring all require data-to-insight latency controlled at the second or even millisecond level. The combination of Apache Flink and Apache Kafka provides a mature technical solution for building high-throughput, low-latency, Exactly-Once semantic real-time data processing pipelines.",
     "bf_p2": "This article shares practical experience from course projects and internships using Flink + Kafka to build real-time data processing systems, covering architecture design, core concepts, code implementation, and production deployment.",
     "bf_p3": "A typical Flink + Kafka real-time data processing architecture includes the following core components:",

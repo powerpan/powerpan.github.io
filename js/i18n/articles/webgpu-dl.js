@@ -1,6 +1,8 @@
 /* i18n data: articles / webgpu-dl */
 window.registerI18nChunk({
   "zh": {
+    "bw_quote1": "WebGPU 的出现标志着浏览器从 \"图形渲染工具\" 升级为 \"通用 GPU 计算平台\"，这是 Web 平台能力的一次质的飞跃。",
+    "bw_quote2": "内存优化的核心原则：让数据尽可能留在 GPU 上，减少跨设备传输。每一次 CPU-GPU 数据拷贝都是潜在的性能瓶颈。",
     "bw_p1": "WebGPU 正在彻底改变浏览器中高性能计算的格局。作为 WebGL 的继任者，它不仅提供了更现代的图形 API，更重要的是暴露了强大的 Compute Shader 能力——这意味着我们终于可以在浏览器中高效地运行深度学习推理，而无需依赖 WebAssembly 的 workaround。",
     "bw_p2": "作为一名在学习视觉模型开发的学生，我对\"能否在浏览器中跑模型\"这个问题特别感兴趣。本文将从零开始，带你了解 WebGPU 的核心概念，并通过实际的 ML 推理案例，展示如何在浏览器中获得接近原生 GPU 的性能。",
     "bw_p3": "WebGPU 是由 W3C GPU Working Group 开发的全新 Web API，设计灵感来自 Vulkan、Metal 和 Direct3D 12。与 WebGL 相比，它提供了更底层的 GPU 访问能力，同时保持了 Web 平台的安全性和可移植性。",
@@ -58,6 +60,8 @@ window.registerI18nChunk({
     "bw_s8": "实战建议与最佳实践"
   },
   "en": {
+    "bw_quote1": "WebGPU expands the browser from a graphics-rendering tool into a general-purpose GPU computing platform, a significant leap in what the web can do.",
+    "bw_quote2": "The core principle of memory optimization is to keep data on the GPU as much as possible and minimize transfers between devices. Every CPU-GPU copy is a potential bottleneck.",
     "bw_p1": "WebGPU is fundamentally transforming high-performance computing in browsers. As WebGL's successor, it not only provides a more modern graphics API but, more importantly, exposes powerful Compute Shader capabilities — meaning we can finally run deep learning inference efficiently in browsers without relying on WebAssembly workarounds.",
     "bw_p2": "As a student learning vision model development, I'm particularly interested in \"can we run models in the browser?\" This article starts from zero, introducing WebGPU's core concepts and demonstrating how to achieve near-native GPU performance in browsers through practical ML inference cases.",
     "bw_p3": "WebGPU is a new Web API developed by the W3C GPU Working Group, inspired by Vulkan, Metal, and Direct3D 12. Compared to WebGL, it provides lower-level GPU access while maintaining Web platform security and portability.",

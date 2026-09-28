@@ -9,6 +9,12 @@ function canonicalFor(rel) {
   return SITE_ORIGIN + publicPathFor(rel);
 }
 
+function languagePath(pathname, lang) {
+  if (!['zh', 'en'].includes(lang)) throw new Error(`Unsupported language: ${lang}`);
+  const base = pathname.replace(/^\/en(?=\/|$)/, '') || '/';
+  return lang === 'en' ? '/en' + base : base;
+}
+
 function rewritePublicLinks(html, rel, publicHtmlFiles) {
   // Keep source-file links for file:// previews; normalize only published HTML.
   return html.replace(/<!--[^]*?-->|<(?:a|area|link)\b[^>]*>/gi, (tag) => {
@@ -31,4 +37,4 @@ function rewritePublicLinks(html, rel, publicHtmlFiles) {
   });
 }
 
-module.exports = { SITE_ORIGIN, publicPathFor, canonicalFor, rewritePublicLinks };
+module.exports = { SITE_ORIGIN, publicPathFor, canonicalFor, languagePath, rewritePublicLinks };

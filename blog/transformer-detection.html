@@ -189,12 +189,12 @@
                     <div class="line"><span class="line-content"><span style="color:#ff79c6">import</span> torchvision.transforms <span style="color:#ff79c6">as</span> T</span></div>
                     <div class="line"><span class="line-content"><span style="color:#ff79c6">from</span> models <span style="color:#ff79c6">import</span> DeformableDETR</span></div>
                     <div class="line"><span class="line-content"></span></div>
-                    <div class="line"><span class="line-content"><span style="color:#6272a4"># ---- 模型初始化 ----</span></span></div>
+                    <div class="line"><span class="line-content"><span style="color:#6272a4" data-i18n="bt_code_init"># ---- 模型初始化 ----</span></span></div>
                     <div class="line"><span class="line-content">model = DeformableDETR(num_classes=<span style="color:#bd93f9">80</span>, num_queries=<span style="color:#bd93f9">300</span>)</span></div>
                     <div class="line"><span class="line-content">model.<span style="color:#50fa7b">load_state_dict</span>(torch.<span style="color:#50fa7b">load</span>(<span style="color:#f1fa8c">'checkpoints/detr_v2.pth'</span>))</span></div>
                     <div class="line"><span class="line-content">model.<span style="color:#50fa7b">eval</span>().<span style="color:#50fa7b">cuda</span>()</span></div>
                     <div class="line"><span class="line-content"></span></div>
-                    <div class="line"><span class="line-content"><span style="color:#6272a4"># ---- 预处理 ----</span></span></div>
+                    <div class="line"><span class="line-content"><span style="color:#6272a4" data-i18n="bt_code_preprocess"># ---- 预处理 ----</span></span></div>
                     <div class="line"><span class="line-content">transform = T.Compose([</span></div>
                     <div class="line"><span class="line-content">    T.Resize((<span style="color:#bd93f9">640</span>, <span style="color:#bd93f9">640</span>)),</span></div>
                     <div class="line"><span class="line-content">    T.ToTensor(),</span></div>
@@ -202,13 +202,13 @@
                     <div class="line"><span class="line-content">                [<span style="color:#bd93f9">0.229</span>, <span style="color:#bd93f9">0.224</span>, <span style="color:#bd93f9">0.225</span>])</span></div>
                     <div class="line"><span class="line-content">])</span></div>
                     <div class="line"><span class="line-content"></span></div>
-                    <div class="line"><span class="line-content"><span style="color:#6272a4"># ---- 推理 ----</span></span></div>
+                    <div class="line"><span class="line-content"><span style="color:#6272a4" data-i18n="bt_code_inference"># ---- 推理 ----</span></span></div>
                     <div class="line"><span class="line-content"><span style="color:#ff79c6">with</span> torch.<span style="color:#50fa7b">no_grad</span>(), torch.<span style="color:#50fa7b">cuda</span>.amp.autocast():</span></div>
                     <div class="line"><span class="line-content">    image = transform(raw_image).<span style="color:#50fa7b">unsqueeze</span>(<span style="color:#bd93f9">0</span>).<span style="color:#50fa7b">cuda</span>()</span></div>
                     <div class="line"><span class="line-content">    outputs = model(image)</span></div>
                     <div class="line"><span class="line-content">    probs = outputs[<span style="color:#f1fa8c">'pred_logits'</span>].softmax(-<span style="color:#bd93f9">1</span>)</span></div>
                     <div class="line"><span class="line-content">    boxes = outputs[<span style="color:#f1fa8c">'pred_boxes'</span>]</span></div>
-                    <div class="line"><span class="line-content">    <span style="color:#6272a4"># 过滤低置信度预测</span></span></div>
+                    <div class="line"><span class="line-content">    <span style="color:#6272a4" data-i18n="bt_code_filter"># 过滤低置信度预测</span></span></div>
                     <div class="line"><span class="line-content">    keep = probs.max(-<span style="color:#bd93f9">1</span>).values > <span style="color:#bd93f9">0.7</span></span></div>
                     <div class="line"><span class="line-content">    results = boxes[keep], probs[keep]</span></div>
                 </div>

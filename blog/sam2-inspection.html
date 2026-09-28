@@ -131,7 +131,7 @@
             <h2 data-i18n="bs_s1">引言</h2>
             <p data-i18n="bs_p1">工业质检是计算机视觉技术最重要的落地场景之一。传统的缺陷检测方案通常需要为每种产品训练专门的模型，数据标注成本高、模型迭代周期长。Meta 发布的 SAM 2（Segment Anything Model 2）为这一领域带来了新的可能性——通过强大的零样本分割能力和灵活的 Prompt 机制，我们可以用更少的标注数据实现高精度的缺陷分割。</p>
             <p data-i18n="bs_p2">在参与视觉模型开发的实习项目中，我有幸深度参与了基于 SAM 2 的工业质检系统建设。本文将分享在电子元器件表面缺陷检测项目中落地 SAM 2 的完整经验，包括 Prompt Engineering 策略、模型微调方法和边缘设备部署优化。</p>
-            <blockquote>SAM 2 的核心优势不在于它能替代所有专用模型，而在于它提供了一个强大的通用基座，大幅降低了新场景的适配成本。</blockquote>
+            <blockquote data-i18n="bs_quote1">SAM 2 的核心优势不在于它能替代所有专用模型，而在于它提供了一个强大的通用基座，大幅降低了新场景的适配成本。</blockquote>
         </section>
 
         <!-- Section 2: SAM 2 架构 -->
@@ -156,7 +156,7 @@
                 <li data-i18n-html="bs_f6"><strong>级联 Prompt</strong> — 先用点 Prompt 获取初始分割，再将初始 mask 作为 Prompt 输入，通过迭代优化提升分割精度</li>
                 <li data-i18n-html="bs_f7"><strong>文本 Prompt</strong> — 结合 CLIP 的文本编码器，使用 "surface scratch"、"discoloration" 等缺陷描述文本作为 Prompt，实现零样本缺陷分类</li>
             </ul>
-            <blockquote>关键发现：在工业场景中，框 Prompt + 中心点 Prompt 的组合策略效果最好，mIoU 达到 0.92，比单独使用点 Prompt 高 8 个百分点。</blockquote>
+            <blockquote data-i18n="bs_quote2">关键发现：在工业场景中，框 Prompt + 中心点 Prompt 的组合策略效果最好，mIoU 达到 0.92，比单独使用点 Prompt 高 8 个百分点。</blockquote>
         </section>
 
         <!-- Section 4: 缺陷检测流程 -->
@@ -189,21 +189,21 @@
                     <div class="line"><span class="line-content"><span style="color:#ff79c6">from</span> sam2.build_sam <span style="color:#ff79c6">import</span> build_sam2</span></div>
                     <div class="line"><span class="line-content"><span style="color:#ff79c6">from</span> sam2.sam2_image_predictor <span style="color:#ff79c6">import</span> SAM2ImagePredictor</span></div>
                     <div class="line"><span class="line-content"></span></div>
-                    <div class="line"><span class="line-content"><span style="color:#6272a4"># ---- 初始化模型 ----</span></span></div>
+                    <div class="line"><span class="line-content"><span style="color:#6272a4" data-i18n="bs_code_init"># ---- 初始化模型 ----</span></span></div>
                     <div class="line"><span class="line-content">sam2 = <span style="color:#50fa7b">build_sam2</span>(<span style="color:#f1fa8c">"sam2_hiera_l.yaml"</span>, <span style="color:#f1fa8c">"sam2_hiera_large.pt"</span>)</span></div>
                     <div class="line"><span class="line-content">predictor = <span style="color:#50fa7b">SAM2ImagePredictor</span>(sam2)</span></div>
                     <div class="line"><span class="line-content"></span></div>
                     <div class="line"><span class="line-content"><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">detect_defects</span>(image, yolo_boxes, threshold=<span style="color:#bd93f9">0.7</span>):</span></div>
-                    <div class="line"><span class="line-content">    <span style="color:#f1fa8c">"""两阶段缺陷检测：YOLO 定位 + SAM2 分割"""</span></span></div>
+                    <div class="line"><span class="line-content">    <span style="color:#f1fa8c" data-i18n="bs_code_doc">"""两阶段缺陷检测：YOLO 定位 + SAM2 分割"""</span></span></div>
                     <div class="line"><span class="line-content">    predictor.<span style="color:#50fa7b">set_image</span>(image)</span></div>
                     <div class="line"><span class="line-content">    defects = []</span></div>
                     <div class="line"><span class="line-content">    <span style="color:#ff79c6">for</span> box <span style="color:#ff79c6">in</span> yolo_boxes:</span></div>
-                    <div class="line"><span class="line-content">        <span style="color:#6272a4"># 使用检测框作为 Prompt</span></span></div>
+                    <div class="line"><span class="line-content">        <span style="color:#6272a4" data-i18n="bs_code_prompt"># 使用检测框作为 Prompt</span></span></div>
                     <div class="line"><span class="line-content">        masks, scores, _ = predictor.<span style="color:#50fa7b">predict</span>(</span></div>
                     <div class="line"><span class="line-content">            box=box,</span></div>
                     <div class="line"><span class="line-content">            multimask_output=<span style="color:#bd93f9">True</span>,</span></div>
                     <div class="line"><span class="line-content">        )</span></div>
-                    <div class="line"><span class="line-content">        <span style="color:#6272a4"># 选择最高置信度的 mask</span></span></div>
+                    <div class="line"><span class="line-content">        <span style="color:#6272a4" data-i18n="bs_code_mask"># 选择最高置信度的 mask</span></span></div>
                     <div class="line"><span class="line-content">        best_idx = np.<span style="color:#50fa7b">argmax</span>(scores)</span></div>
                     <div class="line"><span class="line-content">        <span style="color:#ff79c6">if</span> scores[best_idx] > threshold:</span></div>
                     <div class="line"><span class="line-content">            mask = masks[best_idx]</span></div>
@@ -243,7 +243,7 @@
                 <li data-i18n-html="bs_f19"><strong>流水线并行</strong> — 将 YOLO 检测和 SAM 2 分割放在不同的 CUDA Stream 上并行执行</li>
             </ul>
             <p data-i18n-html="bs_p12">优化后，在 Jetson Orin NX 上实现了 <strong>45ms</strong> 的端到端推理延迟（YOLO 8ms + SAM 2 Decoder 37ms），满足产线 <strong>20 FPS</strong> 的节拍要求。GPU 利用率稳定在 65%，功耗约 25W。</p>
-            <blockquote>边缘部署的核心原则：能预计算的不实时算，能蒸馏的不用大模型，能量化的不用浮点。每一个环节省下的几毫秒，在产线规模上都是巨大的价值。</blockquote>
+            <blockquote data-i18n="bs_quote3">边缘部署的核心原则：能预计算的不实时算，能蒸馏的不用大模型，能量化的不用浮点。每一个环节省下的几毫秒，在产线规模上都是巨大的价值。</blockquote>
         </section>
 
         <!-- Section 8: 实际效果 -->

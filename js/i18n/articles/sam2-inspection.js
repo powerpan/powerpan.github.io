@@ -1,6 +1,13 @@
 /* i18n data: articles / sam2-inspection */
 window.registerI18nChunk({
   "zh": {
+    "bs_quote1": "SAM 2 的核心优势不在于它能替代所有专用模型，而在于它提供了一个强大的通用基座，大幅降低了新场景的适配成本。",
+    "bs_quote2": "关键发现：在工业场景中，框 Prompt + 中心点 Prompt 的组合策略效果最好，mIoU 达到 0.92，比单独使用点 Prompt 高 8 个百分点。",
+    "bs_quote3": "边缘部署的核心原则：能预计算的不实时算，能蒸馏的不用大模型，能量化的不用浮点。每一个环节省下的几毫秒，在产线规模上都是巨大的价值。",
+    "bs_code_init": "# ---- 初始化模型 ----",
+    "bs_code_doc": "\"\"\"两阶段缺陷检测：YOLO 定位 + SAM2 分割\"\"\"",
+    "bs_code_prompt": "# 使用检测框作为 Prompt",
+    "bs_code_mask": "# 选择最高置信度的 mask",
     "bs_p1": "工业质检是计算机视觉技术最重要的落地场景之一。传统的缺陷检测方案通常需要为每种产品训练专门的模型，数据标注成本高、模型迭代周期长。Meta 发布的 SAM 2（Segment Anything Model 2）为这一领域带来了新的可能性——通过强大的零样本分割能力和灵活的 Prompt 机制，我们可以用更少的标注数据实现高精度的缺陷分割。",
     "bs_p2": "在参与视觉模型开发的实习项目中，我有幸深度参与了基于 SAM 2 的工业质检系统建设。本文将分享在电子元器件表面缺陷检测项目中落地 SAM 2 的完整经验，包括 Prompt Engineering 策略、模型微调方法和边缘设备部署优化。",
     "bs_p3": "SAM 2 在原始 SAM 的基础上引入了时序建模能力，使其能够处理视频序列中的目标分割。其核心架构由三个模块组成：",
@@ -56,6 +63,13 @@ window.registerI18nChunk({
     "bs_s9": "总结与展望"
   },
   "en": {
+    "bs_quote1": "SAM 2's strength is not that it replaces every specialized model, but that it provides a powerful general-purpose foundation that substantially reduces the cost of adapting to new scenarios.",
+    "bs_quote2": "Key finding: in industrial scenarios, combining a box prompt with a center-point prompt worked best, reaching an mIoU of 0.92, eight percentage points above point-only prompting.",
+    "bs_quote3": "Core principles for edge deployment: precompute where possible, use distilled models where practical, and quantize instead of relying on floating-point computation. A few milliseconds saved at each stage add up across a production line.",
+    "bs_code_init": "# ---- Initialize the model ----",
+    "bs_code_doc": "\"\"\"Two-stage defect detection: YOLO localization + SAM2 segmentation\"\"\"",
+    "bs_code_prompt": "# Use detection boxes as prompts",
+    "bs_code_mask": "# Select the highest-confidence mask",
     "bs_p1": "Industrial quality inspection is one of the most important application scenarios for computer vision. Traditional defect detection typically requires training specialized models for each product, with high data annotation costs and long model iteration cycles. Meta's SAM 2 (Segment Anything Model 2) brings new possibilities to this field — through powerful zero-shot segmentation and flexible Prompt mechanisms, we can achieve high-precision defect segmentation with less annotation data.",
     "bs_p2": "During my internship in vision model development, I had the privilege of deeply participating in building a SAM 2-based industrial quality inspection system. This article shares the complete experience of deploying SAM 2 in an electronic component surface defect detection project, including Prompt Engineering strategies, model fine-tuning methods, and edge device deployment optimization.",
     "bs_p3": "SAM 2 introduces temporal modeling capabilities on top of the original SAM, enabling target segmentation in video sequences. Its core architecture consists of three modules:",

@@ -2,7 +2,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const { SITE_ORIGIN, canonicalFor } = require('./site_urls');
+const { SITE_ORIGIN, canonicalFor, languagePath } = require('./site_urls');
 
 const root = path.resolve(__dirname, '..');
 const checkOnly = process.argv.includes('--check');
@@ -410,7 +410,7 @@ function buildTopicPage(blogIndexHtml, category) {
 
   html = html.replace(/<title>[\s\S]*?<\/title>/, `<title>${category.label} — Eric</title>`);
   html = html.replace('<body>', `<body data-page-type="topic" data-initial-filter="${category.id}">`);
-  html = html.replace(/<h1 data-i18n="blog_list_title">[\s\S]*?<\/h1>/, `<h1>// ${category.label}</h1>`);
+  html = html.replace(/<h1 data-i18n="blog_list_title">[\s\S]*?<\/h1>/, `<h1>// <span data-i18n="blog_tag_${category.id}">${category.label}</span></h1>`);
   html = html.replace(/<p data-i18n="blog_list_sub">[\s\S]*?<\/p>/, `<p>Topic Archive — ${topicPosts.length} articles</p>`);
   html = html.replace(
     /(<div class="blog-filter-stat-value" id="blogFilterCount">)[^<]*(<\/div>)/,
@@ -476,7 +476,7 @@ function generateSitemap(projectPages) {
 
   return `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${entries.map((entry) => `  <url>
+${entries.flatMap((entry) => [entry, { ...entry, loc: SITE_ORIGIN + languagePath(new URL(entry.loc).pathname, 'en') }]).map((entry) => `  <url>
     <loc>${escapeXml(entry.loc)}</loc>${entry.lastmod ? `
     <lastmod>${entry.lastmod}</lastmod>` : ''}
   </url>`).join('\n')}

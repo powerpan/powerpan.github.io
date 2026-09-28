@@ -351,6 +351,8 @@ npm run check
 - [ ] `node tools/build_site.js` 已生成 `_site/` 发布目录
 - [ ] `node tools/build_site.js --check` 通过
 - [ ] `npm run check` 通过（包括公开网址、站内链接及旧链接兼容测试）；发布版使用 `npm run preview` 预览
+- [ ] `npm run locales:check` 通过；构建产物含 `/blog/{slug}` 与 `/en/blog/{slug}`，英文正文无需 JS 即存在，语言入口指向对应版本
+- [ ] 只维护原始 HTML 和对应中英文字典，未手工复制英文镜像、未提交 `_site/`；新环境先用 Node 22.16+ 运行 `npm ci`
 - [ ] 首页最新 6 篇规则正确
 - [ ] 列表页包含全部文章，排序和编号正确
 - [ ] `blog_list_sub` 计数正确

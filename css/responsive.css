@@ -56,7 +56,8 @@
     transition: color 0.3s ease;
 }
 .mobile-nav-links a:hover { color: var(--accent); }
-.mobile-lang-btn {
+.mobile-lang-btn,
+.mobile-nav-links .mobile-lang-btn {
     font-family: var(--font-mono);
     font-size: 0.75rem; font-weight: 500;
     color: var(--text-secondary);

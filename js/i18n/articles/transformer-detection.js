@@ -1,6 +1,10 @@
 /* i18n data: articles / transformer-detection */
 window.registerI18nChunk({
   "zh": {
+    "bt_code_init": "# ---- 模型初始化 ----",
+    "bt_code_preprocess": "# ---- 预处理 ----",
+    "bt_code_inference": "# ---- 推理 ----",
+    "bt_code_filter": "# 过滤低置信度预测",
     "bt_p1": "目标检测是计算机视觉中最核心的任务之一。从 R-CNN 系列到 YOLO 系列，两阶段和单阶段检测器在过去十年中不断演进。然而，2020 年 DETR 的出现彻底改变了游戏规则——它首次将 Transformer 架构引入目标检测，用端到端的方式取代了传统的 anchor-based 方法。",
     "bt_p2": "本文将从 DETR 的核心思想出发，逐步介绍其演进路线，并分享我在工程实践中遇到的挑战与解决方案。",
     "bt_p3": "DETR 的核心贡献在于将目标检测从 \"启发式设计\" 转变为 \"端到端学习\"，这是范式层面的变革。",
@@ -53,6 +57,10 @@ window.registerI18nChunk({
     "bt_s8": "总结与展望"
   },
   "en": {
+    "bt_code_init": "# ---- Initialize the model ----",
+    "bt_code_preprocess": "# ---- Preprocessing ----",
+    "bt_code_inference": "# ---- Inference ----",
+    "bt_code_filter": "# Filter low-confidence predictions",
     "bt_p1": "Object detection is one of the most fundamental tasks in computer vision. From the R-CNN series to YOLO, two-stage and single-stage detectors have continuously evolved over the past decade. However, the emergence of DETR in 2020 completely changed the game — it was the first to introduce Transformer architecture into object detection, replacing traditional anchor-based methods with an end-to-end approach.",
     "bt_p2": "This article starts from DETR's core ideas, progressively introduces its evolution, and shares the challenges and solutions I encountered in engineering practice.",
     "bt_p3": "DETR's core contribution is transforming object detection from \"heuristic design\" to \"end-to-end learning\" — a paradigm-level revolution.",

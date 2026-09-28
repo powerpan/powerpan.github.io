@@ -8,7 +8,7 @@ const root = path.resolve(__dirname, '..');
 const blogCategories = ['ai', 'agent', 'vision', 'architecture', 'observation', 'essay'];
 const filterCategories = ['all', ...blogCategories];
 const i18nAttrs = ['data-i18n', 'data-i18n-html', 'data-i18n-placeholder', 'data-i18n-title', 'data-i18n-alt'];
-const ignoredDirs = new Set(['.git', '.qwen', '_site']);
+const ignoredDirs = new Set(['.git', '.qwen', '_site', 'node_modules']);
 
 function loadI18n() {
   const noop = () => {};
@@ -20,7 +20,7 @@ function loadI18n() {
       querySelector: () => null,
       getElementById: () => null,
       createElement: () => ({ addEventListener: noop }),
-      documentElement: {},
+      documentElement: { getAttribute: () => null },
     },
     window: { addEventListener: noop },
     console,

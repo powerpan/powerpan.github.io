@@ -131,7 +131,7 @@
             <h2 data-i18n="bi_s1">架构概述</h2>
             <p data-i18n="bi_p1">在构建实时图像处理系统时，传统的请求-响应模式往往无法满足高吞吐量和低延迟的双重需求。我们需要一种事件驱动的流水线架构，将图像处理拆分为多个独立的阶段，每个阶段可以独立扩展和优化。</p>
             <p data-i18n-html="bi_p2">核心设计原则：<strong>解耦、可扩展、容错</strong>。每个处理阶段都是一个独立的服务，通过消息队列进行通信，支持水平扩展和故障隔离。</p>
-            <blockquote>流水线的价值不在于单个环节的高效，而在于整体的协调与平衡。一个瓶颈节点会拖慢整条链路。</blockquote>
+            <blockquote data-i18n="bi_quote1">流水线的价值不在于单个环节的高效，而在于整体的协调与平衡。一个瓶颈节点会拖慢整条链路。</blockquote>
         </section>
 
         <!-- Section 2: 流水线阶段 -->
@@ -164,7 +164,7 @@
                 <li data-i18n-html="bi_f11"><strong>消费者组</strong> — 每个阶段使用独立的消费者组，支持独立扩缩容</li>
                 <li data-i18n-html="bi_f12"><strong>Dead Letter Queue</strong> — 处理失败的消息自动转入 DLQ，避免阻塞正常流水线</li>
             </ul>
-            <blockquote>经验教训：Kafka 消息体越小，吞吐量越高。将大块数据（如图像）放入对象存储，Kafka 只传递元数据和指针，是一个经过验证的最佳实践。</blockquote>
+            <blockquote data-i18n="bi_quote2">经验教训：Kafka 消息体越小，吞吐量越高。将大块数据（如图像）放入对象存储，Kafka 只传递元数据和指针，是一个经过验证的最佳实践。</blockquote>
         </section>
 
         <!-- Section 4: Worker 实现 -->
@@ -183,7 +183,7 @@
         <!-- Section 5: Kubernetes 部署 -->
         <section class="detail-section reveal" id="k8s">
             <h2 data-i18n="bi_s5">Kubernetes 部署配置</h2>
-            <p>每个流水线阶段作为一个独立的 Kubernetes Deployment 运行，通过 HPA（Horizontal Pod Autoscaler）根据队列深度自动扩缩容。以下是 Inference Worker 的部署配置：</p>
+            <p data-i18n="bi_deployment">每个流水线阶段作为一个独立的 Kubernetes Deployment 运行，通过 HPA（Horizontal Pod Autoscaler）根据队列深度自动扩缩容。以下是 Inference Worker 的部署配置：</p>
             <div class="detail-code-block">
                 <div class="detail-code-header">
                     <div class="detail-code-dot" style="background:#ff5f57"></div>
