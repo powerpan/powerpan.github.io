@@ -161,6 +161,8 @@ python3 -m http.server 8080
 ### Indexable English Pages
 - Chinese URLs stay unchanged. English equivalents use `/en/`, `/en/blog/`, `/en/blog/slug`, `/en/blog/topics/category`, `/en/projects/`, and `/en/projects/slug`.
 - `tools/localize_site.js` reads each page's declared dictionary chunks and translates both initial HTML documents at build time. Maintain the existing source HTML and `js/i18n/` only; never hand-edit or commit `_site/en/`.
+- `tools/fingerprint_assets.js` gives all published local scripts and styles content-hashed filenames. Changed bytes must get a new URL: stale language runtimes can overwrite English HTML and insert duplicate switches. Keep source references unchanged and retain original asset paths for cached older documents. Do not rely on fixed query versions or cache headers alone.
+- After deployment, verify the rendered production homepage and an article in an existing browser session: URL language must survive script execution and there must be exactly one desktop language switch. Raw HTML/SEO checks alone do not cover cached runtime regressions.
 - URL language takes precedence over saved preferences. Published pages do not replay DOM translations on load, which protects localized links and metadata. Source/file previews still use runtime translation.
 - Each language has its own canonical, title, description, social metadata and JSON-LD, plus reciprocal `zh-CN`/`en` hreflang. Root sitemap lists both versions. Chinese RSS and existing GUIDs remain unchanged; no English RSS is advertised.
 - English navigation stays in `/en/`; shared CSS/JS/images retain root asset paths. Language links preserve query/hash with JS and remain ordinary working links without JS.

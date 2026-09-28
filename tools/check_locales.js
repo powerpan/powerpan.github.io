@@ -2,6 +2,7 @@
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
+const { createHash } = require('node:crypto');
 const { load } = require('cheerio');
 const { canonicalFor, languagePath, SITE_ORIGIN } = require('./site_urls');
 
@@ -62,6 +63,15 @@ function checkLocales() {
     }
     $('[src],[poster],link[rel="stylesheet"]').each((_, node) => {
       for (const attr of ['src', 'poster', 'href']) if ($(node).attr(attr)) asset($(node).attr(attr));
+    });
+    $('script[src],link[rel="stylesheet"]').each((_, node) => {
+      const value = $(node).attr('src') || $(node).attr('href');
+      const url = new URL(value, canonical);
+      if (url.origin !== SITE_ORIGIN) return;
+      const hash = url.pathname.match(/\.([a-f0-9]{16})\.(?:js|css)$/)?.[1];
+      assert(hash, `${rel}: unversioned script or style ${value}`);
+      const bytes = fs.readFileSync(path.join(root, url.pathname.slice(1)));
+      assert.equal(hash, createHash('sha256').update(bytes).digest('hex').slice(0, 16), `${rel}: asset fingerprint mismatch`);
     });
     $('[srcset]').each((_, node) => $(node).attr('srcset').split(',').forEach((entry) => asset(entry.trim().split(/\s+/)[0])));
     $('[style],style').each((_, node) => {

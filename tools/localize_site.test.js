@@ -95,13 +95,15 @@ function runtime(staticLang, preference, blockedStorage = false) {
   const events = [];
   const navigations = [];
   let queries = 0;
+  const switchLink = { href: SITE_ORIGIN + '/blog/example', getAttribute: () => '/blog/example', addEventListener() {} };
+  const nav = { insertBefore() { assert.fail('Duplicate language switch inserted'); }, appendChild() { assert.fail('Duplicate language switch appended'); } };
   const context = {
     URL,
     localStorage: { getItem() { if (blockedStorage) throw new Error('blocked'); return preference; }, setItem() { if (blockedStorage) throw new Error('blocked'); } },
     document: {
       documentElement: { getAttribute: () => staticLang },
       addEventListener: (_, fn) => events.push(fn),
-      getElementById: () => null,
+      getElementById: (id) => staticLang ? ({ nav, langToggle: switchLink }[id] || null) : null,
       querySelectorAll: () => { queries++; return []; },
       querySelector: (selector) => selector.startsWith('link[hreflang=')
         ? { href: SITE_ORIGIN + (selector.includes('"en"') ? '/en' : '') + '/blog/example' } : null,
@@ -120,6 +122,7 @@ test('published runtime obeys URL language despite saved preferences, and never 
     const { context, navigations, queryCount } = runtime(lang, preference);
     assert.equal(context.currentLang, lang);
     assert.equal(context.document.documentElement.lang, lang === 'zh' ? 'zh-CN' : 'en');
+    assert.equal(context.document.getElementById('langToggle').textContent, lang === 'en' ? '中' : 'EN');
     assert.equal(queryCount(), 0);
     assert.deepEqual(navigations, []);
     context.toggleLang();

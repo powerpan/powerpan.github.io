@@ -4,6 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const { spawnSync } = require('child_process');
 const { createLocalizedPages } = require('./localize_site');
+const { fingerprintAssets } = require('./fingerprint_assets');
 
 const root = path.resolve(__dirname, '..');
 const outDirName = '_site';
@@ -126,7 +127,7 @@ function expectedOutput() {
     else output.set(rel, source);
   }
   for (const [rel, content] of createLocalizedPages(entries)) output.set(rel, content);
-  return output;
+  return fingerprintAssets(output);
 }
 
 function build() {
