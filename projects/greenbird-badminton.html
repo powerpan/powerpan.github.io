@@ -3,28 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Greenbird Badminton Platform — Eric's Project</title>
+    <title>BF Badminton Platform — Eric's Project</title>
     <!-- SEO:START -->
-    <meta name="description" content="面向高并发预订的羽毛球馆全栈运营平台，以 Tornado 异步服务、Redis 分布式锁和 MySQL 事务防止场地重复预约，并整合会员、商城、赛事和运营统计。">
+    <meta name="description" content="BF 羽毛球馆四角色运营平台：连续场次推荐、线上预约与柜台开场、会员储值、模拟支付、一次性取货核销与全局流水，结合 MySQL 事务行锁和请求幂等保护交易一致性。">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://erichz.site/projects/greenbird-badminton">
     <link rel="alternate" type="application/rss+xml" title="Eric Blog RSS" href="https://erichz.site/feed.xml">
     <meta property="og:site_name" content="Eric">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Greenbird Badminton Platform">
-    <meta property="og:description" content="面向高并发预订的羽毛球馆全栈运营平台，以 Tornado 异步服务、Redis 分布式锁和 MySQL 事务防止场地重复预约，并整合会员、商城、赛事和运营统计。">
+    <meta property="og:title" content="BF Badminton Platform">
+    <meta property="og:description" content="BF 羽毛球馆四角色运营平台：连续场次推荐、线上预约与柜台开场、会员储值、模拟支付、一次性取货核销与全局流水，结合 MySQL 事务行锁和请求幂等保护交易一致性。">
     <meta property="og:url" content="https://erichz.site/projects/greenbird-badminton">
     <meta property="og:image" content="https://erichz.site/assets/og-default.svg">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Greenbird Badminton Platform">
-    <meta name="twitter:description" content="面向高并发预订的羽毛球馆全栈运营平台，以 Tornado 异步服务、Redis 分布式锁和 MySQL 事务防止场地重复预约，并整合会员、商城、赛事和运营统计。">
+    <meta name="twitter:title" content="BF Badminton Platform">
+    <meta name="twitter:description" content="BF 羽毛球馆四角色运营平台：连续场次推荐、线上预约与柜台开场、会员储值、模拟支付、一次性取货核销与全局流水，结合 MySQL 事务行锁和请求幂等保护交易一致性。">
     <meta name="twitter:image" content="https://erichz.site/assets/og-default.svg">
     <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "CreativeWork",
-  "name": "Greenbird Badminton Platform",
-  "description": "面向高并发预订的羽毛球馆全栈运营平台，以 Tornado 异步服务、Redis 分布式锁和 MySQL 事务防止场地重复预约，并整合会员、商城、赛事和运营统计。",
+  "name": "BF Badminton Platform",
+  "description": "BF 羽毛球馆四角色运营平台：连续场次推荐、线上预约与柜台开场、会员储值、模拟支付、一次性取货核销与全局流水，结合 MySQL 事务行锁和请求幂等保护交易一致性。",
   "url": "https://erichz.site/projects/greenbird-badminton",
   "author": {
     "@type": "Person",
@@ -50,8 +50,7 @@
     <link rel="stylesheet" href="../css/responsive.css">
     <style>
         .greenbird-hero-image {
-            height: auto;
-            aspect-ratio: 2474 / 1474;
+            display: block;
             background: #f5f7f5;
         }
 
@@ -59,8 +58,7 @@
         .greenbird-figure img {
             display: block;
             width: 100%;
-            height: 100%;
-            object-fit: cover;
+            height: auto;
         }
 
         .greenbird-figure {
@@ -76,11 +74,23 @@
             height: auto;
         }
 
+        .greenbird-screenshot { display: block; cursor: zoom-in; }
+        .greenbird-screenshot:focus-visible { outline: 3px solid var(--accent); outline-offset: -3px; }
+
+        .greenbird-benchmark { overflow-x: auto; margin-top: 24px; }
+        .greenbird-benchmark:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+        .greenbird-benchmark table { width: 100%; border-collapse: collapse; font-size: 0.75rem; text-align: left; }
+        .greenbird-benchmark caption { text-align: left; color: var(--text-primary); padding-bottom: 16px; }
+        .greenbird-benchmark th, .greenbird-benchmark td { padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.1); white-space: nowrap; }
+        .greenbird-benchmark th { color: var(--text-primary); }
+        .greenbird-benchmark td { color: var(--text-secondary); }
+        .greenbird-source { display: inline-block; margin-top: 16px; color: var(--accent); font-size: 0.75rem; text-decoration: underline; text-underline-offset: 4px; }
+
         .greenbird-caption {
             padding: 14px 16px;
             border-top: 1px solid rgba(255,255,255,0.06);
             background: var(--bg-elevated);
-            color: var(--text-muted);
+            color: var(--text-secondary);
             font-size: 0.72rem;
             line-height: 1.6;
         }
@@ -91,6 +101,7 @@
             gap: 12px;
             margin-top: 28px;
         }
+        .greenbird-concurrency + .detail-text { margin-top: 28px; }
 
         .greenbird-concurrency-step {
             min-height: 150px;
@@ -114,7 +125,7 @@
         }
 
         .greenbird-concurrency-desc {
-            color: var(--text-muted);
+            color: var(--text-secondary);
             font-size: 0.7rem;
             line-height: 1.6;
         }
@@ -124,7 +135,7 @@
             padding: 14px 16px;
             border-left: 2px solid var(--accent);
             background: rgba(0,255,136,0.04);
-            color: var(--text-muted);
+            color: var(--text-secondary);
             font-size: 0.72rem;
             line-height: 1.7;
         }
@@ -134,9 +145,6 @@
                 grid-template-columns: 1fr 1fr;
             }
 
-            .greenbird-hero-image {
-                aspect-ratio: 16 / 10;
-            }
         }
 
         @media (max-width: 480px) {
@@ -188,6 +196,7 @@
         <div class="detail-toc-item" data-target="reservation" data-label="Reservation"></div>
         <div class="detail-toc-item" data-target="membership" data-label="Membership"></div>
         <div class="detail-toc-item" data-target="commerce" data-label="Commerce"></div>
+        <div class="detail-toc-item" data-target="frontdesk" data-label="Front Desk"></div>
         <div class="detail-toc-item" data-target="operations" data-label="Operations"></div>
     </div>
 
@@ -197,9 +206,9 @@
             <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
             BACK
         </a>
-        <div class="detail-tag">High-Concurrency Booking · Tornado · Redis</div>
-        <h1 class="detail-title" data-i18n-html="greenbird_title">Greenbird <span class="hl">Badminton</span></h1>
-        <p class="detail-subtitle" data-i18n="greenbird_sub">面向羽毛球馆高峰预订场景的全栈运营平台，以异步 I/O、分布式锁和数据库事务控制预约冲突，并连接会员、支付、商城、赛事与后台运营。</p>
+        <div class="detail-tag">Venue Operations · Transactions · Vue 3 / Tornado</div>
+        <h1 class="detail-title" data-i18n-html="greenbird_title">BF <span class="hl">Badminton</span></h1>
+        <p class="detail-subtitle" data-i18n="greenbird_sub">面向羽毛球馆日常运营的全栈平台，将线上预约、到店开场、会员储值、商城取货和经营核对串联起来，为用户、前台、管理员和维修人员提供各自的工作区。</p>
         <div class="detail-meta">
             <div class="detail-meta-item"><span class="detail-meta-label">Role</span><span class="detail-meta-value" data-i18n="greenbird_role">全栈开发者</span></div>
             <div class="detail-meta-item"><span class="detail-meta-label">Focus</span><span class="detail-meta-value" data-i18n="greenbird_focus">并发预约安全</span></div>
@@ -208,41 +217,37 @@
     </section>
 
     <div class="detail-image-section reveal">
-        <div class="detail-image-wrap">
-            <div class="detail-image greenbird-hero-image">
-                <img src="../assets/projects/greenbird-badminton/reservation.jpg" alt="Greenbird 羽毛球馆场地与时段预订界面" data-i18n-alt="greenbird_image_reservation_alt">
-            </div>
-            <div class="detail-image-overlay"></div>
-            <div class="detail-image-dots">
-                <div class="detail-image-dot" style="background:#ff5f57"></div>
-                <div class="detail-image-dot" style="background:#febc2e"></div>
-                <div class="detail-image-dot" style="background:#28c840"></div>
-            </div>
-        </div>
+        <figure class="detail-image-wrap">
+            <a class="greenbird-hero-image greenbird-screenshot" href="../assets/projects/greenbird-badminton/booking-20260929.jpg" target="_blank" rel="noopener noreferrer" title="在新标签页查看完整截图" data-i18n-title="greenbird_open_image">
+                <img src="../assets/projects/greenbird-badminton/booking-20260929.jpg" width="1120" height="1099" alt="BF 羽毛球馆连续两小时选场、金卡九折报价与模拟支付宝选项" data-i18n-alt="greenbird_image_reservation_alt" decoding="async">
+            </a>
+            <figcaption class="greenbird-caption" data-i18n="greenbird_booking_caption">连续选时与会员报价：选择 18:00–20:00，原价 200 元，金卡九折后 180 元。截图仅展示报价与支付方式，未提交订单。</figcaption>
+        </figure>
     </div>
 
     <div class="detail-content">
         <div class="detail-section reveal" id="overview">
             <div class="detail-section-label">Overview</div>
-            <h2 class="detail-section-title" data-i18n="greenbird_s1">从“抢场地”出发设计完整运营系统</h2>
-            <p class="detail-text" data-i18n-html="greenbird_p1">Greenbird 以最容易产生竞争条件的<strong>场地时段预订</strong>为核心，向外连接会员账户、余额支付、预约订单、商城库存、赛事报名、球友社区、通知和运营统计。用户侧与管理侧共享同一套业务状态，避免前台显示、资金流水和后台处理互相脱节。</p>
+            <h2 class="detail-section-title" data-i18n="greenbird_s1">不只解决订场，还要接住场馆每天的工作</h2>
+            <p class="detail-text" data-i18n-html="greenbird_p1">BF 羽毛球馆以<strong>线上预约与到店服务共享场地安排</strong>为基础，连接会员账户、支付订单、商品库存、取货凭证、赛事和社区。普通用户办理预约与消费，前台处理散客开场、储值和取货，管理员负责经营与权限管理，维修人员只读查看维护安排。</p>
             <p class="detail-text" data-i18n="greenbird_p2">前端使用 Vue 3、TypeScript、Pinia 与 Element Plus，后端采用 Tornado 异步请求模型，通过 aiomysql 连接池和异步 Redis 客户端处理网络与数据库 I/O。</p>
             <div class="detail-tech-grid">
                 <div class="detail-tech-badge">Python Tornado</div>
                 <div class="detail-tech-badge">Vue 3</div>
                 <div class="detail-tech-badge">TypeScript</div>
                 <div class="detail-tech-badge">Pinia</div>
-                <div class="detail-tech-badge">MySQL 8</div>
-                <div class="detail-tech-badge">Redis 6</div>
+                <div class="detail-tech-badge">MySQL / InnoDB</div>
+                <div class="detail-tech-badge">Redis</div>
                 <div class="detail-tech-badge">JWT</div>
                 <div class="detail-tech-badge">Nginx</div>
             </div>
+            <p class="greenbird-note" data-i18n="greenbird_evidence_note">本页截图拍摄于 2026-09-29，来自本地独立演示环境，界面保留中文原貌；历史交易主要发生于 9 月 24 日。支付是项目内模拟，不是支付宝官方沙箱或真实转账。正式 HTTPS 部署、微信公众号挂链和真实扫码设备仍需另行验收。点击图片可打开原图。</p>
         </div>
 
         <div class="detail-section reveal" id="concurrency">
             <div class="detail-section-label">Concurrency Control</div>
-            <h2 class="detail-section-title" data-i18n="greenbird_s2">四层保护，避免高峰期重复占用同一时段</h2>
-            <p class="detail-text" data-i18n-html="greenbird_p3">同一场地和起止时间首先通过 Redis <code>SET NX EX</code> 获取带 TTL 的分布式锁；释放时执行 Lua 脚本校验锁持有者，避免一个请求误删另一个请求的锁。进入持久化阶段后，MySQL 事务通过 <code>FOR UPDATE</code> 锁定用户、场地、会员账户与冲突预约，再原子创建预约和待支付订单。</p>
+            <h2 class="detail-section-title" data-i18n="greenbird_s2">用事务、行锁与幂等保护每一次占场和收款</h2>
+            <p class="detail-text" data-i18n-html="greenbird_p3">当前新预约以 MySQL 事务为权威边界：先用 <code>FOR UPDATE</code> 锁定相关场地行，再复核有效预约、维护占用和报价；预约、支付单与审计记录在同一事务中提交。线上订场、到店开场、续场和改期使用统一的冲突规则。Redis 保留验证码、令牌和既有临时锁等用途，但不再是新预约占场防重的主要依据。</p>
             <div class="greenbird-concurrency">
                 <div class="greenbird-concurrency-step">
                     <div class="greenbird-concurrency-index">01 / ASYNC I/O</div>
@@ -250,67 +255,106 @@
                     <div class="greenbird-concurrency-desc" data-i18n="greenbird_cc1_desc">Tornado 协程配合异步 MySQL 与 Redis 客户端，减少 I/O 等待造成的线程阻塞。</div>
                 </div>
                 <div class="greenbird-concurrency-step">
-                    <div class="greenbird-concurrency-index">02 / DISTRIBUTED LOCK</div>
-                    <div class="greenbird-concurrency-title" data-i18n="greenbird_cc2_title">快速拒绝竞争</div>
-                    <div class="greenbird-concurrency-desc" data-i18n="greenbird_cc2_desc">Redis 原子加锁让同一时段只有一个请求进入核心创建流程，并通过 TTL 自动兜底。</div>
+                    <div class="greenbird-concurrency-index">02 / COURT ROW LOCK</div>
+                    <div class="greenbird-concurrency-title" data-i18n="greenbird_cc2_title">统一锁定场地</div>
+                    <div class="greenbird-concurrency-desc" data-i18n="greenbird_cc2_desc">线上、柜台、改期与维护在事务中锁定场地行，再检查时间区间和有效占用。</div>
                 </div>
                 <div class="greenbird-concurrency-step">
-                    <div class="greenbird-concurrency-index">03 / TRANSACTION</div>
-                    <div class="greenbird-concurrency-title" data-i18n="greenbird_cc3_title">数据库最终校验</div>
-                    <div class="greenbird-concurrency-desc" data-i18n="greenbird_cc3_desc">事务内复核场地状态、交叉时段、每日上限、余额和会员折扣，失败整体回滚。</div>
+                    <div class="greenbird-concurrency-index">03 / IDEMPOTENCY</div>
+                    <div class="greenbird-concurrency-title" data-i18n="greenbird_cc3_title">幂等与唯一约束</div>
+                    <div class="greenbird-concurrency-desc" data-i18n="greenbird_cc3_desc">记录请求号、参数摘要和处理结果；同号重试复用结果，同号变参拒绝，避免重复入账与核销。</div>
                 </div>
                 <div class="greenbird-concurrency-step">
                     <div class="greenbird-concurrency-index">04 / EXPIRATION</div>
-                    <div class="greenbird-concurrency-title" data-i18n="greenbird_cc4_title">超时释放容量</div>
-                    <div class="greenbird-concurrency-desc" data-i18n="greenbird_cc4_desc">待支付订单到期后同步标记预约失效，使占用时段重新回到可预订状态。</div>
+                    <div class="greenbird-concurrency-title" data-i18n="greenbird_cc4_title">超时与失败恢复</div>
+                    <div class="greenbird-concurrency-desc" data-i18n="greenbird_cc4_desc">待付过期释放场地、库存或余额占用；关键状态与流水同事务提交，失败整体回滚。</div>
                 </div>
             </div>
-            <div class="greenbird-note" data-i18n="greenbird_concurrency_note">该架构面向高并发预约冲突设计；项目目前未提供公开压测报告，因此不展示未经验证的 QPS 或吞吐量数字。</div>
+            <p class="detail-text" data-i18n="greenbird_benchmark_intro">项目已保存一轮经真实 Tornado HTTP 路由、JWT 与角色校验的测量：macOS arm64、Python 3.14.3、MySQL 5.7.28，连接池上限 10。每类先执行一次首请求，再以 20 并发上限执行 200 次请求。</p>
+            <div class="greenbird-benchmark" tabindex="0" role="region" aria-labelledby="greenbirdBenchmarkTitle">
+                <table>
+                    <caption id="greenbirdBenchmarkTitle" data-i18n="greenbird_benchmark_title">本地并发样本（2026-09-24）</caption>
+                    <thead><tr><th scope="col" data-i18n="greenbird_benchmark_scenario">场景</th><th scope="col">P50 (ms)</th><th scope="col">P95 (ms)</th><th scope="col" data-i18n="greenbird_benchmark_failures">失败 / 样本</th></tr></thead>
+                    <tbody>
+                        <tr data-benchmark="shop_quote"><th scope="row" data-i18n="greenbird_benchmark_quote">商城结算报价</th><td>15.39</td><td>17.93</td><td>0 / 200</td></tr>
+                        <tr data-benchmark="mock_collection"><th scope="row" data-i18n="greenbird_benchmark_payment">商城模拟收款</th><td>61.00</td><td>74.46</td><td>0 / 200</td></tr>
+                        <tr data-benchmark="admin_financial_list"><th scope="row" data-i18n="greenbird_benchmark_ledger">全局流水查询</th><td>305.47</td><td>349.48</td><td>0 / 200</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <a class="greenbird-source" href="../assets/projects/greenbird-badminton/benchmark-20260924.json" data-i18n="greenbird_benchmark_link">查看原始测量记录（JSON）</a>
+            <div class="greenbird-note" data-i18n="greenbird_concurrency_note">这些数字来自 2026-09-24 的本地隔离数据库测试，不代表生产 QPS、千级并发或公网多实例容量，也不是本次截图更新重新跑出的成绩。</div>
         </div>
 
         <div class="detail-section reveal" id="reservation">
             <div class="detail-section-label">Reservation Lifecycle</div>
-            <h2 class="detail-section-title" data-i18n="greenbird_s3">从实时可用状态到支付、取消和退款</h2>
-            <p class="detail-text" data-i18n-html="greenbird_p4">场地页按日期、营业时间和配置化时间粒度生成时段状态，并把 Redis 临时锁与数据库有效预约合并为<strong>可预订、锁定、已预订、不可用</strong>四类结果。选择场地和时段后，系统即时计算时长、会员折扣、应付金额及可用余额。</p>
-            <p class="detail-text" data-i18n="greenbird_p5">创建后的预约进入待支付订单，支付成功后同步扣减会员余额、记录资金流水并发送通知；取消、超时和管理员退款分别进入对应事务流程，保证预约状态、订单状态和余额变化一致。</p>
+            <h2 class="detail-section-title" data-i18n="greenbird_s3">从连续场次推荐，到报价确认与改期结算</h2>
+            <p class="detail-text" data-i18n-html="greenbird_p4">用户可在时间表中连续选时，也可以给出最早开始时间、运动时长与场地偏好，让系统寻找<strong>完整空闲窗口</strong>。推荐算法通过前缀和筛选连续时段，再按时间偏差、偏好、价格及零散空档排序，最多返回三个候选并解释理由；推荐不占位，下单时仍需重新检查。</p>
+            <p class="detail-text" data-i18n="greenbird_p5">确认预约前展示原价、会员折扣、应付金额与可用余额，支持储值余额或项目内模拟支付宝。价格或权益变动会要求重新确认；有效待付订单保留成交快照。取消、过期和改期分别处理占用释放与差额结算，退款退回原支付渠道，模拟支付宝退款不会增加会员余额。</p>
         </div>
 
         <div class="detail-section reveal" id="membership">
             <div class="detail-section-label">Membership & Community</div>
             <h2 class="detail-section-title" data-i18n="greenbird_s4">会员账户不只是一个折扣标签</h2>
-            <p class="detail-text" data-i18n="greenbird_p6">会员中心统一管理等级、有效期、余额、积分与完整流水。预约消费、取消退款、商城购买和商城退款都会写入同一账本，保留变更前后余额、积分、原因和操作人，便于用户核对和管理员审计。</p>
+            <p class="detail-text" data-i18n="greenbird_p6">会员中心统一管理等级、有效期、余额、积分与账户流水。前台或管理员可以办理模拟收款储值，账户变更保留原因、经办人和关联业务。待支付订单的占用与可用余额分开显示，用户可核对储值、消费、退款及人工调整，而不是只看到一个余额数字。</p>
             <p class="detail-text" data-i18n="greenbird_p7">平台还提供活动赛事报名、球友圈、公告和通知中心，使场馆系统同时覆盖交易、组织与社群触达，而不是停留在单一预约工具。</p>
         </div>
 
         <div class="detail-section reveal" id="commerce">
             <div class="detail-section-label">Club Commerce</div>
-            <h2 class="detail-section-title" data-i18n="greenbird_s5">把会员余额延伸到场馆零售</h2>
-            <p class="detail-text" data-i18n-html="greenbird_p8">商城支持商品搜索、购物车、余额支付、到店领取、订单查询和退款申请。下单事务按固定顺序锁定商品，复核库存后原子扣减<strong>库存、会员余额</strong>并生成订单明细，降低并发购买下的超卖和账实不一致风险。</p>
+            <h2 class="detail-section-title" data-i18n="greenbird_s5">付款不是终点，商品交付也需要可追溯</h2>
+            <p class="detail-text" data-i18n-html="greenbird_p8">商城结算前重新核对价格、库存与可用余额，支持<strong>储值余额和模拟支付宝</strong>。待付订单预留库存，付款成功后生成取货二维码与可读码；前台或管理员先查询订单，再确认整单交付。同一订单只能核销一次，退款申请期间冻结取货，退款成功后凭证失效。</p>
             <figure class="greenbird-figure">
-                <img src="../assets/projects/greenbird-badminton/shop.jpg" alt="Greenbird 羽毛球馆会员商城界面" data-i18n-alt="greenbird_image_shop_alt" loading="lazy">
-                <figcaption class="greenbird-caption" data-i18n="greenbird_shop_caption">场馆商城：商品库存、会员余额、购物车和订单入口集中在同一工作区，支持球馆用品到店领取。</figcaption>
+                <a class="greenbird-screenshot" href="../assets/projects/greenbird-badminton/checkout-20260929.jpg" target="_blank" rel="noopener noreferrer" title="在新标签页查看完整截图" data-i18n-title="greenbird_open_image">
+                    <img src="../assets/projects/greenbird-badminton/checkout-20260929.jpg" width="1135" height="616" alt="BF 场馆商城购物车、实时核价提示与储值余额或模拟支付宝结算选项" data-i18n-alt="greenbird_image_shop_alt" loading="lazy" decoding="async">
+                </a>
+                <figcaption class="greenbird-caption" data-i18n="greenbird_shop_caption">购物车结算：展示余额、订单金额及两种支付渠道，下单前重新核价。截图未下单，背景中的测试商品与缺图占位按原状保留。</figcaption>
+            </figure>
+            <figure class="greenbird-figure">
+                <a class="greenbird-screenshot" href="../assets/projects/greenbird-badminton/pickup-20260929.jpg" target="_blank" rel="noopener noreferrer" title="在新标签页查看完整截图" data-i18n-title="greenbird_open_image">
+                    <img src="../assets/projects/greenbird-badminton/pickup-20260929.jpg" width="1120" height="912" alt="BF 前台查询已领取订单，显示核销经办人、领取时间与已取货状态" data-i18n-alt="greenbird_image_pickup_alt" loading="lazy" decoding="async">
+                </a>
+                <figcaption class="greenbird-caption" data-i18n="greenbird_pickup_caption">取货核销结果：该演示订单已于 9 月 24 日领取，保留经办人与时间。这不是可重复使用的取货凭证，也不表示已完成真实扫码设备验收。</figcaption>
+            </figure>
+        </div>
+
+        <div class="detail-section reveal" id="frontdesk">
+            <div class="detail-section-label">Front Desk & Roles</div>
+            <h2 class="detail-section-title" data-i18n="greenbird_s6">同一份经营记录，不同角色各司其职</h2>
+            <p class="detail-text" data-i18n="greenbird_p9">前台按完整时段原价为散客开场，无需先注册。例如 14:10 到店选择 14:00–15:00，仍支付整段费用并在 15:00 结束；相邻续场、收款和经办记录可追溯。前台不能发布赛事或公告，维修人员只读查看维护原因与时段，恢复开放由管理员确认。</p>
+            <figure class="greenbird-figure">
+                <a class="greenbird-screenshot" href="../assets/projects/greenbird-badminton/frontdesk-20260929.jpg" target="_blank" rel="noopener noreferrer" title="在新标签页查看完整截图" data-i18n-title="greenbird_open_image">
+                    <img src="../assets/projects/greenbird-badminton/frontdesk-20260929.jpg" width="1120" height="1419" alt="BF 前台工作台的当日三场地排期与散客开场入口" data-i18n-alt="greenbird_image_frontdesk_alt" loading="lazy" decoding="async">
+                </a>
+                <figcaption class="greenbird-caption" data-i18n="greenbird_frontdesk_caption">前台排期：当日三片场地的空闲时段与开场入口，统一承接散客开场、续场、储值和取货。</figcaption>
             </figure>
         </div>
 
         <div class="detail-section reveal" id="operations">
-            <div class="detail-section-label">Operations</div>
-            <h2 class="detail-section-title" data-i18n="greenbird_s6">把用户服务与后台运维放在同一数据闭环</h2>
-            <p class="detail-text" data-i18n="greenbird_p9">管理员可以管理用户角色、会员账户、场地状态、预约与退款、商品库存、赛事、公告、通知和社区内容。统计模块按日期聚合预约状态、活跃用户、场地使用率和热门时段，健康检查同时覆盖应用、MySQL 与 Redis。</p>
+            <div class="detail-section-label">Reconciliation & Operations</div>
+            <h2 class="detail-section-title" data-i18n="greenbird_s7">把每一笔收款解释清楚，而不是只做收入总数</h2>
+            <p class="detail-text" data-i18n="greenbird_p10">管理员在全局流水中区分渠道收款、储值充值、余额消费和退款，避免“充值 100 元再消费 100 元”被统计成 200 元渠道收款。预约结束不等于已到场：到场率与记录覆盖率分别披露，人工调整也不混入经营收入。</p>
+            <figure class="greenbird-figure">
+                <a class="greenbird-screenshot" href="../assets/projects/greenbird-badminton/ledger-20260929.jpg" target="_blank" rel="noopener noreferrer" title="在新标签页查看完整截图" data-i18n-title="greenbird_open_image">
+                    <img src="../assets/projects/greenbird-badminton/ledger-20260929.jpg" width="1120" height="2148" alt="BF 管理员全业务交易流水，区分模拟渠道收款、余额消费、退款和人工调整" data-i18n-alt="greenbird_image_ledger_alt" loading="lazy" decoding="async">
+                </a>
+                <figcaption class="greenbird-caption" data-i18n="greenbird_ledger_caption">全局资金流水：渠道收退款与余额消费分开核对。人工调增含演示账户初始余额，不能解释为经营收入。</figcaption>
+            </figure>
             <div class="detail-features">
                 <div class="detail-feature" data-hover>
                     <div class="detail-feature-icon">01</div>
                     <div class="detail-feature-title" data-i18n="greenbird_f1_title">并发安全预约</div>
-                    <div class="detail-feature-desc" data-i18n="greenbird_f1_desc">分布式锁、事务复核和超时释放共同保护场地时段。</div>
+                    <div class="detail-feature-desc" data-i18n="greenbird_f1_desc">场地行锁、事务复核、幂等与超时释放共同保护业务状态。</div>
                 </div>
                 <div class="detail-feature" data-hover>
                     <div class="detail-feature-icon">02</div>
                     <div class="detail-feature-title" data-i18n="greenbird_f2_title">会员资金账本</div>
-                    <div class="detail-feature-desc" data-i18n="greenbird_f2_desc">余额、积分、折扣与每笔交易变更都可追踪。</div>
+                    <div class="detail-feature-desc" data-i18n="greenbird_f2_desc">储值、消费、退款和人工调整分别记录，并关联原业务与经办人。</div>
                 </div>
                 <div class="detail-feature" data-hover>
                     <div class="detail-feature-icon">03</div>
-                    <div class="detail-feature-title" data-i18n="greenbird_f3_title">事务化商城</div>
-                    <div class="detail-feature-desc" data-i18n="greenbird_f3_desc">库存、支付、订单、退款和通知形成一致状态流。</div>
+                    <div class="detail-feature-title" data-i18n="greenbird_f3_title">一次性取货核销</div>
+                    <div class="detail-feature-desc" data-i18n="greenbird_f3_desc">付款后生成凭证，整单确认交付；退款冻结取货，阻止重复核销。</div>
                 </div>
                 <div class="detail-feature" data-hover>
                     <div class="detail-feature-icon">04</div>
@@ -320,7 +364,7 @@
                 <div class="detail-feature" data-hover>
                     <div class="detail-feature-icon">05</div>
                     <div class="detail-feature-title" data-i18n="greenbird_f5_title">运营统计</div>
-                    <div class="detail-feature-desc" data-i18n="greenbird_f5_desc">按场地、时段和用户分析预约量与使用率。</div>
+                    <div class="detail-feature-desc" data-i18n="greenbird_f5_desc">区分预订率、到场率与记录覆盖率，避免将未知到场误记为未到场。</div>
                 </div>
                 <div class="detail-feature" data-hover>
                     <div class="detail-feature-icon">06</div>

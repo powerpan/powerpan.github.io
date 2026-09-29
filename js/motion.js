@@ -95,6 +95,17 @@
         sync();
     });
     preference.addEventListener('change', sync);
+    window.addEventListener('storage', event => {
+        if (event.key !== 'site-motion') return;
+        userEnabled = event.newValue !== 'off';
+        sync();
+    });
+    window.addEventListener('pageshow', event => {
+        if (!event.persisted) return;
+        try { userEnabled = localStorage.getItem('site-motion') !== 'off'; }
+        catch (_) { /* Preserve the in-memory preference if storage is blocked. */ }
+        sync();
+    });
     document.addEventListener('visibilitychange', () => {
         stop();
         root.classList.toggle('page-hidden', document.hidden);

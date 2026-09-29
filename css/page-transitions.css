@@ -1,0 +1,49 @@
+/* Progressive enhancement: unsupported browsers keep ordinary navigation. */
+@view-transition { navigation: auto; }
+::view-transition { pointer-events: none; }
+::view-transition-old(root) { animation: pageDepart 320ms ease both; }
+::view-transition-new(root) { animation: pageAperture 460ms cubic-bezier(.2,.7,.2,1) both; }
+::view-transition-group(root) { animation-duration: 460ms; }
+@keyframes pageDepart { to { opacity: 0; transform: scale(.985); } }
+@keyframes pageAperture {
+    from { clip-path: polygon(0 0, 0 0, 0 100%, 0 100%); opacity: .6; }
+    to { clip-path: polygon(0 0, 120% 0, 100% 100%, 0 100%); opacity: 1; }
+}
+@keyframes pageFade { from { opacity: 0; } to { opacity: 1; } }
+/* Reading pages never move or reveal their body through a theatrical wipe. */
+html[data-page-scene="reading"]::view-transition-new(root) { animation: pageFade 180ms ease-out both; }
+html[data-page-scene="reading"]::view-transition-old(root) { animation: pageFade 180ms ease-out reverse both; }
+html[data-page-scene="reading"] :is(h1.detail-title, h1.blog-article-title) {
+    view-transition-name: story-title; animation: none; opacity: 1; transform: none; transition: none;
+}
+html[data-page-scene="reading"][data-motion] h1.reveal { opacity: 1; transform: none; }
+::view-transition-group(story-title) { animation-duration: 460ms; animation-timing-function: cubic-bezier(.2,.7,.2,1); }
+::view-transition-old(story-title), ::view-transition-new(story-title) { height: 100%; width: 100%; object-fit: contain; object-position: left center; }
+::view-transition-old(story-title) { animation: pageFade 70ms ease-out reverse both; }
+::view-transition-new(story-title) { animation: pageFade 180ms ease-out 50ms both; }
+.page-motion-button {
+    position: fixed; z-index: 90; left: 24px; bottom: 24px; min-height: 40px; padding: 10px 14px;
+    color: #9aaca2; background: rgba(8, 11, 9, .92); border: 1px solid #263b2e; border-radius: 8px;
+    font: 400 11px var(--font-mono); cursor: pointer;
+}
+.page-motion-button::before { content: ''; display: inline-block; width: 5px; height: 5px; border-radius: 50%; background: #6d7c72; margin-right: 8px; }
+.page-motion-button[aria-pressed="true"]::before { background: #00ff88; }
+.page-motion-button:focus-visible { outline: 2px solid #c8ffdf; outline-offset: 3px; }
+.page-motion-button:disabled { opacity: .6; cursor: default; }
+html[data-motion="off"]::view-transition-group(*),
+html[data-motion="off"]::view-transition-old(*),
+html[data-motion="off"]::view-transition-new(*) { animation: none !important; }
+html[data-motion="off"] { scroll-behavior: auto; }
+html[data-motion="off"] *, html[data-motion="off"] *::before, html[data-motion="off"] *::after {
+    animation-duration: .01ms !important; animation-iteration-count: 1 !important;
+    animation-delay: 0s !important; transition-duration: 0s !important; transition-delay: 0s !important;
+}
+@media (max-width: 900px), (pointer: coarse) {
+    ::view-transition-new(root) { animation: pageFade 180ms ease-out both; }
+    ::view-transition-old(root) { animation: pageFade 180ms ease-out reverse both; }
+    html[data-page-scene="reading"] :is(h1.detail-title, h1.blog-article-title) { view-transition-name: none; }
+    .page-motion-button { left: 16px; bottom: 16px; }
+}
+@media (prefers-reduced-motion: reduce) {
+    ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; }
+}

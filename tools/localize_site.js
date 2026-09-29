@@ -216,7 +216,21 @@ function createLocalizedPages(entries) {
       if (label) el.attr('data-label', label);
     });
     addLanguageNavigation($, lang, meta.canonical);
-    $('head').append('<noscript><style>.reveal,.timeline-item,.detail-hero .detail-tag,.detail-title,.detail-subtitle,.detail-meta{opacity:1!important;transform:none!important;visibility:visible!important}.loader,#cursor,#cursorDot,.nav-hamburger{display:none!important}.lang-toggle{display:inline-flex!important}body,a,button{cursor:auto!important}</style></noscript>');
+    // Opt in before the blocking bootstrap; otherwise an early reveal can cancel the transition.
+    $('head').prepend('<link rel="stylesheet" href="/css/page-transitions.css"><script src="/js/page-transitions.js" blocking="render"></script>');
+    const heading = $('h1').first();
+    if (heading.length) {
+      if (!heading.attr('id')) heading.attr('id', 'page-heading');
+      $('head').prepend($('<link rel="expect" blocking="render">').attr('href', '#' + heading.attr('id')));
+    }
+    $('html').attr('data-page-scene', rel.startsWith('blog/') || rel.startsWith('projects/') ? 'reading' : 'showcase');
+    if (!$('#motionToggle').length) {
+      const label = lang === 'en' ? 'Motion effects' : '动态效果';
+      const hint = lang === 'en' ? 'Pause or resume decorative motion' : '暂停或恢复装饰动画';
+      $('body').append($('<button type="button" class="page-motion-button" data-page-motion aria-pressed="true"></button>')
+        .attr('title', hint).text(label));
+    }
+    $('head').append('<noscript><style>.reveal,.timeline-item,.detail-hero .detail-tag,.detail-title,.detail-subtitle,.detail-meta{opacity:1!important;transform:none!important;visibility:visible!important}.loader,#cursor,#cursorDot,.nav-hamburger,.page-motion-button{display:none!important}.lang-toggle{display:inline-flex!important}body,a,button{cursor:auto!important}</style></noscript>');
     output.set(lang === 'en' ? 'en/' + rel : rel, Buffer.from($.html()));
   }
   return output;
