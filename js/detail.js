@@ -5,40 +5,8 @@
 (function() {
     'use strict';
 
-    /* ========================================
-       CUSTOM CURSOR (simplified)
-    ======================================== */
-    const cursor = document.getElementById('cursor');
-    const cursorDot = document.getElementById('cursorDot');
-    let cursorX = 0, cursorY = 0;
-    let dotX = 0, dotY = 0;
-
-    document.addEventListener('mousemove', e => {
-        cursorX = e.clientX;
-        cursorY = e.clientY;
-    });
-
-    function animateCursor() {
-        dotX += (cursorX - dotX) * 0.15;
-        dotY += (cursorY - dotY) * 0.15;
-        if (cursor) {
-            cursor.style.left = cursorX + 'px';
-            cursor.style.top = cursorY + 'px';
-        }
-        if (cursorDot) {
-            cursorDot.style.left = dotX + 'px';
-            cursorDot.style.top = dotY + 'px';
-        }
-        requestAnimationFrame(animateCursor);
-    }
-    animateCursor();
-
-    /* Hover effect */
-    const hoverEls = document.querySelectorAll('[data-hover], a, button');
-    hoverEls.forEach(el => {
-        el.addEventListener('mouseenter', () => cursor && cursor.classList.add('hovering'));
-        el.addEventListener('mouseleave', () => cursor && cursor.classList.remove('hovering'));
-    });
+    const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)');
+    const canAnimate = () => SiteMotion.enabled && !document.hidden;
 
     /* ========================================
        SCROLL PROGRESS
@@ -81,22 +49,31 @@
        COUNTER ANIMATION
     ======================================== */
     const counters = document.querySelectorAll('[data-count]');
+    const counterFrames = new Map();
+    function finishCounter(el) {
+        cancelAnimationFrame(counterFrames.get(el));
+        counterFrames.delete(el);
+        el.textContent = parseInt(el.dataset.count).toLocaleString() + '+';
+    }
     const counterObs = new IntersectionObserver(entries => {
         entries.forEach(entry => {
             if (!entry.isIntersecting) return;
             const el = entry.target;
+            counterObs.unobserve(el);
+            if (!canAnimate()) return finishCounter(el);
             const target = parseInt(el.dataset.count);
             const duration = target > 100 ? 2200 : 1600;
             const startTime = performance.now();
             function tick(now) {
+                if (!canAnimate()) return finishCounter(el);
                 const progress = Math.min((now - startTime) / duration, 1);
                 const eased = 1 - Math.pow(1 - progress, 3);
                 const val = Math.floor(eased * target);
                 el.textContent = val.toLocaleString() + '+';
-                if (progress < 1) requestAnimationFrame(tick);
+                if (progress < 1) counterFrames.set(el, requestAnimationFrame(tick));
+                else counterFrames.delete(el);
             }
-            requestAnimationFrame(tick);
-            counterObs.unobserve(el);
+            counterFrames.set(el, requestAnimationFrame(tick));
         });
     }, { threshold: 0.5 });
     counters.forEach(el => counterObs.observe(el));
@@ -147,7 +124,7 @@
         item.addEventListener('click', () => {
             const target = document.getElementById(item.dataset.target);
             if (target) {
-                target.scrollIntoView({ behavior: 'smooth' });
+                target.scrollIntoView({ behavior: SiteMotion.enabled ? 'smooth' : 'instant' });
             }
         });
     });
@@ -155,8 +132,12 @@
     /* ========================================
        MAGNETIC BUTTONS
     ======================================== */
-    document.querySelectorAll('.magnetic').forEach(btn => {
+    const magneticButtons = document.querySelectorAll('.magnetic');
+    const resetMagnets = () => magneticButtons.forEach(btn => btn.style.transform = '');
+    finePointer.addEventListener('change', resetMagnets);
+    magneticButtons.forEach(btn => {
         btn.addEventListener('mousemove', e => {
+            if (!canAnimate() || !finePointer.matches) return;
             const rect = btn.getBoundingClientRect();
             const x = (e.clientX - rect.left - rect.width / 2) * 0.3;
             const y = (e.clientY - rect.top - rect.height / 2) * 0.3;
@@ -200,6 +181,7 @@
     ======================================== */
     const parallaxEls = document.querySelectorAll('[data-parallax]');
     window.addEventListener('scroll', () => {
+        if (!canAnimate()) return;
         const scrollTop = window.pageYOffset;
         parallaxEls.forEach(el => {
             const speed = parseFloat(el.dataset.parallax) || 0.5;
@@ -211,21 +193,50 @@
     /* ========================================
        TYPEWRITER EFFECT
     ======================================== */
-    document.querySelectorAll('[data-typewriter]').forEach(el => {
+    const typewriters = document.querySelectorAll('[data-typewriter]');
+    const typewriterTimers = new Map();
+    function finishTypewriter(el) {
+        clearTimeout(typewriterTimers.get(el));
+        typewriterTimers.delete(el);
+        el.textContent = el.dataset.typewriter;
+    }
+    typewriters.forEach(el => {
+        if (!canAnimate()) return finishTypewriter(el);
         const text = el.dataset.typewriter;
         let i = 0;
         el.textContent = '';
         
         function type() {
+            if (!canAnimate()) return finishTypewriter(el);
             if (i < text.length) {
                 el.textContent += text.charAt(i);
                 i++;
-                setTimeout(type, 50 + Math.random() * 30);
+                typewriterTimers.set(el, setTimeout(type, 50 + Math.random() * 30));
             }
+            else typewriterTimers.delete(el);
         }
         
-        setTimeout(type, 1000);
+        typewriterTimers.set(el, setTimeout(type, 1000));
     });
+
+    function stopDecorations() {
+        resetMagnets();
+        parallaxEls.forEach(el => el.style.transform = '');
+        counterFrames.forEach((_, el) => finishCounter(el));
+        typewriterTimers.forEach((_, el) => finishTypewriter(el));
+    }
+    SiteMotion.subscribe(enabled => {
+        if (enabled) return;
+        stopDecorations();
+        counters.forEach(el => {
+            counterObs.unobserve(el);
+            finishCounter(el);
+        });
+    });
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden) stopDecorations();
+    });
+    window.addEventListener('pagehide', stopDecorations);
 
     /* ========================================
        FLOAT KEYFRAMES (injected)
@@ -279,7 +290,7 @@
             backToTop.classList.toggle('visible', window.pageYOffset > 400);
         });
         backToTop.addEventListener('click', () => {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            window.scrollTo({ top: 0, behavior: SiteMotion.enabled ? 'smooth' : 'instant' });
         });
     }
 

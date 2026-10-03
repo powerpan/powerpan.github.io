@@ -880,7 +880,7 @@
     color: var(--text-muted);
     font-size: 1.1rem;
     display: flex; align-items: center; justify-content: center;
-    cursor: none;
+    cursor: pointer;
     z-index: 10001;
     opacity: 0; pointer-events: none;
     transform: translateY(12px);

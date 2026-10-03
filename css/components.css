@@ -124,6 +124,11 @@
         /* ========================================
            CUSTOM CURSOR
         ======================================== */
+        .cursor, .cursor-dot { top: 0; left: 0; opacity: 0; }
+        body :is(input, textarea, [contenteditable="true"]) { cursor: text; }
+        body.custom-cursor-active,
+        body.custom-cursor-active :is(a, button, [data-hover], [role="button"]) { cursor: none; }
+        body.custom-cursor-active :is(.cursor, .cursor-dot) { opacity: 1; }
         .cursor {
             width: 28px; height: 28px;
             border: 1px solid rgba(var(--accent-rgb), 0.65);

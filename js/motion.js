@@ -43,16 +43,25 @@
         lastTime = 0;
     }
 
-    function sync() {
-        stop();
-        root.dataset.motion = enabled() ? 'on' : 'off';
+    function syncControls() {
+        document.querySelectorAll('[data-page-motion]').forEach(button => {
+            button.setAttribute('aria-pressed', String(enabled()));
+            button.disabled = preference.matches;
+        });
         if (toggle) {
             toggle.hidden = false;
             toggle.setAttribute('aria-pressed', String(enabled()));
             toggle.disabled = preference.matches;
             toggle.dataset.i18nTitle = preference.matches ? 'motion_system' : 'motion_hint';
-            toggle.title = getCurrentTranslations()[toggle.dataset.i18nTitle] || '';
+            const translations = typeof getCurrentTranslations === 'function' ? getCurrentTranslations() : {};
+            toggle.title = translations[toggle.dataset.i18nTitle] || '';
         }
+    }
+
+    function sync() {
+        stop();
+        root.dataset.motion = enabled() ? 'on' : 'off';
+        syncControls();
         listeners.forEach(listener => listener(enabled()));
         tasks.forEach(task => task.render(task.time, 0));
         wake();
@@ -75,6 +84,14 @@
 
     window.SiteMotion = {
         get enabled() { return enabled(); },
+        setEnabled(value) {
+            if (preference.matches) return;
+            userEnabled = Boolean(value);
+            try {
+                localStorage.setItem('site-motion', userEnabled ? 'on' : 'off');
+            } catch (_) { /* The current visit does not require persistence. */ }
+            sync();
+        },
         animate(element, render) {
             if (!element) return;
             tasks.push({ element, render, time: 0, visible: false });
@@ -84,19 +101,18 @@
         subscribe(listener) {
             listeners.add(listener);
             listener(enabled());
+            return () => listeners.delete(listener);
         }
     };
 
     toggle?.addEventListener('click', () => {
-        userEnabled = !userEnabled;
-        try {
-            localStorage.setItem('site-motion', userEnabled ? 'on' : 'off');
-        } catch (_) { /* The current visit does not require persistence. */ }
-        sync();
+        SiteMotion.setEnabled(!enabled());
     });
+    // Localized detail controls are appended after the shared scripts.
+    document.addEventListener('DOMContentLoaded', syncControls, { once: true });
     preference.addEventListener('change', sync);
     window.addEventListener('storage', event => {
-        if (event.key !== 'site-motion') return;
+        if (event.key !== 'site-motion' && event.key !== null) return;
         userEnabled = event.newValue !== 'off';
         sync();
     });
@@ -111,5 +127,6 @@
         root.classList.toggle('page-hidden', document.hidden);
         wake();
     });
+    window.addEventListener('pagehide', stop);
     sync();
 })();

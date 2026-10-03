@@ -53,12 +53,6 @@
             background: linear-gradient(90deg, rgba(var(--accent-rgb), 0.065), transparent 80%);
         }
         .home-page .blog-item:focus-visible::before { opacity: 1; }
-        .home-page .cursor, .home-page .cursor-dot { top: 0; left: 0; opacity: 0; }
-        .home-page { cursor: auto; }
-        .home-page :is(input, textarea, [contenteditable="true"]) { cursor: text; }
-        .home-page.custom-cursor-active,
-        .home-page.custom-cursor-active :is(a, button, [data-hover], [role="button"]) { cursor: none; }
-        .home-page.custom-cursor-active :is(.cursor, .cursor-dot) { opacity: 1; }
         .home-page :focus-visible { outline: 2px solid var(--accent); outline-offset: 5px; }
         .home-page nav:focus-within { transform: none; }
         .home-page :is(section[id], .section-divider) { scroll-margin-top: 85px; }

@@ -52,6 +52,10 @@
         const button = event.target.closest?.('[data-page-motion]');
         if (!button || reduced.matches) return;
         const next = !enabled();
+        if (window.SiteMotion) {
+            SiteMotion.setEnabled(next);
+            return;
+        }
         try { localStorage.setItem('site-motion', next ? 'on' : 'off'); }
         catch {
             // In private/blocked storage the current page still honors the switch.

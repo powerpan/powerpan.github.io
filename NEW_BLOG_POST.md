@@ -28,7 +28,7 @@
 - `<head>` 中的 CSS 引用顺序：`base.css` → `components.css` → `detail.css` → `responsive.css`
 - Nav 结构、scroll progress、cursor、particle canvas
 - Footer（`.detail-footer`）、back-to-top 按钮
-- 底部 `<script>` 引用：`i18n.js` → `i18n/core.js` → `i18n/blog-list.js` → `i18n/articles/{slug}.js` → `detail.js`
+- 底部 `<script>` 引用：`i18n.js` → `i18n/core.js` → `i18n/blog-list.js` → `i18n/articles/{slug}.js` → `motion.js` → `cursor.js` → `detail.js`。详情页与首页共用动效偏好和按需光标，不要另写持续运行的光标动画循环。
 - Mobile hamburger menu + `mobileLangBtn`
 
 ---

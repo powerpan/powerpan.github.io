@@ -26,7 +26,7 @@
     }
 
     document.addEventListener('pointermove', event => {
-        if (!finePointer.matches || !SiteMotion.enabled || event.pointerType === 'touch') return hide();
+        if (!finePointer.matches || !SiteMotion.enabled || document.hidden || event.pointerType === 'touch') return hide();
         // Keep the familiar text caret while editing or selecting form content.
         if (event.target.closest('input, textarea, [contenteditable="true"]')) return hide();
         targetX = event.clientX;
@@ -44,6 +44,7 @@
     document.addEventListener('keydown', event => { if (event.key === 'Tab') hide(); });
     document.addEventListener('visibilitychange', hide);
     window.addEventListener('blur', hide);
+    window.addEventListener('pagehide', hide);
     finePointer.addEventListener('change', hide);
     SiteMotion.subscribe(hide);
 })();

@@ -38,7 +38,7 @@
             color: var(--text-primary);
             font-family: var(--font-mono);
             overflow-x: hidden;
-            cursor: none;
+            cursor: auto;
         }
         ::selection { background: var(--accent); color: var(--bg); }
         ::-webkit-scrollbar { width: 6px; }
