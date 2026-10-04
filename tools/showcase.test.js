@@ -51,27 +51,27 @@ test('milestone sparks are deterministic, bounded and finish with the arrival se
   }
 });
 
-test('showcase prioritizes screenshot-backed projects and keeps one labeled concept fallback', () => {
+test('showcase features six screenshot-backed projects with accurate image labels', () => {
   const $ = load(read('index.html'));
   const cards = $('.project-card');
   assert.equal(cards.length, 6);
   const featured = ['local-rag', 'greenbird-badminton', 'classbridge-suite',
-    'trading-simulator', 'moyu-night-library', 'yolo26-multimodal'];
+    'trading-simulator', 'moyu-night-library', 'civilization-z'];
   assert.deepEqual(cards.map((_, el) => $(el).attr('href')).get(),
     featured.map(slug => `projects/${slug}.html`));
   const screenshotProjects = fs.readdirSync(path.join(root, 'projects'))
     .filter(file => file.endsWith('.html') && load(read(`projects/${file}`))('img[src*="assets/projects/"]').length)
     .map(file => file.replace(/\.html$/, '')).sort();
-  assert.deepEqual(featured.slice(0, 5).sort(), screenshotProjects);
+  assert.deepEqual([...featured].sort(), screenshotProjects);
   cards.each((_, el) => {
     assert(fs.existsSync(path.join(root, $(el).attr('href'))));
     assert($(el).find('.project-title').text().length > 0);
     assert($(el).find('.project-desc').text().length > 0);
   });
-  assert.equal(cards.last().find('.project-visual').attr('data-art'), 'vision');
-  assert.equal(cards.last().find('.project-visual').attr('aria-hidden'), 'true');
+  assert.equal(cards.last().find('.project-visual-note').attr('data-i18n'), 'civ_screenshot_note');
+  assert.equal(cards.find('.project-art, .project-scan').length, 0);
   const images = $('.project-screenshot');
-  assert.equal(images.length, 5);
+  assert.equal(images.length, 6);
   images.each((index, el) => {
     const img = $(el);
     assert(fs.existsSync(path.join(root, img.attr('src'))));
