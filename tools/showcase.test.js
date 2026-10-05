@@ -55,8 +55,8 @@ test('showcase features six screenshot-backed projects with accurate image label
   const $ = load(read('index.html'));
   const cards = $('.project-card');
   assert.equal(cards.length, 6);
-  const featured = ['local-rag', 'greenbird-badminton', 'classbridge-suite',
-    'trading-simulator', 'moyu-night-library', 'civilization-z'];
+  const featured = ['civilization-z', 'trading-simulator', 'greenbird-badminton',
+    'moyu-night-library', 'local-rag', 'classbridge-suite'];
   assert.deepEqual(cards.map((_, el) => $(el).attr('href')).get(),
     featured.map(slug => `projects/${slug}.html`));
   const screenshotProjects = fs.readdirSync(path.join(root, 'projects'))
@@ -68,7 +68,7 @@ test('showcase features six screenshot-backed projects with accurate image label
     assert($(el).find('.project-title').text().length > 0);
     assert($(el).find('.project-desc').text().length > 0);
   });
-  assert.equal(cards.last().find('.project-visual-note').attr('data-i18n'), 'civ_screenshot_note');
+  assert.equal(cards.first().find('.project-visual-note').attr('data-i18n'), 'civ_screenshot_note');
   assert.equal(cards.find('.project-art, .project-scan').length, 0);
   const images = $('.project-screenshot');
   assert.equal(images.length, 6);

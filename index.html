@@ -53,6 +53,7 @@
 ]
     </script>
     <!-- SEO:END -->
+    <script src="js/loader.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/base.css">
@@ -79,7 +80,7 @@
             </div>
             <div class="loader-terminal-body" id="loaderBody"></div>
         </div>
-        <button class="loader-skip" id="loaderSkip">SKIP <span class="loader-skip-arrow">→</span></button>
+        <button class="loader-skip" id="loaderSkip" type="button">SKIP <span class="loader-skip-arrow">→</span></button>
     </div>
 
     <!-- ============ CURSOR ============ -->
@@ -528,43 +529,19 @@
             <a href="projects/index.html" class="projects-count reveal reveal-d2" data-hover style="color:var(--accent);" data-i18n="blog_viewall">查看全部 →</a>
         </div>
         <div class="projects-grid">
-            <a href="projects/local-rag.html" class="project-card project-card-screenshot reveal" data-hover>
+            <a href="projects/civilization-z.html" class="project-card project-card-screenshot reveal" data-hover>
                 <div class="project-visual project-visual-screenshot">
-                    <img class="project-screenshot" src="assets/projects/local-rag/query-workbench.png" width="2456" height="1192" alt="本地知识库助手的问答与检索工作台" data-i18n-alt="rag_image_query_alt" loading="lazy" decoding="async">
-                    <span class="project-visual-note" data-i18n="projects_screenshot_note">真实界面</span>
+                    <img class="project-screenshot" src="assets/projects/civilization-z/world.webp" width="1920" height="1080" alt="文明Z六边形地图中的三个文明、城市、疆域与部队，采用人工布置的展示局面" data-i18n-alt="civ_world_alt" loading="lazy" decoding="async">
+                    <span class="project-visual-note" data-i18n="civ_screenshot_note">实机界面 · 演示局面</span>
                 </div>
                 <div class="project-card-content">
-                    <div class="project-tag" data-i18n="proj7_tag">AI Application · RAG · Knowledge Graph</div>
-                    <div class="project-title" data-i18n="proj7_title">Local Knowledge Assistant</div>
-                    <div class="project-desc" data-i18n="proj_card7_desc">本地优先的个人知识库 RAG 系统，集成本地向量检索、精排、答案生成、Notion 同步与知识图谱治理。</div>
+                    <div class="project-tag" data-i18n="civ_tag">AI Agents · Strategy Game · Simulation</div>
+                    <div class="project-title" data-i18n="civ_title">文明Z</div>
+                    <div class="project-desc" data-i18n="civ_card_desc">我做的一个 AI 文明沙盘，让三个文明在同一张地图上探索、建城、科研与交战。既可以旁观它们的发展，也可以给出战略方向，或亲自接过指挥权。</div>
                 </div>
                 <div class="project-arrow">↗</div>
             </a>
-            <a href="projects/greenbird-badminton.html" class="project-card project-card-screenshot reveal reveal-d1" data-hover>
-                <div class="project-visual project-visual-screenshot">
-                    <img class="project-screenshot" src="assets/projects/greenbird-badminton/booking-20260929.jpg" width="1120" height="1099" alt="BF 羽毛球馆连续两小时选场、金卡九折报价与模拟支付宝选项" data-i18n-alt="greenbird_image_reservation_alt" loading="lazy" decoding="async">
-                    <span class="project-visual-note" data-i18n="projects_screenshot_note">真实界面</span>
-                </div>
-                <div class="project-card-content">
-                    <div class="project-tag" data-i18n="proj9_tag">Full-stack · Tornado · MySQL</div>
-                    <div class="project-title" data-i18n="proj9_title">BF Badminton Platform</div>
-                    <div class="project-desc" data-i18n="proj_card9_desc">串联线上订场、柜台开场、会员储值与商品核销的四角色场馆运营平台，以事务行锁、请求幂等和统一流水保障交易一致性。</div>
-                </div>
-                <div class="project-arrow">↗</div>
-            </a>
-            <a href="projects/classbridge-suite.html" class="project-card project-card-screenshot reveal reveal-d2" data-hover>
-                <div class="project-visual project-visual-screenshot">
-                    <img class="project-screenshot" src="assets/projects/classbridge-suite/ielts-part-training.jpg" width="2176" height="1442" alt="IELTS Speaking Coach Part 训练工作台" data-i18n-alt="classbridge_image_ielts_alt" loading="lazy" decoding="async">
-                    <span class="project-visual-note" data-i18n="projects_screenshot_note">真实界面</span>
-                </div>
-                <div class="project-card-content">
-                    <div class="project-tag" data-i18n="proj11_tag">EdTech · macOS · Speech AI</div>
-                    <div class="project-title" data-i18n="proj11_title">ClassBridge Product Suite</div>
-                    <div class="project-desc" data-i18n="proj_card11_desc">共享原生 macOS 与云端平台的三个独立学习产品：ClassBridge Kids、IELTS Speaking Coach 和 Cantonese Speaking Coach。</div>
-                </div>
-                <div class="project-arrow">↗</div>
-            </a>
-            <a href="projects/trading-simulator.html" class="project-card project-card-screenshot reveal reveal-d3" data-hover>
+            <a href="projects/trading-simulator.html" class="project-card project-card-screenshot reveal reveal-d1" data-hover>
                 <div class="project-visual project-visual-screenshot">
                     <img class="project-screenshot" src="assets/projects/trading-simulator/trading-terminal.jpg" width="2762" height="1636" alt="股海新手村原生 macOS 模拟交易终端" data-i18n-alt="trading_image_terminal_alt" loading="lazy" decoding="async">
                     <span class="project-visual-note" data-i18n="projects_screenshot_note">真实界面</span>
@@ -576,7 +553,19 @@
                 </div>
                 <div class="project-arrow">↗</div>
             </a>
-            <a href="projects/moyu-night-library.html" class="project-card project-card-screenshot reveal reveal-d4" data-hover>
+            <a href="projects/greenbird-badminton.html" class="project-card project-card-screenshot reveal reveal-d2" data-hover>
+                <div class="project-visual project-visual-screenshot">
+                    <img class="project-screenshot" src="assets/projects/greenbird-badminton/booking-20260929.jpg" width="1120" height="1099" alt="BF 羽毛球馆连续两小时选场、金卡九折报价与模拟支付宝选项" data-i18n-alt="greenbird_image_reservation_alt" loading="lazy" decoding="async">
+                    <span class="project-visual-note" data-i18n="projects_screenshot_note">真实界面</span>
+                </div>
+                <div class="project-card-content">
+                    <div class="project-tag" data-i18n="proj9_tag">Full-stack · Tornado · MySQL</div>
+                    <div class="project-title" data-i18n="proj9_title">BF Badminton Platform</div>
+                    <div class="project-desc" data-i18n="proj_card9_desc">串联线上订场、柜台开场、会员储值与商品核销的四角色场馆运营平台，以事务行锁、请求幂等和统一流水保障交易一致性。</div>
+                </div>
+                <div class="project-arrow">↗</div>
+            </a>
+            <a href="projects/moyu-night-library.html" class="project-card project-card-screenshot reveal reveal-d3" data-hover>
                 <div class="project-visual project-visual-screenshot">
                     <img class="project-screenshot" src="assets/projects/moyu-night-library/home.jpg" width="2454" height="1452" alt="墨语夜书阁首页与书籍展示" data-i18n-alt="moyu_image_home_alt" loading="lazy" decoding="async">
                     <span class="project-visual-note" data-i18n="projects_screenshot_note">真实界面</span>
@@ -588,15 +577,27 @@
                 </div>
                 <div class="project-arrow">↗</div>
             </a>
-            <a href="projects/civilization-z.html" class="project-card project-card-screenshot reveal reveal-d5" data-hover>
+            <a href="projects/local-rag.html" class="project-card project-card-screenshot reveal reveal-d4" data-hover>
                 <div class="project-visual project-visual-screenshot">
-                    <img class="project-screenshot" src="assets/projects/civilization-z/world.webp" width="1920" height="1080" alt="文明Z六边形地图中的三个文明、城市、疆域与部队，采用人工布置的展示局面" data-i18n-alt="civ_world_alt" loading="lazy" decoding="async">
-                    <span class="project-visual-note" data-i18n="civ_screenshot_note">实机界面 · 演示局面</span>
+                    <img class="project-screenshot" src="assets/projects/local-rag/query-workbench.png" width="2456" height="1192" alt="本地知识库助手的问答与检索工作台" data-i18n-alt="rag_image_query_alt" loading="lazy" decoding="async">
+                    <span class="project-visual-note" data-i18n="projects_screenshot_note">真实界面</span>
                 </div>
                 <div class="project-card-content">
-                    <div class="project-tag" data-i18n="civ_tag">AI Agents · Strategy Game · Simulation</div>
-                    <div class="project-title" data-i18n="civ_title">文明Z</div>
-                    <div class="project-desc" data-i18n="civ_card_desc">我做的一个 AI 文明沙盘，让三个文明在同一张地图上探索、建城、科研与交战。既可以旁观它们的发展，也可以给出战略方向，或亲自接过指挥权。</div>
+                    <div class="project-tag" data-i18n="proj7_tag">AI Application · RAG · Knowledge Graph</div>
+                    <div class="project-title" data-i18n="proj7_title">Local Knowledge Assistant</div>
+                    <div class="project-desc" data-i18n="proj_card7_desc">本地优先的个人知识库 RAG 系统，集成本地向量检索、精排、答案生成、Notion 同步与知识图谱治理。</div>
+                </div>
+                <div class="project-arrow">↗</div>
+            </a>
+            <a href="projects/classbridge-suite.html" class="project-card project-card-screenshot reveal reveal-d5" data-hover>
+                <div class="project-visual project-visual-screenshot">
+                    <img class="project-screenshot" src="assets/projects/classbridge-suite/ielts-part-training.jpg" width="2176" height="1442" alt="IELTS Speaking Coach Part 训练工作台" data-i18n-alt="classbridge_image_ielts_alt" loading="lazy" decoding="async">
+                    <span class="project-visual-note" data-i18n="projects_screenshot_note">真实界面</span>
+                </div>
+                <div class="project-card-content">
+                    <div class="project-tag" data-i18n="proj11_tag">EdTech · macOS · Speech AI</div>
+                    <div class="project-title" data-i18n="proj11_title">ClassBridge Product Suite</div>
+                    <div class="project-desc" data-i18n="proj_card11_desc">共享原生 macOS 与云端平台的三个独立学习产品：ClassBridge Kids、IELTS Speaking Coach 和 Cantonese Speaking Coach。</div>
                 </div>
                 <div class="project-arrow">↗</div>
             </a>
@@ -968,7 +969,6 @@
     <script src="js/i18n/projects.js?v=20260730-i18n2"></script>
     <script src="js/i18n/blog-list.js"></script>
     <script src="js/motion.js"></script>
-    <script src="js/loader.js"></script>
     <script src="js/hero-core.js"></script>
     <script src="js/particles.js"></script>
     <script src="js/cursor.js"></script>
