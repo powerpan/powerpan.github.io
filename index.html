@@ -67,6 +67,7 @@
     <link rel="stylesheet" href="css/showcase.css">
     <link rel="stylesheet" href="css/theme.css">
     <link rel="stylesheet" href="css/music.css">
+    <script src="js/music-library.js" defer></script>
     <script src="js/music.js" defer></script>
 </head>
 <body class="home-page">
@@ -952,7 +953,7 @@
     </div>
 
     <!-- ============ NOW PLAYING ============ -->
-    <audio id="bgm" loop preload="none">
+    <audio id="bgm" preload="none">
         <source src="assets/emerald-drift.mp3" type="audio/mpeg">
     </audio>
     <div id="siteSound" class="site-sound" data-state="paused" hidden>
@@ -965,7 +966,21 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 7h16M4 17h16"/><circle cx="9" cy="7" r="3" fill="var(--bg-elevated)"/><circle cx="15" cy="17" r="3" fill="var(--bg-elevated)"/></svg>
         </button>
         <section id="soundPanel" class="sound-panel" aria-label="声音与动效设置" hidden>
-            <div class="sound-panel-track" data-i18n="bgm_title">Emerald Drift｜翡翠漂流</div>
+            <div class="sound-panel-heading"><div class="sound-panel-track" data-i18n="bgm_title">Emerald Drift｜翡翠漂流</div><span id="soundTrackCount" class="sound-track-count">1 / 7</span></div>
+            <label for="soundTrack" data-i18n="audio_playlist">曲库 · 顺序轮播</label>
+            <select id="soundTrack" class="sound-track-select">
+                <option value="emerald-drift" data-i18n="bgm_title">Emerald Drift｜翡翠漂流</option>
+                <option value="liquid-chrome" data-i18n="music_liquid_chrome">Liquid Chrome｜液态铬</option>
+                <option value="glass-dawn" data-i18n="music_glass_dawn">Glass Dawn｜玻璃晨曦</option>
+                <option value="abyssal-signal" data-i18n="music_abyssal_signal">Abyssal Signal｜深海信号</option>
+                <option value="neural-weave" data-i18n="music_neural_weave">Neural Weave｜神经织流</option>
+                <option value="moss-circuit" data-i18n="music_moss_circuit">Moss Circuit｜苔藓电路</option>
+                <option value="orbital-afterglow" data-i18n="music_orbital_afterglow">Orbital Afterglow｜轨道余晖</option>
+            </select>
+            <div class="sound-track-actions">
+                <button type="button" id="soundPrevious"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M6 5v14m12-14-9 7 9 7Z"/></svg><span data-i18n="audio_previous">上一首</span></button>
+                <button type="button" id="soundNext"><span data-i18n="audio_next">下一首</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M18 5v14M6 5l9 7-9 7Z"/></svg></button>
+            </div>
             <label for="soundVolume" data-i18n="audio_volume">音乐音量</label>
             <div class="sound-volume-row"><input id="soundVolume" type="range" min="0" max="100" step="5" value="40"><output for="soundVolume" id="soundVolumeValue">40%</output></div>
             <div class="sound-motion-slot">
