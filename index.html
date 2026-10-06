@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="js/theme.js"></script>
+    <script src="js/theme-ribbon.js" defer></script>
     <title>Eric — Full-Stack & AI Vision Developer</title>
     <!-- SEO:START -->
     <meta name="description" content="Eric 的 AI 工程、计算机视觉、Agent 架构与系统设计技术博客。">
@@ -63,6 +65,7 @@
     <link rel="stylesheet" href="css/new-sections.css">
     <link rel="stylesheet" href="css/responsive.css">
     <link rel="stylesheet" href="css/showcase.css">
+    <link rel="stylesheet" href="css/theme.css">
 </head>
 <body class="home-page">
 
@@ -96,9 +99,15 @@
             <li><a href="#blog" data-hover data-i18n="nav_blog">// 博客</a></li>
             <li><a href="#contact" data-hover data-i18n="nav_contact">// 联系</a></li>
         </ul>
-        <div class="nav-status">
-            <span class="status-dot"></span>
-            <span data-i18n="nav_status">Open to work</span>
+        <div class="nav-tools">
+            <button type="button" id="themeToggle" class="theme-toggle" hidden aria-pressed="false" aria-label="切换到浅色主题" title="切换到浅色主题">
+                <svg class="theme-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 1v3m0 16v3M1 12h3m16 0h3M4.2 4.2l2.1 2.1m11.4 11.4 2.1 2.1M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"></path></svg>
+                <svg class="theme-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M20.5 14.4A8.7 8.7 0 0 1 9.6 3.5a9 9 0 1 0 10.9 10.9Z"></path></svg>
+            </button>
+            <div class="nav-status">
+                <span class="status-dot"></span>
+                <span data-i18n="nav_status">Open to work</span>
+            </div>
         </div>
         <button class="nav-hamburger" id="navHamburger" aria-label="Menu">
             <span></span><span></span><span></span>

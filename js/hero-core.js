@@ -34,7 +34,9 @@
         uniform vec2 drift;
         uniform float time;
         uniform float scroll;
-        const vec3 GREEN = vec3(0.0, 1.0, 0.49);
+        uniform float themeMix;
+        vec3 accent() { return mix(vec3(0.0, 1.0, 0.49), vec3(0.0, 0.43, 0.27), themeMix); }
+        #define GREEN accent()
 
         mat2 rotate(float a) {
             float c = cos(a), s = sin(a);
@@ -72,7 +74,7 @@
             float edge = pow(max(dot(r, normalize(vec3(0.9, 0.4, 0.3))), 0.0), 36.0);
             float strip = pow(max(dot(r, normalize(vec3(-0.6, 0.1, 0.9))), 0.0), 22.0);
             float lower = pow(max(dot(r, normalize(vec3(0.6, -0.75, 0.5))), 0.0), 12.0);
-            return vec3(0.025, 0.035, 0.04) + vec3(1.25, 1.35, 1.4) * broad
+            return mix(vec3(0.025, 0.035, 0.04), vec3(0.09, 0.14, 0.13), themeMix) + vec3(1.25, 1.35, 1.4) * broad
                 + vec3(1.65) * softbox + vec3(1.4, 1.6, 1.65) * edge
                 + vec3(1.0, 1.1, 1.08) * strip + GREEN * lower * 1.4;
         }
@@ -112,6 +114,7 @@
                 color += GREEN * seam * rim * 1.5;
                 color += vec3(0.12, 0.17, 0.16) * fresnel;
                 color = 1.0 - exp(-color * 1.3);
+                color = mix(color, color * vec3(0.69, 0.78, 0.74), themeMix);
                 // Fade grazing edges instead of exposing the ray-march silhouette's hard steps.
                 alpha = smoothstep(0.0, 0.11, max(dot(n, -ray), 0.0));
                 color *= alpha;
@@ -168,7 +171,7 @@
     canvas.dataset.renderer = 'webgl';
     fallback.replaceWith(canvas);
     hero.dataset.core = 'webgl';
-    const uniforms = Object.fromEntries(['resolution', 'pose', 'drift', 'time', 'scroll'].map(name => [name, gl.getUniformLocation(program, name)]));
+    const uniforms = Object.fromEntries(['resolution', 'pose', 'drift', 'time', 'scroll', 'themeMix'].map(name => [name, gl.getUniformLocation(program, name)]));
     const finePointer = matchMedia('(hover: hover) and (pointer: fine)');
     const target = { x: 0, y: 0 };
     const view = { x: 0, y: 0 };
@@ -209,6 +212,8 @@
         gl.uniform2f(uniforms.drift, motion.driftX, motion.driftY);
         gl.uniform1f(uniforms.time, time);
         gl.uniform1f(uniforms.scroll, progress);
+        gl.uniform1f(uniforms.themeMix, window.SiteTheme?.amount || 0);
+        if (window.SiteTheme) window.SiteTheme.phase = time;
         gl.drawArrays(gl.TRIANGLES, 0, 6);
     }
     hero.addEventListener('pointermove', event => {
@@ -229,6 +234,7 @@
         window.initHeroFibers?.();
     });
     SiteMotion.subscribe(active => { if (!active) resetPointer(); });
+    window.addEventListener('site-theme-change', () => draw(phase, 0));
     resize();
     SiteMotion.animate(hero, draw);
 })();

@@ -123,11 +123,12 @@ test('screenshot covers remain uncropped and unfiltered with a separate label ar
 
 function heroRuntime({ available = true, compile = true, link = true, active = true, fine = false } = {}) {
   const renders = [], subscribers = [], observers = [], listeners = new Map(), heroListeners = new Map();
-  const calls = { gpu: 0, cpu: 0, cleanup: 0, uniforms: {} };
+  const calls = { gpu: 0, cpu: 0, cleanup: 0, uniforms: {}, colors: [] };
+  const windowEvents = new Map();
   const noop = () => {};
   const context2d = new Proxy({
     clearRect: () => calls.cpu++,
-    createLinearGradient: () => ({ addColorStop: noop }),
+    createLinearGradient: () => ({ addColorStop: (_, color) => calls.colors.push(color) }),
   }, { get: (target, name) => target[name] || noop });
   const gl = new Proxy({
     getShaderParameter: () => compile,
@@ -135,6 +136,7 @@ function heroRuntime({ available = true, compile = true, link = true, active = t
     createShader: () => ({}), createProgram: () => ({}), createBuffer: () => ({}),
     deleteShader: () => calls.cleanup++,
     getAttribLocation: () => 0, getUniformLocation: (_, name) => name,
+    uniform1f: (name, value) => { calls.uniforms[name] = value; },
     uniform2f: (name, ...values) => { calls.uniforms[name] = values; },
     uniform3f: (name, ...values) => { calls.uniforms[name] = values; },
     getExtension: () => ({ loseContext: noop }),
@@ -157,6 +159,7 @@ function heroRuntime({ available = true, compile = true, link = true, active = t
     addEventListener: (name, callback) => heroListeners.set(name, callback),
   };
   const context = {
+    addEventListener: (name, callback) => windowEvents.set(name, callback),
     document: {
       getElementById: id => id === 'hero' ? hero : current,
       createElement: () => canvas,
@@ -178,8 +181,21 @@ function heroRuntime({ available = true, compile = true, link = true, active = t
   vm.createContext(context);
   vm.runInContext(read('js/hero-core.js'), context);
   vm.runInContext(read('js/particles.js'), context);
-  return { context, canvas, fallback, hero, renders, listeners, heroListeners, subscribers, observers, calls, current: () => current };
+  return { context, canvas, fallback, hero, renders, listeners, heroListeners, windowEvents, subscribers, observers, calls, current: () => current };
 }
+
+test('both hero renderers redraw a changed palette even with motion disabled', () => {
+  for (const available of [true, false]) {
+    const r = heroRuntime({ available, active: false });
+    r.context.SiteTheme = { amount: 1, theme: 'light' };
+    const before = available ? r.calls.gpu : r.calls.cpu;
+    r.windowEvents.get('site-theme-change')();
+    assert((available ? r.calls.gpu : r.calls.cpu) > before);
+    if (available) assert.equal(r.calls.uniforms.themeMix, 1);
+    else assert(r.calls.colors.some(color => color.includes('0, 100, 64')));
+    assert.equal(r.renders.length, 1, 'A palette change never starts another motion loop');
+  }
+});
 
 test('natural motion visibly changes pose within two seconds and pointer motion stays bounded', () => {
   const first = sampleMotion(0), next = sampleMotion(2);

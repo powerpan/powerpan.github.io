@@ -126,10 +126,10 @@ document.addEventListener('DOMContentLoaded', () => {
     langBtn.setAttribute('data-hover', '');
     langBtn.textContent = getCurrentTranslations().nav_lang || (currentLang === 'zh' ? 'EN' : '中');
     langBtn.addEventListener('click', toggleLang);
-    // Insert before nav-status
-    const navStatus = nav.querySelector('.nav-status');
-    if (navStatus) {
-      nav.insertBefore(langBtn, navStatus);
+    // Keep the language link immediately before the shared theme control.
+    const anchor = nav.querySelector('#themeToggle') || nav.querySelector('.nav-status');
+    if (anchor) {
+      anchor.parentNode.insertBefore(langBtn, anchor);
     } else {
       nav.appendChild(langBtn);
     }

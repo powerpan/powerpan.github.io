@@ -46,6 +46,7 @@ window.initHeroFibers = function () {
         // Cap this decorative layer at 30fps, including on high-refresh displays.
         if (delta && time - lastPaint < 1 / 30) return;
         lastPaint = phase = time;
+        if (window.SiteTheme) window.SiteTheme.phase = time;
         const ease = delta ? 0.2 : 1;
         view.x += (pointer.x - view.x) * ease;
         view.y += (pointer.y - view.y) * ease;
@@ -80,11 +81,12 @@ window.initHeroFibers = function () {
         }
 
         const ink = ctx.createLinearGradient(-radius, -radius * 0.6, radius, radius * 0.6);
-        ink.addColorStop(0, 'rgba(0, 255, 136, 0.12)');
-        ink.addColorStop(0.3, 'rgba(0, 255, 136, 0.8)');
-        ink.addColorStop(0.53, 'rgba(188, 255, 230, 0.95)');
-        ink.addColorStop(0.76, 'rgba(40, 214, 180, 0.5)');
-        ink.addColorStop(1, 'rgba(0, 255, 136, 0.08)');
+        const light = window.SiteTheme?.theme === 'light';
+        ink.addColorStop(0, light ? 'rgba(0, 100, 64, 0.12)' : 'rgba(0, 255, 136, 0.12)');
+        ink.addColorStop(0.3, light ? 'rgba(0, 100, 64, 0.8)' : 'rgba(0, 255, 136, 0.8)');
+        ink.addColorStop(0.53, light ? 'rgba(49, 77, 65, 0.95)' : 'rgba(188, 255, 230, 0.95)');
+        ink.addColorStop(0.76, light ? 'rgba(32, 119, 96, 0.5)' : 'rgba(40, 214, 180, 0.5)');
+        ink.addColorStop(1, light ? 'rgba(0, 100, 64, 0.08)' : 'rgba(0, 255, 136, 0.08)');
         ctx.strokeStyle = ink;
         ctx.lineWidth = small ? 0.65 : 0.75;
         for (let strand = 0; strand < strands; strand++) {
@@ -103,7 +105,7 @@ window.initHeroFibers = function () {
         for (let i = 0; i < 26; i++) {
             const p = project(i * 2.39996 + time * (i % 2 ? 0.23 : -0.18), i * 0.71);
             ctx.globalAlpha = 0.2 + (p.depth + 1.4) * 0.2;
-            ctx.fillStyle = i % 3 ? '#a8ffe0' : '#00ff88';
+            ctx.fillStyle = light ? (i % 3 ? '#497660' : '#007b4c') : (i % 3 ? '#a8ffe0' : '#00ff88');
             ctx.beginPath();
             ctx.arc(p.x, p.y, i % 4 ? 1 : 1.7, 0, tau);
             ctx.fill();
@@ -112,6 +114,7 @@ window.initHeroFibers = function () {
     }
 
     new ResizeObserver(resize).observe(hero);
+    window.addEventListener('site-theme-change', () => draw(phase, 0));
     resize();
     SiteMotion.animate(hero, draw);
 };

@@ -167,7 +167,7 @@
                 { icon: '🐙', title: 'GitHub', desc: '', action: () => document.getElementById('github')?.scrollIntoView({ behavior: 'smooth' }), group: t.cmdk_group_nav || '导航' },
                 { icon: '💬', title: t.cmdk_goto_contact || '联系我', desc: '', action: () => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }), group: t.cmdk_group_nav || '导航' },
                 { icon: '🌐', title: t.cmdk_toggle_lang || '切换语言', desc: '中 / EN', action: () => toggleLang(), group: t.cmdk_group_action || '操作' },
-                { icon: '🌙', title: t.cmdk_toggle_theme || '切换主题', desc: '', action: () => {}, group: t.cmdk_group_action || '操作', shortcut: 'T' },
+                { icon: '🌙', title: t.cmdk_toggle_theme || '切换主题', desc: '', action: () => window.SiteTheme?.toggle(), group: t.cmdk_group_action || '操作', shortcut: 'T' },
                 { icon: '📧', title: t.cmdk_copy_email || '复制邮箱', desc: 'eric@example.com', action: () => navigator.clipboard?.writeText('eric@example.com'), group: t.cmdk_group_action || '操作' },
             ];
         }

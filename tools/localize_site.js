@@ -3,6 +3,7 @@ const path = require('node:path');
 const vm = require('node:vm');
 const { load } = require('cheerio');
 const { SITE_ORIGIN, publicPathFor, languagePath } = require('./site_urls');
+const { addThemeRuntime } = require('./theme_controls');
 
 const root = path.resolve(__dirname, '..');
 const attributes = {
@@ -216,6 +217,7 @@ function createLocalizedPages(entries) {
       if (label) el.attr('data-label', label);
     });
     addLanguageNavigation($, lang, meta.canonical);
+    addThemeRuntime($, lang);
     // Opt in before the blocking bootstrap; otherwise an early reveal can cancel the transition.
     $('head').prepend('<link rel="stylesheet" href="/css/page-transitions.css"><script src="/js/page-transitions.js" blocking="render"></script>');
     const heading = $('h1').first();
