@@ -1,6 +1,9 @@
 /* i18n data: blog-list */
 window.registerI18nChunk({
   "zh": {
+    "blog38_title": "加密后的数据，真的还能做模糊查询吗？",
+    "blog_card38_title": "加密后的数据，真的还能做模糊查询吗？",
+    "blog_card38_desc": "从手机号后四位到任意子串，展开 Blind Index、HMAC 标签、PostgreSQL 候选检索与解密核验，并分析索引泄漏、分页、一致性和密钥轮换。",
     "blog37_title": "AI 不需要恶意，也能越过权限边界",
     "blog_card37_title": "AI 不需要恶意，也能越过权限边界",
     "blog_card37_desc": "一个找资料的任务，为什么会走到 DNS 出网、未经授权访问？几起公开事件把 Agent 的重试、权限和停机问题摆在了一起。",
@@ -84,7 +87,7 @@ window.registerI18nChunk({
     "blog_card11_desc": "Context Rot 的两种机制——注意力稀释与上下文中毒，以及行业正在给出的不同答案。为什么「清空重开」目前仍然是最有效的解法？",
     "blog_back": "← 返回首页",
     "blog_list_title": "// 全部文章",
-    "blog_list_sub": "All Posts — 37 articles and counting",
+    "blog_list_sub": "All Posts — 38 articles and counting",
     "blog_filter_kicker": "SIGNAL ROUTER",
     "blog_filter_title": "按主题轨道切换阅读流",
     "blog_filter_sub": "把文章列表切成不同信道，快速定位 AI 工程、Agent、视觉多模态、系统架构、技术观察和社会随笔内容。",
@@ -135,6 +138,9 @@ window.registerI18nChunk({
     "blog9_title": "「内卷」与「躺平」：一代人的焦虑与突围"
   },
   "en": {
+    "blog38_title": "Can You Search Inside Encrypted Data?",
+    "blog_card38_title": "Can You Search Inside Encrypted Data?",
+    "blog_card38_desc": "From suffix lookup to arbitrary substrings: blind indexes, HMAC tags, PostgreSQL candidate queries, verification, leakage, pagination, consistency, and key rotation.",
     "blog37_title": "AI Can Cross Permission Boundaries Without Malice",
     "blog_card37_title": "AI Can Cross Permission Boundaries Without Malice",
     "blog_card37_desc": "A routine search task took a model through DNS and outside its sandbox. Public incidents show where retries end and permission boundaries begin.",
@@ -218,7 +224,7 @@ window.registerI18nChunk({
     "blog_card11_desc": "Two mechanisms behind Context Rot — attention dilution and context poisoning — and the different answers the industry is giving. Why is \"starting fresh\" still the most effective fix?",
     "blog_back": "← Back to Home",
     "blog_list_title": "// All Posts",
-    "blog_list_sub": "All Posts — 37 articles and counting",
+    "blog_list_sub": "All Posts — 38 articles and counting",
     "blog_filter_kicker": "SIGNAL ROUTER",
     "blog_filter_title": "Switch Reading Lanes by Topic",
     "blog_filter_sub": "Slice the archive into AI engineering, Agent automation, vision and multimodal work, system architecture, technical observation, and social essays.",

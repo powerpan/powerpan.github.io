@@ -5,7 +5,15 @@
     <link>https://erichz.site/blog/</link>
     <description>Eric 的 AI 工程、计算机视觉、Agent 架构与系统设计技术博客。</description>
     <language>zh-CN</language>
-    <lastBuildDate>Mon, 28 Sep 2026 00:00:00 GMT</lastBuildDate>
+    <lastBuildDate>Tue, 06 Oct 2026 00:00:00 GMT</lastBuildDate>
+    <item>
+      <title>加密后的数据，真的还能做模糊查询吗？</title>
+      <link>https://erichz.site/blog/encrypted-substring-search</link>
+      <guid isPermaLink="false">https://erichz.site/blog/encrypted-substring-search.html</guid>
+      <pubDate>Tue, 06 Oct 2026 00:00:00 GMT</pubDate>
+      <category>系统架构</category>
+      <description>从手机号后四位到任意子串，展开 Blind Index、HMAC 标签、PostgreSQL 候选检索与解密核验，并分析索引泄漏、分页、一致性和密钥轮换。</description>
+    </item>
     <item>
       <title>AI 不需要恶意，也能越过权限边界</title>
       <link>https://erichz.site/blog/agent-goals-permission-boundaries</link>
@@ -157,14 +165,6 @@
       <pubDate>Wed, 29 Apr 2026 00:00:00 GMT</pubDate>
       <category>系统架构</category>
       <description>技术债表现为代码和架构问题，但根源往往来自组织对时间、成本、风险和未来维护能力的连续选择。</description>
-    </item>
-    <item>
-      <title>视觉算法工程师，别把自己做成流程操作员</title>
-      <link>https://erichz.site/blog/vision-engineer-not-operator</link>
-      <guid isPermaLink="false">https://erichz.site/blog/vision-engineer-not-operator.html</guid>
-      <pubDate>Tue, 28 Apr 2026 00:00:00 GMT</pubDate>
-      <category>视觉多模态</category>
-      <description>开源模型和训练部署平台会继续降低门槛，视觉算法工程师真正的壁垒，是定义问题、设计数据闭环、诊断模型和系统落地。</description>
     </item>
   </channel>
 </rss>

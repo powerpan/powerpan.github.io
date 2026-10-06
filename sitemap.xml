@@ -2,19 +2,19 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://erichz.site/</loc>
-    <lastmod>2026-09-28</lastmod>
+    <lastmod>2026-10-06</lastmod>
   </url>
   <url>
     <loc>https://erichz.site/en/</loc>
-    <lastmod>2026-09-28</lastmod>
+    <lastmod>2026-10-06</lastmod>
   </url>
   <url>
     <loc>https://erichz.site/blog/</loc>
-    <lastmod>2026-09-28</lastmod>
+    <lastmod>2026-10-06</lastmod>
   </url>
   <url>
     <loc>https://erichz.site/en/blog/</loc>
-    <lastmod>2026-09-28</lastmod>
+    <lastmod>2026-10-06</lastmod>
   </url>
   <url>
     <loc>https://erichz.site/blog/topics/ai</loc>
@@ -42,11 +42,11 @@
   </url>
   <url>
     <loc>https://erichz.site/blog/topics/architecture</loc>
-    <lastmod>2026-07-20</lastmod>
+    <lastmod>2026-10-06</lastmod>
   </url>
   <url>
     <loc>https://erichz.site/en/blog/topics/architecture</loc>
-    <lastmod>2026-07-20</lastmod>
+    <lastmod>2026-10-06</lastmod>
   </url>
   <url>
     <loc>https://erichz.site/blog/topics/observation</loc>
@@ -63,6 +63,14 @@
   <url>
     <loc>https://erichz.site/en/blog/topics/essay</loc>
     <lastmod>2026-05-25</lastmod>
+  </url>
+  <url>
+    <loc>https://erichz.site/blog/encrypted-substring-search</loc>
+    <lastmod>2026-10-06</lastmod>
+  </url>
+  <url>
+    <loc>https://erichz.site/en/blog/encrypted-substring-search</loc>
+    <lastmod>2026-10-06</lastmod>
   </url>
   <url>
     <loc>https://erichz.site/blog/agent-goals-permission-boundaries</loc>
