@@ -64,6 +64,7 @@ test('preview supports final URLs, legacy redirects, assets, HEAD and safe 404s'
   fs.writeFileSync(path.join(root, 'blog', 'index.html'), '<h1>Blog</h1>');
   fs.writeFileSync(path.join(root, 'blog', 'example.html'), '<h1>Article</h1>');
   fs.writeFileSync(path.join(root, 'test.css'), 'body{}');
+  fs.writeFileSync(path.join(root, 'music.mp3'), '0123456789');
   fs.symlinkSync(path.join(__dirname, 'site_urls.js'), path.join(root, 'outside.js'));
   const server = createPreviewServer(root);
   await new Promise((resolve) => server.listen(0, '127.0.0.1', resolve));
@@ -90,4 +91,23 @@ test('preview supports final URLs, legacy redirects, assets, HEAD and safe 404s'
   assert.equal(head.status, 200);
   assert.equal(await head.text(), '');
   assert.equal((await fetch(origin + '/', { method: 'POST' })).status, 405);
+  for (const [range, body, contentRange] of [
+    ['bytes=0-1', '01', 'bytes 0-1/10'], ['bytes=4-', '456789', 'bytes 4-9/10'],
+    ['bytes=-3', '789', 'bytes 7-9/10'], ['bytes=2-99', '23456789', 'bytes 2-9/10'],
+  ]) {
+    const response = await fetch(origin + '/music.mp3', { headers: { Range: range } });
+    assert.equal(response.status, 206);
+    assert.equal(response.headers.get('content-range'), contentRange);
+    assert.equal(response.headers.get('content-length'), String(body.length));
+    assert.equal(await response.text(), body);
+  }
+  for (const range of ['bytes=10-', 'bytes=9-2', 'bytes=-0', 'bytes=-']) {
+    const response = await fetch(origin + '/music.mp3', { headers: { Range: range } });
+    assert.equal(response.status, 416);
+    assert.equal(response.headers.get('content-range'), 'bytes */10');
+  }
+  const rangeHead = await fetch(origin + '/music.mp3', { method: 'HEAD', headers: { Range: 'bytes=0-1' } });
+  assert.equal(rangeHead.status, 200);
+  assert.equal(rangeHead.headers.get('content-length'), '10');
+  assert.equal(await rangeHead.text(), '');
 });

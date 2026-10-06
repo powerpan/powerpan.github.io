@@ -54,11 +54,30 @@ function createPreviewServer(directory) {
         return;
       }
     }
-    res.writeHead(200, {
+    const size = fs.statSync(file).size;
+    const headers = {
       'Content-Type': mimeTypes[extension] || 'application/octet-stream',
-      'Content-Length': fs.statSync(file).size,
+      'Content-Length': size,
       'Cache-Control': 'no-store',
-    });
+      'Accept-Ranges': 'bytes',
+    };
+    // Media backends need byte-range responses to seek while loading an MP3.
+    const range = req.method === 'GET' && !req.headers['if-range'] &&
+      /^bytes=(\d*)-(\d*)$/.exec(req.headers.range || '');
+    if (range) {
+      const start = range[1] ? Number(range[1]) : Math.max(0, size - Number(range[2]));
+      const end = range[1] && range[2] ? Math.min(Number(range[2]), size - 1) : size - 1;
+      if (!size || (!range[1] && !Number(range[2])) || !Number.isSafeInteger(start) ||
+          !Number.isSafeInteger(end) || start >= size || end < start) {
+        res.writeHead(416, { 'Content-Range': `bytes */${size}`, 'Accept-Ranges': 'bytes' }).end();
+        return;
+      }
+      res.writeHead(206, { ...headers, 'Content-Length': end - start + 1,
+        'Content-Range': `bytes ${start}-${end}/${size}` });
+      fs.createReadStream(file, { start, end }).on('error', () => res.destroy()).pipe(res);
+      return;
+    }
+    res.writeHead(200, headers);
     if (req.method === 'HEAD') res.end();
     else fs.createReadStream(file).on('error', () => res.destroy()).pipe(res);
   });

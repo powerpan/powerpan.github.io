@@ -4,6 +4,7 @@ const vm = require('node:vm');
 const { load } = require('cheerio');
 const { SITE_ORIGIN, publicPathFor, languagePath } = require('./site_urls');
 const { addThemeRuntime } = require('./theme_controls');
+const { addMusicRuntime } = require('./music_controls');
 
 const root = path.resolve(__dirname, '..');
 const attributes = {
@@ -187,12 +188,12 @@ function createLocalizedPages(entries) {
       translateDocument($, translations, lang, rel);
       const meta = metadata($, rel, lang, translations, blogCards);
       pair[lang] = meta;
-      documents.push({ $, rel, lang, meta });
+      documents.push({ $, rel, lang, meta, translations });
     }
     metadataByPath.set(publicPathFor(rel), pair);
   }
   const output = new Map();
-  for (const { $, rel, lang, meta } of documents) {
+  for (const { $, rel, lang, meta, translations } of documents) {
     rewriteLinks($, rel, lang, pages);
     $('html').attr({ lang: lang === 'en' ? 'en' : 'zh-CN', 'data-site-lang': lang });
     $('title').text(meta.title);
@@ -232,6 +233,7 @@ function createLocalizedPages(entries) {
       $('body').append($('<button type="button" class="page-motion-button" data-page-motion aria-pressed="true"></button>')
         .attr('title', hint).text(label));
     }
+    addMusicRuntime($, lang, translations[lang]);
     $('head').append('<noscript><style>.reveal,.timeline-item,.detail-hero .detail-tag,.detail-title,.detail-subtitle,.detail-meta{opacity:1!important;transform:none!important;visibility:visible!important}.loader,#cursor,#cursorDot,.nav-hamburger,.page-motion-button{display:none!important}.lang-toggle{display:inline-flex!important}body,a,button{cursor:auto!important}</style></noscript>');
     output.set(lang === 'en' ? 'en/' + rel : rel, Buffer.from($.html()));
   }

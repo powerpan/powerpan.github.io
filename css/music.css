@@ -1,0 +1,71 @@
+/* One shared dock on every page; palette and motion preferences stay independent. */
+.site-sound {
+    position: fixed; left: max(24px, env(safe-area-inset-left));
+    bottom: max(24px, env(safe-area-inset-bottom)); z-index: 9999;
+    display: flex; align-items: stretch; max-width: calc(100vw - 96px);
+    color: var(--text-primary); background: var(--bg-elevated);
+    border: 1px solid rgba(var(--accent-rgb), .22); border-radius: 100px;
+    box-shadow: 0 8px 28px rgba(0, 0, 0, .16); font: 400 11px var(--font-mono);
+}
+.site-sound[hidden], .sound-panel[hidden] { display: none; }
+.site-sound button { cursor: pointer; }
+.site-sound button:focus-visible, .site-sound input:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.site-sound-toggle {
+    display: flex; align-items: center; gap: 10px; min-width: 0;
+    min-height: 44px; padding: 10px 12px 10px 16px; border-radius: 100px 0 0 100px;
+}
+.site-sound-toggle:hover, .sound-settings:hover { background: var(--accent-dim); }
+.sound-icon, .sound-settings svg { width: 18px; height: 18px; flex-shrink: 0; }
+.sound-icon { color: var(--text-secondary); }
+.sound-waves { display: none; }
+[data-state="playing"] .sound-waves { display: block; }
+[data-state="playing"] .sound-off { display: none; }
+[data-state="playing"] .sound-icon { color: var(--accent); }
+.sound-title { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sound-meter { display: flex; gap: 2px; align-items: center; height: 14px; flex-shrink: 0; }
+.sound-meter i { width: 2px; height: 5px; border-radius: 2px; background: var(--text-secondary); }
+[data-state="playing"] .sound-meter i { background: var(--accent); animation: soundPulse 1.2s ease-in-out infinite alternate; }
+.sound-meter i:nth-child(2) { animation-delay: -.4s; height: 11px; }
+.sound-meter i:nth-child(3) { animation-delay: -.8s; }
+@keyframes soundPulse { to { transform: scaleY(.45); opacity: .6; } }
+.sound-settings {
+    display: flex; align-items: center; justify-content: center; width: 44px; min-height: 44px;
+    flex-shrink: 0; border-left: 1px solid rgba(var(--accent-rgb), .12); border-radius: 0 100px 100px 0;
+    color: var(--text-secondary);
+}
+.sound-settings[aria-expanded="true"] { color: var(--accent); background: var(--accent-dim); }
+.sound-panel {
+    position: absolute; left: 0; bottom: calc(100% + 12px); width: min(292px, calc(100vw - 32px));
+    max-height: calc(100dvh - 104px); overflow: auto; padding: 20px; border-radius: 16px;
+    background: var(--bg-elevated); border: 1px solid rgba(var(--accent-rgb), .25);
+    box-shadow: 0 16px 44px rgba(0, 0, 0, .25);
+}
+.sound-panel-track { color: var(--accent); margin-bottom: 18px; font-size: 12px; line-height: 1.6; }
+.sound-panel label { display: block; color: var(--text-secondary); font-size: 11px; margin-bottom: 10px; }
+.sound-volume-row { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; }
+.sound-volume-row input { min-width: 0; width: 100%; height: 26px; accent-color: var(--accent); cursor: pointer; }
+.sound-volume-row output { min-width: 34px; font-size: 11px; text-align: right; }
+.sound-panel :is(.motion-toggle, .page-motion-button) {
+    position: static; display: flex; align-items: center; width: 100%; margin: 0; min-height: 44px;
+    padding: 12px; font-size: 11px; border-radius: 8px; border: 1px solid rgba(var(--accent-rgb), .2);
+    background: var(--accent-dim); color: var(--text-secondary);
+}
+.sound-panel .motion-toggle[hidden] { display: none; }
+.sound-panel p { color: var(--text-secondary); line-height: 1.7; font-size: 10px; margin-top: 14px; }
+.sound-status:empty { display: none; }
+.sound-status {
+    position: absolute; bottom: calc(100% + 12px); left: 0; width: min(292px, calc(100vw - 32px));
+    padding: 12px 16px; border-radius: 12px; background: var(--bg-elevated);
+    border: 1px solid rgba(var(--accent-rgb), .25); color: var(--text-secondary); font-size: 11px; line-height: 1.6;
+    pointer-events: none;
+}
+.site-sound:has(.sound-panel:not([hidden])) .sound-status { position: static; width: 0; padding: 0; border: 0; overflow: hidden; }
+html[data-motion="off"] .sound-meter i { animation: none; }
+@media (prefers-reduced-motion: reduce) { .sound-meter i { animation: none !important; } }
+@media (max-width: 600px), (max-height: 500px) {
+    .site-sound { left: max(16px, env(safe-area-inset-left)); bottom: max(16px, env(safe-area-inset-bottom)); font-size: 10px; }
+    .site-sound-toggle { gap: 8px; padding-left: 12px; }
+    .sound-meter { display: none; }
+    .sound-title { max-width: 172px; }
+}
+@media (max-width: 360px) { .sound-title { max-width: 124px; } }
