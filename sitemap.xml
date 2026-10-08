@@ -2,27 +2,27 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://erichz.site/</loc>
-    <lastmod>2026-10-06</lastmod>
+    <lastmod>2026-10-08</lastmod>
   </url>
   <url>
     <loc>https://erichz.site/en/</loc>
-    <lastmod>2026-10-06</lastmod>
+    <lastmod>2026-10-08</lastmod>
   </url>
   <url>
     <loc>https://erichz.site/blog/</loc>
-    <lastmod>2026-10-06</lastmod>
+    <lastmod>2026-10-08</lastmod>
   </url>
   <url>
     <loc>https://erichz.site/en/blog/</loc>
-    <lastmod>2026-10-06</lastmod>
+    <lastmod>2026-10-08</lastmod>
   </url>
   <url>
     <loc>https://erichz.site/blog/topics/ai</loc>
-    <lastmod>2026-05-10</lastmod>
+    <lastmod>2026-10-08</lastmod>
   </url>
   <url>
     <loc>https://erichz.site/en/blog/topics/ai</loc>
-    <lastmod>2026-05-10</lastmod>
+    <lastmod>2026-10-08</lastmod>
   </url>
   <url>
     <loc>https://erichz.site/blog/topics/agent</loc>
@@ -42,11 +42,11 @@
   </url>
   <url>
     <loc>https://erichz.site/blog/topics/architecture</loc>
-    <lastmod>2026-10-06</lastmod>
+    <lastmod>2026-10-08</lastmod>
   </url>
   <url>
     <loc>https://erichz.site/en/blog/topics/architecture</loc>
-    <lastmod>2026-10-06</lastmod>
+    <lastmod>2026-10-08</lastmod>
   </url>
   <url>
     <loc>https://erichz.site/blog/topics/observation</loc>
@@ -63,6 +63,22 @@
   <url>
     <loc>https://erichz.site/en/blog/topics/essay</loc>
     <lastmod>2026-05-25</lastmod>
+  </url>
+  <url>
+    <loc>https://erichz.site/blog/physics-benchmark-grading</loc>
+    <lastmod>2026-10-08</lastmod>
+  </url>
+  <url>
+    <loc>https://erichz.site/en/blog/physics-benchmark-grading</loc>
+    <lastmod>2026-10-08</lastmod>
+  </url>
+  <url>
+    <loc>https://erichz.site/blog/data-center-grid-protection</loc>
+    <lastmod>2026-10-08</lastmod>
+  </url>
+  <url>
+    <loc>https://erichz.site/en/blog/data-center-grid-protection</loc>
+    <lastmod>2026-10-08</lastmod>
   </url>
   <url>
     <loc>https://erichz.site/blog/encrypted-substring-search</loc>

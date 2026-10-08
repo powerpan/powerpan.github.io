@@ -87,7 +87,7 @@ window.registerI18nChunk({
     "blog_card11_desc": "Context Rot 的两种机制——注意力稀释与上下文中毒，以及行业正在给出的不同答案。为什么「清空重开」目前仍然是最有效的解法？",
     "blog_back": "← 返回首页",
     "blog_list_title": "// 全部文章",
-    "blog_list_sub": "All Posts — 38 articles and counting",
+    "blog_list_sub": "All Posts — 40 articles and counting",
     "blog_filter_kicker": "SIGNAL ROUTER",
     "blog_filter_title": "按主题轨道切换阅读流",
     "blog_filter_sub": "把文章列表切成不同信道，快速定位 AI 工程、Agent、视觉多模态、系统架构、技术观察和社会随笔内容。",
@@ -135,7 +135,13 @@ window.registerI18nChunk({
     "blog6_title": "AI Agent：重塑工作流的变革者，还是新一轮泡沫？",
     "blog7_title": "开源项目的「三个月定律」：从爆火到无人问津",
     "blog8_title": "如何客观看待现今女权主义",
-    "blog9_title": "「内卷」与「躺平」：一代人的焦虑与突围"
+    "blog9_title": "「内卷」与「躺平」：一代人的焦虑与突围",
+    "blog39_title": "当每个系统都在自保：3.8 GW 负载退出之后",
+    "blog_card39_title": "当每个系统都在自保：3.8 GW 负载退出之后",
+    "blog_card39_desc": "从北弗吉尼亚 3.8 GW 负载转移，讨论 UPS 控制、重试风暴、故障穿越与 AI 集群功率整形：各自保护自己之后，系统会怎样？",
+    "blog40_title": "当考卷本身有错：我们在测量 AI 的什么？",
+    "blog_card40_title": "当考卷本身有错：我们在测量 AI 的什么？",
+    "blog_card40_desc": "从等价公式被判零分到修订题库后的涨分，拆开评分错误、任务变化、重复尝试和测试契约，讨论 AI 评测怎样保留可比较的证据。"
   },
   "en": {
     "blog38_title": "Can You Search Inside Encrypted Data?",
@@ -224,7 +230,7 @@ window.registerI18nChunk({
     "blog_card11_desc": "Two mechanisms behind Context Rot — attention dilution and context poisoning — and the different answers the industry is giving. Why is \"starting fresh\" still the most effective fix?",
     "blog_back": "← Back to Home",
     "blog_list_title": "// All Posts",
-    "blog_list_sub": "All Posts — 38 articles and counting",
+    "blog_list_sub": "All Posts — 40 articles and counting",
     "blog_filter_kicker": "SIGNAL ROUTER",
     "blog_filter_title": "Switch Reading Lanes by Topic",
     "blog_filter_sub": "Slice the archive into AI engineering, Agent automation, vision and multimodal work, system architecture, technical observation, and social essays.",
@@ -272,6 +278,12 @@ window.registerI18nChunk({
     "blog6_title": "AI Agents: Reshaping Workflows or the Next Bubble?",
     "blog7_title": "The \"Three-Month Law\" of Open Source: From Hype to Abandonment",
     "blog8_title": "How to Objectively View Modern Feminism",
-    "blog9_title": "\"Involution\" vs \"Lying Flat\": Anxiety and Breakthrough of a Generation"
+    "blog9_title": "\"Involution\" vs \"Lying Flat\": Anxiety and Breakthrough of a Generation",
+    "blog39_title": "When Data Centers Protect Themselves: A 3.8 GW Load Transfer",
+    "blog_card39_title": "When Data Centers Protect Themselves: A 3.8 GW Load Transfer",
+    "blog_card39_desc": "A 3.8 GW load transfer in Northern Virginia connects UPS controls, retry storms, ride-through, and AI power shaping. What happens when each component protects itself?",
+    "blog40_title": "When the Exam Is Wrong: What Do AI Scores Measure?",
+    "blog_card40_title": "When the Exam Is Wrong: What Do AI Scores Measure?",
+    "blog_card40_desc": "From equivalent formulas graded as wrong to higher scores on repaired tasks: separating grader errors, task changes, repeated attempts, and test contracts in AI evaluation."
   }
 });

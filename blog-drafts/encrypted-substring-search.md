@@ -12,7 +12,7 @@ SELECT id FROM users WHERE phone LIKE '%0138%';
 
 问题不在于数据库不够聪明。对于我们通常采用的随机化字段加密方案，隐藏明文之间的关系，本来就是它应该做的事。不能一边要求别人看不懂数据，一边又希望数据库从密文中直接认出哪几条记录包含同一个片段。
 
-但这也不意味着加密之后就只能放弃搜索。 我更倾向于换一种拆法：让密文负责保护原始数据，让另一套经过设计的索引负责有限的查询。 这条路线在 Blind Index 和一些商业加密 SDK 中都能看到，不过，“有限”两个字不能省略。索引提供了能力，也会暴露原本被加密隐藏的关系。[^blind][^aws]
+但这也不意味着加密之后就只能放弃搜索。 我更倾向于换一种拆法：让密文负责保护原始数据，让另一套经过设计的索引负责有限的查询。 这条路线在 [Blind Index](https://ciphersweet.paragonie.com/internals/blind-index) 和一些[商业加密 SDK](https://docs.aws.amazon.com/database-encryption-sdk/latest/devguide/searchable-encryption.html) 中都能看到，不过，“有限”两个字不能省略。索引提供了能力，也会暴露原本被加密隐藏的关系。
 
 实现之前，先明确要恢复哪些查询能力、数据库因此会看到什么。
 
@@ -28,11 +28,11 @@ SELECT id FROM users WHERE phone LIKE '%0138%';
 | 输入中间一段查找 | 子串匹配 | 包含 `0138` |
 | 输错几个字也能找到 | 容错匹配 | `Erci` 仍能匹配 `Eric` |
 
-SQL 的 `LIKE '%xxx%'`，在这里主要对应子串搜索，不等于拼写纠错。后者还要定义允许什么错误、距离怎么算、结果怎么排序。本文先解决按字面内容查找子串，不尝试实现任意 SQL 通配符表达式。[^pg-fuzzy]
+SQL 的 `LIKE '%xxx%'`，在这里主要对应子串搜索，不等于[拼写纠错](https://www.postgresql.org/docs/18/fuzzystrmatch.html)。后者还要定义允许什么错误、距离怎么算、结果怎么排序。本文先解决按字面内容查找子串，不尝试实现任意 SQL 通配符表达式。
 
 查询语义会决定需要建立哪些索引，以及暴露哪些关系。 只查后四位，不需要把整个手机号拆成所有四位片段。只允许输入完整邮箱，也不需要预先建立邮箱中每一段字符的索引。为了一个尚未确认的未来需求，把所有可搜索特征提前存下来，在敏感数据场景里未必是“扩展性好”，也可能只是提前扩大泄漏面。
 
-还有一个更基础的问题：我们想防谁？ 磁盘被盗、数据库备份泄漏、攻击者拿到数据库查询权限，以及应用服务器被完全控制，要求的防护并不相同。磁盘加密保护不了一个已经能正常查询数据库的攻击者；反过来，数据库具备解密能力，也不代表单独一份不含密钥的离线备份必然能被解开。加密应该放在哪一层，要跟威胁模型一起决定。[^storage]
+还有一个更基础的问题：我们想防谁？ 磁盘被盗、数据库备份泄漏、攻击者拿到数据库查询权限，以及应用服务器被完全控制，要求的防护并不相同。磁盘加密保护不了一个已经能正常查询数据库的攻击者；反过来，数据库具备解密能力，也不代表单独一份不含密钥的离线备份必然能被解开。加密应该放在哪一层，要跟[威胁模型](https://cheatsheetseries.owasp.org/cheatsheets/Cryptographic_Storage_Cheat_Sheet.html)一起决定。
 
 本文采用的主要边界是：应用服务可以处理明文，数据库只保存密文和搜索索引；攻击者可能读到数据库，但没有应用侧的密钥。 后面再讨论长期观察查询、主动写入数据，以及应用自身失守时会发生什么。
 
@@ -58,7 +58,7 @@ WHERE decrypt(phone_ciphertext) LIKE '%0138%'
 
 它省下了把所有密文传给应用的开销，却没有自动解决筛选成本。已有的密文字段索引，通常不能帮助数据库判断解密后的内容是否包含某个子串。
 
-这里还要避免一个常见的过度概括：不能把问题说成“用了函数就一定无法建立索引”，也不能说“所有 `LIKE '%xxx%'` 都无法优化”。PostgreSQL 支持表达式索引，`pg_trgm` 的 GIN/GiST 索引也能支持一些包含前导通配符的搜索；普通 B-tree 则不是这种任意子串查询的通用答案。[^pg-index][^pg-expr][^pg-trgm]
+这里还要避免一个常见的过度概括：不能把问题说成“用了函数就一定无法建立索引”，也不能说“所有 `LIKE '%xxx%'` 都无法优化”。PostgreSQL 支持[表达式索引](https://www.postgresql.org/docs/18/indexes-expressional.html)，[`pg_trgm`](https://www.postgresql.org/docs/18/pgtrgm.html) 的 GIN/GiST 索引也能支持一些包含前导通配符的搜索；[普通 B-tree](https://www.postgresql.org/docs/18/indexes-types.html) 则不是这种任意子串查询的通用答案。
 
 然而，如果为了加速查询，把解密后的文本或可直接还原的明文特征物化到索引里，敏感信息又进入了数据库。这已经不是单纯的性能优化，而是在改变安全边界。
 
@@ -78,9 +78,9 @@ WHERE decrypt(phone_ciphertext) LIKE '%0138%'
 
 我会先保留一份正常的随机化加密数据，而不是为了搜索去修改它的加密方式。
 
-对于本文的示例，可以选择成熟密码库提供的 AES-GCM；ChaCha20-Poly1305 也是一种标准化的认证加密方案。重点不只是保密，还要在解密时验证数据是否被篡改。新系统没有必要沿用旧教程里的 DES，也不应该自行发明一套“既加密又保留字符规律”的算法。[^storage][^gcm][^chacha]
+对于本文的示例，可以选择[成熟密码库](https://cheatsheetseries.owasp.org/cheatsheets/Cryptographic_Storage_Cheat_Sheet.html)提供的 [AES-GCM](https://csrc.nist.gov/pubs/sp/800/38/d/final)；[ChaCha20-Poly1305](https://www.rfc-editor.org/rfc/rfc8439) 也是一种标准化的认证加密方案。重点不只是保密，还要在解密时验证数据是否被篡改。新系统没有必要沿用旧教程里的 DES，也不应该自行发明一套“既加密又保留字符规律”的算法。
 
-以 AES-GCM 为例，存储的加密封装通常还要包含算法或格式版本、密钥版本、nonce 和认证标签。nonce 不需要保密，但同一密钥下不能重复使用。采用随机 nonce 时，也必须遵守方案的随机源、使用量和轮换要求，不能把“每次生成随机数”理解成无需管理的无限保证。[^aead]
+以 AES-GCM 为例，存储的加密封装通常还要包含算法或格式版本、密钥版本、[nonce](https://cryptography.io/en/latest/hazmat/primitives/aead/) 和认证标签。nonce 不需要保密，但同一密钥下不能重复使用。采用随机 nonce 时，也必须遵守方案的随机源、使用量和轮换要求，不能把“每次生成随机数”理解成无需管理的无限保证。
 
 搜索走另一条路径。 先从最简单的精确匹配开始。应用对规范化后的手机号计算一个带密钥的确定性标签：
 
@@ -92,7 +92,7 @@ WHERE decrypt(phone_ciphertext) LIKE '%0138%'
 
 用户输入完整号码时，应用使用同一套规则生成查询标签，数据库执行标签的等值匹配，再由应用解密候选记录并核对。
 
-这类辅助结构通常称为 Blind Index，盲索引。不同实现可能采用不同的带密钥哈希、密钥派生或截断策略；本文使用 HMAC-SHA-256 来说明确定性搜索标签的构造，不把它等同于任何现成库的完整实现。[^blind][^hmac]
+这类辅助结构通常称为 [Blind Index](https://ciphersweet.paragonie.com/internals/blind-index)，盲索引。不同实现可能采用不同的带密钥哈希、密钥派生或截断策略；本文使用 [HMAC-SHA-256](https://www.rfc-editor.org/rfc/rfc2104) 来说明确定性搜索标签的构造，不把它等同于任何现成库的完整实现。
 
 它不是一种可以反向解密的“另一份密文”，更不是匿名化证明。数据库虽然不知道标签对应哪个号码，却能在同一个索引域内识别相同标签。
 
@@ -100,7 +100,7 @@ WHERE decrypt(phone_ciphertext) LIKE '%0138%'
 
 对于四位数字，可能的输入只有 `0000` 到 `9999`，总共一万种。 如果索引是 `SHA256("1380")`，拿到数据库的人可以自行计算这一万种输入的哈希，建立对照表。哈希输出再长，也不会增加输入本身的可能性。
 
-HMAC 引入了一个不交给数据库的秘密密钥。在密钥未泄漏、攻击者也没有可利用的标签生成接口时，他不能再像处理普通 SHA-256 那样，自行计算完整对照表。公开的固定 salt 不提供这一性质。[^hmac]
+[HMAC](https://www.rfc-editor.org/rfc/rfc2104) 引入了一个不交给数据库的秘密密钥。在密钥未泄漏、攻击者也没有可利用的标签生成接口时，他不能再像处理普通 SHA-256 那样，自行计算完整对照表。公开的固定 salt 不提供这一性质。
 
 但这句话的边界很重要：不能直接计算对照表，不等于不能通过统计、关联或接口反馈猜出标签含义。 后面还要回来讨论这件事。
 
@@ -132,7 +132,7 @@ HMAC 引入了一个不交给数据库的秘密密钥。在密钥未泄漏、攻
 
 这里有八个窗口位置，但只有六个不同片段。对于“是否包含”的候选筛选，同一条记录中的重复片段可以去重，没必要重复存储。 然后，对每个片段生成 HMAC 标签。数据库保存的是“某个标签出现在哪些记录中”的关系，而不是把所有标签拼成一大段字符串，再执行一次 `LIKE '%标签%'`。
 
-后者既容易重新引入扫描问题，也没有充分利用标签本来就适合等值匹配的特点。独立的标签表，实际上是在构造一个简单的倒排索引：由标签找到记录 ID。[^pg-index]
+后者既容易重新引入扫描问题，也没有充分利用标签本来就适合等值匹配的特点。独立的标签表，实际上是在构造一个简单的[倒排索引](https://www.postgresql.org/docs/18/indexes-types.html)：由标签找到记录 ID。
 
 下面是一份用于说明结构的 PostgreSQL 最小表设计。它不是完整的用户模型，省略了具体业务字段和授权策略：
 
@@ -178,7 +178,7 @@ HAVING COUNT(*) = cardinality($3)
 ORDER BY user_id;
 ```
 
-这里使用了 PostgreSQL 的预备语句和数组参数。`COUNT(*)` 能直接使用，是因为表的主键已保证每条记录的标签不重复，查询数组也已经去重。[^pg-prepare][^pg-array]
+这里使用了 PostgreSQL 的[预备语句](https://www.postgresql.org/docs/18/sql-prepare.html)和[数组参数](https://www.postgresql.org/docs/18/functions-array.html)。`COUNT(*)` 能直接使用，是因为表的主键已保证每条记录的标签不重复，查询数组也已经去重。
 
 这个示例假设调用者已获准搜索该租户内的全部记录。若系统还有记录级权限，就要在候选筛选中加入相应授权条件；租户 ID 也必须来自经过验证的身份上下文，不能相信请求随便传来的值。
 
@@ -250,11 +250,11 @@ A 确实包含 `01380`。 B 不包含这个完整子串，但它开头有 `1380`
 
 如果他既能通过正常业务写入自己选择的数据，又能观察数据库中的标签变化，还可能逐步建立“已知输入—标签”的对应关系。仅仅不提供一个名为 `generateHmac` 的 API，并不足以排除这种能力。
 
-可搜索加密研究把这类利用额外知识和泄漏信息恢复查询或明文的攻击称为 leakage-abuse attacks。Cash 等人的研究表明，在特定泄漏模型和攻击者知识条件下，系统即使使用了密码学机制，泄漏仍然可以被实际利用。这里被攻击的，不一定是加密算法，而可能是数据之间的关系。[^leakage]
+可搜索加密研究把这类利用额外知识和泄漏信息恢复查询或明文的攻击称为 leakage-abuse attacks。[Cash 等人的研究](https://eprint.iacr.org/2016/718)表明，在特定泄漏模型和攻击者知识条件下，系统即使使用了密码学机制，泄漏仍然可以被实际利用。这里被攻击的，不一定是加密算法，而可能是数据之间的关系。
 
 对于手机号、短编号这类高度结构化的数据，我尤其不愿意把“全量 n-gram 加 HMAC”写成无条件的通用推荐。每个四位片段的输入空间只有一万种，片段还彼此重叠。字段之间若存在关联，其他表中的信息也可能帮助缩小猜测范围。
 
-AWS Database Encryption SDK 的文档也明确提醒：可搜索标签会暴露数据分布；分布偏斜和相关字段会影响安全性，不能只看算法名称来判断一个索引是否合适。[^aws]
+[AWS Database Encryption SDK 的文档](https://docs.aws.amazon.com/database-encryption-sdk/latest/devguide/searchable-encryption.html)也明确提醒：可搜索标签会暴露数据分布；分布偏斜和相关字段会影响安全性，不能只看算法名称来判断一个索引是否合适。
 
 ### 片段长度与标签位数影响不同
 
@@ -262,7 +262,7 @@ n-gram 的 n，指明文片段长度。HMAC 标签保留多少 bit，指密码�
 
 把标签从 256 bit 截断到 128 bit，可以减少标签值的存储，但不会让一万种四位数字突然拥有 128 bit 的输入熵。对这么小的输入域，128 bit 标签几乎不会产生随机碰撞，仍然近似保留片段的等值关系。
 
-一些现成方案会主动截断得更短，让不同输入共享同一标签，通过增加误报来减弱区分能力，再在解密后过滤。这个策略需要结合数据分布、关联性和误报成本设计，不是“短一点就安全”，更不能把某个产品的配置结论直接套到任意自制 n-gram 索引上。[^blind][^beacon-length]
+[一些现成方案](https://ciphersweet.paragonie.com/internals/blind-index)会主动截断得更短，让不同输入共享同一标签，通过增加误报来减弱区分能力，再在解密后过滤。这个策略需要结合数据分布、关联性和[误报成本](https://docs.aws.amazon.com/database-encryption-sdk/latest/devguide/choosing-beacon-length.html)设计，不是“短一点就安全”，更不能把某个产品的配置结论直接套到任意自制 n-gram 索引上。
 
 因此，我不会给 n-gram 长度画一张“越长越安全”的星级表。较长片段可能改善选择性，也可能让罕见值更容易被区分。风险取决于整个数据集和攻击者掌握的信息，不取决于一个参数的单调变化。
 
@@ -284,7 +284,7 @@ n-gram 的 n，指明文片段长度。HMAC 标签保留多少 bit，指密码�
 
 我不会把一把密钥同时拿去做字段加密和所有搜索标签。应使用独立生成的密钥，或者通过成熟的密钥派生方案，按用途派生彼此分离的子密钥。
 
-例如，索引域可以包含租户、表、字段、查询类型、分片长度和规范化版本。HKDF 的 `info` 参数就是用来绑定应用上下文的一种标准机制；上下文需要采用无歧义的编码方式，不能随意拼接几个字符串。[^hkdf]
+例如，索引域可以包含租户、表、字段、查询类型、分片长度和规范化版本。[HKDF](https://www.rfc-editor.org/rfc/rfc5869) 的 `info` 参数就是用来绑定应用上下文的一种标准机制；上下文需要采用无歧义的编码方式，不能随意拼接几个字符串。
 
 这样，同一个 `1380` 在不同租户或不同字段中，不必形成一个可以直接跨域关联的共同标签。但这只能减少某类直接关联，不能自动消除业务数据本身的相关性。
 
@@ -292,11 +292,11 @@ n-gram 的 n，指明文片段长度。HMAC 标签保留多少 bit，指密码�
 
 密钥分离也不是万能的失陷隔离。若同一个应用进程能取得数据密钥和搜索密钥，应用被完全控制时，两者都可能暴露。即便只泄漏搜索密钥，攻击者也能枚举低熵片段，进而推断原始数据。分离是在限制用途和部分泄漏影响，不是在承诺“丢一把密钥也没事”。
 
-KMS 可以用于保护和管理密钥，例如通过信封加密保护数据密钥；这不意味着每生成一个片段标签都必须远程调用一次 KMS。应用中的明文密钥生命周期、缓存、权限和审计仍需要单独设计。[^kms]
+KMS 可以用于保护和管理密钥，例如通过[信封加密](https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html)保护数据密钥；这不意味着每生成一个片段标签都必须远程调用一次 KMS。应用中的明文密钥生命周期、缓存、权限和审计仍需要单独设计。
 
 ### AAD 认证密文，无法认证整个结果集
 
-加密时，可以把租户 ID、记录 ID 和字段标识等上下文绑定为 AAD，也就是参与认证但不被加密的附加数据。这样，把某条密文直接换到另一条记录或另一个字段下，通常不能通过原有上下文的认证检查。[^aead][^blind-security]
+加密时，可以把租户 ID、记录 ID 和字段标识等上下文绑定为 [AAD](https://cryptography.io/en/latest/hazmat/primitives/aead/)，也就是参与认证但不被加密的附加数据。这样，[把某条密文直接换到另一条记录或另一个字段下](https://ciphersweet.paragonie.com/security)，通常不能通过原有上下文的认证检查。
 
 但不要把它扩大解释成“数据库无法作弊”。 数据库仍然可以漏掉某条索引记录，让应用查不到结果；也可能返回同一上下文下以前保存过的合法旧版本。单条密文的认证，不会自动证明整个查询结果是完整、最新的。
 
@@ -310,7 +310,7 @@ KMS 可以用于保护和管理密钥，例如通过信封加密保护数据密�
 
 搜索密钥轮换同样不能只改配置。新密钥生成的标签与旧标签不同，需要安排双写或其他迁移策略，回填存量数据，覆盖必要版本的查询，再安全移除旧索引。规范化规则变化时也是一样。
 
-还要区分“替换实际的数据或搜索密钥”与“只更换包裹它们的上层密钥”。后者可能只涉及重新包裹，而不需要重算全部搜索标签；前者通常不能省略数据或索引迁移。[^kms]
+还要区分“替换实际的数据或搜索密钥”与“只更换包裹它们的上层密钥”。后者可能只涉及[重新包裹](https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html)，而不需要重算全部搜索标签；前者通常不能省略数据或索引迁移。
 
 删除也不止删主表。索引、缓存、搜索引擎副本和备份保留策略，都必须在数据生命周期里有明确安排。
 
@@ -332,7 +332,7 @@ KMS 可以用于保护和管理密钥，例如通过信封加密保护数据密�
 
 把条件改成“至少共享一个片段”也不是完整答案。一个简单反例是 `abc` 与 `axc`：它们只相差一次字符替换，但未加边界标记的 2-gram 分别是 `{ab, bc}` 和 `{ax, xc}`，没有任何共同片段。
 
-所以，容错方案需要围绕指定的距离函数、长度范围和允许错误数设计召回过滤；短字符串可能需要额外通道，或者在已经受限的授权集合内直接扫描。必须明确是否保证召回完整，再用测试验证。Levenshtein 距离按插入、删除和替换计数；若要把相邻字符交换视为一次错误，还需要选用相应的距离定义。[^pg-fuzzy]
+所以，容错方案需要围绕指定的距离函数、长度范围和允许错误数设计召回过滤；短字符串可能需要额外通道，或者在已经受限的授权集合内直接扫描。必须明确是否保证召回完整，再用测试验证。[Levenshtein 距离](https://www.postgresql.org/docs/18/fuzzystrmatch.html)按插入、删除和替换计数；若要把相邻字符交换视为一次错误，还需要选用相应的距离定义。
 
 编辑距离可以排除已召回候选中的误报，第一阶段漏掉的记录则需要修改召回条件。
 
@@ -340,15 +340,15 @@ KMS 可以用于保护和管理密钥，例如通过信封加密保护数据密�
 
 当标签数量、查询并发或组合检索需求超过当前关系数据库方案的合适范围，可以评估专门的搜索引擎。
 
-对本文这种标签索引，存入 Elasticsearch 的应是应用已经生成的稳定标签，而不是解密后的原始手机号。通常应把标签当作 `keyword` 这类精确值处理，而不是交给普通文本分析器再次分词；多个标签的匹配条件，可以用对应的精确集合查询来表达。[^elastic]
+对本文这种标签索引，存入 Elasticsearch 的应是应用已经生成的稳定标签，而不是解密后的原始手机号。通常应把标签当作 [`keyword`](https://www.elastic.co/docs/reference/elasticsearch/mapping-reference/keyword) 这类精确值处理，而不是交给普通文本分析器再次分词；多个标签的匹配条件，可以用对应的[精确集合查询](https://www.elastic.co/docs/reference/query-languages/query-dsl/query-dsl-terms-set-query)来表达。
 
 但搜索引擎不会因此替我们解决密码学问题。标签频率、记录关联、查询模式和返回规模，仍然需要分析。也不能因为数据到了“千万级”，就自动认定必须迁移：倒排列表长度、租户划分、更新模式和实际负载，比总行数更有判断价值。
 
 ### SSE 要按具体协议评估
 
-可搜索对称加密，也就是 SSE，是一个研究领域，不是一种固定算法。它研究如何在外包存储的同时支持搜索，并在明确的模型下定义与证明安全性质。[^sse]
+[可搜索对称加密](https://eprint.iacr.org/2006/210)，也就是 SSE，是一个研究领域，不是一种固定算法。它研究如何在外包存储的同时支持搜索，并在明确的模型下定义与证明安全性质。
 
-因此，不能给“自制 HMAC 标签”“SSE”“全同态加密”依次标上三颗、四颗、五颗安全星。具体协议支持什么查询、泄漏什么、怎样更新、信任谁，以及需要多少交互，必须分别讨论。形式化安全也总是相对于具体定义成立，不意味着不存在可利用的泄漏。[^leakage]
+因此，不能给“自制 HMAC 标签”“SSE”“全同态加密”依次标上三颗、四颗、五颗安全星。具体协议支持什么查询、泄漏什么、怎样更新、信任谁，以及需要多少交互，必须分别讨论。形式化安全也总是相对于具体定义成立，不意味着不存在[可利用的泄漏](https://eprint.iacr.org/2016/718)。
 
 如果需求还包括隐藏重复查询或访问了哪些记录，就需要重新评估专门协议及其计算、通信和运维成本，而不是给现有标签表再换一个更长的哈希。
 
@@ -362,50 +362,6 @@ KMS 可以用于保护和管理密钥，例如通过信封加密保护数据密�
 
 加密后的数据能支持某些搜索，但索引会留下关系。验收时除了检查密文能否解密、查询能否命中，我还会检查另一件事：拿到数据库的人，能从搜索结构里推断出多少关于客户的信息？
 
----
-
-## 参考资料与说明
-
 本文的起点是阅读《被问懵了，加密后的数据如何进行模糊查询？》后的重新梳理。本文使用独立推导的标签结构、SQL 和反例，不沿用原文的算法选择与性能估算。写作缘起：[原文链接](https://mp.weixin.qq.com/s/YHrq4fxoRkjtQyMXtmvuKw)。
 
-下面列出用于核对技术概念的一手资料。示例数字串为教学用途；候选规模估算不是生产基准测试。本文给出的是架构分析与最小示例，不代表任何具体部署已经通过密码学安全审计。
-
-[^blind]: Paragon Initiative Enterprises, [Blind Indexing](https://ciphersweet.paragonie.com/internals/blind-index)。说明盲索引的带密钥构造、快慢模式及输出截断；本文不声称 n-gram 方案就是 CipherSweet 的现成全文搜索功能。
-
-[^aws]: AWS, [Searchable encryption — AWS Database Encryption SDK](https://docs.aws.amazon.com/database-encryption-sdk/latest/devguide/searchable-encryption.html)。说明 HMAC beacon、候选过滤，以及数据分布和相关字段带来的风险。
-
-[^storage]: OWASP, [Cryptographic Storage Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Cryptographic_Storage_Cheat_Sheet.html)。关于威胁模型、加密层次、认证加密和密钥存储的工程指导。
-
-[^pg-fuzzy]: PostgreSQL 18, [fuzzystrmatch](https://www.postgresql.org/docs/18/fuzzystrmatch.html)。说明字符串距离及 Levenshtein 匹配；本文的零共同片段反例为直接构造。
-
-[^pg-index]: PostgreSQL 18, [Index Types](https://www.postgresql.org/docs/18/indexes-types.html)。说明 B-tree 的适用查询及倒排索引概念。
-
-[^pg-expr]: PostgreSQL 18, [Indexes on Expressions](https://www.postgresql.org/docs/18/indexes-expressional.html)。函数或表达式不意味着绝对无法索引。
-
-[^pg-trgm]: PostgreSQL 18, [pg_trgm](https://www.postgresql.org/docs/18/pgtrgm.html)。说明 trigram 索引对相似性、LIKE 和 ILIKE 等查询的支持与限制。
-
-[^gcm]: NIST, [SP 800-38D: Recommendation for Block Cipher Modes of Operation: Galois/Counter Mode (GCM) and GMAC](https://csrc.nist.gov/pubs/sp/800/38/d/final)。GCM 的认证加密定义及使用要求。
-
-[^chacha]: IETF, [RFC 8439: ChaCha20 and Poly1305 for IETF Protocols](https://www.rfc-editor.org/rfc/rfc8439)。标准化的 ChaCha20-Poly1305 AEAD 构造。
-
-[^aead]: Python Cryptographic Authority, [Authenticated encryption](https://cryptography.io/en/latest/hazmat/primitives/aead/)。用于核对 nonce 不复用、AAD、认证标签与认证失败行为。
-
-[^hmac]: IETF, [RFC 2104: HMAC: Keyed-Hashing for Message Authentication](https://www.rfc-editor.org/rfc/rfc2104)。HMAC 的带密钥构造。本文使用 SHA-256，而非照搬早期文档中的旧哈希示例。
-
-[^pg-prepare]: PostgreSQL 18, [PREPARE](https://www.postgresql.org/docs/18/sql-prepare.html)。预备语句与参数的语法。
-
-[^pg-array]: PostgreSQL 18, [Array Functions and Operators](https://www.postgresql.org/docs/18/functions-array.html)。用于核对 `cardinality`；标签数组的去重和输入校验属于本文的调用约束。
-
-[^leakage]: David Cash, Paul Grubbs, Jason Perry and Thomas Ristenpart, [Leakage-Abuse Attacks Against Searchable Encryption](https://eprint.iacr.org/2016/718)。发表于 CCS 2015；链接指向作者后续修订的 ePrint 版本。研究分析了不同泄漏及先验知识条件下的查询和明文恢复攻击。
-
-[^beacon-length]: AWS, [Choosing a beacon length and partitions](https://docs.aws.amazon.com/database-encryption-sdk/latest/devguide/choosing-beacon-length.html)。用于理解输出长度、误报与泄漏之间的权衡；并非本文标签表的直接配置指南。
-
-[^hkdf]: IETF, [RFC 5869: HMAC-based Extract-and-Expand Key Derivation Function](https://www.rfc-editor.org/rfc/rfc5869)，特别是第 3.2 节关于 `info` 绑定上下文的说明。
-
-[^kms]: AWS, [AWS KMS keys / Envelope encryption / Data keys](https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html)。用于核对信封加密、上层密钥与数据密钥的关系。
-
-[^blind-security]: Paragon Initiative Enterprises, [Security Properties and Threat Model](https://ciphersweet.paragonie.com/security)。关于数据库与应用的信任边界、主键绑定 AAD，以及盲索引信息泄漏。
-
-[^elastic]: Elastic, [Keyword type family](https://www.elastic.co/docs/reference/elasticsearch/mapping-reference/keyword)；[Terms set query](https://www.elastic.co/docs/reference/query-languages/query-dsl/query-dsl-terms-set-query)。用于核对精确标签的映射及集合匹配行为。
-
-[^sse]: Reza Curtmola, Juan Garay, Seny Kamara and Rafail Ostrovsky, [Searchable Symmetric Encryption: Improved Definitions and Efficient Constructions](https://eprint.iacr.org/2006/210)。SSE 的安全定义与构造研究。
+示例数字串为教学用途；候选规模估算不是生产基准测试。本文给出的是架构分析与最小示例，不代表任何具体部署已经通过密码学安全审计。

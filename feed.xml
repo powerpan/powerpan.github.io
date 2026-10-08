@@ -5,7 +5,23 @@
     <link>https://erichz.site/blog/</link>
     <description>Eric 的 AI 工程、计算机视觉、Agent 架构与系统设计技术博客。</description>
     <language>zh-CN</language>
-    <lastBuildDate>Tue, 06 Oct 2026 00:00:00 GMT</lastBuildDate>
+    <lastBuildDate>Thu, 08 Oct 2026 00:00:00 GMT</lastBuildDate>
+    <item>
+      <title>当考卷本身有错：我们在测量 AI 的什么？</title>
+      <link>https://erichz.site/blog/physics-benchmark-grading</link>
+      <guid isPermaLink="false">https://erichz.site/blog/physics-benchmark-grading.html</guid>
+      <pubDate>Thu, 08 Oct 2026 00:00:00 GMT</pubDate>
+      <category>AI 工程</category>
+      <description>从等价公式被判零分到修订题库后的涨分，拆开评分错误、任务变化、重复尝试和测试契约，讨论 AI 评测怎样保留可比较的证据。</description>
+    </item>
+    <item>
+      <title>当每个系统都在自保：3.8 GW 负载退出之后</title>
+      <link>https://erichz.site/blog/data-center-grid-protection</link>
+      <guid isPermaLink="false">https://erichz.site/blog/data-center-grid-protection.html</guid>
+      <pubDate>Thu, 08 Oct 2026 00:00:00 GMT</pubDate>
+      <category>系统架构</category>
+      <description>从北弗吉尼亚 3.8 GW 负载转移，讨论 UPS 控制、重试风暴、故障穿越与 AI 集群功率整形：各自保护自己之后，系统会怎样？</description>
+    </item>
     <item>
       <title>加密后的数据，真的还能做模糊查询吗？</title>
       <link>https://erichz.site/blog/encrypted-substring-search</link>
@@ -149,22 +165,6 @@
       <pubDate>Thu, 30 Apr 2026 00:00:00 GMT</pubDate>
       <category>Agent 自动化</category>
       <description>Agent 的价值不只是聊天或工具调用，而是把分散功能重新组织成围绕目标推进的任务系统。</description>
-    </item>
-    <item>
-      <title>如果没有数据库，系统如何设计？</title>
-      <link>https://erichz.site/blog/database-not-system-center</link>
-      <guid isPermaLink="false">https://erichz.site/blog/database-not-system-center.html</guid>
-      <pubDate>Wed, 29 Apr 2026 00:00:00 GMT</pubDate>
-      <category>系统架构</category>
-      <description>不是否定数据库，而是把系统设计的起点从表结构拉回业务事实、状态规则、查询视图和一致性协议。</description>
-    </item>
-    <item>
-      <title>技术债不是代码坏味道，而是组织对未来的定价</title>
-      <link>https://erichz.site/blog/technical-debt-org-game</link>
-      <guid isPermaLink="false">https://erichz.site/blog/technical-debt-org-game.html</guid>
-      <pubDate>Wed, 29 Apr 2026 00:00:00 GMT</pubDate>
-      <category>系统架构</category>
-      <description>技术债表现为代码和架构问题，但根源往往来自组织对时间、成本、风险和未来维护能力的连续选择。</description>
     </item>
   </channel>
 </rss>

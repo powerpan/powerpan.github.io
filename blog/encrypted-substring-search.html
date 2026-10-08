@@ -116,7 +116,7 @@
         <h1 class="blog-article-title reveal reveal-d1" data-i18n-html="bess_title">加密后的数据，真的还能做<span class="hl">模糊查询</span>吗？</h1>
         <div class="blog-article-meta reveal reveal-d2">
             <span>📅 2026.10</span>
-            <span>⏱️ 32 min</span>
+            <span>⏱️ 34 min</span>
             <span>👤 Eric Pan</span>
         </div>
         <p class="detail-subtitle reveal reveal-d3" data-i18n="bess_sub">从手机号后四位到任意子串：标签如何生成，候选为什么会误报，以及索引会暴露什么。</p>
@@ -128,7 +128,7 @@
             <p data-i18n="bess_p2">到这里，原来那句 SQL 就不管用了：</p>
             <pre><code class="language-sql" data-i18n="bess_l1">SELECT id FROM users WHERE phone LIKE '%0138%';</code></pre>
             <p data-i18n="bess_p3">问题不在于数据库不够聪明。对于我们通常采用的随机化字段加密方案，隐藏明文之间的关系，本来就是它应该做的事。不能一边要求别人看不懂数据，一边又希望数据库从密文中直接认出哪几条记录包含同一个片段。</p>
-            <p data-i18n-html="bess_p4">但这也不意味着加密之后就只能放弃搜索。 我更倾向于换一种拆法：让密文负责保护原始数据，让另一套经过设计的索引负责有限的查询。 这条路线在 Blind Index 和一些商业加密 SDK 中都能看到，不过，“有限”两个字不能省略。索引提供了能力，也会暴露原本被加密隐藏的关系。<sup><a href="#ref-blind">[1]</a></sup><sup><a href="#ref-aws">[2]</a></sup></p>
+            <p data-i18n-html="bess_p4">但这也不意味着加密之后就只能放弃搜索。 我更倾向于换一种拆法：让密文负责保护原始数据，让另一套经过设计的索引负责有限的查询。 这条路线在 <a href="https://ciphersweet.paragonie.com/internals/blind-index" target="_blank" rel="noopener">Blind Index</a> 和一些<a href="https://docs.aws.amazon.com/database-encryption-sdk/latest/devguide/searchable-encryption.html" target="_blank" rel="noopener">商业加密 SDK</a> 中都能看到，不过，“有限”两个字不能省略。索引提供了能力，也会暴露原本被加密隐藏的关系。</p>
             <p data-i18n="bess_p5">实现之前，先明确要恢复哪些查询能力、数据库因此会看到什么。</p>
         </section>
 
@@ -147,9 +147,9 @@
                     </tbody>
                 </table>
             </div>
-            <p data-i18n-html="bess_p7">SQL 的 <code>LIKE '%xxx%'</code>，在这里主要对应子串搜索，不等于拼写纠错。后者还要定义允许什么错误、距离怎么算、结果怎么排序。本文先解决按字面内容查找子串，不尝试实现任意 SQL 通配符表达式。<sup><a href="#ref-pg-fuzzy">[4]</a></sup></p>
+            <p data-i18n-html="bess_p7">SQL 的 <code>LIKE '%xxx%'</code>，在这里主要对应子串搜索，不等于<a href="https://www.postgresql.org/docs/18/fuzzystrmatch.html" target="_blank" rel="noopener">拼写纠错</a>。后者还要定义允许什么错误、距离怎么算、结果怎么排序。本文先解决按字面内容查找子串，不尝试实现任意 SQL 通配符表达式。</p>
             <p data-i18n="bess_p8">查询语义会决定需要建立哪些索引，以及暴露哪些关系。 只查后四位，不需要把整个手机号拆成所有四位片段。只允许输入完整邮箱，也不需要预先建立邮箱中每一段字符的索引。为了一个尚未确认的未来需求，把所有可搜索特征提前存下来，在敏感数据场景里未必是“扩展性好”，也可能只是提前扩大泄漏面。</p>
-            <p data-i18n-html="bess_p9">还有一个更基础的问题：我们想防谁？ 磁盘被盗、数据库备份泄漏、攻击者拿到数据库查询权限，以及应用服务器被完全控制，要求的防护并不相同。磁盘加密保护不了一个已经能正常查询数据库的攻击者；反过来，数据库具备解密能力，也不代表单独一份不含密钥的离线备份必然能被解开。加密应该放在哪一层，要跟威胁模型一起决定。<sup><a href="#ref-storage">[3]</a></sup></p>
+            <p data-i18n-html="bess_p9">还有一个更基础的问题：我们想防谁？ 磁盘被盗、数据库备份泄漏、攻击者拿到数据库查询权限，以及应用服务器被完全控制，要求的防护并不相同。磁盘加密保护不了一个已经能正常查询数据库的攻击者；反过来，数据库具备解密能力，也不代表单独一份不含密钥的离线备份必然能被解开。加密应该放在哪一层，要跟<a href="https://cheatsheetseries.owasp.org/cheatsheets/Cryptographic_Storage_Cheat_Sheet.html" target="_blank" rel="noopener">威胁模型</a>一起决定。</p>
             <p data-i18n="bess_p10">本文采用的主要边界是：应用服务可以处理明文，数据库只保存密文和搜索索引；攻击者可能读到数据库，但没有应用侧的密钥。 后面再讨论长期观察查询、主动写入数据，以及应用自身失守时会发生什么。</p>
         </section>
 
@@ -164,7 +164,7 @@
             <p data-i18n="bess_p15">第二种做法，是把解密搬进 SQL。下面只是表达思路的伪 SQL，并不是某个数据库可以直接执行的通用函数：</p>
             <pre><code class="language-text" data-i18n="bess_l2">WHERE decrypt(phone_ciphertext) LIKE '%0138%'</code></pre>
             <p data-i18n="bess_p16">它省下了把所有密文传给应用的开销，却没有自动解决筛选成本。已有的密文字段索引，通常不能帮助数据库判断解密后的内容是否包含某个子串。</p>
-            <p data-i18n-html="bess_p17">这里还要避免一个常见的过度概括：不能把问题说成“用了函数就一定无法建立索引”，也不能说“所有 <code>LIKE '%xxx%'</code> 都无法优化”。PostgreSQL 支持表达式索引，<code>pg_trgm</code> 的 GIN/GiST 索引也能支持一些包含前导通配符的搜索；普通 B-tree 则不是这种任意子串查询的通用答案。<sup><a href="#ref-pg-index">[5]</a></sup><sup><a href="#ref-pg-expr">[6]</a></sup><sup><a href="#ref-pg-trgm">[7]</a></sup></p>
+            <p data-i18n-html="bess_p17">这里还要避免一个常见的过度概括：不能把问题说成“用了函数就一定无法建立索引”，也不能说“所有 <code>LIKE '%xxx%'</code> 都无法优化”。PostgreSQL 支持<a href="https://www.postgresql.org/docs/18/indexes-expressional.html" target="_blank" rel="noopener">表达式索引</a>，<a href="https://www.postgresql.org/docs/18/pgtrgm.html" target="_blank" rel="noopener"><code>pg_trgm</code></a> 的 GIN/GiST 索引也能支持一些包含前导通配符的搜索；<a href="https://www.postgresql.org/docs/18/indexes-types.html" target="_blank" rel="noopener">普通 B-tree</a> 则不是这种任意子串查询的通用答案。</p>
             <p data-i18n="bess_p18">然而，如果为了加速查询，把解密后的文本或可直接还原的明文特征物化到索引里，敏感信息又进入了数据库。这已经不是单纯的性能优化，而是在改变安全边界。</p>
             <p data-i18n="bess_p19">同样，把解密能力交给数据库，也意味着必须信任具备相应权限的数据库执行环境。明文会在那个环境中出现；SQL 参数、诊断信息和日志如何记录，也都需要重新检查。不能笼统地说每一条明文都会进入备份或慢查询日志，但暴露面确实需要逐项评估。</p>
             <h3 data-i18n="bess_h3">搜索字段也在保护范围内</h3>
@@ -177,18 +177,18 @@
         <section class="detail-section reveal" id="blind-index">
             <h2 data-i18n="bess_s3">密文之外，再建一份 Blind Index</h2>
             <p data-i18n="bess_p24">我会先保留一份正常的随机化加密数据，而不是为了搜索去修改它的加密方式。</p>
-            <p data-i18n-html="bess_p25">对于本文的示例，可以选择成熟密码库提供的 AES-GCM；ChaCha20-Poly1305 也是一种标准化的认证加密方案。重点不只是保密，还要在解密时验证数据是否被篡改。新系统没有必要沿用旧教程里的 DES，也不应该自行发明一套“既加密又保留字符规律”的算法。<sup><a href="#ref-storage">[3]</a></sup><sup><a href="#ref-gcm">[8]</a></sup><sup><a href="#ref-chacha">[9]</a></sup></p>
-            <p data-i18n-html="bess_p26">以 AES-GCM 为例，存储的加密封装通常还要包含算法或格式版本、密钥版本、nonce 和认证标签。nonce 不需要保密，但同一密钥下不能重复使用。采用随机 nonce 时，也必须遵守方案的随机源、使用量和轮换要求，不能把“每次生成随机数”理解成无需管理的无限保证。<sup><a href="#ref-aead">[10]</a></sup></p>
+            <p data-i18n-html="bess_p25">对于本文的示例，可以选择<a href="https://cheatsheetseries.owasp.org/cheatsheets/Cryptographic_Storage_Cheat_Sheet.html" target="_blank" rel="noopener">成熟密码库</a>提供的 <a href="https://csrc.nist.gov/pubs/sp/800/38/d/final" target="_blank" rel="noopener">AES-GCM</a>；<a href="https://www.rfc-editor.org/rfc/rfc8439" target="_blank" rel="noopener">ChaCha20-Poly1305</a> 也是一种标准化的认证加密方案。重点不只是保密，还要在解密时验证数据是否被篡改。新系统没有必要沿用旧教程里的 DES，也不应该自行发明一套“既加密又保留字符规律”的算法。</p>
+            <p data-i18n-html="bess_p26">以 AES-GCM 为例，存储的加密封装通常还要包含算法或格式版本、密钥版本、<a href="https://cryptography.io/en/latest/hazmat/primitives/aead/" target="_blank" rel="noopener">nonce</a> 和认证标签。nonce 不需要保密，但同一密钥下不能重复使用。采用随机 nonce 时，也必须遵守方案的随机源、使用量和轮换要求，不能把“每次生成随机数”理解成无需管理的无限保证。</p>
             <p data-i18n="bess_p27">搜索走另一条路径。 先从最简单的精确匹配开始。应用对规范化后的手机号计算一个带密钥的确定性标签：</p>
             <pre><code class="language-text" data-i18n="bess_l3">原始手机号 ──认证加密──&gt; phone_envelope
 
 规范化手机号 ──HMAC-SHA-256(K_search, value)──&gt; phone_index</code></pre>
             <p data-i18n="bess_p28">用户输入完整号码时，应用使用同一套规则生成查询标签，数据库执行标签的等值匹配，再由应用解密候选记录并核对。</p>
-            <p data-i18n-html="bess_p29">这类辅助结构通常称为 Blind Index，盲索引。不同实现可能采用不同的带密钥哈希、密钥派生或截断策略；本文使用 HMAC-SHA-256 来说明确定性搜索标签的构造，不把它等同于任何现成库的完整实现。<sup><a href="#ref-blind">[1]</a></sup><sup><a href="#ref-hmac">[11]</a></sup></p>
+            <p data-i18n-html="bess_p29">这类辅助结构通常称为 <a href="https://ciphersweet.paragonie.com/internals/blind-index" target="_blank" rel="noopener">Blind Index</a>，盲索引。不同实现可能采用不同的带密钥哈希、密钥派生或截断策略；本文使用 <a href="https://www.rfc-editor.org/rfc/rfc2104" target="_blank" rel="noopener">HMAC-SHA-256</a> 来说明确定性搜索标签的构造，不把它等同于任何现成库的完整实现。</p>
             <p data-i18n="bess_p30">它不是一种可以反向解密的“另一份密文”，更不是匿名化证明。数据库虽然不知道标签对应哪个号码，却能在同一个索引域内识别相同标签。</p>
             <h3 data-i18n="bess_h4">四位数字经不起无密钥哈希枚举</h3>
             <p data-i18n-html="bess_p31">对于四位数字，可能的输入只有 <code>0000</code> 到 <code>9999</code>，总共一万种。 如果索引是 <code>SHA256("1380")</code>，拿到数据库的人可以自行计算这一万种输入的哈希，建立对照表。哈希输出再长，也不会增加输入本身的可能性。</p>
-            <p data-i18n-html="bess_p32">HMAC 引入了一个不交给数据库的秘密密钥。在密钥未泄漏、攻击者也没有可利用的标签生成接口时，他不能再像处理普通 SHA-256 那样，自行计算完整对照表。公开的固定 salt 不提供这一性质。<sup><a href="#ref-hmac">[11]</a></sup></p>
+            <p data-i18n-html="bess_p32"><a href="https://www.rfc-editor.org/rfc/rfc2104" target="_blank" rel="noopener">HMAC</a> 引入了一个不交给数据库的秘密密钥。在密钥未泄漏、攻击者也没有可利用的标签生成接口时，他不能再像处理普通 SHA-256 那样，自行计算完整对照表。公开的固定 salt 不提供这一性质。</p>
             <p data-i18n="bess_p33">但这句话的边界很重要：不能直接计算对照表，不等于不能通过统计、关联或接口反馈猜出标签含义。 后面还要回来讨论这件事。</p>
         </section>
 
@@ -212,7 +212,7 @@
 去重后的片段：
 1380  3800  8001  0013  0138  8000</code></pre>
             <p data-i18n-html="bess_p40">这里有八个窗口位置，但只有六个不同片段。对于“是否包含”的候选筛选，同一条记录中的重复片段可以去重，没必要重复存储。 然后，对每个片段生成 HMAC 标签。数据库保存的是“某个标签出现在哪些记录中”的关系，而不是把所有标签拼成一大段字符串，再执行一次 <code>LIKE '%标签%'</code>。</p>
-            <p data-i18n-html="bess_p41">后者既容易重新引入扫描问题，也没有充分利用标签本来就适合等值匹配的特点。独立的标签表，实际上是在构造一个简单的倒排索引：由标签找到记录 ID。<sup><a href="#ref-pg-index">[5]</a></sup></p>
+            <p data-i18n-html="bess_p41">后者既容易重新引入扫描问题，也没有充分利用标签本来就适合等值匹配的特点。独立的标签表，实际上是在构造一个简单的<a href="https://www.postgresql.org/docs/18/indexes-types.html" target="_blank" rel="noopener">倒排索引</a>：由标签找到记录 ID。</p>
             <p data-i18n="bess_p42">下面是一份用于说明结构的 PostgreSQL 最小表设计。它不是完整的用户模型，省略了具体业务字段和授权策略：</p>
             <pre><code class="language-sql" data-i18n="bess_l5">CREATE TABLE users (
     tenant_id      BIGINT NOT NULL,
@@ -246,7 +246,7 @@ WHERE tenant_id = $1
 GROUP BY user_id
 HAVING COUNT(*) = cardinality($3)
 ORDER BY user_id;</code></pre>
-            <p data-i18n-html="bess_p46">这里使用了 PostgreSQL 的预备语句和数组参数。<code>COUNT(*)</code> 能直接使用，是因为表的主键已保证每条记录的标签不重复，查询数组也已经去重。<sup><a href="#ref-pg-prepare">[12]</a></sup><sup><a href="#ref-pg-array">[13]</a></sup></p>
+            <p data-i18n-html="bess_p46">这里使用了 PostgreSQL 的<a href="https://www.postgresql.org/docs/18/sql-prepare.html" target="_blank" rel="noopener">预备语句</a>和<a href="https://www.postgresql.org/docs/18/functions-array.html" target="_blank" rel="noopener">数组参数</a>。<code>COUNT(*)</code> 能直接使用，是因为表的主键已保证每条记录的标签不重复，查询数组也已经去重。</p>
             <p data-i18n="bess_p47">这个示例假设调用者已获准搜索该租户内的全部记录。若系统还有记录级权限，就要在候选筛选中加入相应授权条件；租户 ID 也必须来自经过验证的身份上下文，不能相信请求随便传来的值。</p>
             <p data-i18n="bess_p48">到这一步，我们得到了候选 ID，还没有得到最终搜索结果。</p>
         </section>
@@ -293,13 +293,13 @@ B：13801110138
             <p data-i18n-html="bess_p65">假设攻击者拿到了数据库。虽然不知道某个标签代表 <code>1380</code> 还是 <code>8000</code>，但他仍然能看到：哪些记录共享标签、每个标签关联多少条记录、哪些标签经常共同出现，以及一条记录有多少个不同标签。</p>
             <p data-i18n="bess_p66">如果他能持续观察数据库上的查询，还可能看到哪些查询标签反复出现、哪些记录被访问、每次返回多少候选。静态数据库快照和持续观察查询，泄漏的信息不是同一回事。</p>
             <p data-i18n-html="bess_p67">如果他既能通过正常业务写入自己选择的数据，又能观察数据库中的标签变化，还可能逐步建立“已知输入—标签”的对应关系。仅仅不提供一个名为 <code>generateHmac</code> 的 API，并不足以排除这种能力。</p>
-            <p data-i18n-html="bess_p68">可搜索加密研究把这类利用额外知识和泄漏信息恢复查询或明文的攻击称为 leakage-abuse attacks。Cash 等人的研究表明，在特定泄漏模型和攻击者知识条件下，系统即使使用了密码学机制，泄漏仍然可以被实际利用。这里被攻击的，不一定是加密算法，而可能是数据之间的关系。<sup><a href="#ref-leakage">[14]</a></sup></p>
+            <p data-i18n-html="bess_p68">可搜索加密研究把这类利用额外知识和泄漏信息恢复查询或明文的攻击称为 leakage-abuse attacks。<a href="https://eprint.iacr.org/2016/718" target="_blank" rel="noopener">Cash 等人的研究</a>表明，在特定泄漏模型和攻击者知识条件下，系统即使使用了密码学机制，泄漏仍然可以被实际利用。这里被攻击的，不一定是加密算法，而可能是数据之间的关系。</p>
             <p data-i18n="bess_p69">对于手机号、短编号这类高度结构化的数据，我尤其不愿意把“全量 n-gram 加 HMAC”写成无条件的通用推荐。每个四位片段的输入空间只有一万种，片段还彼此重叠。字段之间若存在关联，其他表中的信息也可能帮助缩小猜测范围。</p>
-            <p data-i18n-html="bess_p70">AWS Database Encryption SDK 的文档也明确提醒：可搜索标签会暴露数据分布；分布偏斜和相关字段会影响安全性，不能只看算法名称来判断一个索引是否合适。<sup><a href="#ref-aws">[2]</a></sup></p>
+            <p data-i18n-html="bess_p70"><a href="https://docs.aws.amazon.com/database-encryption-sdk/latest/devguide/searchable-encryption.html" target="_blank" rel="noopener">AWS Database Encryption SDK 的文档</a>也明确提醒：可搜索标签会暴露数据分布；分布偏斜和相关字段会影响安全性，不能只看算法名称来判断一个索引是否合适。</p>
             <h3 data-i18n="bess_h6">片段长度与标签位数影响不同</h3>
             <p data-i18n="bess_p71">n-gram 的 n，指明文片段长度。HMAC 标签保留多少 bit，指密码学输出长度。这是两个不同参数。</p>
             <p data-i18n="bess_p72">把标签从 256 bit 截断到 128 bit，可以减少标签值的存储，但不会让一万种四位数字突然拥有 128 bit 的输入熵。对这么小的输入域，128 bit 标签几乎不会产生随机碰撞，仍然近似保留片段的等值关系。</p>
-            <p data-i18n-html="bess_p73">一些现成方案会主动截断得更短，让不同输入共享同一标签，通过增加误报来减弱区分能力，再在解密后过滤。这个策略需要结合数据分布、关联性和误报成本设计，不是“短一点就安全”，更不能把某个产品的配置结论直接套到任意自制 n-gram 索引上。<sup><a href="#ref-blind">[1]</a></sup><sup><a href="#ref-beacon-length">[15]</a></sup></p>
+            <p data-i18n-html="bess_p73"><a href="https://ciphersweet.paragonie.com/internals/blind-index" target="_blank" rel="noopener">一些现成方案</a>会主动截断得更短，让不同输入共享同一标签，通过增加误报来减弱区分能力，再在解密后过滤。这个策略需要结合数据分布、关联性和<a href="https://docs.aws.amazon.com/database-encryption-sdk/latest/devguide/choosing-beacon-length.html" target="_blank" rel="noopener">误报成本</a>设计，不是“短一点就安全”，更不能把某个产品的配置结论直接套到任意自制 n-gram 索引上。</p>
             <p data-i18n="bess_p74">因此，我不会给 n-gram 长度画一张“越长越安全”的星级表。较长片段可能改善选择性，也可能让罕见值更容易被区分。风险取决于整个数据集和攻击者掌握的信息，不取决于一个参数的单调变化。</p>
             <p data-i18n="bess_p75">“受控泄漏”也不是贴在架构图上的免责标签。它意味着我们已经列出允许暴露什么，检查这些暴露能否组合出更多信息，并确认剩余风险确实可以接受。</p>
         </section>
@@ -313,20 +313,20 @@ B：13801110138
             <p data-i18n="bess_p79">规则变化意味着需要重建索引。它不是换一个工具函数就结束的事情。</p>
             <h3 data-i18n="bess_h8">按租户、字段和用途隔离密钥</h3>
             <p data-i18n="bess_p80">我不会把一把密钥同时拿去做字段加密和所有搜索标签。应使用独立生成的密钥，或者通过成熟的密钥派生方案，按用途派生彼此分离的子密钥。</p>
-            <p data-i18n-html="bess_p81">例如，索引域可以包含租户、表、字段、查询类型、分片长度和规范化版本。HKDF 的 <code>info</code> 参数就是用来绑定应用上下文的一种标准机制；上下文需要采用无歧义的编码方式，不能随意拼接几个字符串。<sup><a href="#ref-hkdf">[16]</a></sup></p>
+            <p data-i18n-html="bess_p81">例如，索引域可以包含租户、表、字段、查询类型、分片长度和规范化版本。<a href="https://www.rfc-editor.org/rfc/rfc5869" target="_blank" rel="noopener">HKDF</a> 的 <code>info</code> 参数就是用来绑定应用上下文的一种标准机制；上下文需要采用无歧义的编码方式，不能随意拼接几个字符串。</p>
             <p data-i18n-html="bess_p82">这样，同一个 <code>1380</code> 在不同租户或不同字段中，不必形成一个可以直接跨域关联的共同标签。但这只能减少某类直接关联，不能自动消除业务数据本身的相关性。</p>
             <p data-i18n="bess_p83">另一个常见误区，是给每条记录都加独立随机 salt，以为能够同时隐藏重复值并保留一次等值查询。这样做以后，相同输入在不同记录中不再得到相同标签，原来的直接查找方式也就不成立了。随机化放在哪里，必须和查询流程一起设计。</p>
             <p data-i18n="bess_p84">密钥分离也不是万能的失陷隔离。若同一个应用进程能取得数据密钥和搜索密钥，应用被完全控制时，两者都可能暴露。即便只泄漏搜索密钥，攻击者也能枚举低熵片段，进而推断原始数据。分离是在限制用途和部分泄漏影响，不是在承诺“丢一把密钥也没事”。</p>
-            <p data-i18n-html="bess_p85">KMS 可以用于保护和管理密钥，例如通过信封加密保护数据密钥；这不意味着每生成一个片段标签都必须远程调用一次 KMS。应用中的明文密钥生命周期、缓存、权限和审计仍需要单独设计。<sup><a href="#ref-kms">[17]</a></sup></p>
+            <p data-i18n-html="bess_p85">KMS 可以用于保护和管理密钥，例如通过<a href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html" target="_blank" rel="noopener">信封加密</a>保护数据密钥；这不意味着每生成一个片段标签都必须远程调用一次 KMS。应用中的明文密钥生命周期、缓存、权限和审计仍需要单独设计。</p>
             <h3 data-i18n="bess_h9">AAD 认证密文，无法认证整个结果集</h3>
-            <p data-i18n-html="bess_p86">加密时，可以把租户 ID、记录 ID 和字段标识等上下文绑定为 AAD，也就是参与认证但不被加密的附加数据。这样，把某条密文直接换到另一条记录或另一个字段下，通常不能通过原有上下文的认证检查。<sup><a href="#ref-aead">[10]</a></sup><sup><a href="#ref-blind-security">[18]</a></sup></p>
+            <p data-i18n-html="bess_p86">加密时，可以把租户 ID、记录 ID 和字段标识等上下文绑定为 <a href="https://cryptography.io/en/latest/hazmat/primitives/aead/" target="_blank" rel="noopener">AAD</a>，也就是参与认证但不被加密的附加数据。这样，<a href="https://ciphersweet.paragonie.com/security" target="_blank" rel="noopener">把某条密文直接换到另一条记录或另一个字段下</a>，通常不能通过原有上下文的认证检查。</p>
             <p data-i18n="bess_p87">但不要把它扩大解释成“数据库无法作弊”。 数据库仍然可以漏掉某条索引记录，让应用查不到结果；也可能返回同一上下文下以前保存过的合法旧版本。单条密文的认证，不会自动证明整个查询结果是完整、最新的。</p>
             <p data-i18n="bess_p88">如果威胁模型要求抵抗这种恶意服务端行为，就需要额外的完整性、新鲜度或可验证查询设计。本文的标签表加解密核验，并没有提供这些保证。</p>
             <h3 data-i18n="bess_h10">密文和索引必须一起维护</h3>
             <p data-i18n="bess_p89">手机号修改后，旧标签要删除，新标签要生成，密文也要更新。在同一个关系数据库中，可以用事务把它们作为一次一致的变更提交；并发搜索还需要定义读取一致性，避免候选查询和密文读取落在互不相容的版本上。</p>
             <p data-i18n="bess_p90">若索引放在外部搜索引擎，必须处理异步同步、重试、幂等和版本对齐。不能一边接受最终一致性，一边保证“号码刚改完一定能立即搜到”。</p>
             <p data-i18n="bess_p91">搜索密钥轮换同样不能只改配置。新密钥生成的标签与旧标签不同，需要安排双写或其他迁移策略，回填存量数据，覆盖必要版本的查询，再安全移除旧索引。规范化规则变化时也是一样。</p>
-            <p data-i18n-html="bess_p92">还要区分“替换实际的数据或搜索密钥”与“只更换包裹它们的上层密钥”。后者可能只涉及重新包裹，而不需要重算全部搜索标签；前者通常不能省略数据或索引迁移。<sup><a href="#ref-kms">[17]</a></sup></p>
+            <p data-i18n-html="bess_p92">还要区分“替换实际的数据或搜索密钥”与“只更换包裹它们的上层密钥”。后者可能只涉及<a href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html" target="_blank" rel="noopener">重新包裹</a>，而不需要重算全部搜索标签；前者通常不能省略数据或索引迁移。</p>
             <p data-i18n="bess_p93">删除也不止删主表。索引、缓存、搜索引擎副本和备份保留策略，都必须在数据生命周期里有明确安排。</p>
             <h3 data-i18n="bess_h11">搜索接口能成为枚举入口</h3>
             <p data-i18n="bess_p94">数据库看不到搜索词，不代表调用搜索接口的人也看不到。 一个可以无限尝试号码片段、返回完整客户信息、又没有业务范围限制的接口，即使背后全部采用 HMAC，也会成为批量枚举入口。</p>
@@ -340,15 +340,15 @@ B：13801110138
             <p data-i18n-html="bess_p97">假设希望把 <code>Erci</code> 匹配到 <code>Eric</code>，可以在解密后计算编辑距离。但这只解决了“拿到候选以后怎么判断”，没有解决“怎样把它先捞出来”。</p>
             <p data-i18n="bess_p98">前面的子串索引要求查询的全部 n-gram 都出现。对容错匹配，这个条件通常过严；一个字符变化就可能破坏多个片段。</p>
             <p data-i18n-html="bess_p99">把条件改成“至少共享一个片段”也不是完整答案。一个简单反例是 <code>abc</code> 与 <code>axc</code>：它们只相差一次字符替换，但未加边界标记的 2-gram 分别是 <code>{ab, bc}</code> 和 <code>{ax, xc}</code>，没有任何共同片段。</p>
-            <p data-i18n-html="bess_p100">所以，容错方案需要围绕指定的距离函数、长度范围和允许错误数设计召回过滤；短字符串可能需要额外通道，或者在已经受限的授权集合内直接扫描。必须明确是否保证召回完整，再用测试验证。Levenshtein 距离按插入、删除和替换计数；若要把相邻字符交换视为一次错误，还需要选用相应的距离定义。<sup><a href="#ref-pg-fuzzy">[4]</a></sup></p>
+            <p data-i18n-html="bess_p100">所以，容错方案需要围绕指定的距离函数、长度范围和允许错误数设计召回过滤；短字符串可能需要额外通道，或者在已经受限的授权集合内直接扫描。必须明确是否保证召回完整，再用测试验证。<a href="https://www.postgresql.org/docs/18/fuzzystrmatch.html" target="_blank" rel="noopener">Levenshtein 距离</a>按插入、删除和替换计数；若要把相邻字符交换视为一次错误，还需要选用相应的距离定义。</p>
             <p data-i18n="bess_p101">编辑距离可以排除已召回候选中的误报，第一阶段漏掉的记录则需要修改召回条件。</p>
             <h3 data-i18n="bess_h13">Elasticsearch 负责执行标签查询</h3>
             <p data-i18n="bess_p102">当标签数量、查询并发或组合检索需求超过当前关系数据库方案的合适范围，可以评估专门的搜索引擎。</p>
-            <p data-i18n-html="bess_p103">对本文这种标签索引，存入 Elasticsearch 的应是应用已经生成的稳定标签，而不是解密后的原始手机号。通常应把标签当作 <code>keyword</code> 这类精确值处理，而不是交给普通文本分析器再次分词；多个标签的匹配条件，可以用对应的精确集合查询来表达。<sup><a href="#ref-elastic">[19]</a></sup></p>
+            <p data-i18n-html="bess_p103">对本文这种标签索引，存入 Elasticsearch 的应是应用已经生成的稳定标签，而不是解密后的原始手机号。通常应把标签当作 <a href="https://www.elastic.co/docs/reference/elasticsearch/mapping-reference/keyword" target="_blank" rel="noopener"><code>keyword</code></a> 这类精确值处理，而不是交给普通文本分析器再次分词；多个标签的匹配条件，可以用对应的<a href="https://www.elastic.co/docs/reference/query-languages/query-dsl/query-dsl-terms-set-query" target="_blank" rel="noopener">精确集合查询</a>来表达。</p>
             <p data-i18n="bess_p104">但搜索引擎不会因此替我们解决密码学问题。标签频率、记录关联、查询模式和返回规模，仍然需要分析。也不能因为数据到了“千万级”，就自动认定必须迁移：倒排列表长度、租户划分、更新模式和实际负载，比总行数更有判断价值。</p>
             <h3 data-i18n="bess_h14">SSE 要按具体协议评估</h3>
-            <p data-i18n-html="bess_p105">可搜索对称加密，也就是 SSE，是一个研究领域，不是一种固定算法。它研究如何在外包存储的同时支持搜索，并在明确的模型下定义与证明安全性质。<sup><a href="#ref-sse">[20]</a></sup></p>
-            <p data-i18n-html="bess_p106">因此，不能给“自制 HMAC 标签”“SSE”“全同态加密”依次标上三颗、四颗、五颗安全星。具体协议支持什么查询、泄漏什么、怎样更新、信任谁，以及需要多少交互，必须分别讨论。形式化安全也总是相对于具体定义成立，不意味着不存在可利用的泄漏。<sup><a href="#ref-leakage">[14]</a></sup></p>
+            <p data-i18n-html="bess_p105"><a href="https://eprint.iacr.org/2006/210" target="_blank" rel="noopener">可搜索对称加密</a>，也就是 SSE，是一个研究领域，不是一种固定算法。它研究如何在外包存储的同时支持搜索，并在明确的模型下定义与证明安全性质。</p>
+            <p data-i18n-html="bess_p106">因此，不能给“自制 HMAC 标签”“SSE”“全同态加密”依次标上三颗、四颗、五颗安全星。具体协议支持什么查询、泄漏什么、怎样更新、信任谁，以及需要多少交互，必须分别讨论。形式化安全也总是相对于具体定义成立，不意味着不存在<a href="https://eprint.iacr.org/2016/718" target="_blank" rel="noopener">可利用的泄漏</a>。</p>
             <p data-i18n="bess_p107">如果需求还包括隐藏重复查询或访问了哪些记录，就需要重新评估专门协议及其计算、通信和运维成本，而不是给现有标签表再换一个更长的哈希。</p>
         </section>
 
@@ -358,33 +358,12 @@ B：13801110138
             <p data-i18n="bess_p109">任意子串搜索需要更多理由。确认需求不可替代后，才用实际数据分布测候选规模，评估频率、关联和已知输入带来的推断风险。高度敏感、取值空间很小或关联性很强的字段，评估结果可能要求调整客服流程。</p>
             <p data-i18n="bess_p110">随机化认证加密、最小搜索索引、授权范围内召回、解密核验，这几步可以形成一个待评估的设计。密钥隔离、规范化版本、写入一致性和接口限制也要同时成立；只写下“AEAD + HMAC + n-gram”，还不足以交付这套系统。</p>
             <p data-i18n="bess_p111">加密后的数据能支持某些搜索，但索引会留下关系。验收时除了检查密文能否解密、查询能否命中，我还会检查另一件事：拿到数据库的人，能从搜索结构里推断出多少关于客户的信息？</p>
+
+            <p data-i18n-html="bess_p112">本文的起点是阅读《被问懵了，加密后的数据如何进行模糊查询？》后的重新梳理。本文使用独立推导的标签结构、SQL 和反例，不沿用原文的算法选择与性能估算。写作缘起：<a href="https://mp.weixin.qq.com/s/YHrq4fxoRkjtQyMXtmvuKw" target="_blank" rel="noopener">原文链接</a>。</p>
+            <p data-i18n="bess_p113">示例数字串为教学用途；候选规模估算不是生产基准测试。本文给出的是架构分析与最小示例，不代表任何具体部署已经通过密码学安全审计。</p>
         </section>
 
-        <section class="detail-section reveal" id="references">
-            <h2 data-i18n="bess_s12">参考资料与说明</h2>
-            <p data-i18n-html="bess_p112">本文的起点是阅读《被问懵了，加密后的数据如何进行模糊查询？》后的重新梳理。本文使用独立推导的标签结构、SQL 和反例，不沿用原文的算法选择与性能估算。写作缘起：<a href="https://mp.weixin.qq.com/s/YHrq4fxoRkjtQyMXtmvuKw" target="_blank" rel="noopener">原文链接</a>。</p>
-            <p data-i18n="bess_p113">下面列出用于核对技术概念的一手资料。示例数字串为教学用途；候选规模估算不是生产基准测试。本文给出的是架构分析与最小示例，不代表任何具体部署已经通过密码学安全审计。</p>
-            <p id="ref-blind" data-i18n-html="bess_p114">[1] Paragon Initiative Enterprises, <a href="https://ciphersweet.paragonie.com/internals/blind-index" target="_blank" rel="noopener">Blind Indexing</a>。说明盲索引的带密钥构造、快慢模式及输出截断；本文不声称 n-gram 方案就是 CipherSweet 的现成全文搜索功能。</p>
-            <p id="ref-aws" data-i18n-html="bess_p115">[2] AWS, <a href="https://docs.aws.amazon.com/database-encryption-sdk/latest/devguide/searchable-encryption.html" target="_blank" rel="noopener">Searchable encryption — AWS Database Encryption SDK</a>。说明 HMAC beacon、候选过滤，以及数据分布和相关字段带来的风险。</p>
-            <p id="ref-storage" data-i18n-html="bess_p116">[3] OWASP, <a href="https://cheatsheetseries.owasp.org/cheatsheets/Cryptographic_Storage_Cheat_Sheet.html" target="_blank" rel="noopener">Cryptographic Storage Cheat Sheet</a>。关于威胁模型、加密层次、认证加密和密钥存储的工程指导。</p>
-            <p id="ref-pg-fuzzy" data-i18n-html="bess_p117">[4] PostgreSQL 18, <a href="https://www.postgresql.org/docs/18/fuzzystrmatch.html" target="_blank" rel="noopener">fuzzystrmatch</a>。说明字符串距离及 Levenshtein 匹配；本文的零共同片段反例为直接构造。</p>
-            <p id="ref-pg-index" data-i18n-html="bess_p118">[5] PostgreSQL 18, <a href="https://www.postgresql.org/docs/18/indexes-types.html" target="_blank" rel="noopener">Index Types</a>。说明 B-tree 的适用查询及倒排索引概念。</p>
-            <p id="ref-pg-expr" data-i18n-html="bess_p119">[6] PostgreSQL 18, <a href="https://www.postgresql.org/docs/18/indexes-expressional.html" target="_blank" rel="noopener">Indexes on Expressions</a>。函数或表达式不意味着绝对无法索引。</p>
-            <p id="ref-pg-trgm" data-i18n-html="bess_p120">[7] PostgreSQL 18, <a href="https://www.postgresql.org/docs/18/pgtrgm.html" target="_blank" rel="noopener">pg_trgm</a>。说明 trigram 索引对相似性、LIKE 和 ILIKE 等查询的支持与限制。</p>
-            <p id="ref-gcm" data-i18n-html="bess_p121">[8] NIST, <a href="https://csrc.nist.gov/pubs/sp/800/38/d/final" target="_blank" rel="noopener">SP 800-38D: Recommendation for Block Cipher Modes of Operation: Galois/Counter Mode (GCM) and GMAC</a>。GCM 的认证加密定义及使用要求。</p>
-            <p id="ref-chacha" data-i18n-html="bess_p122">[9] IETF, <a href="https://www.rfc-editor.org/rfc/rfc8439" target="_blank" rel="noopener">RFC 8439: ChaCha20 and Poly1305 for IETF Protocols</a>。标准化的 ChaCha20-Poly1305 AEAD 构造。</p>
-            <p id="ref-aead" data-i18n-html="bess_p123">[10] Python Cryptographic Authority, <a href="https://cryptography.io/en/latest/hazmat/primitives/aead/" target="_blank" rel="noopener">Authenticated encryption</a>。用于核对 nonce 不复用、AAD、认证标签与认证失败行为。</p>
-            <p id="ref-hmac" data-i18n-html="bess_p124">[11] IETF, <a href="https://www.rfc-editor.org/rfc/rfc2104" target="_blank" rel="noopener">RFC 2104: HMAC: Keyed-Hashing for Message Authentication</a>。HMAC 的带密钥构造。本文使用 SHA-256，而非照搬早期文档中的旧哈希示例。</p>
-            <p id="ref-pg-prepare" data-i18n-html="bess_p125">[12] PostgreSQL 18, <a href="https://www.postgresql.org/docs/18/sql-prepare.html" target="_blank" rel="noopener">PREPARE</a>。预备语句与参数的语法。</p>
-            <p id="ref-pg-array" data-i18n-html="bess_p126">[13] PostgreSQL 18, <a href="https://www.postgresql.org/docs/18/functions-array.html" target="_blank" rel="noopener">Array Functions and Operators</a>。用于核对 <code>cardinality</code>；标签数组的去重和输入校验属于本文的调用约束。</p>
-            <p id="ref-leakage" data-i18n-html="bess_p127">[14] David Cash, Paul Grubbs, Jason Perry and Thomas Ristenpart, <a href="https://eprint.iacr.org/2016/718" target="_blank" rel="noopener">Leakage-Abuse Attacks Against Searchable Encryption</a>。发表于 CCS 2015；链接指向作者后续修订的 ePrint 版本。研究分析了不同泄漏及先验知识条件下的查询和明文恢复攻击。</p>
-            <p id="ref-beacon-length" data-i18n-html="bess_p128">[15] AWS, <a href="https://docs.aws.amazon.com/database-encryption-sdk/latest/devguide/choosing-beacon-length.html" target="_blank" rel="noopener">Choosing a beacon length and partitions</a>。用于理解输出长度、误报与泄漏之间的权衡；并非本文标签表的直接配置指南。</p>
-            <p id="ref-hkdf" data-i18n-html="bess_p129">[16] IETF, <a href="https://www.rfc-editor.org/rfc/rfc5869" target="_blank" rel="noopener">RFC 5869: HMAC-based Extract-and-Expand Key Derivation Function</a>，特别是第 3.2 节关于 <code>info</code> 绑定上下文的说明。</p>
-            <p id="ref-kms" data-i18n-html="bess_p130">[17] AWS, <a href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html" target="_blank" rel="noopener">AWS KMS keys / Envelope encryption / Data keys</a>。用于核对信封加密、上层密钥与数据密钥的关系。</p>
-            <p id="ref-blind-security" data-i18n-html="bess_p131">[18] Paragon Initiative Enterprises, <a href="https://ciphersweet.paragonie.com/security" target="_blank" rel="noopener">Security Properties and Threat Model</a>。关于数据库与应用的信任边界、主键绑定 AAD，以及盲索引信息泄漏。</p>
-            <p id="ref-elastic" data-i18n-html="bess_p132">[19] Elastic, <a href="https://www.elastic.co/docs/reference/elasticsearch/mapping-reference/keyword" target="_blank" rel="noopener">Keyword type family</a>；<a href="https://www.elastic.co/docs/reference/query-languages/query-dsl/query-dsl-terms-set-query" target="_blank" rel="noopener">Terms set query</a>。用于核对精确标签的映射及集合匹配行为。</p>
-            <p id="ref-sse" data-i18n-html="bess_p133">[20] Reza Curtmola, Juan Garay, Seny Kamara and Rafail Ostrovsky, <a href="https://eprint.iacr.org/2006/210" target="_blank" rel="noopener">Searchable Symmetric Encryption: Improved Definitions and Efficient Constructions</a>。SSE 的安全定义与构造研究。</p>
-        </section>
+
     </article>
 
     <!-- RELATED POSTS:START -->
@@ -392,6 +371,12 @@ B：13801110138
         <div class="related-posts-kicker" data-i18n="related_posts_kicker">RELATED</div>
         <h2 id="relatedPostsTitle" data-i18n="related_posts_title">相关文章</h2>
         <div class="related-posts-grid">
+            <a href="data-center-grid-protection.html" class="related-post-card" data-hover>
+                <span class="related-post-tag" data-i18n="blog_tag_architecture">系统架构</span>
+                <h3 data-i18n="blog_card39_title">当每个系统都在自保：3.8 GW 负载退出之后</h3>
+                <p data-i18n="blog_card39_desc">从北弗吉尼亚 3.8 GW 负载转移，讨论 UPS 控制、重试风暴、故障穿越与 AI 集群功率整形：各自保护自己之后，系统会怎样？</p>
+                <span class="related-post-more" data-i18n="related_posts_more">继续阅读</span>
+            </a>
             <a href="mac-personal-ai-runtime.html" class="related-post-card" data-hover>
                 <span class="related-post-tag" data-i18n="blog_tag_architecture">系统架构</span>
                 <h3 data-i18n="blog_card34_title">Mac 正在成为个人 AI 应用的理想运行时</h3>
@@ -402,12 +387,6 @@ B：13801110138
                 <span class="related-post-tag" data-i18n="blog_tag_architecture">系统架构</span>
                 <h3 data-i18n="blog_card20_title">如果没有数据库，系统如何设计？</h3>
                 <p data-i18n="blog_card20_desc">不是否定数据库，而是把系统设计的起点从表结构拉回业务事实、状态规则、查询视图和一致性协议。</p>
-                <span class="related-post-more" data-i18n="related_posts_more">继续阅读</span>
-            </a>
-            <a href="technical-debt-org-game.html" class="related-post-card" data-hover>
-                <span class="related-post-tag" data-i18n="blog_tag_architecture">系统架构</span>
-                <h3 data-i18n="blog_card19_title">技术债不是代码坏味道，而是组织对未来的定价</h3>
-                <p data-i18n="blog_card19_desc">技术债表现为代码和架构问题，但根源往往来自组织对时间、成本、风险和未来维护能力的连续选择。</p>
                 <span class="related-post-more" data-i18n="related_posts_more">继续阅读</span>
             </a>
         </div>
@@ -427,7 +406,7 @@ B：13801110138
         <div class="detail-toc-item" data-target="operations" data-label="写入一致性、密钥轮换和接口权限"></div>
         <div class="detail-toc-item" data-target="extensions" data-label="子串索引之外，还有哪些需求没解决"></div>
         <div class="detail-toc-item" data-target="choice" data-label="回到客服后台，该提供哪种搜索"></div>
-        <div class="detail-toc-item" data-target="references" data-label="参考资料与说明"></div>
+
     </div>
 
     <footer class="detail-footer">

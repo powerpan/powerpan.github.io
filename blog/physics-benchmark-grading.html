@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>当考卷本身有错：我们在测量 AI 的什么？ — Eric</title>
+    <!-- SEO:START -->
+    <meta name="description" content="从等价公式被判零分到修订题库后的涨分，拆开评分错误、任务变化、重复尝试和测试契约，讨论 AI 评测怎样保留可比较的证据。">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://erichz.site/blog/physics-benchmark-grading">
+    <link rel="alternate" type="application/rss+xml" title="Eric Blog RSS" href="https://erichz.site/feed.xml">
+    <meta property="og:site_name" content="Eric">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="当考卷本身有错：我们在测量 AI 的什么？ — Eric">
+    <meta property="og:description" content="从等价公式被判零分到修订题库后的涨分，拆开评分错误、任务变化、重复尝试和测试契约，讨论 AI 评测怎样保留可比较的证据。">
+    <meta property="og:url" content="https://erichz.site/blog/physics-benchmark-grading">
+    <meta property="og:image" content="https://erichz.site/assets/og-default.svg">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="当考卷本身有错：我们在测量 AI 的什么？ — Eric">
+    <meta name="twitter:description" content="从等价公式被判零分到修订题库后的涨分，拆开评分错误、任务变化、重复尝试和测试契约，讨论 AI 评测怎样保留可比较的证据。">
+    <meta name="twitter:image" content="https://erichz.site/assets/og-default.svg">
+    <meta property="article:published_time" content="2026-10-08">
+    <meta property="article:modified_time" content="2026-10-08">
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "当考卷本身有错：我们在测量 AI 的什么？",
+  "description": "从等价公式被判零分到修订题库后的涨分，拆开评分错误、任务变化、重复尝试和测试契约，讨论 AI 评测怎样保留可比较的证据。",
+  "url": "https://erichz.site/blog/physics-benchmark-grading",
+  "mainEntityOfPage": "https://erichz.site/blog/physics-benchmark-grading",
+  "datePublished": "2026-10-08",
+  "dateModified": "2026-10-08",
+  "author": {
+    "@type": "Person",
+    "name": "Eric Pan",
+    "url": "https://erichz.site",
+    "sameAs": [
+      "https://github.com/powerpan"
+    ]
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "Eric Pan",
+    "url": "https://erichz.site",
+    "sameAs": [
+      "https://github.com/powerpan"
+    ]
+  },
+  "image": "https://erichz.site/assets/og-default.svg",
+  "articleSection": "AI 工程",
+  "keywords": [
+    "AI 工程",
+    "ai"
+  ],
+  "inLanguage": "zh-CN"
+}
+    </script>
+    <!-- SEO:END -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/detail.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+    <style>
+        .physics-benchmark-article .blog-article-body p, .physics-benchmark-article .blog-article-body h2 { overflow-wrap: anywhere; }
+        .physics-benchmark-article .blog-article-body pre code { background: none; padding: 0; font-size: inherit; }
+        .physics-benchmark-article .article-table-scroll { overflow-x: auto; margin: 24px 0; }
+        .physics-benchmark-article table { width: 100%; min-width: 480px; border-collapse: collapse; font-size: 0.82rem; line-height: 1.6; }
+        .physics-benchmark-article th, .physics-benchmark-article td { padding: 12px; border-bottom: 1px solid rgba(var(--accent-rgb), 0.18); text-align: left; }
+        .physics-benchmark-article th { color: var(--text-primary); font-weight: 600; }
+        .physics-benchmark-article td { color: var(--text-secondary); }
+        .physics-benchmark-article .article-table-scroll:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+        @media (max-width: 480px) {
+            .physics-benchmark-article .blog-article-title { font-size: 28px; line-height: 1.2; }
+        }
+    </style>
+</head>
+<body class="physics-benchmark-article">
+    <div class="detail-scroll-progress" id="detailScrollProgress"></div>
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor-dot" id="cursorDot"></div>
+    <canvas id="particleCanvas"></canvas>
+
+    <nav id="nav">
+        <a href="../index.html" class="nav-logo magnetic" data-hover>ERIC<span class="dot">.</span></a>
+        <ul class="nav-center">
+            <li><a href="../index.html#about" data-hover data-i18n="nav_about">// 关于</a></li>
+            <li><a href="../index.html#projects" data-hover data-i18n="nav_projects">// 项目</a></li>
+            <li><a href="../index.html#blog" data-hover data-i18n="nav_blog">// 博客</a></li>
+            <li><a href="../index.html#contact" data-hover data-i18n="nav_contact">// 联系</a></li>
+        </ul>
+        <div class="nav-status"><span class="status-dot"></span>Open to work</div>
+        <button class="nav-hamburger" id="navHamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+    </nav>
+    <div class="mobile-nav" id="mobileNav">
+        <button class="mobile-nav-close" id="mobileNavClose" aria-label="Close menu">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+        <ul class="mobile-nav-links">
+            <li><a href="../index.html#about" data-i18n="nav_about">// 关于</a></li>
+            <li><a href="../index.html#projects" data-i18n="nav_projects">// 项目</a></li>
+            <li><a href="../index.html#blog" data-i18n="nav_blog">// 博客</a></li>
+            <li><a href="../index.html#contact" data-i18n="nav_contact">// 联系</a></li>
+            <li><button class="mobile-lang-btn" id="mobileLangBtn" onclick="toggleLang()" data-i18n="nav_lang">中 / EN</button></li>
+        </ul>
+    </div>
+
+    <section class="blog-article-hero">
+        <div class="detail-hero-bg"></div>
+        <a href="../index.html#blog" class="detail-back" data-hover>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            <span data-i18n="detail_back_blog">返回博客</span>
+        </a>
+        <div class="blog-article-tag reveal" data-i18n="blog_tag_ai">AI 工程</div>
+        <h1 class="blog-article-title reveal reveal-d1" data-i18n-html="bpbg_title">当考卷本身有错：<span class="hl">我们在测量 AI 的什么？</span></h1>
+        <div class="blog-article-meta reveal reveal-d2">
+            <span>📅 2026.10</span>
+            <span>⏱️ 16 min</span>
+            <span>👤 Eric Pan</span>
+        </div>
+        <p class="detail-subtitle reveal reveal-d3" data-i18n="bpbg_sub">等价公式拿了零分，修订题库后成绩大涨。先看清考卷和判卷过程，再判断模型究竟进步了多少。</p>
+    </section>
+
+    <article class="blog-article-body">
+        <section class="detail-section reveal" id="intro">
+            <p data-i18n="bpbg_p1">PHYBench 有一道绳索张力题，模型和参考答案给出了看起来不一样的式子。用普通的分母有理化，就能把它们写成同一个结果：</p>
+            <pre><code class="language-text" data-i18n="bpbg_l1">T = P / (3 * sqrt(6))
+  = P * sqrt(6) / (3 * 6)
+  = sqrt(6) * P / 18
+</code></pre>
+            <p data-i18n-html="bpbg_p2">但它的 Expression Edit Distance（EED）评分器给了零分，二元判定也是错误。这不是我编造的反例，而是 <a href="https://arxiv.org/html/2609.13009v1" target="_blank" rel="noopener">2026 年 9 月 11 日的物理评测审计论文</a>图 3 记录的案例。模型给出了等价答案，测量系统没有认出来。</p>
+            <p data-i18n="bpbg_p3">这篇《How Good Are Frontier Models at Physics?》由耶鲁大学等机构的研究者完成，审查了 UGPhysics、PHYBench、PRISM-Physics、HLE-Physics、CMT-Benchmark 和 CritPt 六套测试，范围是文字形式、具有可验证最终答案的封闭式物理题。修复后，一些成绩大幅上涨：GPT-5.6-Sol 在 CMT 的 mean@4 从 61.00% 升到 87.24%，在 HLE-Physics 从 47.28% 升到 78.66%。</p>
+            <p data-i18n="bpbg_p4">如果只转发这两组数字，很容易把故事写成“AI 已经很会物理，是考卷拖了后腿”。我更想弄清楚的是：哪一部分是原来判错了，哪一部分是题目改了，哪一部分是比较口径变了？这些区分会决定高分究竟能支持多大的结论。</p>
+        </section>
+
+        <section class="detail-section reveal" id="audit-denominator">
+            <h2 data-i18n="bpbg_s1">95.2% 的分母，是被判错的回答</h2>
+            <p data-i18n="bpbg_p5">专家把审计案例分为模型错误、评分器错误和题库错误。第一类是题目与参考解都没问题，模型确实答错；第二类是模型答对，评分器拒绝；第三类则包括参考解错误、条件缺失或题目歧义。材料本身有问题时，论文优先把案例归入题库错误，而不是继续当作一场正常考试来判模型。</p>
+            <p data-i18n="bpbg_p6">四套合并审计里，250 个被拒绝后送审的案例，裁决后有 143 个题库错误、95 个评分器错误、12 个模型错误。因此，95.2% 说的是这批拒绝案例中前两类的占比，不是模型的物理正确率，也不是整个题库 95.2% 有错。CMT 与 CritPt 的审计覆盖方式不同，不包含在这个合并计数里。</p>
+            <p data-i18n="bpbg_p7">这不是一个可以省掉的统计注脚。审计本来就在寻找“为何判失败”，自然更容易遇到误拒绝。它足以说明这些失败记录不能直接归因于模型，却没有通过随机检查全部题目，给出整个测量系统的完整误差率。</p>
+            <p data-i18n-html="bpbg_p8">而且，题库错误未必只是计算粗心。论文图 4 中，CritPt 的 Kitaev 蜂窝模型题要求计算基态能量，却没有明确哈密顿量采用泡利矩阵还是自旋算符。对自旋为 1/2 的系统，采用 <code>S = σ/2</code> 后，两体乘积会带来四倍的系数差异。修订题补上了哈密顿量和约定；不能用某位研究者习惯的约定，代替题面没写出来的条件。</p>
+            <p data-i18n="bpbg_p9">我觉得这比“评分器不够聪明”更值得警惕。如果题目允许不止一种解释，换一个更强的 LLM 裁判也未必能补出唯一正确答案。先判断问题是否可判，再判断模型回答是否正确，是两道不同的工作。</p>
+        </section>
+
+        <section class="detail-section reveal" id="repaired-tasks">
+            <h2 data-i18n="bpbg_s2">61 分变成 87 分，不只发生了重新判卷</h2>
+            <p data-i18n="bpbg_p10">CMT 原有 50 道题，专家发现 30 道材料有问题，修复 29 道、删掉一道，最终保留 49 道。HLE-Physics 从排除多模态后的 202 道文字题，剔除 86 道题库错误，留下 116 道。下面的数值来自论文表 1，对应 GPT-5.6-Sol High，在相应工具条件下的 mean@4。</p>
+            <div class="article-table-scroll" tabindex="0" role="region" aria-labelledby="bpbg_table_heading"><table>
+<thead id="bpbg_table_heading">
+<tr>
+<th data-i18n="bpbg_t1" scope="col">评测</th>
+<th data-i18n="bpbg_t2" scope="col">原题数 → 保留题数</th>
+<th data-i18n="bpbg_t3" scope="col">修订前 → 修订后</th>
+</tr>
+</thead>
+<tbody><tr>
+<td data-i18n="bpbg_t4">CMT-Benchmark</td>
+<td data-i18n="bpbg_t5">50 → 49</td>
+<td data-i18n="bpbg_t6">61.00% → 87.24%</td>
+</tr>
+<tr>
+<td data-i18n="bpbg_t7">HLE-Physics</td>
+<td data-i18n="bpbg_t8">202 → 116</td>
+<td data-i18n="bpbg_t9">47.28% → 78.66%</td>
+</tr>
+</tbody></table></div>
+            <p data-i18n="bpbg_p11">有一个细节值得单独纠正：CMT 没有公开的原生评分器，这项研究在修订前后都使用同一个 HLE-adapted evaluator。论文第 3.2.2 节明确把变化归于评测材料修复。不能一看到新成绩就假定换了评分程序，也不能把 CMT 的涨幅全部算成“找回被误判的正确回答”。</p>
+            <p data-i18n="bpbg_p12">固定原题与模型输出，只改变评分，测的是判卷误差；修正参考解，改变的是判定依据；补充题目条件后重新作答，改变的是任务；删掉题目，还会改变分母和难度构成。每种操作都有正当用途，但不是同一场测量。</p>
+            <p data-i18n="bpbg_p13">尤其是 HLE。剔除无效题是必要的，可审计集中在模型被拒绝的回答，删除与原先的失败记录有关。保留题集未必仍代表原题集的难度分布。这个提醒不是要求留下坏题，而是要求同时报告哪些题被删、为什么删，以及新成绩针对哪一组任务。</p>
+            <p data-i18n="bpbg_p14">修订后的结果，可以比旧结果更有解释力，却不一定与旧分数处在同一把尺子上。我会希望报告同时保留“固定输出重评分”和“修订任务重新评测”两个实验，而不是用一个新百分比覆盖旧记录。若多个因素相互作用，也不能随意把贡献相加。</p>
+        </section>
+
+        <section class="detail-section reveal" id="attempt-metrics">
+            <h2 data-i18n="bpbg_s3">四次里答对一次，不是一次就答对</h2>
+            <p data-i18n="bpbg_p15">修复后的 CMT 中，GPT-5.6-Sol High 的 mean@4 为 87.24%，pass@4 为 97.96%。前者对每题四次尝试的正确情况取平均，后者只问四次里是否至少成功一次。</p>
+            <p data-i18n="bpbg_p16">这两个数并不矛盾，但 pass@4 更接近一种有事后判定的覆盖能力。假设四个答案里只有一个正确，三个错误，用户仍然需要辨认哪一个可信。这个指标没有自动提供一个能挑出正确答案的选择器，不能写成“用户问一次，正确概率接近 98%”。</p>
+            <p data-i18n="bpbg_p17">样本量也会限制结论。49 道题的 pass@4，每一道题约占 2.04 个百分点。只差一两题的排名，首先值得看逐题差异和不确定性，而不是宣布显著的能力鸿沟。同一道题生成四个回答，也不能直接当成四道独立题来扩大统计样本。</p>
+            <p data-i18n="bpbg_p18">这让我区分三件事：测量是否可重复，是否反映目标能力，以及不同版本能否比较。每次都稳定地拒绝一个等价公式，是可重复的错误，不是有效测量。题目再好，如果工具权限、推理预算或评分版本不停变化，历史分数也未必可比。</p>
+            <p data-i18n-html="bpbg_p19">Bowman 和 Dahl 在 <a href="https://aclanthology.org/2021.naacl-main.385/" target="_blank" rel="noopener">2021 年的评测方法论文</a>里就讨论了题集设计、标注可靠性与规模等限制。模型解决的有效题越多，剩余失分越可能受到少量测量缺陷支配。接近饱和有时意味着题集不再能区分前沿模型，而不是模型已经没有短板。</p>
+        </section>
+
+        <section class="detail-section reveal" id="expert-audit">
+            <h2 data-i18n="bpbg_s4">专家也有分歧，错误还可能偏向另一边</h2>
+            <p data-i18n="bpbg_p20">引入专家，不等于获得了无误差的裁判。物理论文有 196 个案例由两人审查，初始一致 140 个，分歧 56 个，后来由第三次审查裁决；另有 54 个案例只收到一次审查。71.43% 是双人案例的初始一致率，既不是最终正确率，也不能反过来说剩下 28.57% 的结论全错。</p>
+            <p data-i18n="bpbg_p21">在边界条件和学科惯例之间划线，本来就需要判断。题目没写的假设，是足够明确的领域默认，还是会改变答案的缺失条件？审查者还看到了模型输出和 AI 生成的初步分析，理解可能受这些信息影响。这是方法上需要控制的风险，不是指控专家有意偏袒模型。</p>
+            <p data-i18n="bpbg_p22">我会尽量把题目有效性检查放在看模型输出之前，并保留争议理由。还要抽查被判正确的回答：只检查失败，更容易发现假阴性，也就是正确答案被拒绝；错误答案被接受的假阳性，同样会扭曲分数，而且方向相反。</p>
+            <p data-i18n-html="bpbg_p23">Epoch AI 在<a href="https://epoch.ai/benchmarks/hle/review" target="_blank" rel="noopener">2026 年 8 月的原版 HLE 审查</a>里，从八个类别各随机取六题，共 48 题，确认 22 题有实质缺陷：12 题按题面无法明确作答，另外 10 题可能误拒绝正确答案，其中五题还可能接受错误答案。这是等额分层抽样的审查结果，不是整个 HLE 的精确缺陷率，更不是 HLE-Rolling 或 HLE-Verified 的结果。</p>
+            <p data-i18n="bpbg_p24">这些证据支持修复评分，却不支持预设“修好以后分数应该只涨不跌”。扩大等价答案的接受范围时，也要同时检查误接受是否增加。两边都审，才知道修复是不是把一种误差换成了另一种。</p>
+        </section>
+
+        <section class="detail-section reveal" id="coding-tests">
+            <h2 data-i18n="bpbg_s5">测试认定了函数名，需求却没有</h2>
+            <p data-i18n-html="bpbg_p25">编程评测也会遇到同样的错位。OpenAI 的 <a href="https://openai.com/index/why-we-no-longer-evaluate-swe-bench-verified/" target="_blank" rel="noopener">SWE-bench Verified 审查</a>选了 138 个 o3 在多次运行中未能稳定解决的任务，发现其中 59.4% 有实质性的测试或描述问题。这是 500 题中的难题子集，不是全题库随机样本。</p>
+            <p data-i18n-html="bpbg_p26">一个 Pylint 任务尤其具体：测试直接导入新函数 <code>get_annotation</code>，但问题描述没有要求这个名字。补丁即使通过另一种内部实现满足需求，也可能在收集测试时因为导入失败被拒绝。此时测试把参考补丁的实现细节，写成了需求之外的条件。</p>
+            <p data-i18n="bpbg_p27">物理题要求结果正确，不该要求分母必须按某一种形式写；软件需求规定行为，也不该悄悄要求内部辅助函数必须叫某个名字。当然，如果接口名本来就是公开协议，测试它完全合理。要检查的是这项约束有没有出现在任务要求里，而不是一概禁止测试实现细节。</p>
+            <p data-i18n="bpbg_p28">还有相反的风险。公开问题、修复补丁和讨论可能进入训练数据。OpenAI 报告，在部分任务上，被测试的前沿模型能复现人工参考补丁或题面细节。这些观察支持污染担忧，却不能直接量化每个分数有多少来自记忆。</p>
+            <p data-i18n="bpbg_p29">正确判卷只能证明该回答满足该任务的规则，不能顺便证明模型从未见过题目。评测长期公开、用于训练反馈和模型选择后，成绩也可能更好地反映对这套测试的适应。修复假阴性与排查污染，是两件需要分别做的事。</p>
+        </section>
+
+        <section class="detail-section reveal" id="benchmark-versions">
+            <h2 data-i18n="bpbg_s6">换新题以后，旧分数怎么比较</h2>
+            <p data-i18n-html="bpbg_p30"><a href="https://github.com/LiveBench/LiveBench" target="_blank" rel="noopener">LiveBench</a>持续引入新材料，并强调可验证的客观答案；<a href="https://livecodebench.github.io/" target="_blank" rel="noopener">LiveCodeBench</a>持续收集竞赛题，用时间范围组织评测。这些办法能降低旧题长期暴露带来的风险，但“新”不自动等于“同样难”。</p>
+            <p data-i18n="bpbg_p31">如果今年模型 A 在一组题上得 80 分，明年模型 B 在另一组题上得 85 分，涨了五分并不能单独证明 B 更强。子领域比例、题目难度和测试设置都可能变了。比较新旧模型，至少应尽量在同一个冻结版本、同一预算和工具条件下重跑，而不是把不同年份的榜单数字接成能力曲线。</p>
+            <p data-i18n="bpbg_p32">我倾向于保留两个用途不同的集合：稳定且经过验证的题，用来观察回归和配置差异；持续更新、控制暴露时间的新题，用来检查对新任务的表现。已经饱和的旧题仍能检测退化，只是不适合再用来细排最强模型。</p>
+            <p data-i18n="bpbg_p33">跨版本要校准，也得解释方法和假设。共同题若已被广泛记忆或接近全对，很难继续当作有效锚点。不是加上几个锚题就获得了天然可比性；数据污染、工具配置和题型覆盖仍然需要单独检查。</p>
+        </section>
+
+        <section class="detail-section reveal" id="grader-regressions">
+            <h2 data-i18n="bpbg_s7">把评分器当作软件来维护</h2>
+            <p data-i18n="bpbg_p34">落到工程上，我希望 Benchmark 不只保存一个数据集和最终排行榜，还保存产生分数的过程。题目、参考解、评分器、提示词、模型版本、推理预算与工具权限，都应能追溯。题目补一句条件，也要记录它是否改变了正确答案集合，而不是悄悄覆盖。</p>
+            <p data-i18n="bpbg_p35">生成回答与评分应分离。先保存原始输出和运行配置，评分器修复后就能对同一输出重评；题面改变则另开一次实验。这样才能区别模型进步与测量变化，也方便解释某次排名为何翻转。</p>
+            <p data-i18n="bpbg_p36">评分器还需要自己的回归样本。对公式，加入代数等价的正例，也加入近似但不等价、单位错误、遗漏条件的负例。分层使用符号计算、数值核验和专家判断；不能只围绕已经见过的误拒绝放宽规则。</p>
+            <p data-i18n-html="bpbg_p37">数值代入尤其容易被用过头。有限几个点碰巧相等，不证明恒等；表达式的定义域、奇点和平方根分支都可能影响等价性。比如 <code>sqrt(x*x) = x</code> 只在额外条件下成立，对实数的一般表达应是 <code>abs(x)</code>。符号化简同样要携带假设，不能拿一个看起来合理的化简结果代替物理约束。</p>
+            <p data-i18n="bpbg_p38">报告最后可以保留几组并列结果：原题原评分、固定输出校正评分、修订任务重新评测。每组列出题目数、模型与配置、审计范围，以及按题目组织的不确定性。它没有一个总准确率那么简洁，但读者至少能知道自己比较的是哪一次实验。</p>
+        </section>
+
+        <section class="detail-section reveal" id="research-boundary">
+            <h2 data-i18n="bpbg_s8">做题与做研究，先分开评价</h2>
+            <p data-i18n="bpbg_p39">这次审计提供了值得认真对待的证据：在明确条件、可验证最终答案的文字物理问题上，一些前沿模型被旧流程低估了。不能为了维护“AI 不懂物理”的直觉，把这些修复后的结果一笔抹掉。</p>
+            <p data-i18n="bpbg_p40">但物理题通常已经替解题者确定了研究对象、条件和要找的量。开放研究还要决定什么值得问、采用哪种表示、怎样区分解释、怎样根据证据修改假设。把封闭题的分数直接读成独立研究能力，会跳过这段差别。</p>
+            <p data-i18n-html="bpbg_p41">论文作者 John Sous 在后续<a href="https://jsous.github.io/blogs/is-physics-dead/" target="_blank" rel="noopener">《Is Physics Dead?》</a>中描述过对开放理论物理问题的初步 Agent 尝试，当时尚未自主完整解决其中任何一道。他说明这些结果不在论文里。它们不是严格的能力上限测试，也不能证明 AI 做不了研究；更合适的用法，是提醒我们把开放研究能力另外定义、另外评估。</p>
+            <p data-i18n="bpbg_p42">更难的题也不自动更有效。开放任务如果只让另一个模型给出模糊的“很有洞见”，同样可能失去复核依据。需要保存推导、验证过程、可检验的预测和人类评审理由，才能讨论研究进展，而不只是换一种打分语言。</p>
+            <p data-i18n="bpbg_p43">所以，看完这篇论文，我不会把旧分数当成模型能力的定论，也不会把新分数当成“物理已被解决”。先读题集版本、工具条件、尝试次数和审计范围，再读那个百分比。分数仍然有用，但它得连同产生它的实验一起被理解。</p>
+
+            <p data-i18n="bpbg_p44">本文依据截至 2026 年 10 月 8 日查阅的一手材料编辑。物理审计数字以 arXiv:2609.13009v1 为准；Epoch 与 OpenAI 的审查对象、抽样方式不同，不能合并计算全行业缺陷率。文中的回归测试和报告方案是作者的工程建议，没有声称已复现这些研究。</p>
+        </section>
+
+
+    </article>
+
+    <!-- RELATED POSTS:START -->
+    <section class="related-posts reveal" aria-labelledby="relatedPostsTitle">
+        <div class="related-posts-kicker" data-i18n="related_posts_kicker">RELATED</div>
+        <h2 id="relatedPostsTitle" data-i18n="related_posts_title">相关文章</h2>
+        <div class="related-posts-grid">
+            <a href="ai-engineering-boundaries.html" class="related-post-card" data-hover>
+                <span class="related-post-tag" data-i18n="blog_tag_ai">AI 工程</span>
+                <h3 data-i18n="blog_card27_title">AI 工程的核心不是让模型万能，而是定义边界</h3>
+                <p data-i18n="blog_card27_desc">成熟的 AI 工程不是把模型包装成万能助手，而是把模型放进边界清晰、责任明确、风险可控的系统里。</p>
+                <span class="related-post-more" data-i18n="related_posts_more">继续阅读</span>
+            </a>
+            <a href="enterprise-ai-data-readiness.html" class="related-post-card" data-hover>
+                <span class="related-post-tag" data-i18n="blog_tag_ai">AI 工程</span>
+                <h3 data-i18n="blog_card26_title">企业 AI 本地部署，第一步不是买 GPU，而是先洗数据</h3>
+                <p data-i18n="blog_card26_desc">企业 AI 真正的起点不是模型和算力，而是内部数据是否具备可检索、可引用、可追溯和可回答的知识质量。</p>
+                <span class="related-post-more" data-i18n="related_posts_more">继续阅读</span>
+            </a>
+            <a href="code-review-debt.html" class="related-post-card" data-hover>
+                <span class="related-post-tag" data-i18n="blog_tag_ai">AI 工程</span>
+                <h3 data-i18n="blog_card12_title">AI 编程时代的代码审查债务：为什么写得更快，反而更容易失控</h3>
+                <p data-i18n="blog_card12_desc">AI coding 工具放大了代码生成速度，也放大了团队的审查压力。真正稀缺的不再是提交量，而是稳定理解和验证这些改动的能力。</p>
+                <span class="related-post-more" data-i18n="related_posts_more">继续阅读</span>
+            </a>
+        </div>
+    </section>
+    <!-- RELATED POSTS:END -->
+
+
+    <div class="detail-toc" id="detailToc">
+        <div class="detail-toc-item" data-target="audit-denominator" data-label="95.2% 的分母，是被判错的回答"></div>
+        <div class="detail-toc-item" data-target="repaired-tasks" data-label="61 分变成 87 分，不只发生了重新判卷"></div>
+        <div class="detail-toc-item" data-target="attempt-metrics" data-label="四次里答对一次，不是一次就答对"></div>
+        <div class="detail-toc-item" data-target="expert-audit" data-label="专家也有分歧，错误还可能偏向另一边"></div>
+        <div class="detail-toc-item" data-target="coding-tests" data-label="测试认定了函数名，需求却没有"></div>
+        <div class="detail-toc-item" data-target="benchmark-versions" data-label="换新题以后，旧分数怎么比较"></div>
+        <div class="detail-toc-item" data-target="grader-regressions" data-label="把评分器当作软件来维护"></div>
+        <div class="detail-toc-item" data-target="research-boundary" data-label="做题与做研究，先分开评价"></div>
+
+    </div>
+
+    <footer class="detail-footer">
+        <div class="detail-footer-copy">&copy; 2026 Eric. Built with <span class="heart">♥</span> and too much coffee.</div>
+        <div class="detail-footer-links">
+            <a href="../index.html">← Back to Home</a>
+            <a href="https://github.com/powerpan" target="_blank">GitHub</a>
+        </div>
+    </footer>
+    <button class="back-to-top" id="backToTop" title="回到顶部" data-i18n-title="back_to_top">↑</button>
+    <script src="../js/i18n.js"></script>
+    <script src="../js/i18n/core.js"></script>
+    <script src="../js/i18n/blog-list.js"></script>
+    <script src="../js/i18n/articles/physics-benchmark-grading.js"></script>
+    <script src="../js/motion.js"></script>
+    <script src="../js/cursor.js"></script>
+    <script src="../js/detail.js"></script>
+</body>
+</html>
