@@ -45,16 +45,18 @@ test('Civilization Z presents six complete screenshots with captions and origina
   assert.equal($('a[href*="github.com/powerpan/agent_island"]').length, 0);
 });
 
-test('Civilization Z keeps six featured projects, twelve archive entries and the previous project', () => {
+test('Civilization Z stays featured and the archive retains every project', () => {
   const home = load(read('index.html')), archive = load(read('projects/index.html'));
   assert.equal(home('.project-card').length, 6);
   assert.equal(home('.project-card[href="projects/civilization-z.html"]').length, 1);
-  assert.equal(archive('.project-list-card').length, 12);
+  const projectCount = fs.readdirSync(path.join(root, 'projects'))
+    .filter(file => file.endsWith('.html') && file !== 'index.html').length;
+  assert.equal(archive('.project-list-card').length, projectCount);
   assert.equal(archive('.project-list-card[href="civilization-z.html"]').length, 1);
   assert.equal(archive('.project-list-card[href="yolo26-multimodal.html"]').length, 1);
   assert.deepEqual(archive('.project-list-num').map((_, el) => archive(el).text()).get(),
-    Array.from({ length: 12 }, (_, index) => String(index + 1).padStart(2, '0')));
-  assert.match(archive('[data-i18n="proj_list_sub"]').text(), /12/);
+    Array.from({ length: projectCount }, (_, index) => String(index + 1).padStart(2, '0')));
+  assert(archive('[data-i18n="proj_list_sub"]').text().includes(String(projectCount)));
   assert.equal(home('#blog .blog-item').length, 6);
 });
 

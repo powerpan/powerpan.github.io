@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>算法博物馆 — Eric's Project</title>
+    <!-- SEO:START -->
+    <meta name="description" content="我做的算法博物馆：在浏览器里观察排序、编辑寻路地图、比较 CPU 调度，逐步回放算法的选择，并把实验保存在本地。">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://erichz.site/projects/algorithm-museum">
+    <link rel="alternate" type="application/rss+xml" title="Eric Blog RSS" href="https://erichz.site/feed.xml">
+    <meta property="og:site_name" content="Eric">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="算法博物馆">
+    <meta property="og:description" content="我做的算法博物馆：在浏览器里观察排序、编辑寻路地图、比较 CPU 调度，逐步回放算法的选择，并把实验保存在本地。">
+    <meta property="og:url" content="https://erichz.site/projects/algorithm-museum">
+    <meta property="og:image" content="https://erichz.site/assets/og-default.svg">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="算法博物馆">
+    <meta name="twitter:description" content="我做的算法博物馆：在浏览器里观察排序、编辑寻路地图、比较 CPU 调度，逐步回放算法的选择，并把实验保存在本地。">
+    <meta name="twitter:image" content="https://erichz.site/assets/og-default.svg">
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "CreativeWork",
+  "name": "算法博物馆",
+  "description": "我做的算法博物馆：在浏览器里观察排序、编辑寻路地图、比较 CPU 调度，逐步回放算法的选择，并把实验保存在本地。",
+  "url": "https://erichz.site/projects/algorithm-museum",
+  "author": {
+    "@type": "Person",
+    "name": "Eric Pan",
+    "url": "https://erichz.site",
+    "sameAs": [
+      "https://github.com/powerpan"
+    ]
+  },
+  "image": "https://erichz.site/assets/og-default.svg",
+  "inLanguage": [
+    "zh-CN",
+    "en"
+  ]
+}
+    </script>
+    <!-- SEO:END -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/detail.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+    <style>
+        .museum-page .detail-title { max-width: 100%; overflow-wrap: anywhere; }
+        .museum-page .detail-meta { flex-wrap: wrap; justify-content: center; }
+        .museum-page .detail-image-section { margin-top: 0; }
+        .museum-page .detail-toc-item { border: 0; padding: 0; }
+        .museum-page .detail-toc-item.active:not(:hover):not(:focus-visible)::before { content: none; }
+        .museum-actions { display: flex; justify-content: center; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+        .museum-visit {
+            display: inline-flex; align-items: center; justify-content: center; gap: 20px;
+            min-height: 48px; padding: 12px 24px; border: 1px solid var(--accent);
+            border-radius: 8px; color: var(--accent); background: rgba(var(--accent-rgb), 0.06);
+            font-size: 0.8rem; line-height: 1.6;
+        }
+        .museum-visit:hover { background: rgba(var(--accent-rgb), 0.12); }
+        .museum-figure {
+            margin: 32px 0; border: 1px solid rgba(var(--accent-rgb), 0.15); border-radius: 8px;
+            background: var(--bg-elevated); overflow: hidden;
+        }
+        .museum-hero-figure { max-width: 960px; margin: 0 auto; }
+        .museum-image-link { display: block; }
+        .museum-figure img { display: block; width: 100%; height: auto; object-fit: contain; }
+        .museum-caption { padding: 16px 20px; color: var(--text-secondary); font-size: 0.75rem; line-height: 1.8; }
+        .museum-image-note { margin-bottom: 48px; color: var(--text-secondary); font-size: 0.75rem; line-height: 1.8; }
+        .museum-pipeline {
+            display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px;
+            list-style: none; padding: 0; margin: 28px 0;
+        }
+        .museum-pipeline li { padding: 24px; background: var(--bg-elevated); border: 1px solid rgba(var(--accent-rgb), 0.15); border-radius: 8px; }
+        .museum-pipeline span { display: block; color: var(--accent); font-size: 0.7rem; margin-bottom: 18px; }
+        .museum-pipeline h3 { color: var(--text-primary); font-size: 0.95rem; margin-bottom: 12px; }
+        .museum-pipeline p { color: var(--text-secondary); font-size: 0.8rem; line-height: 1.9; }
+        .museum-page a:focus-visible, .museum-page .detail-toc-item:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+        @media (max-width: 600px) {
+            .museum-pipeline { grid-template-columns: 1fr; }
+            .museum-caption { padding: 12px 16px; }
+            .museum-page .detail-meta { gap: 20px; }
+        }
+    </style>
+</head>
+<body class="museum-page">
+    <div class="detail-scroll-progress" id="detailScrollProgress"></div>
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor-dot" id="cursorDot"></div>
+    <canvas id="particleCanvas"></canvas>
+    <nav id="nav">
+        <a href="../index.html" class="nav-logo magnetic" data-hover>ERIC<span class="dot">.</span></a>
+        <ul class="nav-center">
+            <li><a href="../index.html#about" data-hover data-i18n="nav_about">// 关于</a></li>
+            <li><a href="../index.html#projects" data-hover data-i18n="nav_projects">// 项目</a></li>
+            <li><a href="../index.html#blog" data-hover data-i18n="nav_blog">// 博客</a></li>
+            <li><a href="../index.html#contact" data-hover data-i18n="nav_contact">// 联系</a></li>
+        </ul>
+        <div class="nav-status"><span class="status-dot"></span>Open to work</div>
+        <button class="nav-hamburger" id="navHamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+    </nav>
+    <div class="mobile-nav" id="mobileNav">
+        <button class="mobile-nav-close" id="mobileNavClose" aria-label="Close menu">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+        <ul class="mobile-nav-links">
+            <li><a href="../index.html#about" data-hover data-i18n="nav_about">// 关于</a></li>
+            <li><a href="../index.html#projects" data-hover data-i18n="nav_projects">// 项目</a></li>
+            <li><a href="../index.html#blog" data-hover data-i18n="nav_blog">// 博客</a></li>
+            <li><a href="../index.html#contact" data-hover data-i18n="nav_contact">// 联系</a></li>
+            <li><button class="mobile-lang-btn" id="mobileLangBtn" onclick="toggleLang()" data-i18n="nav_lang">中 / EN</button></li>
+        </ul>
+    </div>
+    <div class="detail-toc visible" id="detailToc">
+        <button type="button" class="detail-toc-item" data-target="idea" data-label="让理解发生在动手之后" title="让理解发生在动手之后" data-i18n-title="museum_s_idea"></button>
+        <button type="button" class="detail-toc-item" data-target="sorting" data-label="追踪一个元素，而不只是一根柱子" title="追踪一个元素，而不只是一根柱子" data-i18n-title="museum_s_sorting"></button>
+        <button type="button" class="detail-toc-item" data-target="pathfinding" data-label="走得少，未必代价低" title="走得少，未必代价低" data-i18n-title="museum_s_pathfinding"></button>
+        <button type="button" class="detail-toc-item" data-target="scheduler" data-label="谁先运行，谁在等待" title="谁先运行，谁在等待" data-i18n-title="museum_s_scheduler"></button>
+        <button type="button" class="detail-toc-item" data-target="replay" data-label="把一次运行留下来" title="把一次运行留下来" data-i18n-title="museum_s_replay"></button>
+        <button type="button" class="detail-toc-item" data-target="try" data-label="从改一个条件开始" title="从改一个条件开始" data-i18n-title="museum_s_try"></button>
+    </div>
+    <main>
+        <section class="detail-hero">
+            <div class="detail-hero-bg"></div>
+            <a href="index.html" class="detail-back magnetic" data-hover>
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                <span data-i18n="civ_footer_all">查看全部项目</span>
+            </a>
+            <div class="detail-tag" data-i18n="museum_tag">Interactive Learning · Algorithms · Visualization</div>
+            <h1 class="detail-title" data-i18n="museum_title">算法博物馆</h1>
+            <p class="detail-subtitle" data-i18n="museum_sub">我想做一个可以动手的算法展馆：改一组数字、画一堵墙、调一个时间片，然后停下来，看清每一步选择是怎样改变结果的。</p>
+            <div class="museum-actions">
+                <a class="museum-visit" href="https://algorithm.erichz.site/" target="_blank" rel="noopener noreferrer" data-hover><span data-i18n="museum_visit">进入算法博物馆</span><span aria-hidden="true">↗</span></a>
+            </div>
+            <div class="detail-meta">
+                <div class="detail-meta-item"><span class="detail-meta-label">Role</span><span class="detail-meta-value" data-i18n="museum_role">产品设计与前端工程</span></div>
+                <div class="detail-meta-item"><span class="detail-meta-label">Status</span><span class="detail-meta-value" data-i18n="museum_status">在线体验 · 持续完善</span></div>
+                <div class="detail-meta-item"><span class="detail-meta-label">Stack</span><span class="detail-meta-value">React / TypeScript / Web Workers</span></div>
+            </div>
+        </section>
+        <div class="detail-image-section reveal">
+            <figure class="museum-figure museum-hero-figure">
+                <a class="museum-image-link" href="../assets/projects/algorithm-museum/lobby.png" target="_blank" rel="noopener noreferrer" data-i18n-title="museum_open_image" title="查看完整截图">
+                    <img src="../assets/projects/algorithm-museum/lobby.png" width="1265" height="1328" alt="算法博物馆首页，蓝色展板用元素轨迹呈现冒泡排序，下方提供三个算法展品入口" data-i18n-alt="museum_lobby_alt" loading="eager" decoding="async">
+                </a>
+                <figcaption class="museum-caption" data-i18n="museum_lobby_caption">展馆入口。我用纸白底色、蓝色展板和元素轨迹，让算法先以一个可观察的现象出现。</figcaption>
+            </figure>
+        </div>
+        <div class="detail-content">
+            <p class="museum-image-note" data-i18n="museum_image_note">截图来自网站的实际运行，使用内置示例输入。点击图片可查看完整尺寸。</p>
+            <section class="detail-section reveal" id="idea">
+                <div class="detail-section-label">01 / THE IDEA</div>
+                <h2 class="detail-section-title" data-i18n="museum_s_idea">让理解发生在动手之后</h2>
+                <p class="detail-text" data-i18n="museum_idea_p1">学算法时，能读懂伪代码和能解释一次具体选择，常常还差一步。我想把这一步做成可以操作的界面：先猜结果，再改条件，最后沿着执行过程检查自己的判断。排序、寻路和 CPU 调度刚好提供了三种不同的观察对象：数字的顺序、地图上的路径，以及任务占用的时间。</p>
+                <p class="detail-text" data-i18n="museum_idea_p2">我给三个展品统一了“学习、运行、实验、比较”四个入口。可以从一段解释开始，也可以直接进入实验台。画面旁边放伪代码和当前步骤，下方放数据与指标；停在任何一步，都能把看到的变化和算法正在做的事对上。</p>
+            </section>
+            <section class="detail-section reveal" id="sorting">
+                <div class="detail-section-label">02 / SORTING</div>
+                <h2 class="detail-section-title" data-i18n="museum_s_sorting">追踪一个元素，而不只是一根柱子</h2>
+                <p class="detail-text" data-i18n="museum_sorting_p1">排序实验台放了冒泡、插入、归并、快速和堆排序。我给每个元素保留独立编号，即使两个值相同，也能看出谁先谁后。这样观察稳定性就有了具体对象：把输入改成 2、1、2、1，逐步看相同数值的元素怎样移动，比只记住“稳定排序”的定义直观得多。</p>
+                <p class="detail-text" data-i18n="museum_sorting_p2">有序、逆序、大量重复值都可以直接载入，也能手工输入。比较时使用同一组数据，把两到三个算法并排放在一起，查看比较次数、写入和辅助空间。快速排序采用固定的末尾 pivot 版本，我也把这个前提留下来，让某种输入下的表现有据可查。</p>
+                <figure class="museum-figure">
+                    <a class="museum-image-link" href="../assets/projects/algorithm-museum/sorting.png" target="_blank" rel="noopener noreferrer" data-i18n-title="museum_open_image" title="查看完整截图">
+                        <img src="../assets/projects/algorithm-museum/sorting.png" width="1265" height="1129" alt="排序实验台暂停在冒泡排序的比较步骤，柱状图、元素编号、伪代码与指标同步展示" data-i18n-alt="museum_sorting_alt" loading="lazy" decoding="async">
+                    </a>
+                    <figcaption class="museum-caption" data-i18n="museum_sorting_caption">暂停在一次比较上：42 和 18 被选中，右侧说明这一步的判断，下方记录已经发生的操作。</figcaption>
+                </figure>
+            </section>
+            <section class="detail-section reveal" id="pathfinding">
+                <div class="detail-section-label">03 / PATHFINDING</div>
+                <h2 class="detail-section-title" data-i18n="museum_s_pathfinding">走得少，未必代价低</h2>
+                <p class="detail-text" data-i18n="museum_pathfinding_p1">寻路实验室可以画墙、修改格子权重、移动起终点，再观察 BFS、Dijkstra 和 A* 如何探索。只要给一条近路加上更高的代价，“最少走几步”和“总成本最低”就可能分开。我希望使用者自己改出这个差别，再回头理解算法的适用条件。</p>
+                <p class="detail-text" data-i18n="museum_pathfinding_p2">因此，普通 BFS 遇到不满足统一边代价的地图时，会解释为什么不能运行；负边教学反例则单独标明它破坏了 Dijkstra 的前提。图形展示探索过程，节点表保留距离和前驱等状态。看不到路径时，也能分清是终点不可达，还是输入条件不适合这个算法。</p>
+                <figure class="museum-figure">
+                    <a class="museum-image-link" href="../assets/projects/algorithm-museum/pathfinding.png" target="_blank" rel="noopener noreferrer" data-i18n-title="museum_open_image" title="查看完整截图">
+                        <img src="../assets/projects/algorithm-museum/pathfinding.png" width="1265" height="1903" alt="Dijkstra 在墙障绕路预设上的寻路结果，下方网格编辑器可以修改障碍、权重与起终点" data-i18n-alt="museum_pathfinding_alt" loading="lazy" decoding="async">
+                    </a>
+                    <figcaption class="museum-caption" data-i18n="museum_pathfinding_caption">同一张地图既是输入，也是解释结果的地方。蓝色路径绕过障碍，编辑器保留下一次实验的修改入口。</figcaption>
+                </figure>
+            </section>
+            <section class="detail-section reveal" id="scheduler">
+                <div class="detail-section-label">04 / SCHEDULING</div>
+                <h2 class="detail-section-title" data-i18n="museum_s_scheduler">谁先运行，谁在等待</h2>
+                <p class="detail-text" data-i18n="museum_scheduler_p1">CPU 调度台把 FCFS、SJF 和 RR 放到同一条时间线上。输入每个任务的到达时间和运行时长，再调节时间片与切换开销，就能看到运行、等待和空闲怎样分布。长任务先来会怎样？时间片变短，响应更快的同时会付出多少切换代价？这些问题都可以直接做实验。</p>
+                <p class="detail-text" data-i18n="museum_scheduler_p2">这里采用单 CPU、无 I/O、运行时长已知的教学模型，SJF 不抢占。时间轴旁边保留就绪队列和任务数据，最终给出响应、等待与周转时间。我把这些简化条件写在界面上，方便把实验结论放回它成立的范围内。</p>
+                <figure class="museum-figure">
+                    <a class="museum-image-link" href="../assets/projects/algorithm-museum/scheduler.png" target="_blank" rel="noopener noreferrer" data-i18n-title="museum_open_image" title="查看完整截图">
+                        <img src="../assets/projects/algorithm-museum/scheduler.png" width="1265" height="1659" alt="时间片轮转调度的运行结果，以深色运行区间和蓝色切换区间展示 CPU 时间分配" data-i18n-alt="museum_scheduler_alt" loading="lazy" decoding="async">
+                    </a>
+                    <figcaption class="museum-caption" data-i18n="museum_scheduler_caption">RR 的切换代价也占据时间。把它画出来，才容易理解时间片的选择为什么会影响整体表现。</figcaption>
+                </figure>
+            </section>
+            <section class="detail-section reveal" id="replay">
+                <div class="detail-section-label">05 / UNDER THE SURFACE</div>
+                <h2 class="detail-section-title" data-i18n="museum_s_replay">把一次运行留下来</h2>
+                <p class="detail-text" data-i18n="museum_replay_p1">工程上，我把计算、记录和观看分开。算法在 Web Worker 中执行，生成比较、交换、节点展开或任务切换等事件；界面读取这些事件恢复状态。播放速度只改变观看节奏，后退是在查看历史，修改输入后重新运行才会产生新的实验。</p>
+                <ol class="museum-pipeline">
+                    <li><span>01 / COMPUTE</span><h3 data-i18n="museum_step1_title">固定运行条件</h3><p data-i18n="museum_step1_desc">保存输入、种子、算法版本和参数，再交给 Worker 计算。</p></li>
+                    <li><span>02 / REPLAY</span><h3 data-i18n="museum_step2_title">用事件恢复状态</h3><p data-i18n="museum_step2_desc">图形、数据表、指标与伪代码读取同一份执行记录。</p></li>
+                    <li><span>03 / KEEP</span><h3 data-i18n="museum_step3_title">留下可以重开的实验</h3><p data-i18n="museum_step3_desc">运行、比较和测量保存在 IndexedDB，也可以导出文件备份。</p></li>
+                </ol>
+                <p class="detail-text" data-i18n="museum_replay_p2">界面用 React、TypeScript 和 Canvas 2D 组织，协议、运行时、存储与三个展品各自分包。另一个需要认真区分的是“做了多少次操作”和“这台设备用了多久”：前者来自执行记录，后者通过独立的重复测量获得。测量包含算法与事件生成的开销，遇到计时精度不足会标明不可靠，不用动画快慢替算法排名。</p>
+            </section>
+            <section class="detail-section reveal" id="try">
+                <div class="detail-section-label">06 / TRY IT</div>
+                <h2 class="detail-section-title" data-i18n="museum_s_try">从改一个条件开始</h2>
+                <p class="detail-text" data-i18n="museum_try_p1">现在可以直接在浏览器里体验三个展品，不需要注册。第一次打开，我建议先选一个熟悉的算法，运行默认例子，再只改一个条件。保留原来的记录，把新结果放在旁边比较，很多差别会比从头读一遍解释更容易记住。</p>
+                <p class="detail-text" data-i18n="museum_try_p2">实验保存在当前浏览器，换设备需要导出、导入文件，还没有账号或云同步。完整离线使用也仍在后续计划里，当前版本需要联网打开。我接下来想继续完善反例、教学解释和手机上的操作，让每次实验都能留下一个说得清楚的发现。</p>
+                <div class="museum-actions"><a class="museum-visit" href="https://algorithm.erichz.site/" target="_blank" rel="noopener noreferrer" data-hover><span data-i18n="museum_visit">进入算法博物馆</span><span aria-hidden="true">↗</span></a></div>
+            </section>
+        </div>
+    </main>
+    <footer class="detail-footer">
+        <div class="detail-footer-copy">&copy; 2026 Eric. Built with too much coffee.</div>
+        <div class="detail-footer-links"><a href="index.html" data-i18n="civ_footer_all">查看全部项目</a><a href="../index.html" data-i18n="civ_footer_home">返回首页</a></div>
+    </footer>
+    <button class="back-to-top" id="backToTop" title="回到顶部" data-i18n-title="back_to_top">↑</button>
+    <script src="../js/i18n.js?v=20260730-i18n2"></script>
+    <script src="../js/i18n/core.js?v=20260730-i18n2"></script>
+    <script src="../js/i18n/projects.js?v=20260730-i18n2"></script>
+    <script src="../js/motion.js"></script>
+    <script src="../js/cursor.js"></script>
+    <script src="../js/detail.js"></script>
+</body>
+</html>
