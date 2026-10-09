@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word Note — Eric's Project</title>
+    <!-- SEO:START -->
+    <meta name="description" content="我为英文课程和技术阅读做的 macOS 词汇笔记工具：悬浮窗随手记，中英双向查词，人工确认入库，再按课程检索与复习。">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://erichz.site/projects/word-note">
+    <link rel="alternate" type="application/rss+xml" title="Eric Blog RSS" href="https://erichz.site/feed.xml">
+    <meta property="og:site_name" content="Eric">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Word Note">
+    <meta property="og:description" content="我为英文课程和技术阅读做的 macOS 词汇笔记工具：悬浮窗随手记，中英双向查词，人工确认入库，再按课程检索与复习。">
+    <meta property="og:url" content="https://erichz.site/projects/word-note">
+    <meta property="og:image" content="https://erichz.site/assets/og-default.svg">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Word Note">
+    <meta name="twitter:description" content="我为英文课程和技术阅读做的 macOS 词汇笔记工具：悬浮窗随手记，中英双向查词，人工确认入库，再按课程检索与复习。">
+    <meta name="twitter:image" content="https://erichz.site/assets/og-default.svg">
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "CreativeWork",
+  "name": "Word Note",
+  "description": "我为英文课程和技术阅读做的 macOS 词汇笔记工具：悬浮窗随手记，中英双向查词，人工确认入库，再按课程检索与复习。",
+  "url": "https://erichz.site/projects/word-note",
+  "author": {
+    "@type": "Person",
+    "name": "Eric Pan",
+    "url": "https://erichz.site",
+    "sameAs": [
+      "https://github.com/powerpan"
+    ]
+  },
+  "image": "https://erichz.site/assets/og-default.svg",
+  "inLanguage": [
+    "zh-CN",
+    "en"
+  ]
+}
+    </script>
+    <!-- SEO:END -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/detail.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+    <style>
+        .wordnote-page .detail-title { max-width: 100%; overflow-wrap: anywhere; }
+        .wordnote-page .detail-meta { flex-wrap: wrap; justify-content: center; }
+        .wordnote-page .detail-image-section { margin-top: 0; }
+        .wordnote-page .detail-toc-item { border: 0; padding: 0; }
+        .wordnote-page .detail-toc-item.active:not(:hover):not(:focus-visible)::before { content: none; }
+        .wordnote-figure {
+            margin: 32px 0; border: 1px solid rgba(var(--accent-rgb), 0.15); border-radius: 12px;
+            background: var(--bg-elevated); overflow: hidden;
+        }
+        .wordnote-hero-figure { max-width: 1100px; margin: 0 auto; }
+        .wordnote-image-link { display: block; }
+        .wordnote-figure img { display: block; width: 100%; height: auto; object-fit: contain; }
+        .wordnote-caption { padding: 16px 20px; color: var(--text-secondary); font-size: 0.75rem; line-height: 1.9; }
+        .wordnote-capture-figure { max-width: 580px; margin: 36px auto; }
+        .wordnote-capture-figure .wordnote-image-link { padding: 28px; }
+        .wordnote-provenance {
+            margin-bottom: 48px; padding-left: 20px; border-left: 2px solid rgba(var(--accent-rgb), 0.4);
+            color: var(--text-secondary); font-size: 0.75rem; line-height: 1.9;
+        }
+        .wordnote-flow {
+            display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px;
+            list-style: none; padding: 0; margin: 28px 0;
+        }
+        .wordnote-flow li { min-width: 0; padding: 24px; border-top: 1px solid var(--accent); background: var(--bg-elevated); }
+        .wordnote-flow span { display: block; color: var(--accent); font-size: 0.7rem; margin-bottom: 16px; }
+        .wordnote-flow h3 { color: var(--text-primary); font-size: 0.95rem; margin-bottom: 12px; }
+        .wordnote-flow p { color: var(--text-secondary); font-size: 0.8rem; line-height: 1.9; }
+        .wordnote-page a:focus-visible, .wordnote-page .detail-toc-item:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+        @media (max-width: 600px) {
+            .wordnote-flow { grid-template-columns: 1fr; }
+            .wordnote-caption { padding: 12px 16px; }
+            .wordnote-capture-figure .wordnote-image-link { padding: 16px; }
+            .wordnote-page .detail-meta { gap: 20px; }
+        }
+    </style>
+</head>
+<body class="wordnote-page">
+    <div class="detail-scroll-progress" id="detailScrollProgress"></div>
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor-dot" id="cursorDot"></div>
+    <canvas id="particleCanvas"></canvas>
+    <nav id="nav">
+        <a href="../index.html" class="nav-logo magnetic" data-hover>ERIC<span class="dot">.</span></a>
+        <ul class="nav-center">
+            <li><a href="../index.html#about" data-hover data-i18n="nav_about">// 关于</a></li>
+            <li><a href="../index.html#projects" data-hover data-i18n="nav_projects">// 项目</a></li>
+            <li><a href="../index.html#blog" data-hover data-i18n="nav_blog">// 博客</a></li>
+            <li><a href="../index.html#contact" data-hover data-i18n="nav_contact">// 联系</a></li>
+        </ul>
+        <div class="nav-status"><span class="status-dot"></span>Open to work</div>
+        <button class="nav-hamburger" id="navHamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+    </nav>
+    <div class="mobile-nav" id="mobileNav">
+        <button class="mobile-nav-close" id="mobileNavClose" aria-label="Close menu">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+        <ul class="mobile-nav-links">
+            <li><a href="../index.html#about" data-hover data-i18n="nav_about">// 关于</a></li>
+            <li><a href="../index.html#projects" data-hover data-i18n="nav_projects">// 项目</a></li>
+            <li><a href="../index.html#blog" data-hover data-i18n="nav_blog">// 博客</a></li>
+            <li><a href="../index.html#contact" data-hover data-i18n="nav_contact">// 联系</a></li>
+            <li><button class="mobile-lang-btn" id="mobileLangBtn" onclick="toggleLang()" data-i18n="nav_lang">中 / EN</button></li>
+        </ul>
+    </div>
+    <div class="detail-toc visible" id="detailToc">
+        <button type="button" class="detail-toc-item" data-target="capture" data-label="先记下来，继续读下去" title="先记下来，继续读下去" data-i18n-title="wn_s_capture"></button>
+        <button type="button" class="detail-toc-item" data-target="confirm" data-label="释义先放在 Inbox" title="释义先放在 Inbox" data-i18n-title="wn_s_confirm"></button>
+        <button type="button" class="detail-toc-item" data-target="retrieve" data-label="只记得中文，也能找回来" title="只记得中文，也能找回来" data-i18n-title="wn_s_retrieve"></button>
+        <button type="button" class="detail-toc-item" data-target="review" data-label="给回忆留一点空白" title="给回忆留一点空白" data-i18n-title="wn_s_review"></button>
+        <button type="button" class="detail-toc-item" data-target="architecture" data-label="小窗口背后的工程取舍" title="小窗口背后的工程取舍" data-i18n-title="wn_s_architecture"></button>
+        <button type="button" class="detail-toc-item" data-target="status" data-label="目前做到哪里" title="目前做到哪里" data-i18n-title="wn_s_status"></button>
+    </div>
+    <main>
+        <section class="detail-hero">
+            <div class="detail-hero-bg"></div>
+            <a href="index.html" class="detail-back magnetic" data-hover>
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                <span data-i18n="civ_footer_all">查看全部项目</span>
+            </a>
+            <div class="detail-tag" data-i18n="wn_tag">macOS · SwiftUI · AI Vocabulary</div>
+            <h1 class="detail-title" data-i18n="wn_title">Word Note</h1>
+            <p class="detail-subtitle" data-i18n="wn_sub">我想把英文课程和阅读里遇到的词，留在自己的词本里。查过的释义、当时的语境和下一次复习，应该能接在一起。</p>
+            <div class="detail-meta">
+                <div class="detail-meta-item"><span class="detail-meta-label">Role</span><span class="detail-meta-value" data-i18n="wn_role">产品设计与原生应用开发</span></div>
+                <div class="detail-meta-item"><span class="detail-meta-label">Status</span><span class="detail-meta-value" data-i18n="wn_status">本地应用 · 持续开发</span></div>
+                <div class="detail-meta-item"><span class="detail-meta-label">Stack</span><span class="detail-meta-value">SwiftUI / AppKit / SwiftData</span></div>
+            </div>
+        </section>
+        <div class="detail-image-section reveal">
+            <figure class="wordnote-figure wordnote-hero-figure">
+                <a class="wordnote-image-link" href="../assets/projects/word-note/01-dashboard-light.png" data-i18n-title="wn_open_image" title="查看完整截图">
+                    <img src="../assets/projects/word-note/01-dashboard-light.png" width="2498" height="1600" alt="Word Note 演示首页，展示待处理记录、个人词库、今日复习与课程概览" data-i18n-alt="wn_dashboard_alt" loading="eager" decoding="async">
+                </a>
+                <figcaption class="wordnote-caption" data-i18n="wn_dashboard_caption">打开应用，先看今天要整理和复习什么。图中的数量是演示数据，Failed 是预设的失败样例；Mastery 表示词条掌握程度，不是课程完成率。</figcaption>
+            </figure>
+        </div>
+        <div class="detail-content">
+            <p class="wordnote-provenance" data-i18n="wn_provenance">以下六张图片拍摄于 2026-10-09，来自普通 V1 界面的隔离演示构建 WordNoteQA。使用演示词库与离线预置 AI 响应，不含日常学习资料，也不代表实时模型质量或新版功能已完成验收。保留原始窗口与界面文字，点击可查看原图。</p>
+            <section class="detail-section reveal" id="capture">
+                <div class="detail-section-label">01 / CAPTURE</div>
+                <h2 class="detail-section-title" data-i18n="wn_s_capture">先记下来，继续读下去</h2>
+                <p class="detail-text" data-i18n="wn_capture_p1">做 Word Note 的起点，是我在英文课程、论文和技术资料之间切换时的一点不方便：一个词当时查懂了，过几天又遇见，却只记得“好像查过”。相比从一套固定词表开始，我更想留下自己真正碰到的词句，以及它为什么出现在那一页。</p>
+                <p class="detail-text" data-i18n="wn_capture_p2">所以我把记录入口做得很轻。主窗口可以补课程、来源和备注，菜单栏则能打开一个小浮窗；先输入，保存并排队分析，再继续手头的阅读。精确命中已经收录的英文词时，直接复用本地释义，并把它提到待复习队列，不必为同一个词再请求一次模型。</p>
+                <figure class="wordnote-figure wordnote-capture-figure">
+                    <a class="wordnote-image-link" href="../assets/projects/word-note/10-floating-quick-add.png" data-i18n-title="wn_open_image" title="查看完整截图">
+                        <img src="../assets/projects/word-note/10-floating-quick-add.png" width="720" height="264" alt="紧凑的 Quick Add 悬浮窗，显示已有英文词 quick 的本地中文释义" data-i18n-alt="wn_floating_alt" loading="lazy" decoding="async">
+                    </a>
+                    <figcaption class="wordnote-caption" data-i18n="wn_floating_caption">浮窗只留下输入和必要的结果。这里的 quick 已在词库中，显示的是本地释义，没有发起新的 AI 查询。</figcaption>
+                </figure>
+                <p class="detail-text" data-i18n="wn_capture_p3">输入也不必总从英文开始。只记得“过拟合”时，可以先用中文找英文表达；返回的 overfitting 仍然作为英文候选进入整理流程。上一条结果留着看，输入区可以继续写下一条，不需要一直守着一个等待中的对话框。</p>
+                <figure class="wordnote-figure">
+                    <a class="wordnote-image-link" href="../assets/projects/word-note/03-quick-add-result.png" data-i18n-title="wn_open_image" title="查看完整截图">
+                        <img src="../assets/projects/word-note/03-quick-add-result.png" width="2498" height="1600" alt="Quick Add 保留过拟合的英文候选 overfitting，输入区已填写下一条 gradient descent" data-i18n-alt="wn_lookup_alt" loading="lazy" decoding="async">
+                    </a>
+                    <figcaption class="wordnote-caption" data-i18n="wn_lookup_caption">下方是上一条“过拟合”的候选结果，上方已开始记录 gradient descent。这是连续输入的演示，不是响应速度或并发性能测试。</figcaption>
+                </figure>
+            </section>
+            <section class="detail-section reveal" id="confirm">
+                <div class="detail-section-label">02 / CONFIRM</div>
+                <h2 class="detail-section-title" data-i18n="wn_s_confirm">释义先放在 Inbox</h2>
+                <p class="detail-text" data-i18n="wn_confirm_p1">我没有让 AI 生成完就直接写进正式词库。原始输入、课程和笔记先留在 Inbox，候选的中文释义、英文解释、语境和例句放在旁边，确认或修改后再收录。对于专业术语和多义词，这一步很有必要：模型给了一段流畅的解释，不代表它刚好符合我正在读的内容。</p>
+                <p class="detail-text" data-i18n="wn_confirm_p2">释义的要求也尽量朴素：先把词本身解释清楚，专业含义确实有区别时再补充。像 quick 这样的普通词，不需要为了显得“懂 AI”而硬加技术语境。没有合适的候选可以手动建词；分析失败则保留原文，留到之后重试。</p>
+                <figure class="wordnote-figure">
+                    <a class="wordnote-image-link" href="../assets/projects/word-note/04-inbox-candidates.png" data-i18n-title="wn_open_image" title="查看完整截图">
+                        <img src="../assets/projects/word-note/04-inbox-candidates.png" width="2498" height="1600" alt="Inbox 将原始输入、课程与笔记和可编辑的 overfitting 候选放在一起" data-i18n-alt="wn_inbox_alt" loading="lazy" decoding="async">
+                    </a>
+                    <figcaption class="wordnote-caption" data-i18n="wn_inbox_caption">收录前的编辑状态。英文解释、语境和例句是拍摄时填写的演示草稿，尚未执行批量确认；左侧 Failed 也是预设测试记录。</figcaption>
+                </figure>
+            </section>
+            <section class="detail-section reveal" id="retrieve">
+                <div class="detail-section-label">03 / RETRIEVE</div>
+                <h2 class="detail-section-title" data-i18n="wn_s_retrieve">只记得中文，也能找回来</h2>
+                <p class="detail-text" data-i18n="wn_retrieve_p1">词条留下来以后，还要能找得到。我保留英文词头、中文释义、英文解释和例句，也把课程与来源留在详情里。Vocabulary 可以按课程和掌握程度筛选；回到某门课时，不必在所有阅读笔记里重新翻一遍。</p>
+                <p class="detail-text" data-i18n="wn_retrieve_p2">有时忘掉的恰好是拼写，所以搜索也覆盖中文释义，并兼容简繁体。输入“迅速”，就能找回 quick。这里做的是本地文本检索，不需要再让模型猜一遍；原来保存的文字也不会因为搜索而被改写。</p>
+                <figure class="wordnote-figure">
+                    <a class="wordnote-image-link" href="../assets/projects/word-note/06-chinese-meaning-search.png" data-i18n-title="wn_open_image" title="查看完整截图">
+                        <img src="../assets/projects/word-note/06-chinese-meaning-search.png" width="2498" height="1600" alt="在词库中搜索中文迅速，从四个演示词条中找到 quick，右侧保留完整词条详情" data-i18n-alt="wn_search_alt" loading="lazy" decoding="async">
+                    </a>
+                    <figcaption class="wordnote-caption" data-i18n="wn_search_caption">从意思找回拼写。左侧用“迅速”筛出 quick，右侧仍能看到释义、例句和课程，而不是一条脱离语境的搜索结果。</figcaption>
+                </figure>
+            </section>
+            <section class="detail-section reveal" id="review">
+                <div class="detail-section-label">04 / RECALL</div>
+                <h2 class="detail-section-title" data-i18n="wn_s_review">给回忆留一点空白</h2>
+                <p class="detail-text" data-i18n="wn_review_p1">复习页先把答案藏起来。可以从今日到期或薄弱词开始，按课程缩小范围，再选择英文回忆中文，或中文回忆英文。看见解释时觉得熟悉，和自己想得起来，毕竟是两回事。</p>
+                <p class="detail-text" data-i18n="wn_review_p2">揭晓后由自己选择 Again、Hard、Good 或 Easy，程序据此安排下次复习，不让 AI 替我判定“已经掌握”。暂时不想处理的词可以移到本轮末尾，或延后到明天。这里展示的是现有复习流程；按方向独立排程和可恢复会话仍在新版中验证，没有拿它们来解释这些截图。</p>
+                <figure class="wordnote-figure">
+                    <a class="wordnote-image-link" href="../assets/projects/word-note/08-review-answer.png" data-i18n-title="wn_open_image" title="查看完整截图">
+                        <img src="../assets/projects/word-note/08-review-answer.png" width="2498" height="1600" alt="复习页展开 overfitting 的中文释义，提供四档自评和 Skip、Later 操作" data-i18n-alt="wn_review_alt" loading="lazy" decoding="async">
+                    </a>
+                    <figcaption class="wordnote-caption" data-i18n="wn_review_caption">答案展开后的状态。截图没有提交评分，也没有为了展示效果制造学习进度。</figcaption>
+                </figure>
+            </section>
+            <section class="detail-section reveal" id="architecture">
+                <div class="detail-section-label">05 / NATIVE BY DESIGN</div>
+                <h2 class="detail-section-title" data-i18n="wn_s_architecture">小窗口背后的工程取舍</h2>
+                <p class="detail-text" data-i18n="wn_architecture_p1">这个工具大部分时间应该安静地待在阅读旁边，所以我选择了原生 macOS：SwiftUI 组织主界面，AppKit 处理悬浮窗和输入补全，SwiftData 保存词库与学习记录。外观可以跟随系统，也可以单独选浅色或黑灰色深色主题，主窗口和浮窗保持一致。</p>
+                <ol class="wordnote-flow">
+                    <li><span>01 / INPUT</span><h3 data-i18n="wn_step1_title">先保存原文</h3><p data-i18n="wn_step1_desc">新查询落到本地记录，再进入分析队列；不把输入只留在请求里。</p></li>
+                    <li><span>02 / ANALYSIS</span><h3 data-i18n="wn_step2_title">模型只给候选</h3><p data-i18n="wn_step2_desc">解析结构化响应，检查英文词条与释义，再交给 Inbox 核对。</p></li>
+                    <li><span>03 / VOCABULARY</span><h3 data-i18n="wn_step3_title">确认后再学习</h3><p data-i18n="wn_step3_desc">正式词库用于检索与复习，与未确认的分析结果分开保存。</p></li>
+                </ol>
+                <p class="detail-text" data-i18n="wn_architecture_p2">我把排队分析和界面分开，主窗口与浮窗共用同一条队列。新查询先保存，单条失败不挡住后面的任务；程序重新打开时，也能找回未完成的记录。搜索、补全、查词方向和复习规则放在 WordNoteCore 里，AI 客户端可以替换为预置响应，便于在不调用付费服务的情况下检查流程。</p>
+            </section>
+            <section class="detail-section reveal" id="status">
+                <div class="detail-section-label">06 / WHERE IT STANDS</div>
+                <h2 class="detail-section-title" data-i18n="wn_s_status">目前做到哪里</h2>
+                <p class="detail-text" data-i18n="wn_status_p1">Word Note 目前是从源码构建的本地 Mac 应用，没有提供安装包下载，也没有账号或云同步。已有词条的浏览、检索和复习可以离线进行；生成新释义需要联网，并使用自己的 DeepSeek API Key，调用会产生供应商费用。</p>
+                <p class="detail-text" data-i18n="wn_status_p2">本地优先不等于所有内容都不离开设备：主动分析时，本次输入和相关的课程名称、来源、备注会发送给 DeepSeek，不会把完整词库作为上下文。Key 保存在本机受权限限制的明文环境文件中，不是加密保险库。我希望这些边界是清楚的，而不是用一句“隐私安全”带过。</p>
+                <p class="detail-text" data-i18n="wn_status_p3">接下来我更在意的是长期使用的可靠性：整理时保护手工修改，备份恢复有清楚的预览，复习中断后能继续。相关新版功能已有实现和测试，仍有集成与实机验收待完成。我会先把这些日常细节打磨好，再考虑更大的功能范围。</p>
+            </section>
+        </div>
+    </main>
+    <footer class="detail-footer">
+        <div class="detail-footer-copy">&copy; 2026 Eric. Built with too much coffee.</div>
+        <div class="detail-footer-links"><a href="index.html" data-i18n="civ_footer_all">查看全部项目</a><a href="../index.html" data-i18n="civ_footer_home">返回首页</a></div>
+    </footer>
+    <button class="back-to-top" id="backToTop" title="回到顶部" data-i18n-title="back_to_top">↑</button>
+    <script src="../js/i18n.js?v=20260730-i18n2"></script>
+    <script src="../js/i18n/core.js?v=20260730-i18n2"></script>
+    <script src="../js/i18n/projects.js?v=20260730-i18n2"></script>
+    <script src="../js/motion.js"></script>
+    <script src="../js/cursor.js"></script>
+    <script src="../js/detail.js"></script>
+</body>
+</html>

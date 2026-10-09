@@ -56,7 +56,7 @@ test('showcase features six screenshot-backed projects with accurate image label
   const cards = $('.project-card');
   assert.equal(cards.length, 6);
   const featured = ['civilization-z', 'trading-simulator', 'greenbird-badminton',
-    'moyu-night-library', 'algorithm-museum', 'local-rag'];
+    'moyu-night-library', 'algorithm-museum', 'word-note'];
   assert.deepEqual(cards.map((_, el) => $(el).attr('href')).get(),
     featured.map(slug => `projects/${slug}.html`));
   const screenshotProjects = fs.readdirSync(path.join(root, 'projects'))
@@ -119,6 +119,17 @@ test('screenshot covers remain uncropped and unfiltered with a separate label ar
   assert.match(css, /\.project-screenshot\s*\{[^}]*object-fit:\s*contain;/);
   assert.match(css, /\.project-visual-screenshot\s*\{[^}]*padding:\s*58px 24px 22px;/);
   assert.match(css, /\.project-visual-screenshot::before,\s*\.home-page \.project-card-screenshot::after\s*\{\s*display:\s*none;/);
+});
+
+test('project visit links keep their destination and the hero decoration does not intercept clicks', () => {
+  const $ = load(read('projects/algorithm-museum.html'));
+  const links = $('.museum-visit');
+  assert.equal(links.length, 2);
+  links.each((_, el) => {
+    assert.equal($(el).attr('href'), 'https://algorithm.erichz.site/');
+    assert.equal($(el).attr('target'), undefined);
+  });
+  assert.match(read('css/detail.css'), /\.detail-hero-bg\s*\{[^}]*pointer-events:\s*none;/);
 });
 
 function heroRuntime({ available = true, compile = true, link = true, active = true, fine = false } = {}) {
