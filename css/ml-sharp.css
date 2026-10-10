@@ -39,9 +39,16 @@
 .sharp-edits p { margin: 0 0 14px; }
 .sharp-edits .sharp-map-hint { font-size: 0.65rem; color: var(--accent); }
 .sharp-map-scroll { overflow-x: auto; overscroll-behavior-x: contain; margin-bottom: 20px; border-radius: 6px; }
-.sharp-map-scroll figure { min-width: 960px; margin: 0; }
-.sharp-map-scroll img { display: block; width: 100%; height: auto; }
-.sharp-map-scroll figcaption { color: var(--text-secondary); font-size: 0.65rem; padding: 10px 0; line-height: 1.6; }
+.sharp-map-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; min-width: 1040px; }
+.sharp-map-grid figure { min-width: 0; margin: 0; }
+.sharp-map-grid figcaption { display: flex; justify-content: space-between; gap: 8px; align-items: center; min-height: 52px; padding: 10px 0; color: var(--text-secondary); font-size: 0.65rem; line-height: 1.6; }
+.sharp-map-grid figcaption > span:last-child { flex-shrink: 0; color: var(--accent); font-variant-numeric: tabular-nums; }
+.sharp-map-panel { display: block; position: relative; overflow: hidden; aspect-ratio: var(--map-photo-ratio); border-radius: 4px; background: #13171e; }
+/* Each source panel is a 768px square below a 40px header. Restore the photo
+   ratio for the marked region only; render undistorted, localized labels above. */
+.sharp-map-panel img { position: absolute; display: block; max-width: none; width: 400%; height: calc(100% * 808 / 768); top: calc(-100% * 40 / 768); left: calc(-100% * var(--map-column)); object-fit: fill; }
+.sharp-edits .sharp-map-caption { font-size: 0.65rem; margin-bottom: 10px; }
+.sharp-map-original { display: inline-block; margin-bottom: 20px; color: var(--accent); font-size: 0.7rem; text-decoration: underline; text-underline-offset: 4px; }
 .sharp-content { padding-top: 52px; }
 .sharp-content > .detail-text:first-child { font-size: 1.05rem; color: var(--text-primary); }
 .sharp-content > .detail-text:last-of-type { margin-bottom: 64px; }

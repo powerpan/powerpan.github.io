@@ -20,7 +20,7 @@ test('ML-SHARP pairs only the five approved scenes, with opt-in baseline videos 
   assert.equal($('video').length, 5);
   assert.equal($('details.sharp-edits[open]').length, 5);
   assert.equal(manifest.sourceDirectory, 'ML-SHARP/test_photo');
-  assert.deepEqual(fs.readdirSync(assetDir).sort(), manifest.scenes.flatMap(s => s.files.map(f => f.file)).sort());
+  assert.deepEqual(fs.readdirSync(assetDir).sort(), [...manifest.scenes.flatMap(s => s.files.map(f => f.file)), manifest.cover.file].sort());
   for (const scene of manifest.scenes) {
     const panel = $(`#scene-${scene.slug}`), video = panel.find('video');
     const photo = panel.find('.sharp-pair img'), map = panel.find('.sharp-map-scroll img');
@@ -35,11 +35,21 @@ test('ML-SHARP pairs only the five approved scenes, with opt-in baseline videos 
     assert(video.is('[controls][playsinline][muted]'));
     assert.equal(scene.video.format.duration, '2.000000');
     assert.deepEqual(scene.video.streams.map(s => s.codec_name), ['h264']);
-    assert.equal(map.attr('src'), base + '-edits.jpg');
-    assert.equal(map.parent().attr('href'), map.attr('src'));
-    assert.equal(map.attr('width'), '3072');
-    assert.equal(map.attr('height'), '808');
-    assert(photo.attr('data-i18n-alt') && map.attr('data-i18n-alt'));
+    assert.equal(map.length, 4);
+    assert.equal(panel.find('.sharp-map-grid').attr('style'), `--map-photo-ratio: ${scene.width} / ${scene.height}`);
+    map.each((i, el) => {
+      const image = $(el), link = image.parent();
+      assert.equal(image.attr('src'), base + '-edits.jpg');
+      assert.equal(link.attr('href'), image.attr('src'));
+      assert.equal(link.attr('style'), `--map-column: ${i}`);
+      assert.equal(image.attr('width'), '3072');
+      assert.equal(image.attr('height'), '808');
+      assert.equal(image.attr('alt'), '', 'the link and caption name this grid region');
+      const label = $('#' + link.attr('aria-labelledby').split(' ')[1]);
+      assert(label.text().includes(scene.mapCounts[i].toLocaleString('en-US')));
+    });
+    assert.equal(panel.find('.sharp-map-original').attr('href'), base + '-edits.jpg');
+    assert(photo.attr('data-i18n-alt'));
     assert.equal(panel.attr('hidden'), undefined, 'all scenes work without JavaScript');
     assert(panel.find('[data-sharp-play]').is('[hidden]'));
     for (const file of scene.files) {
@@ -55,6 +65,9 @@ test('ML-SHARP pairs only the five approved scenes, with opt-in baseline videos 
   assert.match(css, /object-fit: contain/);
   assert.match(css, /max-width: 540px[\s\S]*grid-template-columns: 1fr/);
   assert.match(css, /\.sharp-map-scroll \{ overflow-x: auto/);
+  assert.match(css, /\.sharp-map-panel \{[^}]*aspect-ratio: var\(--map-photo-ratio\)/);
+  assert.match(css, /height: calc\(100% \* 808 \/ 768\)/);
+  assert.match(css, /top: calc\(-100% \* 40 \/ 768\)/);
   assert.match(css, /\.sharp-table-wrap \{ overflow-x: auto/);
 });
 
@@ -102,8 +115,26 @@ test('ML-SHARP preserves approved prose, factual limits and the five-scene table
   assert.equal(archive('.project-list-card[href="ml-sharp.html"]').length, 1);
   assert.deepEqual(archive('.project-list-num').toArray().map(el => archive(el).text()), Array.from({ length: 15 }, (_, i) => String(i + 1).padStart(2, '0')));
   assert.equal(home('.project-card').length, 6);
-  assert.equal(home('.project-card[href="projects/ml-sharp.html"]').length, 0);
+  assert.equal(home('.project-card').eq(3).attr('href'), 'projects/ml-sharp.html');
+  assert.equal(home('.project-card[href="projects/moyu-night-library.html"]').length, 0);
+  assert.equal(archive('.project-list-card[href="moyu-night-library.html"]').length, 1);
   assert.equal(home('#blog .blog-item').length, 6);
+});
+
+test('ML-SHARP cover is the requested layer-two crop, not a browser screenshot', () => {
+  const { cover } = manifest;
+  const bytes = fs.readFileSync(path.join(assetDir, cover.file));
+  assert.equal(cover.source, 'corridor-edits.jpg');
+  assert.deepEqual(cover.crop, { left: 1536, top: 0, width: 1536, height: 808 });
+  assert.equal(bytes.readUInt32BE(16), cover.crop.width);
+  assert.equal(bytes.readUInt32BE(20), cover.crop.height);
+  assert.equal(bytes.length, cover.bytes);
+  assert.equal(createHash('sha256').update(bytes).digest('hex'), cover.sha256);
+  const home = load(read('index.html'));
+  const image = home('.project-card[href="projects/ml-sharp.html"] .project-screenshot');
+  assert.equal(image.attr('src'), `assets/projects/ml-sharp/${cover.file}`);
+  assert.equal(image.attr('width'), String(cover.crop.width));
+  assert.equal(image.attr('height'), String(cover.crop.height));
 });
 
 function fixture() {

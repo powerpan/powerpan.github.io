@@ -40,6 +40,12 @@
           "sha256": "0dce8ebaf9d3222ca8846e465e883a52ba2f3bd37f8145262b4184404f3e37a6",
           "bytes": 1191738
         }
+      ],
+      "mapCounts": [
+        2,
+        58853,
+        1,
+        28461
       ]
     },
     {
@@ -79,6 +85,12 @@
           "sha256": "1c1eb204e918f241249477ae3ee72bb176b600c212252e50698b755956d50a80",
           "bytes": 1024917
         }
+      ],
+      "mapCounts": [
+        0,
+        11329,
+        14,
+        1812
       ]
     },
     {
@@ -118,6 +130,12 @@
           "sha256": "1fd99eb8b2fd6e0424bbc71822e446ded0d368cb8967817425eb4aa43611bf23",
           "bytes": 1104884
         }
+      ],
+      "mapCounts": [
+        0,
+        2832,
+        0,
+        4254
       ]
     },
     {
@@ -157,6 +175,12 @@
           "sha256": "975bbc4c713c1db1f16cca1c5e5113eb80b1b4de9b74ad17c716bf4616587332",
           "bytes": 1068257
         }
+      ],
+      "mapCounts": [
+        8,
+        14293,
+        21,
+        16980
       ]
     },
     {
@@ -196,7 +220,31 @@
           "sha256": "97a34d8f8fc12422663d49107d3d8f6ebc71f33b2be4146d2f914557b282b8a0",
           "bytes": 1136474
         }
+      ],
+      "mapCounts": [
+        0,
+        32295,
+        0,
+        35877
       ]
     }
-  ]
+  ],
+  "cover": {
+    "file": "corridor-cover.png",
+    "source": "corridor-edits.jpg",
+    "crop": {
+      "left": 1536,
+      "top": 0,
+      "width": 1536,
+      "height": 808
+    },
+    "processing": "Lossless PNG crop of the two layer-2 columns; no browser screenshot or generated image.",
+    "sha256": "a00e94c06fd6459c7132f7165c48f0379d3a296d15190f44ad47326273648d40",
+    "bytes": 1786316
+  },
+  "mapDisplay": {
+    "sourcePanelSize": 768,
+    "sourceHeaderHeight": 40,
+    "presentation": "Each marked grid region is displayed at its input photograph aspect ratio. Original map files remain unchanged."
+  }
 }

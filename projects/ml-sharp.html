@@ -126,12 +126,24 @@
 <p class="sharp-error" role="status" hidden data-i18n="ms_error">暂时无法播放，可重试或直接打开视频。</p>
 </div>
 <details class="sharp-edits" open><summary><span data-i18n="ms_edits">修改位置图</span><span aria-hidden="true">+</span></summary>
-<p data-i18n="ms_map_note">四栏依次为：第一层深度修正、第一层裁剪、第二层深度修正、第二层裁剪。红色为深度调整，青色为裁剪；这不是误差热图。</p><p class="sharp-map-hint" data-i18n="ms_map_hint">可横向滑动查看四栏，点击图片查看完整原图。</p>
+<p data-i18n="ms_map_note">四栏依次为：第一层深度修正、第一层裁剪、第二层深度修正、第二层裁剪。红色为深度调整，青色为裁剪；这不是误差热图。</p><p class="sharp-map-hint" data-i18n="ms_map_hint">各栏按输入照片比例展示，标记位置同步缩放。可横向滑动查看，原始 768×768 网格图保留在下方链接。</p>
 <div class="sharp-map-scroll" tabindex="0" role="region" aria-labelledby="map-street-caption">
-<figure><a href="../assets/projects/ml-sharp/street-edits.jpg" title="查看完整图片" data-i18n-title="ms_open">
-<img src="../assets/projects/ml-sharp/street-edits.jpg" width="3072" height="808" alt="海边街道两层 Gaussian 深度调整与裁剪位置，四栏标记图" data-i18n-alt="ms_map_street" loading="lazy" decoding="async"></a>
-<figcaption id="map-street-caption" data-i18n="ms_map_street">海边街道两层 Gaussian 深度调整与裁剪位置，四栏标记图</figcaption></figure>
-</div></details>
+<div class="sharp-map-grid" style="--map-photo-ratio: 905 / 1600">
+<figure><figcaption id="map-street-0-label"><span data-i18n="ms_layer1_depth">第一层 · 深度修正</span><span>2 <span data-i18n="ms_points">点</span></span></figcaption>
+<a class="sharp-map-panel" style="--map-column: 0" href="../assets/projects/ml-sharp/street-edits.jpg" aria-labelledby="scene-street-title map-street-0-label" title="查看原始网格图" data-i18n-title="ms_map_original">
+<img src="../assets/projects/ml-sharp/street-edits.jpg" width="3072" height="808" alt="" loading="lazy" decoding="async"></a></figure>
+<figure><figcaption id="map-street-1-label"><span data-i18n="ms_layer1_prune">第一层 · 裁剪</span><span>58,853 <span data-i18n="ms_points">点</span></span></figcaption>
+<a class="sharp-map-panel" style="--map-column: 1" href="../assets/projects/ml-sharp/street-edits.jpg" aria-labelledby="scene-street-title map-street-1-label" title="查看原始网格图" data-i18n-title="ms_map_original">
+<img src="../assets/projects/ml-sharp/street-edits.jpg" width="3072" height="808" alt="" loading="lazy" decoding="async"></a></figure>
+<figure><figcaption id="map-street-2-label"><span data-i18n="ms_layer2_depth">第二层 · 深度修正</span><span>1 <span data-i18n="ms_points">点</span></span></figcaption>
+<a class="sharp-map-panel" style="--map-column: 2" href="../assets/projects/ml-sharp/street-edits.jpg" aria-labelledby="scene-street-title map-street-2-label" title="查看原始网格图" data-i18n-title="ms_map_original">
+<img src="../assets/projects/ml-sharp/street-edits.jpg" width="3072" height="808" alt="" loading="lazy" decoding="async"></a></figure>
+<figure><figcaption id="map-street-3-label"><span data-i18n="ms_layer2_prune">第二层 · 裁剪</span><span>28,461 <span data-i18n="ms_points">点</span></span></figcaption>
+<a class="sharp-map-panel" style="--map-column: 3" href="../assets/projects/ml-sharp/street-edits.jpg" aria-labelledby="scene-street-title map-street-3-label" title="查看原始网格图" data-i18n-title="ms_map_original">
+<img src="../assets/projects/ml-sharp/street-edits.jpg" width="3072" height="808" alt="" loading="lazy" decoding="async"></a></figure>
+</div></div>
+<p class="sharp-map-caption" id="map-street-caption" data-i18n="ms_map_street">海边街道两层 Gaussian 深度调整与裁剪位置，四栏标记图</p>
+<a class="sharp-map-original" href="../assets/projects/ml-sharp/street-edits.jpg" data-i18n="ms_map_original">查看原始网格图</a></details>
 </section>
 <section class="sharp-scene" id="scene-coast" data-sharp-scene="coast" aria-labelledby="scene-coast-title" tabindex="0">
 <h3 class="sharp-scene-title" id="scene-coast-title" data-i18n="ms_scene_coast">海岸悬崖</h3>
@@ -152,12 +164,24 @@
 <p class="sharp-error" role="status" hidden data-i18n="ms_error">暂时无法播放，可重试或直接打开视频。</p>
 </div>
 <details class="sharp-edits" open><summary><span data-i18n="ms_edits">修改位置图</span><span aria-hidden="true">+</span></summary>
-<p data-i18n="ms_map_note">四栏依次为：第一层深度修正、第一层裁剪、第二层深度修正、第二层裁剪。红色为深度调整，青色为裁剪；这不是误差热图。</p><p class="sharp-map-hint" data-i18n="ms_map_hint">可横向滑动查看四栏，点击图片查看完整原图。</p>
+<p data-i18n="ms_map_note">四栏依次为：第一层深度修正、第一层裁剪、第二层深度修正、第二层裁剪。红色为深度调整，青色为裁剪；这不是误差热图。</p><p class="sharp-map-hint" data-i18n="ms_map_hint">各栏按输入照片比例展示，标记位置同步缩放。可横向滑动查看，原始 768×768 网格图保留在下方链接。</p>
 <div class="sharp-map-scroll" tabindex="0" role="region" aria-labelledby="map-coast-caption">
-<figure><a href="../assets/projects/ml-sharp/coast-edits.jpg" title="查看完整图片" data-i18n-title="ms_open">
-<img src="../assets/projects/ml-sharp/coast-edits.jpg" width="3072" height="808" alt="海岸悬崖两层 Gaussian 深度调整与裁剪位置，四栏标记图" data-i18n-alt="ms_map_coast" loading="lazy" decoding="async"></a>
-<figcaption id="map-coast-caption" data-i18n="ms_map_coast">海岸悬崖两层 Gaussian 深度调整与裁剪位置，四栏标记图</figcaption></figure>
-</div></details>
+<div class="sharp-map-grid" style="--map-photo-ratio: 900 / 1600">
+<figure><figcaption id="map-coast-0-label"><span data-i18n="ms_layer1_depth">第一层 · 深度修正</span><span>0 <span data-i18n="ms_points">点</span></span></figcaption>
+<a class="sharp-map-panel" style="--map-column: 0" href="../assets/projects/ml-sharp/coast-edits.jpg" aria-labelledby="scene-coast-title map-coast-0-label" title="查看原始网格图" data-i18n-title="ms_map_original">
+<img src="../assets/projects/ml-sharp/coast-edits.jpg" width="3072" height="808" alt="" loading="lazy" decoding="async"></a></figure>
+<figure><figcaption id="map-coast-1-label"><span data-i18n="ms_layer1_prune">第一层 · 裁剪</span><span>11,329 <span data-i18n="ms_points">点</span></span></figcaption>
+<a class="sharp-map-panel" style="--map-column: 1" href="../assets/projects/ml-sharp/coast-edits.jpg" aria-labelledby="scene-coast-title map-coast-1-label" title="查看原始网格图" data-i18n-title="ms_map_original">
+<img src="../assets/projects/ml-sharp/coast-edits.jpg" width="3072" height="808" alt="" loading="lazy" decoding="async"></a></figure>
+<figure><figcaption id="map-coast-2-label"><span data-i18n="ms_layer2_depth">第二层 · 深度修正</span><span>14 <span data-i18n="ms_points">点</span></span></figcaption>
+<a class="sharp-map-panel" style="--map-column: 2" href="../assets/projects/ml-sharp/coast-edits.jpg" aria-labelledby="scene-coast-title map-coast-2-label" title="查看原始网格图" data-i18n-title="ms_map_original">
+<img src="../assets/projects/ml-sharp/coast-edits.jpg" width="3072" height="808" alt="" loading="lazy" decoding="async"></a></figure>
+<figure><figcaption id="map-coast-3-label"><span data-i18n="ms_layer2_prune">第二层 · 裁剪</span><span>1,812 <span data-i18n="ms_points">点</span></span></figcaption>
+<a class="sharp-map-panel" style="--map-column: 3" href="../assets/projects/ml-sharp/coast-edits.jpg" aria-labelledby="scene-coast-title map-coast-3-label" title="查看原始网格图" data-i18n-title="ms_map_original">
+<img src="../assets/projects/ml-sharp/coast-edits.jpg" width="3072" height="808" alt="" loading="lazy" decoding="async"></a></figure>
+</div></div>
+<p class="sharp-map-caption" id="map-coast-caption" data-i18n="ms_map_coast">海岸悬崖两层 Gaussian 深度调整与裁剪位置，四栏标记图</p>
+<a class="sharp-map-original" href="../assets/projects/ml-sharp/coast-edits.jpg" data-i18n="ms_map_original">查看原始网格图</a></details>
 </section>
 <section class="sharp-scene" id="scene-temple" data-sharp-scene="temple" aria-labelledby="scene-temple-title" tabindex="0">
 <h3 class="sharp-scene-title" id="scene-temple-title" data-i18n="ms_scene_temple">古建筑与树木</h3>
@@ -178,12 +202,24 @@
 <p class="sharp-error" role="status" hidden data-i18n="ms_error">暂时无法播放，可重试或直接打开视频。</p>
 </div>
 <details class="sharp-edits" open><summary><span data-i18n="ms_edits">修改位置图</span><span aria-hidden="true">+</span></summary>
-<p data-i18n="ms_map_note">四栏依次为：第一层深度修正、第一层裁剪、第二层深度修正、第二层裁剪。红色为深度调整，青色为裁剪；这不是误差热图。</p><p class="sharp-map-hint" data-i18n="ms_map_hint">可横向滑动查看四栏，点击图片查看完整原图。</p>
+<p data-i18n="ms_map_note">四栏依次为：第一层深度修正、第一层裁剪、第二层深度修正、第二层裁剪。红色为深度调整，青色为裁剪；这不是误差热图。</p><p class="sharp-map-hint" data-i18n="ms_map_hint">各栏按输入照片比例展示，标记位置同步缩放。可横向滑动查看，原始 768×768 网格图保留在下方链接。</p>
 <div class="sharp-map-scroll" tabindex="0" role="region" aria-labelledby="map-temple-caption">
-<figure><a href="../assets/projects/ml-sharp/temple-edits.jpg" title="查看完整图片" data-i18n-title="ms_open">
-<img src="../assets/projects/ml-sharp/temple-edits.jpg" width="3072" height="808" alt="古建筑与树木两层 Gaussian 深度调整与裁剪位置，四栏标记图" data-i18n-alt="ms_map_temple" loading="lazy" decoding="async"></a>
-<figcaption id="map-temple-caption" data-i18n="ms_map_temple">古建筑与树木两层 Gaussian 深度调整与裁剪位置，四栏标记图</figcaption></figure>
-</div></details>
+<div class="sharp-map-grid" style="--map-photo-ratio: 1200 / 1600">
+<figure><figcaption id="map-temple-0-label"><span data-i18n="ms_layer1_depth">第一层 · 深度修正</span><span>0 <span data-i18n="ms_points">点</span></span></figcaption>
+<a class="sharp-map-panel" style="--map-column: 0" href="../assets/projects/ml-sharp/temple-edits.jpg" aria-labelledby="scene-temple-title map-temple-0-label" title="查看原始网格图" data-i18n-title="ms_map_original">
+<img src="../assets/projects/ml-sharp/temple-edits.jpg" width="3072" height="808" alt="" loading="lazy" decoding="async"></a></figure>
+<figure><figcaption id="map-temple-1-label"><span data-i18n="ms_layer1_prune">第一层 · 裁剪</span><span>2,832 <span data-i18n="ms_points">点</span></span></figcaption>
+<a class="sharp-map-panel" style="--map-column: 1" href="../assets/projects/ml-sharp/temple-edits.jpg" aria-labelledby="scene-temple-title map-temple-1-label" title="查看原始网格图" data-i18n-title="ms_map_original">
+<img src="../assets/projects/ml-sharp/temple-edits.jpg" width="3072" height="808" alt="" loading="lazy" decoding="async"></a></figure>
+<figure><figcaption id="map-temple-2-label"><span data-i18n="ms_layer2_depth">第二层 · 深度修正</span><span>0 <span data-i18n="ms_points">点</span></span></figcaption>
+<a class="sharp-map-panel" style="--map-column: 2" href="../assets/projects/ml-sharp/temple-edits.jpg" aria-labelledby="scene-temple-title map-temple-2-label" title="查看原始网格图" data-i18n-title="ms_map_original">
+<img src="../assets/projects/ml-sharp/temple-edits.jpg" width="3072" height="808" alt="" loading="lazy" decoding="async"></a></figure>
+<figure><figcaption id="map-temple-3-label"><span data-i18n="ms_layer2_prune">第二层 · 裁剪</span><span>4,254 <span data-i18n="ms_points">点</span></span></figcaption>
+<a class="sharp-map-panel" style="--map-column: 3" href="../assets/projects/ml-sharp/temple-edits.jpg" aria-labelledby="scene-temple-title map-temple-3-label" title="查看原始网格图" data-i18n-title="ms_map_original">
+<img src="../assets/projects/ml-sharp/temple-edits.jpg" width="3072" height="808" alt="" loading="lazy" decoding="async"></a></figure>
+</div></div>
+<p class="sharp-map-caption" id="map-temple-caption" data-i18n="ms_map_temple">古建筑与树木两层 Gaussian 深度调整与裁剪位置，四栏标记图</p>
+<a class="sharp-map-original" href="../assets/projects/ml-sharp/temple-edits.jpg" data-i18n="ms_map_original">查看原始网格图</a></details>
 </section>
 <section class="sharp-scene" id="scene-chair" data-sharp-scene="chair" aria-labelledby="scene-chair-title" tabindex="0">
 <h3 class="sharp-scene-title" id="scene-chair-title" data-i18n="ms_scene_chair">窗边座椅</h3>
@@ -204,12 +240,24 @@
 <p class="sharp-error" role="status" hidden data-i18n="ms_error">暂时无法播放，可重试或直接打开视频。</p>
 </div>
 <details class="sharp-edits" open><summary><span data-i18n="ms_edits">修改位置图</span><span aria-hidden="true">+</span></summary>
-<p data-i18n="ms_map_note">四栏依次为：第一层深度修正、第一层裁剪、第二层深度修正、第二层裁剪。红色为深度调整，青色为裁剪；这不是误差热图。</p><p class="sharp-map-hint" data-i18n="ms_map_hint">可横向滑动查看四栏，点击图片查看完整原图。</p>
+<p data-i18n="ms_map_note">四栏依次为：第一层深度修正、第一层裁剪、第二层深度修正、第二层裁剪。红色为深度调整，青色为裁剪；这不是误差热图。</p><p class="sharp-map-hint" data-i18n="ms_map_hint">各栏按输入照片比例展示，标记位置同步缩放。可横向滑动查看，原始 768×768 网格图保留在下方链接。</p>
 <div class="sharp-map-scroll" tabindex="0" role="region" aria-labelledby="map-chair-caption">
-<figure><a href="../assets/projects/ml-sharp/chair-edits.jpg" title="查看完整图片" data-i18n-title="ms_open">
-<img src="../assets/projects/ml-sharp/chair-edits.jpg" width="3072" height="808" alt="窗边座椅两层 Gaussian 深度调整与裁剪位置，四栏标记图" data-i18n-alt="ms_map_chair" loading="lazy" decoding="async"></a>
-<figcaption id="map-chair-caption" data-i18n="ms_map_chair">窗边座椅两层 Gaussian 深度调整与裁剪位置，四栏标记图</figcaption></figure>
-</div></details>
+<div class="sharp-map-grid" style="--map-photo-ratio: 1200 / 1600">
+<figure><figcaption id="map-chair-0-label"><span data-i18n="ms_layer1_depth">第一层 · 深度修正</span><span>8 <span data-i18n="ms_points">点</span></span></figcaption>
+<a class="sharp-map-panel" style="--map-column: 0" href="../assets/projects/ml-sharp/chair-edits.jpg" aria-labelledby="scene-chair-title map-chair-0-label" title="查看原始网格图" data-i18n-title="ms_map_original">
+<img src="../assets/projects/ml-sharp/chair-edits.jpg" width="3072" height="808" alt="" loading="lazy" decoding="async"></a></figure>
+<figure><figcaption id="map-chair-1-label"><span data-i18n="ms_layer1_prune">第一层 · 裁剪</span><span>14,293 <span data-i18n="ms_points">点</span></span></figcaption>
+<a class="sharp-map-panel" style="--map-column: 1" href="../assets/projects/ml-sharp/chair-edits.jpg" aria-labelledby="scene-chair-title map-chair-1-label" title="查看原始网格图" data-i18n-title="ms_map_original">
+<img src="../assets/projects/ml-sharp/chair-edits.jpg" width="3072" height="808" alt="" loading="lazy" decoding="async"></a></figure>
+<figure><figcaption id="map-chair-2-label"><span data-i18n="ms_layer2_depth">第二层 · 深度修正</span><span>21 <span data-i18n="ms_points">点</span></span></figcaption>
+<a class="sharp-map-panel" style="--map-column: 2" href="../assets/projects/ml-sharp/chair-edits.jpg" aria-labelledby="scene-chair-title map-chair-2-label" title="查看原始网格图" data-i18n-title="ms_map_original">
+<img src="../assets/projects/ml-sharp/chair-edits.jpg" width="3072" height="808" alt="" loading="lazy" decoding="async"></a></figure>
+<figure><figcaption id="map-chair-3-label"><span data-i18n="ms_layer2_prune">第二层 · 裁剪</span><span>16,980 <span data-i18n="ms_points">点</span></span></figcaption>
+<a class="sharp-map-panel" style="--map-column: 3" href="../assets/projects/ml-sharp/chair-edits.jpg" aria-labelledby="scene-chair-title map-chair-3-label" title="查看原始网格图" data-i18n-title="ms_map_original">
+<img src="../assets/projects/ml-sharp/chair-edits.jpg" width="3072" height="808" alt="" loading="lazy" decoding="async"></a></figure>
+</div></div>
+<p class="sharp-map-caption" id="map-chair-caption" data-i18n="ms_map_chair">窗边座椅两层 Gaussian 深度调整与裁剪位置，四栏标记图</p>
+<a class="sharp-map-original" href="../assets/projects/ml-sharp/chair-edits.jpg" data-i18n="ms_map_original">查看原始网格图</a></details>
 </section>
 <section class="sharp-scene" id="scene-corridor" data-sharp-scene="corridor" aria-labelledby="scene-corridor-title" tabindex="0">
 <h3 class="sharp-scene-title" id="scene-corridor-title" data-i18n="ms_scene_corridor">校园走廊</h3>
@@ -230,12 +278,24 @@
 <p class="sharp-error" role="status" hidden data-i18n="ms_error">暂时无法播放，可重试或直接打开视频。</p>
 </div>
 <details class="sharp-edits" open><summary><span data-i18n="ms_edits">修改位置图</span><span aria-hidden="true">+</span></summary>
-<p data-i18n="ms_map_note">四栏依次为：第一层深度修正、第一层裁剪、第二层深度修正、第二层裁剪。红色为深度调整，青色为裁剪；这不是误差热图。</p><p class="sharp-map-hint" data-i18n="ms_map_hint">可横向滑动查看四栏，点击图片查看完整原图。</p>
+<p data-i18n="ms_map_note">四栏依次为：第一层深度修正、第一层裁剪、第二层深度修正、第二层裁剪。红色为深度调整，青色为裁剪；这不是误差热图。</p><p class="sharp-map-hint" data-i18n="ms_map_hint">各栏按输入照片比例展示，标记位置同步缩放。可横向滑动查看，原始 768×768 网格图保留在下方链接。</p>
 <div class="sharp-map-scroll" tabindex="0" role="region" aria-labelledby="map-corridor-caption">
-<figure><a href="../assets/projects/ml-sharp/corridor-edits.jpg" title="查看完整图片" data-i18n-title="ms_open">
-<img src="../assets/projects/ml-sharp/corridor-edits.jpg" width="3072" height="808" alt="校园走廊两层 Gaussian 深度调整与裁剪位置，四栏标记图" data-i18n-alt="ms_map_corridor" loading="lazy" decoding="async"></a>
-<figcaption id="map-corridor-caption" data-i18n="ms_map_corridor">校园走廊两层 Gaussian 深度调整与裁剪位置，四栏标记图</figcaption></figure>
-</div></details>
+<div class="sharp-map-grid" style="--map-photo-ratio: 1200 / 1600">
+<figure><figcaption id="map-corridor-0-label"><span data-i18n="ms_layer1_depth">第一层 · 深度修正</span><span>0 <span data-i18n="ms_points">点</span></span></figcaption>
+<a class="sharp-map-panel" style="--map-column: 0" href="../assets/projects/ml-sharp/corridor-edits.jpg" aria-labelledby="scene-corridor-title map-corridor-0-label" title="查看原始网格图" data-i18n-title="ms_map_original">
+<img src="../assets/projects/ml-sharp/corridor-edits.jpg" width="3072" height="808" alt="" loading="lazy" decoding="async"></a></figure>
+<figure><figcaption id="map-corridor-1-label"><span data-i18n="ms_layer1_prune">第一层 · 裁剪</span><span>32,295 <span data-i18n="ms_points">点</span></span></figcaption>
+<a class="sharp-map-panel" style="--map-column: 1" href="../assets/projects/ml-sharp/corridor-edits.jpg" aria-labelledby="scene-corridor-title map-corridor-1-label" title="查看原始网格图" data-i18n-title="ms_map_original">
+<img src="../assets/projects/ml-sharp/corridor-edits.jpg" width="3072" height="808" alt="" loading="lazy" decoding="async"></a></figure>
+<figure><figcaption id="map-corridor-2-label"><span data-i18n="ms_layer2_depth">第二层 · 深度修正</span><span>0 <span data-i18n="ms_points">点</span></span></figcaption>
+<a class="sharp-map-panel" style="--map-column: 2" href="../assets/projects/ml-sharp/corridor-edits.jpg" aria-labelledby="scene-corridor-title map-corridor-2-label" title="查看原始网格图" data-i18n-title="ms_map_original">
+<img src="../assets/projects/ml-sharp/corridor-edits.jpg" width="3072" height="808" alt="" loading="lazy" decoding="async"></a></figure>
+<figure><figcaption id="map-corridor-3-label"><span data-i18n="ms_layer2_prune">第二层 · 裁剪</span><span>35,877 <span data-i18n="ms_points">点</span></span></figcaption>
+<a class="sharp-map-panel" style="--map-column: 3" href="../assets/projects/ml-sharp/corridor-edits.jpg" aria-labelledby="scene-corridor-title map-corridor-3-label" title="查看原始网格图" data-i18n-title="ms_map_original">
+<img src="../assets/projects/ml-sharp/corridor-edits.jpg" width="3072" height="808" alt="" loading="lazy" decoding="async"></a></figure>
+</div></div>
+<p class="sharp-map-caption" id="map-corridor-caption" data-i18n="ms_map_corridor">校园走廊两层 Gaussian 深度调整与裁剪位置，四栏标记图</p>
+<a class="sharp-map-original" href="../assets/projects/ml-sharp/corridor-edits.jpg" data-i18n="ms_map_original">查看原始网格图</a></details>
 </section>
 </section>
 <div class="detail-content sharp-content"><p class="detail-text" data-i18n-html="ms_b1">一张街道望海的照片，近处是车辆，两侧是楼房，远处是海面和桥。我把它输入 SHARP，再让虚拟相机稍微移动：车辆与远景产生不同幅度的位移，原本固定在照片里的街道，开始有了向纵深延伸的感觉。</p>

@@ -51,12 +51,12 @@ test('milestone sparks are deterministic, bounded and finish with the arrival se
   }
 });
 
-test('showcase features six screenshot-backed projects with accurate image labels', () => {
+test('showcase features six source-backed projects with accurate image labels', () => {
   const $ = load(read('index.html'));
   const cards = $('.project-card');
   assert.equal(cards.length, 6);
   const featured = ['civilization-z', 'trading-simulator', 'greenbird-badminton',
-    'moyu-night-library', 'algorithm-museum', 'word-note'];
+    'ml-sharp', 'algorithm-museum', 'word-note'];
   assert.deepEqual(cards.map((_, el) => $(el).attr('href')).get(),
     featured.map(slug => `projects/${slug}.html`));
   const screenshotProjects = fs.readdirSync(path.join(root, 'projects'))
@@ -76,8 +76,15 @@ test('showcase features six screenshot-backed projects with accurate image label
     const img = $(el);
     assert(fs.existsSync(path.join(root, img.attr('src'))));
     const detail = load(read(`projects/${featured[index]}.html`));
-    assert(detail('img').toArray().some(image =>
-      detail(image).attr('src') === `../${img.attr('src')}`));
+    if (featured[index] === 'ml-sharp') {
+      const cover = JSON.parse(read('tools/fixtures/ml-sharp-media.json')).cover;
+      assert.equal(img.attr('src'), `assets/projects/ml-sharp/${cover.file}`);
+      assert(detail(`img[src="../assets/projects/ml-sharp/${cover.source}"]`).length > 0);
+      assert.equal(img.closest('.project-visual').find('.project-visual-note').attr('data-i18n'), 'ms_cover_note');
+    } else {
+      assert(detail('img').toArray().some(image =>
+        detail(image).attr('src') === `../${img.attr('src')}`));
+    }
     assert(Number(img.attr('width')) > 0 && Number(img.attr('height')) > 0);
     assert.equal(img.attr('loading'), 'lazy');
     assert.equal(img.attr('decoding'), 'async');
@@ -114,7 +121,7 @@ test('showcase features six screenshot-backed projects with accurate image label
   assert(fs.statSync(path.join(root, 'assets/vfx/project-atlas.jpg')).size < 600 * 1024);
 });
 
-test('screenshot covers remain uncropped and unfiltered with a separate label area', () => {
+test('provided covers are not cropped again or filtered and retain a separate label area', () => {
   const css = read('css/showcase.css');
   assert.match(css, /\.project-screenshot\s*\{[^}]*object-fit:\s*contain;/);
   assert.match(css, /\.project-visual-screenshot\s*\{[^}]*padding:\s*58px 24px 22px;/);

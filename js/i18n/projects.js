@@ -1,6 +1,8 @@
 /* i18n data: projects */
 window.registerI18nChunk({
   "zh": {
+    "ms_cover_alt": "校园走廊修改位置原图的右侧两栏：第二层深度修正与青色裁剪标记",
+    "ms_cover_note": "后处理标记 · 第二层",
     "ms_card_desc": "基于 Apple SHARP 的单图三维场景实践：五组照片与原版视差视频，结合局部深度修正、高斯裁剪和修改位置分析。",
     "wn_title": "Word Note",
     "wn_tag": "macOS · SwiftUI · AI Vocabulary",
@@ -594,6 +596,8 @@ window.registerI18nChunk({
     "sf_s5": "快速上手"
   },
   "en": {
+    "ms_cover_alt": "Right-hand columns cropped from the original campus-corridor edit map: layer-two depth corrections and cyan pruning marks",
+    "ms_cover_note": "Post-processing marks · Layer 2",
     "ms_card_desc": "My single-image 3D workflow with Apple SHARP: five photos and baseline parallax videos, plus local depth correction, Gaussian pruning and edit-location analysis.",
     "wn_title": "Word Note",
     "wn_tag": "macOS · SwiftUI · AI Vocabulary",

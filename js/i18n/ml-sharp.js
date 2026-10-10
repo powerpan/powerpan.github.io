@@ -16,7 +16,7 @@ window.registerI18nChunk({
         "ms_poster": "播放前显示输入照片；点击播放查看模型结果。",
         "ms_edits": "修改位置图",
         "ms_map_note": "四栏依次为：第一层深度修正、第一层裁剪、第二层深度修正、第二层裁剪。红色为深度调整，青色为裁剪；这不是误差热图。",
-        "ms_map_hint": "可横向滑动查看四栏，点击图片查看完整原图。",
+        "ms_map_hint": "各栏按输入照片比例展示，标记位置同步缩放。可横向滑动查看，原始 768×768 网格图保留在下方链接。",
         "ms_open": "查看完整图片",
         "ms_results_caption": "五个场景的后处理统计",
         "ms_col_scene": "场景",
@@ -81,7 +81,13 @@ window.registerI18nChunk({
         "ms_b41": "我想继续推进的方向",
         "ms_b42": "目前的展示保留五组输入照片、原版视频和修改位置图。下一步会先选一个有明确伪影的场景，固定相机路径，一次只放宽一类条件，检查改善是否值得付出细节损失。外部深度对齐也可以继续尝试，但需要先解决尺度、焦距和坐标系对应的问题，不能直接拿另一份预测覆盖现有几何。",
         "ms_b43": "展示端则更适合从小幅度交互开始：让照片跟随鼠标或设备姿态产生受控的视差，而不是默认允许大范围漫游。这还是后续方向，当前展示使用离线生成的视频，并未提供实时交互查看器。",
-        "ms_b44": "我喜欢这类项目的原因，是一张熟悉的照片可以有另一种观看方式。车、楼房和远处的海不再以相同的速度掠过画面，空间感就从这种差别中出现了。接下来要打磨的，是在多大范围内，它既保留照片的观感，也经得起换个角度看。"
+        "ms_b44": "我喜欢这类项目的原因，是一张熟悉的照片可以有另一种观看方式。车、楼房和远处的海不再以相同的速度掠过画面，空间感就从这种差别中出现了。接下来要打磨的，是在多大范围内，它既保留照片的观感，也经得起换个角度看。",
+        "ms_map_original": "查看原始网格图",
+        "ms_layer1_depth": "第一层 · 深度修正",
+        "ms_layer1_prune": "第一层 · 裁剪",
+        "ms_layer2_depth": "第二层 · 深度修正",
+        "ms_layer2_prune": "第二层 · 裁剪",
+        "ms_points": "点"
     },
     "en": {
         "ms_sub": "Turning one photograph into a scene with movable viewpoints",
@@ -99,7 +105,7 @@ window.registerI18nChunk({
         "ms_poster": "The poster is the input photograph. Press play to see the model output.",
         "ms_edits": "Edit locations",
         "ms_map_note": "Columns: layer 1 depth correction, layer 1 pruning, layer 2 depth correction, layer 2 pruning. Red marks depth edits; cyan marks removals. This is not an error heatmap.",
-        "ms_map_hint": "Scroll sideways to inspect all four columns, or open the image at full size.",
+        "ms_map_hint": "Each panel follows the input photo's aspect ratio, with marks scaled together. Scroll sideways to inspect all four; the original 768×768 grid map remains linked below.",
         "ms_open": "View full-size image",
         "ms_results_caption": "Post-processing measurements for the five scenes",
         "ms_col_scene": "Scene",
@@ -164,6 +170,12 @@ window.registerI18nChunk({
         "ms_b41": "Where I want to take it next",
         "ms_b42": "For now, the showcase keeps the five sets of input photographs, baseline videos and edit-location maps. Next, I want to choose a scene with a clear artifact, fix the camera path and relax one condition at a time, checking whether any gain justifies lost detail. External depth alignment is another possibility, but scale, focal length and coordinate conventions need to agree before another prediction can replace existing geometry.",
         "ms_b43": "For presentation, small interactive movements seem more appropriate than unrestricted navigation: a photograph could respond to the mouse or device orientation with controlled parallax. That is a future direction. The current showcase uses offline-rendered videos, not a real-time interactive viewer.",
-        "ms_b44": "What I like about this project is the possibility of seeing a familiar photograph differently. Vehicles, buildings and distant water no longer pass through the frame at the same speed; depth emerges from that difference. What I want to refine next is how far the viewpoint can move while preserving the photograph's character and holding up from another angle."
+        "ms_b44": "What I like about this project is the possibility of seeing a familiar photograph differently. Vehicles, buildings and distant water no longer pass through the frame at the same speed; depth emerges from that difference. What I want to refine next is how far the viewpoint can move while preserving the photograph's character and holding up from another angle.",
+        "ms_map_original": "View original grid map",
+        "ms_layer1_depth": "Layer 1 · Depth",
+        "ms_layer1_prune": "Layer 1 · Pruning",
+        "ms_layer2_depth": "Layer 2 · Depth",
+        "ms_layer2_prune": "Layer 2 · Pruning",
+        "ms_points": "points"
     }
 });
