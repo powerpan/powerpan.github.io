@@ -58,7 +58,7 @@ test('Word Note is featured without losing older projects or changing article sl
   assert.equal(card.find('.project-visual-note').attr('data-i18n'), 'wn_screenshot_note');
   assert.equal(archive('.project-list-card[href="word-note.html"]').length, 1);
   assert.equal(archive('.project-list-card[href="local-rag.html"]').length, 1);
-  assert.equal(archive('.project-list-card').length, 14);
+  assert.equal(archive('.project-list-card').length, 15);
   assert.equal(home('#blog .blog-item').length, 6);
 });
 

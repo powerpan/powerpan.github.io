@@ -1,6 +1,7 @@
 /* i18n data: projects */
 window.registerI18nChunk({
   "zh": {
+    "ms_card_desc": "基于 Apple SHARP 的单图三维场景实践：五组照片与原版视差视频，结合局部深度修正、高斯裁剪和修改位置分析。",
     "wn_title": "Word Note",
     "wn_tag": "macOS · SwiftUI · AI Vocabulary",
     "wn_card_desc": "我为英文课程和阅读做的 Mac 词本。悬浮窗随手记，中英双向查词，核对释义后入库，再按课程检索与复习。",
@@ -507,7 +508,7 @@ window.registerI18nChunk({
     "classbridge_iso6_desc": "Admin Web 按产品管理发布、审核、用户和报告质量。",
     "proj_back": "← 返回首页",
     "proj_list_title": "// 全部项目",
-    "proj_list_sub": "全部项目 — 共 14 个项目，持续更新中",
+    "proj_list_sub": "全部项目 — 共 15 个项目，持续更新中",
     "proj_card1_desc": "基于 YOLO26 的多模态视觉检测系统，单模型同时输出检测、关键点、分割三类结果，可复用 backbone 与 neck 的多头架构设计。",
     "proj_card2_desc": "基于 YOLOv5 的地铁闸机翻越检测系统，部署至 RK3588 边缘设备，RKNN 推理加速，实时识别违规行为。",
     "proj_card3_desc": "基于 YOLO 与 SAM 的实时目标检测与分割系统，面向工业质检场景，支持多类缺陷的自动识别与像素级分割。",
@@ -593,6 +594,7 @@ window.registerI18nChunk({
     "sf_s5": "快速上手"
   },
   "en": {
+    "ms_card_desc": "My single-image 3D workflow with Apple SHARP: five photos and baseline parallax videos, plus local depth correction, Gaussian pruning and edit-location analysis.",
     "wn_title": "Word Note",
     "wn_tag": "macOS · SwiftUI · AI Vocabulary",
     "wn_card_desc": "A Mac vocabulary notebook I built for English-language courses and reading. Capture a word in a floating panel, look it up in either direction, check the meaning, then find and review it by course.",
@@ -1099,7 +1101,7 @@ window.registerI18nChunk({
     "classbridge_iso6_desc": "Admin Web manages publishing, review, users, and report quality by product.",
     "proj_back": "← Back to Home",
     "proj_list_title": "// All Projects",
-    "proj_list_sub": "All Projects — 14 projects and counting",
+    "proj_list_sub": "All Projects — 15 projects and counting",
     "proj_card1_desc": "Multi-modal visual detection system based on YOLO26, outputting detection, keypoints, and segmentation in a single forward pass with reusable backbone and neck architecture.",
     "proj_card2_desc": "Metro gate vaulting detection system based on YOLOv5, deployed on RK3588 edge device with RKNN inference acceleration for real-time violation detection.",
     "proj_card3_desc": "Real-time object detection and segmentation system based on YOLO and SAM, designed for industrial quality inspection with multi-class defect identification.",
