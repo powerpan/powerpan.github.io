@@ -12,9 +12,11 @@ test('language URLs are reversible and idempotent at root, archives and details'
     const english = languagePath(pathname, 'en');
     assert.equal(english, '/en' + pathname);
     assert.equal(languagePath(english, 'en'), english);
-    assert.equal(languagePath(english, 'zh'), pathname);
+    assert.equal(languagePath(english, 'zh'), pathname === '/' ? '/zh/' : pathname);
   }
   assert.equal(languagePath('/en', 'en'), '/en/');
+  assert.equal(languagePath('/zh/', 'zh'), '/zh/');
+  assert.equal(languagePath('/zh', 'en'), '/en/');
   assert.equal(languagePath('/english', 'zh'), '/english');
   assert.throws(() => languagePath('/', 'fr'), /Unsupported/);
 });
@@ -57,6 +59,7 @@ test('only known page links change language; resources, query, hash and external
     ['https://other.example/a.html', 'https://other.example/a.html'], ['data:image/png;base64,abc', 'data:image/png;base64,abc'],
   ]) assert.equal(mappedLink(input, 'blog/example.html', 'en', pages), expected);
   assert.equal(mappedLink('example.html', 'blog/index.html', 'en', pages, true), '/blog/example.html');
+  assert.equal(mappedLink('../index.html?q=1#projects', 'blog/example.html', 'zh', pages), '/zh/?q=1#projects');
 });
 
 test('schema localization updates page facts but preserves author identity and dates', () => {
@@ -89,6 +92,32 @@ test('bilingual generation is deterministic, emits static navigation, shares ass
   assert.equal($('script').last().text(), "const sample = '<div>';");
   const zh = load(first.get('projects/example.html').toString());
   assert.equal(zh('h1').text(), '// 关于');
+});
+
+test('homepages have explicit static languages without moving existing article or project URLs', () => {
+  const entries = ['index.html', 'blog/index.html', 'projects/index.html', 'projects/ml-sharp.html']
+    .map((rel) => ({ rel, html: fs.readFileSync(path.join(__dirname, '..', rel), 'utf8') }));
+  const pages = createLocalizedPages(entries);
+  assert(!pages.has('index.html'), 'Root is the redirect entry, not another Chinese document');
+  assert.equal(pages.size, entries.length * 2);
+  for (const [rel, lang, other] of [
+    ['en/index.html', 'en', '/zh/'], ['zh/index.html', 'zh', '/en/'],
+    ['projects/ml-sharp.html', 'zh', '/en/projects/ml-sharp'],
+  ]) {
+    const $ = load(pages.get(rel).toString());
+    assert.equal($('html').attr('data-site-lang'), lang);
+    assert.equal($('#langToggle').length, 1);
+    assert.equal($('#langToggle').attr('href'), other);
+    assert.equal($('#mobileLangBtn').attr('href'), other);
+    assert.equal($('link[hreflang="zh-CN"]').attr('href'), SITE_ORIGIN + (rel.endsWith('index.html') ? '/zh/' : '/projects/ml-sharp'));
+    assert.equal(new URL($('#nav .nav-logo').attr('href'), $('link[rel="canonical"]').attr('href')).pathname, languagePath('/', lang));
+  }
+  const english = load(pages.get('en/index.html').toString());
+  const chinese = load(pages.get('zh/index.html').toString());
+  assert.equal(english('#nav [data-i18n="nav_about"]').text(), '// About');
+  assert.equal(chinese('#nav [data-i18n="nav_about"]').text(), '// 关于');
+  assert.equal(chinese('link[rel="canonical"]').attr('href'), SITE_ORIGIN + '/zh/');
+  assert.equal(english('link[rel="canonical"]').attr('href'), SITE_ORIGIN + '/en/');
 });
 
 function runtime(staticLang, preference, blockedStorage = false) {
@@ -133,9 +162,17 @@ test('published runtime obeys URL language despite saved preferences, and never 
 
 test('source preview retains in-place switching without an English route or available storage', () => {
   const { context, navigations, queryCount } = runtime(null, 'zh', true);
-  context.toggleLang();
   assert.equal(context.currentLang, 'en');
-  assert.equal(context.document.documentElement.lang, 'en');
+  context.toggleLang();
+  assert.equal(context.currentLang, 'zh');
+  assert.equal(context.document.documentElement.lang, 'zh-CN');
   assert(queryCount() > 0);
   assert.deepEqual(navigations, []);
+});
+
+test('source previews default to English but preserve an explicit Chinese preference', () => {
+  for (const preference of [null, '', 'invalid', 'en']) {
+    assert.equal(runtime(null, preference).context.currentLang, 'en');
+  }
+  assert.equal(runtime(null, 'zh').context.currentLang, 'zh');
 });

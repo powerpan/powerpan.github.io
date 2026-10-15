@@ -11,8 +11,16 @@ function canonicalFor(rel) {
 
 function languagePath(pathname, lang) {
   if (!['zh', 'en'].includes(lang)) throw new Error(`Unsupported language: ${lang}`);
+  if (['/', '/en', '/en/', '/zh', '/zh/'].includes(pathname)) {
+    return lang === 'en' ? '/en/' : '/zh/';
+  }
   const base = pathname.replace(/^\/en(?=\/|$)/, '') || '/';
   return lang === 'en' ? '/en' + base : base;
+}
+
+function localizedFileFor(rel, lang) {
+  if (lang === 'en') return 'en/' + rel;
+  return rel === 'index.html' ? 'zh/index.html' : rel;
 }
 
 function rewritePublicLinks(html, rel, publicHtmlFiles) {
@@ -37,4 +45,4 @@ function rewritePublicLinks(html, rel, publicHtmlFiles) {
   });
 }
 
-module.exports = { SITE_ORIGIN, publicPathFor, canonicalFor, languagePath, rewritePublicLinks };
+module.exports = { SITE_ORIGIN, publicPathFor, canonicalFor, languagePath, localizedFileFor, rewritePublicLinks };

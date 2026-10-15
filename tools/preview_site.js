@@ -17,6 +17,17 @@ const mimeTypes = {
 
 function createPreviewServer(directory) {
   const root = fs.realpathSync(directory);
+  // Mirror exact-path Pages redirects so the default-language entry is testable locally.
+  const redirectsFile = path.join(root, '_redirects');
+  const redirects = new Map();
+  if (fs.existsSync(redirectsFile)) {
+    for (const line of fs.readFileSync(redirectsFile, 'utf8').split(/\r?\n/)) {
+      const [from, to, status = '302'] = line.trim().split(/\s+/);
+      if (!from?.startsWith('/') || /[*:]/.test(from) || !to?.startsWith('/') || to.startsWith('//')) continue;
+      if (!['301', '302', '303', '307', '308'].includes(status) || redirects.has(from)) continue;
+      redirects.set(from, { to, status: Number(status) });
+    }
+  }
   return http.createServer((req, res) => {
     if (!['GET', 'HEAD'].includes(req.method)) {
       res.writeHead(405, { Allow: 'GET, HEAD' }).end();
@@ -33,6 +44,13 @@ function createPreviewServer(directory) {
     }
     if (pathname.includes('\0') || pathname.includes('\\') || pathname.split('/').some((part) => part.startsWith('.'))) {
       res.writeHead(404).end();
+      return;
+    }
+    const redirect = redirects.get(pathname);
+    if (redirect) {
+      const target = new URL(redirect.to, url);
+      if (!target.search) target.search = url.search;
+      res.writeHead(redirect.status, { Location: target.pathname + target.search + target.hash }).end();
       return;
     }
     const source = path.resolve(root, '.' + pathname);

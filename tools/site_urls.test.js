@@ -111,3 +111,42 @@ test('preview supports final URLs, legacy redirects, assets, HEAD and safe 404s'
   assert.equal(rangeHead.headers.get('content-length'), '10');
   assert.equal(await rangeHead.text(), '');
 });
+
+test('default homepage redirects to English while explicit Chinese and existing deep links stay accessible', async (t) => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'webblog-language-'));
+  fs.copyFileSync(path.join(__dirname, '..', '_redirects'), path.join(root, '_redirects'));
+  for (const [rel, body] of [
+    ['en/index.html', '<html lang="en"><h1>English</h1></html>'],
+    ['zh/index.html', '<html lang="zh-CN"><h1>Chinese</h1></html>'],
+    ['blog/example.html', '<h1>Chinese article</h1>'],
+    ['en/blog/example.html', '<h1>English article</h1>'],
+  ]) {
+    fs.mkdirSync(path.dirname(path.join(root, rel)), { recursive: true });
+    fs.writeFileSync(path.join(root, rel), body);
+  }
+  const server = createPreviewServer(root);
+  await new Promise((resolve) => server.listen(0, '127.0.0.1', resolve));
+  t.after(async () => {
+    await new Promise((resolve) => server.close(resolve));
+    fs.rmSync(root, { recursive: true, force: true });
+  });
+  const origin = `http://127.0.0.1:${server.address().port}`;
+  for (const entry of ['/', '/index.html']) {
+    for (const method of ['GET', 'HEAD']) {
+      const response = await fetch(origin + entry + '?ref=test&lang=zh', { method, redirect: 'manual' });
+      assert.equal(response.status, 302);
+      assert.equal(response.headers.get('location'), '/en/?ref=test&lang=zh');
+    }
+    const followed = await fetch(origin + entry);
+    assert.equal(followed.url, origin + '/en/');
+    assert.match(await followed.text(), /lang="en"/);
+  }
+  for (const url of ['/zh/', '/en/', '/blog/example', '/en/blog/example']) {
+    assert.equal((await fetch(origin + url, { redirect: 'manual' })).status, 200, url);
+  }
+  for (const [legacy, target] of [['/zh', '/zh/'], ['/zh/index.html', '/zh/'], ['/en/index.html', '/en/']]) {
+    const response = await fetch(origin + legacy, { redirect: 'manual' });
+    assert.equal(response.status, 308);
+    assert.equal(response.headers.get('location'), target);
+  }
+});

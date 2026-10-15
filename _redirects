@@ -1,3 +1,7 @@
+# English is the default entry; /zh/ remains an explicit Chinese homepage.
+/ /en/ 302
+/index.html /en/ 302
+
 # Safety redirects for source-only files if the repository root is served by mistake.
 /tools/* /
 /admin/* /

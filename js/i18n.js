@@ -17,8 +17,8 @@ window.registerI18nChunk = registerI18nChunk;
 /* ---------- State ---------- */
 var staticLang = document.documentElement.getAttribute('data-site-lang');
 function readLanguagePreference() {
-  try { return localStorage.getItem('lang') === 'en' ? 'en' : 'zh'; }
-  catch { return 'zh'; }
+  try { return localStorage.getItem('lang') === 'zh' ? 'zh' : 'en'; }
+  catch { return 'en'; }
 }
 var currentLang = staticLang || readLanguagePreference();
 

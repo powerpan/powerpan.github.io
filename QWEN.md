@@ -159,11 +159,12 @@ python3 -m http.server 8080
 - Run `npm run check` after building. URL regression tests cover the editor, preview routing, canonical metadata, sitemap, RSS and all published internal links.
 
 ### Indexable English Pages
-- Chinese URLs stay unchanged. English equivalents use `/en/`, `/en/blog/`, `/en/blog/slug`, `/en/blog/topics/category`, `/en/projects/`, and `/en/projects/slug`.
+- The default entry `/` (and `/index.html`) redirects to `/en/` through Pages `_redirects`, without JavaScript or storage. The explicit Chinese homepage is `/zh/`; Chinese archive, article and project URLs stay unchanged. English equivalents remain under `/en/`.
+- `tools/site_urls.js` maps both homepages and their generated filenames. Chinese navigation back to the homepage must point to `/zh/`, not the English entry `/`. Do not add a catch-all language redirect or migrate existing article URLs.
 - `tools/localize_site.js` reads each page's declared dictionary chunks and translates both initial HTML documents at build time. Maintain the existing source HTML and `js/i18n/` only; never hand-edit or commit `_site/en/`.
 - `tools/fingerprint_assets.js` gives all published local scripts and styles content-hashed filenames. Changed bytes must get a new URL: stale language runtimes can overwrite English HTML and insert duplicate switches. Keep source references unchanged and retain original asset paths for cached older documents. Do not rely on fixed query versions or cache headers alone.
 - After deployment, verify the rendered production homepage and an article in an existing browser session: URL language must survive script execution and there must be exactly one desktop language switch. Raw HTML/SEO checks alone do not cover cached runtime regressions.
-- URL language takes precedence over saved preferences. Published pages do not replay DOM translations on load, which protects localized links and metadata. Source/file previews still use runtime translation.
+- URL language takes precedence over saved preferences. Published pages do not replay DOM translations on load, which protects localized links and metadata. Source/file previews still use runtime translation, defaulting to English unless Chinese was explicitly saved.
 - Each language has its own canonical, title, description, social metadata and JSON-LD, plus reciprocal `zh-CN`/`en` hreflang. Root sitemap lists both versions. Chinese RSS and existing GUIDs remain unchanged; no English RSS is advertised.
 - English navigation stays in `/en/`; shared CSS/JS/images retain root asset paths. Language links preserve query/hash with JS and remain ordinary working links without JS.
 - `npm run locales:check` checks every bilingual pair, resource paths, metadata, hreflang and untranslated visible text. It is also a deployment build gate. Native school names and explicitly explained Chinese terms in the involution essay are intentional exceptions, not missing translations.

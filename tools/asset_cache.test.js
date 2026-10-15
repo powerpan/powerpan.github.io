@@ -31,7 +31,7 @@ test('changed bytes invalidate asset URLs without manual version edits', () => {
 
 test('published pages cannot reuse cached pre-localization scripts or styles', () => {
   execFileSync(process.execPath, ['tools/build_site.js', '--skip-seo'], { cwd: root });
-  for (const rel of ['index.html', 'en/index.html', 'en/blog/agent-goals-permission-boundaries.html']) {
+  for (const rel of ['zh/index.html', 'en/index.html', 'en/blog/agent-goals-permission-boundaries.html']) {
     const $ = load(fs.readFileSync(path.join(root, '_site', rel), 'utf8'));
     const runtime = $('script[src]').filter((_, el) => /\/js\/i18n[.]/.test($(el).attr('src')));
     assert.equal(runtime.length, 1, `${rel}: exactly one language runtime`);

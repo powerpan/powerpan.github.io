@@ -476,7 +476,7 @@ function generateSitemap(projectPages) {
 
   return `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${entries.flatMap((entry) => [entry, { ...entry, loc: SITE_ORIGIN + languagePath(new URL(entry.loc).pathname, 'en') }]).map((entry) => `  <url>
+${entries.flatMap((entry) => ['zh', 'en'].map((lang) => ({ ...entry, loc: SITE_ORIGIN + languagePath(new URL(entry.loc).pathname, lang) }))).map((entry) => `  <url>
     <loc>${escapeXml(entry.loc)}</loc>${entry.lastmod ? `
     <lastmod>${entry.lastmod}</lastmod>` : ''}
   </url>`).join('\n')}

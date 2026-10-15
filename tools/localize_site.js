@@ -2,7 +2,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const vm = require('node:vm');
 const { load } = require('cheerio');
-const { SITE_ORIGIN, publicPathFor, languagePath } = require('./site_urls');
+const { SITE_ORIGIN, publicPathFor, languagePath, localizedFileFor } = require('./site_urls');
 const { addThemeRuntime } = require('./theme_controls');
 const { addMusicRuntime } = require('./music_controls');
 
@@ -235,7 +235,7 @@ function createLocalizedPages(entries) {
     }
     addMusicRuntime($, lang, translations[lang]);
     $('head').append('<noscript><style>.reveal,.timeline-item,.detail-hero .detail-tag,.detail-title,.detail-subtitle,.detail-meta{opacity:1!important;transform:none!important;visibility:visible!important}.loader,#cursor,#cursorDot,.nav-hamburger,.page-motion-button{display:none!important}.lang-toggle{display:inline-flex!important}body,a,button{cursor:auto!important}</style></noscript>');
-    output.set(lang === 'en' ? 'en/' + rel : rel, Buffer.from($.html()));
+    output.set(localizedFileFor(rel, lang), Buffer.from($.html()));
   }
   return output;
 }

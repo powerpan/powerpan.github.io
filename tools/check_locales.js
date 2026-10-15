@@ -4,7 +4,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { createHash } = require('node:crypto');
 const { load } = require('cheerio');
-const { canonicalFor, languagePath, SITE_ORIGIN } = require('./site_urls');
+const { canonicalFor, languagePath, localizedFileFor, SITE_ORIGIN } = require('./site_urls');
 
 const root = path.resolve(__dirname, '..', '_site');
 function filesUnder(dir) {
@@ -24,8 +24,8 @@ function checkLocales() {
   let assets = 0;
   for (const rel of htmlFiles) {
     const english = rel.startsWith('en/');
-    const base = english ? rel.slice(3) : rel;
-    assert(fs.existsSync(path.join(root, 'en', base)) && fs.existsSync(path.join(root, base)), `${rel}: missing counterpart`);
+    const base = rel === 'zh/index.html' ? 'index.html' : english ? rel.slice(3) : rel;
+    assert(['zh', 'en'].every((lang) => fs.existsSync(path.join(root, localizedFileFor(base, lang)))), `${rel}: missing counterpart`);
     const $ = load(fs.readFileSync(path.join(root, rel), 'utf8'));
     const canonical = canonicalFor(rel);
     assert.equal($('html').attr('lang'), english ? 'en' : 'zh-CN', rel);
