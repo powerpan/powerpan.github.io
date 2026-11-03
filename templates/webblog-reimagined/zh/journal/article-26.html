@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>AI Agent 架构：从会聊天到会执行 — Eric</title>
-<meta name="description" content="AI Agent 架构：从会聊天到会执行">
+<title>别再把业务系统做成 CRUD 套壳 — Eric</title>
+<meta name="description" content="别再把业务系统做成 CRUD 套壳">
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#ede8df">
 <script>(()=>{const r=document.documentElement;let t,m;try{t=localStorage.getItem('ink-theme');m=localStorage.getItem('ink-motion')}catch(e){}t=t||(matchMedia('(prefers-color-scheme: dark)').matches?'night':'day');if(matchMedia('(prefers-reduced-motion: reduce)').matches)m='off';r.dataset.theme=t;r.dataset.motion=m||'on'})()</script>
@@ -43,81 +43,68 @@
 <div class="progress" aria-hidden="true"><i></i></div>
 <div class="page">
     <header class="article-head">
-        <p class="meta"><a href="index.html">← 文章</a> &nbsp;/&nbsp; <span class="topic" data-topic="2">Agent 自动化</span></p>
-        <h1 data-split>AI Agent 架构：从会聊天到<em>会执行</em></h1>
+        <p class="meta"><a href="index.html">← 文章</a> &nbsp;/&nbsp; <span class="topic" data-topic="4">系统架构</span></p>
+        <h1 data-split>别再把业务系统做成 <em>CRUD 套壳</em></h1>
         <p class="lede rise"></p>
-        <div class="article-meta meta rise" style="--d:120ms"><span>2026.04.27</span><span>9 分钟</span><span>No. 26</span></div>
+        <div class="article-meta meta rise" style="--d:120ms"><span>2026.04.28</span><span>9 分钟</span><span>No. 26</span></div>
     </header>
     <div class="article-layout">
-        <nav class="toc" aria-label="目录"><a href="#intro">Agent 不是更会聊天的 Chatbot</a><a href="#five-layers">一个 Agent 至少有五层</a><a href="#control-loop">控制循环决定 Agent 的性格</a><a href="#context-state-memory">上下文、状态和记忆不能混在一起</a><a href="#tools">工具让 Agent 有行动力，也带来风险</a><a href="#governance">生产级 Agent 的关键词是治理</a><a href="#takeaway">写在最后</a></nav>
+        <nav class="toc" aria-label="目录"><a href="#intro">CRUD 没错，但它不该成为系统中心</a><a href="#capability">从数据表中心转向业务能力中心</a><a href="#frontend">前端也要从页面中心变成任务中心</a><a href="#process">状态机、工作流和事件才撑得住复杂业务</a><a href="#rag-agent">RAG 和 Agent 需要知识层与工具边界</a><a href="#takeaway">写在最后</a></nav>
         <div class="page-surface"><div class="prose"><section class="detail-section" id="intro">
-            <h2 class="">Agent 不是更会聊天的 Chatbot</h2>
-            <p class="">很多人讨论 AI Agent 时，容易把它理解成“更聪明的聊天机器人”。但如果只停留在对话层面，就会错过 Agent 真正重要的变化：它不再只是回答问题，而是围绕一个目标持续规划、调用工具、观察结果、更新状态，并把任务往前推进。</p>
-            <p class="">Chatbot 的核心是响应，Agent 的核心是执行。传统自动化工作流也能执行任务，但路径通常由人提前写死；Agent 的不同之处在于，它把一部分任务拆解、工具选择和下一步判断交给模型参与。这也是它既有潜力、又容易失控的原因。</p>
-            <p class="">所以评价一个 Agent 系统，不能只问模型够不够强，而要问它有没有稳定的控制循环、清晰的工具边界、可靠的状态管理，以及可审计、可回退的执行过程。</p>
+            <h2 class="">CRUD 没错，但它不该成为系统中心</h2>
+            <p class="">CRUD 是企业系统里绕不开的基础能力。用户、角色、字典、基础档案、分类标签这些模块，用增删改查解决很合理。问题不在 CRUD 本身，而在很多复杂业务系统最后只剩下 CRUD：建表、写接口、做列表、加表单、塞按钮，然后把真正的业务流程丢给用户自己理解。</p>
+            <p class="">当系统还只是数据维护工具时，这种方式足够快。但一旦进入审批、工单、项目协作、风险处理、周报生成、客户跟进这类场景，用户真正要的就不是“改一条记录”，而是完成一个任务。系统如果只提供表格和表单，就会把流程判断、风险识别和下一步行动都外包给人。</p>
+            <p class="">AI Agent 让这个问题更明显。Agent 要调用的是清晰的业务能力，而不是模糊的底层数据操作。一个只暴露 updateTask、saveReport、listProject 的系统，很难让 Agent 安全地完成“分析项目延期风险并生成周报”这种任务。</p>
         </section>
 
-        <section class="detail-section" id="five-layers">
-            <h2 class="">一个 Agent 至少有五层</h2>
-            <p class="">我更愿意把 Agent 看成一套软件架构，而不是一个 prompt。一个可用的 Agent 通常至少包含五层：</p>
-            <ul class="">
-                <li class=""><strong class="">模型能力层</strong> —— 负责理解、推理、生成、代码和多模态能力</li>
-                <li class=""><strong class="">控制循环层</strong> —— 决定下一步是思考、调用工具、等待反馈还是结束任务</li>
-                <li class=""><strong class="">工具环境层</strong> —— 连接搜索、数据库、API、文件系统、代码执行器或 MCP Server</li>
-                <li class=""><strong class="">状态记忆层</strong> —— 保存当前步骤、历史上下文、长期知识和可恢复快照</li>
-                <li class=""><strong class="">治理生产化层</strong> —— 处理权限、审计、安全、评估、成本和人工审批</li>
-            </ul>
-            <p class="">这五层决定了 Agent 和普通 LLM 应用的差异。一个只会把用户问题发给模型的系统，即使接了最强模型，也仍然只是问答应用。只有当模型被放进循环、工具、状态和治理组成的系统里，它才开始接近真正的 Agent。</p>
+        <section class="detail-section" id="capability">
+            <h2 class="">从数据表中心转向业务能力中心</h2>
+            <p class="">传统 CRUD 系统往往从表结构出发：先有 project、task、report，再生成接口和页面。业务复杂度上来后，Service 层开始堆满状态判断、权限判断、通知逻辑和异常处理。代码看起来分层清楚，实际业务语义却被淹没在 updateStatus 和 saveSomething 里。</p>
+            <p class="">更好的方式是把接口设计成业务动作。订单不是只需要 updateOrder，而是需要 pay、cancel、ship、applyRefund；任务不是只需要 updateTask，而是需要 assign、start、submit、reviewPass、markRisk。这样的动作能表达业务意图，也能定义权限、前置条件、副作用和审计记录。</p>
+            <p class="">对 AI Agent 来说，这一点尤其关键。Agent 工具应该是业务能力，而不是数据库遥控器。让 Agent 调 <strong class="">submitReportForApproval(reportId)</strong>，比让它调 updateReportStatus(reportId, status) 安全得多，也更容易解释和追踪。</p>
         </section>
 
-        <section class="detail-section" id="control-loop">
-            <h2 class="">控制循环决定 Agent 的性格</h2>
-            <p class="">Agent 的第一类核心问题是“下一步怎么做”。ReAct 是最基础的范式：模型先思考，再行动，再观察工具结果，然后继续思考。这个模式让模型不必全靠内部知识，可以边查边做，适合搜索、调 API、读文件这类任务。</p>
-            <p class="">但 ReAct 的局限也明显。它很灵活，却容易短视；复杂任务里，模型可能来回调用工具，成本飙升，还不一定收敛。于是就有了 Plan-and-Execute：先拆计划，再逐步执行，再验证结果，必要时重新规划。它更适合写代码、做数据分析、整理长文档这类有阶段性的任务。</p>
-            <p class="">Reflection 则解决另一个问题：失败后怎么办。它让 Agent 把失败原因和改进策略写入上下文或记忆，在下一次尝试里使用。但反思必须绑定真实反馈，比如测试结果、工具返回、人工评价，否则很容易变成模型自我解释，甚至把错误经验固化下来。</p>
+        <section class="detail-section" id="frontend">
+            <h2 class="">前端也要从页面中心变成任务中心</h2>
+            <p class="">很多后台系统的前端长得很像：菜单、列表、搜索区、表单弹窗、操作按钮。它们适合维护数据，却不一定适合推进工作。用户真正关心的是：今天有什么待办？哪个项目有延期风险？哪些审批快超时？系统建议我下一步做什么？</p>
+            <p class="">所以复杂业务前端不应该只是“页面集合”，而应该有任务工作台。一个项目协作系统的核心入口，不该只是项目列表和任务列表，而应该呈现项目进度、本周完成、延期任务、阻塞风险、待审批事项、最近事件和 Agent 建议。</p>
+            <p class="">这不是 UI 包装问题，而是系统职责变化。前端从“让用户找到表并操作数据”，变成“帮助用户理解当前局面并完成任务”。当 Agent 进入系统后，前端还要承担人机确认：哪些建议只是草稿，哪些动作会改变业务状态，哪些高风险操作必须确认。</p>
         </section>
 
-        <section class="detail-section" id="context-state-memory">
-            <h2 class="">上下文、状态和记忆不能混在一起</h2>
-            <p class="">很多 Agent 项目早期会犯同一个错误：把所有东西都塞进上下文窗口。历史对话、工具返回、文档片段、用户偏好、执行进度，全都混在一起。短期内这很省事，长期看就是上下文污染的开始。</p>
-            <p class=""><strong class="">Context</strong> 是模型当前能看到的信息；<strong class="">State</strong> 是任务现在执行到哪里；<strong class="">Memory</strong> 是跨任务还能复用的知识；<strong class="">Checkpoint</strong> 是失败后可以恢复的执行快照。它们不是同一种东西，也不应该放在同一个篮子里。</p>
-            <p class="">当 Agent 执行时间变长、工具变多、上下文来源变复杂，核心能力就从 prompt engineering 变成 context engineering：什么时候检索，检索什么，哪些信息该压缩，哪些信息该写进长期记忆，哪些外部文本必须隔离，避免变成高优先级指令。</p>
+        <section class="detail-section" id="process">
+            <h2 class="">状态机、工作流和事件才撑得住复杂业务</h2>
+            <p class="">很多系统用一个 status 字段管理复杂状态：草稿、待审批、已通过、已驳回、已归档。字段本身没问题，但如果没有合法状态迁移，任何状态都可能被接口改出来。真正需要建模的是：谁能在什么条件下，把对象从哪个状态推进到哪个状态。</p>
+            <p class="">状态机解决的是“状态如何变化”，工作流解决的是“流程如何推进”，事件驱动解决的是“发生了什么以及谁要响应”。三者叠起来，复杂业务才不会全部挤进一个巨大的 Service 方法。</p>
+            <p class="">比如任务延期不该只是把 status 改成 delayed。更完整的设计是发布 TaskDelayedEvent，由风险服务更新项目风险，由通知服务提醒项目经理，由周报服务沉淀素材，由 Agent 服务生成延期原因摘要。这样系统记录的不只是最终结果，还有业务过程。</p>
         </section>
 
-        <section class="detail-section" id="tools">
-            <h2 class="">工具让 Agent 有行动力，也带来风险</h2>
-            <p class="">没有工具调用，Agent 只能给建议；有了工具调用，它才能搜索资料、读写文件、查询数据库、执行代码、调用业务 API。工具调用是 Agent 从“会说话”走向“能做事”的关键。</p>
-            <p class="">但工具不是简单的函数列表。一个成熟的工具系统应该有 registry、schema、router、executor、guardrail、result parser 和 audit log。工具描述写得含糊，模型会误选；权限给得过大，Agent 会越权；返回结果不结构化，模型会误解。</p>
-            <p class="">MCP 的价值就在这里。它把工具接入从“每个应用手写适配”推向协议化集成，让 tools、resources、prompts 能以更统一的方式暴露给 Agent。长期看，Agent 生态不会只拼模型，也会拼谁能更安全、更稳定地连接真实工具世界。</p>
-        </section>
-
-        <section class="detail-section" id="governance">
-            <h2 class="">生产级 Agent 的关键词是治理</h2>
-            <p class="">Demo Agent 只需要证明“能跑通一次”；生产 Agent 要回答完全不同的问题：失败后能不能恢复？危险操作是否需要确认？工具调用是否可审计？结果是否忠实于检索和工具返回？成本会不会失控？多 Agent 之间状态是否一致？</p>
-            <p class="">这也是 Guardrails、Observability 和 Evaluation 变重要的原因。Agent Trace 至少要记录模型调用、工具调用、handoff、guardrail、state 和 cost。否则最终答案看起来对了，也没人知道系统是怎么走到这个结果的。</p>
-            <p class="">评估也不能只看最终回答是否顺眼。更重要的是任务是否完成、每一步是否合理、工具是否选对、异常是否能恢复、是否避免越权、token 和时间成本是否可接受。Agent 越接近执行层，就越需要像工程系统一样被测试和监控。</p>
+        <section class="detail-section" id="rag-agent">
+            <h2 class="">RAG 和 Agent 需要知识层与工具边界</h2>
+            <p class="">智能业务系统不能只存最终数据，还要沉淀过程知识：需求文档、会议纪要、任务评论、审批意见、历史周报、风险记录、项目复盘。这些内容进入知识库后，RAG 才能让 Agent 基于真实上下文生成总结、建议或报告。</p>
+            <p class="">但 RAG 不是把文档扔进向量库就结束。业务系统还要处理权限、版本、来源标注、更新时间和引用展示。不同项目、部门、角色能访问的文档不同，Agent 检索时也必须遵守同样的权限边界。</p>
+            <p class="">工具层同样需要边界。低风险工具可以生成周报草稿、分析风险、总结会议；高风险工具，比如提交审批、发送邮件、关闭项目、修改负责人，必须要求人类确认。Agent 可以建议行动，但不应该绕过业务权限和审计机制直接改系统。</p>
         </section>
 
         <section class="detail-section" id="takeaway">
             <h2 class="">写在最后</h2>
-            <p class="">AI Agent 的演进路径大概是：Chatbot 到 Tool-using Agent，再到 Planning Agent，最后走向 Governed Agentic Workflow。真正的变化不是模型突然“有意识”了，而是模型开始被嵌入一套能行动、能记忆、能恢复、能审计的软件系统。</p>
-            <p class="">这也解释了为什么很多 Agent demo 看起来惊艳，落到生产却摇摇晃晃。问题往往不在模型单次回答，而在控制循环、工具边界、状态管理和治理机制没有搭好。</p>
-            <p class="">未来有价值的 Agent 系统，不一定是最会聊天的那个，而是最能稳定交付任务的那个。谁能更好地组织上下文，谁能更安全地连接工具，谁能更清楚地记录和评估执行过程，谁才更接近真正可用的 Agentic System。</p>
+            <p class="">跳出 CRUD 不是抛弃 CRUD，而是别让 CRUD 成为复杂系统的唯一抽象。CRUD 负责基础数据维护，业务能力层负责表达动作，状态机和工作流负责控制过程，事件驱动负责解耦协作，知识库和 Agent 负责智能辅助。</p>
+            <p class="">未来有竞争力的前后端系统，不会只是“表格 + 表单 + 接口”的组合，而会更像一个业务能力平台：前端是任务工作台，后端暴露可授权、可审计、可编排的业务动作，数据层沉淀过程和知识，Agent 在可控边界内参与任务推进。</p>
+            <p class="">真正的系统升级，不是给 CRUD 页面外挂一个聊天框，而是把系统从“管理数据”升级为“推进业务”。<strong class="">AI Agent 时代，最值钱的不是让模型会说话，而是让它能在清晰边界里调用业务能力，帮助用户把复杂工作稳定做完。</strong></p>
         </section></div></div>
     </div>
-    <section class="related" aria-labelledby="related-title"><p class="kicker">继续阅读</p><h2 id="related-title">相关<em>文章</em></h2><ol class="journal-list" style="list-style:none"><li><a class="journal-row" href="article-05.html" data-topic="2" data-cursor="阅读">
-        <span class="journal-date">2026.09 · 05</span>
-        <span class="journal-title"><span class="static">AI 不需要恶意，也能越过权限边界</span><span class="marquee" aria-hidden="true"><span>AI 不需要恶意，也能越过权限边界 —&nbsp;</span><span>AI 不需要恶意，也能越过权限边界 —&nbsp;</span><span>AI 不需要恶意，也能越过权限边界 —&nbsp;</span></span></span>
-        <span class="topic" data-topic="2">Agent 自动化</span><span class="journal-time">12 分钟</span></a></li><li><a class="journal-row" href="article-14.html" data-topic="2" data-cursor="阅读">
-        <span class="journal-date">2026.05 · 14</span>
-        <span class="journal-title"><span class="static">我做了一次多 Agent 架构实验：复杂架构并不天然更聪明</span><span class="marquee" aria-hidden="true"><span>我做了一次多 Agent 架构实验：复杂架构并不天然更聪明 —&nbsp;</span><span>我做了一次多 Agent 架构实验：复杂架构并不天然更聪明 —&nbsp;</span><span>我做了一次多 Agent 架构实验：复杂架构并不天然更聪明 —&nbsp;</span></span></span>
-        <span class="topic" data-topic="2">Agent 自动化</span><span class="journal-time">8 分钟</span></a></li><li><a class="journal-row" href="article-18.html" data-topic="2" data-cursor="阅读">
-        <span class="journal-date">2026.05 · 18</span>
-        <span class="journal-title"><span class="static">多 Agent 架构的真正问题：不是角色分工，而是上下文边界</span><span class="marquee" aria-hidden="true"><span>多 Agent 架构的真正问题：不是角色分工，而是上下文边界 —&nbsp;</span><span>多 Agent 架构的真正问题：不是角色分工，而是上下文边界 —&nbsp;</span><span>多 Agent 架构的真正问题：不是角色分工，而是上下文边界 —&nbsp;</span></span></span>
-        <span class="topic" data-topic="2">Agent 自动化</span><span class="journal-time">10 分钟</span></a></li></ol></section>
+    <section class="related" aria-labelledby="related-title"><p class="kicker">继续阅读</p><h2 id="related-title">相关<em>文章</em></h2><ol class="journal-list" style="list-style:none"><li><a class="journal-row" href="article-04.html" data-topic="4" data-cursor="阅读">
+        <span class="journal-date">2026.10 · 04</span>
+        <span class="journal-title"><span class="static">当每个系统都在自保：3.8 GW 负载退出之后</span><span class="marquee" aria-hidden="true"><span>当每个系统都在自保：3.8 GW 负载退出之后 —&nbsp;</span><span>当每个系统都在自保：3.8 GW 负载退出之后 —&nbsp;</span><span>当每个系统都在自保：3.8 GW 负载退出之后 —&nbsp;</span></span></span>
+        <span class="topic" data-topic="4">系统架构</span><span class="journal-time">16 分钟</span></a></li><li><a class="journal-row" href="article-05.html" data-topic="4" data-cursor="阅读">
+        <span class="journal-date">2026.10 · 05</span>
+        <span class="journal-title"><span class="static">加密后的数据，真的还能做模糊查询吗？</span><span class="marquee" aria-hidden="true"><span>加密后的数据，真的还能做模糊查询吗？ —&nbsp;</span><span>加密后的数据，真的还能做模糊查询吗？ —&nbsp;</span><span>加密后的数据，真的还能做模糊查询吗？ —&nbsp;</span></span></span>
+        <span class="topic" data-topic="4">系统架构</span><span class="journal-time">33 分钟</span></a></li><li><a class="journal-row" href="article-09.html" data-topic="4" data-cursor="阅读">
+        <span class="journal-date">2026.07 · 09</span>
+        <span class="journal-title"><span class="static">Mac 正在成为个人 AI 应用的理想运行时</span><span class="marquee" aria-hidden="true"><span>Mac 正在成为个人 AI 应用的理想运行时 —&nbsp;</span><span>Mac 正在成为个人 AI 应用的理想运行时 —&nbsp;</span><span>Mac 正在成为个人 AI 应用的理想运行时 —&nbsp;</span></span></span>
+        <span class="topic" data-topic="4">系统架构</span><span class="journal-time">9 分钟</span></a></li></ol></section>
     <nav class="pager" aria-label="更多文章">
-        <a href="article-25.html" data-cursor="上一篇"><span class="meta">← 上一篇</span><strong>别再把业务系统做成 CRUD 套壳</strong></a>
-        <a href="article-27.html" data-cursor="下一个"><span class="meta">下一篇 →</span><strong>AI 工作流争夺战：为什么真正的终局不是工具，而是工作代理层</strong></a>
+        <a href="article-25.html" data-cursor="上一篇"><span class="meta">← 上一篇</span><strong>视觉算法工程师，别把自己做成 流程操作员</strong></a>
+        <a href="article-27.html" data-cursor="下一个"><span class="meta">下一篇 →</span><strong>AI Agent 架构：从会聊天到会执行</strong></a>
     </nav>
 </div>
 </main>

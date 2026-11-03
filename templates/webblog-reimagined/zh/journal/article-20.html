@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>工程师的成长本质是抽象层上移 — Eric</title>
-<meta name="description" content="工程师的成长本质是抽象层上移">
+<title>当真的需要多 Agent：如何拆分、协作与合并结果 — Eric</title>
+<meta name="description" content="当真的需要多 Agent：如何拆分、协作与合并结果">
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#ede8df">
 <script>(()=>{const r=document.documentElement;let t,m;try{t=localStorage.getItem('ink-theme');m=localStorage.getItem('ink-motion')}catch(e){}t=t||(matchMedia('(prefers-color-scheme: dark)').matches?'night':'day');if(matchMedia('(prefers-reduced-motion: reduce)').matches)m='off';r.dataset.theme=t;r.dataset.motion=m||'on'})()</script>
@@ -43,68 +43,68 @@
 <div class="progress" aria-hidden="true"><i></i></div>
 <div class="page">
     <header class="article-head">
-        <p class="meta"><a href="index.html">← 文章</a> &nbsp;/&nbsp; <span class="topic" data-topic="5">技术观察</span></p>
-        <h1 data-split>工程师的成长本质是<em>抽象层上移</em></h1>
+        <p class="meta"><a href="index.html">← 文章</a> &nbsp;/&nbsp; <span class="topic" data-topic="2">Agent 自动化</span></p>
+        <h1 data-split>当真的需要多 Agent：如何拆分、协作与<em>合并结果</em></h1>
         <p class="lede rise"></p>
-        <div class="article-meta meta rise" style="--d:120ms"><span>2026.05.01</span><span>9 分钟</span><span>No. 20</span></div>
+        <div class="article-meta meta rise" style="--d:120ms"><span>2026.05.01</span><span>10 分钟</span><span>No. 20</span></div>
     </header>
     <div class="article-layout">
-        <nav class="toc" aria-label="目录"><a href="#skill">熟练不等于成长</a><a href="#modules">从工具到代码，再到模块</a><a href="#architecture">系统架构是在管理变化</a><a href="#business">业务建模决定系统质量</a><a href="#organization">组织也会沉淀进代码</a><a href="#takeaway">写在最后</a></nav>
-        <div class="page-surface"><div class="prose"><section class="detail-section" id="skill">
-            <h2 class="">熟练不等于成长</h2>
-            <p class="">很多工程师都会经历一个阶段：代码写得更快，框架用得更熟，Bug 也见得更多，但面对复杂问题时，仍然习惯从“怎么实现”开始思考。</p>
-            <p class="">需求来了就加字段、写接口、改页面；模型效果不好就换参数、换模型、重新训练；系统变慢就加缓存、加索引、扩机器。这些反应不一定错，但都停留在比较低的抽象层。</p>
-            <p class="">工程师真正的成长，不只是经验变多，而是看问题的抽象层不断上移：从代码看到模块，从模块看到系统，从系统看到业务，从业务看到协作方式和长期演化成本。</p>
+        <nav class="toc" aria-label="目录"><a href="#not-more">多 Agent 不是不能用</a><a href="#when">什么时候必须拆</a><a href="#boundaries">按工程边界拆</a><a href="#structures">协作结构要匹配任务</a><a href="#merge">合并不是拼接</a><a href="#takeaway">写在最后</a></nav>
+        <div class="page-surface"><div class="prose"><section class="detail-section" id="not-more">
+            <h2 class="">多 Agent 不是不能用</h2>
+            <p class="">多 Agent 的问题不是不能用，而是很多系统还没搞清楚为什么要拆，就已经开始堆角色。流程变长了，推理不一定更稳定；节点变多了，结果不一定更可靠。</p>
+            <p class="">真正需要讨论的不是“要不要多 Agent”，而是更具体的问题：什么时候必须拆，按什么边界拆，Agent 之间共享什么，结果如何合并，谁负责最终判断。</p>
+            <p class="">多 Agent 的价值不在于“多”，而在于能不能把复杂任务拆成可控制、可追踪、可组合的协作单元。</p>
         </section>
 
-        <section class="detail-section" id="modules">
-            <h2 class="">从工具到代码，再到模块</h2>
-            <p class="">工程师早期要先把功能做出来。语法、框架、接口、页面、数据库、部署和调试都是基本功。没有实现能力，所有架构和抽象都是空的。</p>
-            <p class="">但工具只是手段，代码只是表达。真正困难的不是用什么写，而是把什么东西表达成什么结构。框架里的 Controller、Service、Repository 不只是目录划分，而是在表达职责边界。</p>
-            <p class="">当关注点从“这段代码怎么写”转向“这段代码应该放在哪里”，工程师才开始进入模块设计。模块设计要求我们把变化频率不同、职责不同、依赖方向不同的东西分离开。</p>
+        <section class="detail-section" id="when">
+            <h2 class="">什么时候必须拆</h2>
+            <p class="">如果单 Agent 能稳定完成任务，就不应该拆。单 Agent 的优势是上下文集中、目标一致、推理主线连续。强行拆分只会引入通信成本、状态同步成本和结果合并成本。</p>
+            <p class="">真正值得拆的场景通常有五类：任务天然可以并行，子任务需要不同工具或能力，需要独立视角验证，需要隔离权限和风险，或者任务生命周期很长、状态需要分工。</p>
+            <p class="">这些场景共同指向同一个原则：拆分不是为了模仿组织结构，而是为了降低单点上下文负担、隔离风险、引入并行和增强验证。</p>
         </section>
 
-        <section class="detail-section" id="architecture">
-            <h2 class="">系统架构是在管理变化</h2>
-            <p class="">模块设计再往上，就是系统架构。架构关注整个系统如何分层、通信、管理状态、处理异常、扩展和演化。</p>
-            <p class="">架构能力的本质不是画复杂的图，而是管理变化。好的架构会区分哪些东西应该稳定，哪些东西允许变化。业务核心概念应该稳定，外部系统接入方式可以变化。</p>
-            <p class="">如果一个系统每次需求变化都要大面积修改，说明抽象边界可能有问题。如果一个局部变化总是牵动全局，说明依赖方向可能有问题。如果系统越做越不敢改，说明缺少对变化的隔离机制。</p>
+        <section class="detail-section" id="boundaries">
+            <h2 class="">按工程边界拆</h2>
+            <p class="">最差的拆法，是按人类岗位机械拆分。更合理的拆法，是按任务依赖、上下文边界、工具边界、状态所有权和结果对象来拆。</p>
+            <p class="">如果两个子任务只需要交换结果，可以拆；如果一个子任务的判断会持续改变另一个子任务的前提，就不能简单隔离。每个 Agent 也不应该拿到全部上下文，而是拿到完成当前任务所需的最小充分上下文。</p>
+            <p class="">工具边界同样重要。检索、文件读取、代码执行、数据库写入、发布内容不是同一类能力。低风险工具可以开放，高风险工具必须收敛；只读能力可以前置，写入能力必须受控。</p>
         </section>
 
-        <section class="detail-section" id="business">
-            <h2 class="">业务建模决定系统质量</h2>
-            <p class="">很多人以为架构主要是技术选型：单体还是微服务，MySQL 还是 PostgreSQL，REST 还是 RPC。但更深一层看，真正决定系统质量的，往往是业务建模能力。</p>
-            <p class="">系统是对现实业务的一种建模。数据库表、接口、模块、状态机、权限模型，本质上都是业务概念在技术系统中的表达。</p>
-            <p class="">低层实现者关注字段怎么加，高层工程师关注这个字段对应的业务概念是什么。概念是否稳定，应该属于哪个模型，和已有概念是什么关系，这些问题决定了系统长期会不会混乱。</p>
+        <section class="detail-section" id="structures">
+            <h2 class="">协作结构要匹配任务</h2>
+            <p class="">Coordinator-Worker 适合并行检索、多文件分析和批量检查。Coordinator 负责目标、计划、上下文分发和结果合并，Worker 负责局部任务。</p>
+            <p class="">Pipeline 适合流程化任务，比如检索、分析、生成、审查、写入。它的风险是错误传递，所以必须有校验点、回退机制和中间状态记录。</p>
+            <p class="">Blackboard 适合复杂系统设计和长期协作任务。多个 Agent 围绕共享状态区工作，写入发现、风险和候选方案。Generator-Critic 则适合代码审查、文章修订、方案评估和事实核查。</p>
         </section>
 
-        <section class="detail-section" id="organization">
-            <h2 class="">组织也会沉淀进代码</h2>
-            <p class="">当抽象层继续上移，工程师会发现很多技术问题最终不是单纯技术问题，而是组织问题。</p>
-            <p class="">代码是组织行为的沉淀物。一个团队如果长期只奖励交付速度，不奖励系统质量，代码就会越来越短视。需求输入混乱，系统模型就会被临时需求污染。职责边界不清，模块边界也很难清晰。</p>
-            <p class="">成熟工程师的价值，在于能把隐性的长期成本表达出来，把局部实现问题上升为结构问题，再把结构问题还原到协作和决策问题。这不是脱离技术，而是对技术现实更完整的理解。</p>
+        <section class="detail-section" id="merge">
+            <h2 class="">合并不是拼接</h2>
+            <p class="">多个 Agent 的结果不能只是拼起来。拼接不是合并，堆叠不是综合。</p>
+            <p class="">独立子任务适合汇总式合并，要统一格式、保留来源、去重并标注冲突。多方案判断适合裁决式合并，必须有证据优先、约束优先、风险优先等明确标准。</p>
+            <p class="">文章、报告、系统方案这类强主线输出，需要综合式合并：提取共识、识别冲突、保留证据、重建结构、统一表达。长期任务则更适合状态更新式合并，把发现、计划、风险和失败原因写入结构化任务状态。</p>
         </section>
 
         <section class="detail-section" id="takeaway">
             <h2 class="">写在最后</h2>
-            <p class="">抽象层上移不等于远离代码。真正的抽象必须能上下贯通：看到 Bug 能追到代码，看到代码能判断模块边界，看到模块能理解系统结构，看到系统能还原业务模型。</p>
-            <p class="">不能落到实现细节的抽象，是空话；不能上升到结构判断的实现，是体力活。成熟工程能力，是既能写清楚一段代码，也能解释这段代码为什么应该存在于这里。</p>
-            <p class="">工程师成长的本质不是离代码越来越远，而是能透过代码看到更深的结构。代码是结果，系统是结构，业务是来源，组织是土壤。能在这些层次之间来回切换，才是真正可靠的工程能力。</p>
+            <p class="">好的多 Agent 架构，不是让多个 Agent 同时发言，而是让多个上下文处理单元围绕同一个任务状态，有边界地协作。</p>
+            <p class="">什么时候拆，要看并行性、工具差异、验证需求、权限边界和长期状态分工。怎么拆，要看任务依赖、上下文边界、工具边界、状态所有权和结果对象。</p>
+            <p class="">多 Agent 的成熟标志，不是 Agent 数量越来越多，而是系统边界越来越清楚。最终，它要组织的是可靠的信息流、状态流和结果流。</p>
         </section></div></div>
     </div>
-    <section class="related" aria-labelledby="related-title"><p class="kicker">继续阅读</p><h2 id="related-title">相关<em>文章</em></h2><ol class="journal-list" style="list-style:none"><li><a class="journal-row" href="article-06.html" data-topic="5" data-cursor="阅读">
+    <section class="related" aria-labelledby="related-title"><p class="kicker">继续阅读</p><h2 id="related-title">相关<em>文章</em></h2><ol class="journal-list" style="list-style:none"><li><a class="journal-row" href="article-06.html" data-topic="2" data-cursor="阅读">
         <span class="journal-date">2026.09 · 06</span>
-        <span class="journal-title"><span class="static">谁有权训练谁？</span><span class="marquee" aria-hidden="true"><span>谁有权训练谁？ —&nbsp;</span><span>谁有权训练谁？ —&nbsp;</span><span>谁有权训练谁？ —&nbsp;</span></span></span>
-        <span class="topic" data-topic="5">技术观察</span><span class="journal-time">8 分钟</span></a></li><li><a class="journal-row" href="article-07.html" data-topic="5" data-cursor="阅读">
-        <span class="journal-date">2026.08 · 07</span>
-        <span class="journal-title"><span class="static">机器人的三个时钟</span><span class="marquee" aria-hidden="true"><span>机器人的三个时钟 —&nbsp;</span><span>机器人的三个时钟 —&nbsp;</span><span>机器人的三个时钟 —&nbsp;</span></span></span>
-        <span class="topic" data-topic="5">技术观察</span><span class="journal-time">8 分钟</span></a></li><li><a class="journal-row" href="article-09.html" data-topic="5" data-cursor="阅读">
-        <span class="journal-date">2026.05 · 09</span>
-        <span class="journal-title"><span class="static">当技术路线被包装成定律</span><span class="marquee" aria-hidden="true"><span>当技术路线被包装成定律 —&nbsp;</span><span>当技术路线被包装成定律 —&nbsp;</span><span>当技术路线被包装成定律 —&nbsp;</span></span></span>
-        <span class="topic" data-topic="5">技术观察</span><span class="journal-time">6 分钟</span></a></li></ol></section>
+        <span class="journal-title"><span class="static">AI 不需要恶意，也能越过权限边界</span><span class="marquee" aria-hidden="true"><span>AI 不需要恶意，也能越过权限边界 —&nbsp;</span><span>AI 不需要恶意，也能越过权限边界 —&nbsp;</span><span>AI 不需要恶意，也能越过权限边界 —&nbsp;</span></span></span>
+        <span class="topic" data-topic="2">Agent 自动化</span><span class="journal-time">13 分钟</span></a></li><li><a class="journal-row" href="article-15.html" data-topic="2" data-cursor="阅读">
+        <span class="journal-date">2026.05 · 15</span>
+        <span class="journal-title"><span class="static">我做了一次多 Agent 架构实验：复杂架构并不天然更聪明</span><span class="marquee" aria-hidden="true"><span>我做了一次多 Agent 架构实验：复杂架构并不天然更聪明 —&nbsp;</span><span>我做了一次多 Agent 架构实验：复杂架构并不天然更聪明 —&nbsp;</span><span>我做了一次多 Agent 架构实验：复杂架构并不天然更聪明 —&nbsp;</span></span></span>
+        <span class="topic" data-topic="2">Agent 自动化</span><span class="journal-time">8 分钟</span></a></li><li><a class="journal-row" href="article-19.html" data-topic="2" data-cursor="阅读">
+        <span class="journal-date">2026.05 · 19</span>
+        <span class="journal-title"><span class="static">多 Agent 架构的真正问题：不是角色分工，而是上下文边界</span><span class="marquee" aria-hidden="true"><span>多 Agent 架构的真正问题：不是角色分工，而是上下文边界 —&nbsp;</span><span>多 Agent 架构的真正问题：不是角色分工，而是上下文边界 —&nbsp;</span><span>多 Agent 架构的真正问题：不是角色分工，而是上下文边界 —&nbsp;</span></span></span>
+        <span class="topic" data-topic="2">Agent 自动化</span><span class="journal-time">10 分钟</span></a></li></ol></section>
     <nav class="pager" aria-label="更多文章">
-        <a href="article-19.html" data-cursor="上一篇"><span class="meta">← 上一篇</span><strong>当真的需要多 Agent：如何拆分、协作与合并结果</strong></a>
-        <a href="article-21.html" data-cursor="下一个"><span class="meta">下一篇 →</span><strong>AI Agent 正在重塑系统架构：从功能系统到任务系统</strong></a>
+        <a href="article-19.html" data-cursor="上一篇"><span class="meta">← 上一篇</span><strong>多 Agent 架构的真正问题：不是角色分工，而是上下文边界</strong></a>
+        <a href="article-21.html" data-cursor="下一个"><span class="meta">下一篇 →</span><strong>工程师的成长本质是抽象层上移</strong></a>
     </nav>
 </div>
 </main>

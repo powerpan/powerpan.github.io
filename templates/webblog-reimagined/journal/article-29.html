@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>After a Vision Model Ships: Do Not Let mAP Become the Only Answer — Eric</title>
-<meta name="description" content="After a Vision Model Ships: Do Not Let mAP Become the Only Answer">
+<title>AI Weekly: Agent Platforms Scale Up, Models Keep Advancing, and AI Hardware Moves Toward the Edge — Eric</title>
+<meta name="description" content="AI Weekly: Agent Platforms Scale Up, Models Keep Advancing, and AI Hardware Moves Toward the Edge">
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#ede8df">
 <script>(()=>{const r=document.documentElement;let t,m;try{t=localStorage.getItem('ink-theme');m=localStorage.getItem('ink-motion')}catch(e){}t=t||(matchMedia('(prefers-color-scheme: dark)').matches?'night':'day');if(matchMedia('(prefers-reduced-motion: reduce)').matches)m='off';r.dataset.theme=t;r.dataset.motion=m||'on'})()</script>
@@ -43,81 +43,91 @@
 <div class="progress" aria-hidden="true"><i></i></div>
 <div class="page">
     <header class="article-head">
-        <p class="meta"><a href="index.html">← Journal</a> &nbsp;/&nbsp; <span class="topic" data-topic="3">Vision & Multimodal</span></p>
-        <h1 data-split>After a Vision Model Ships: Do Not Let <em>mAP</em> Become the Only Answer</h1>
+        <p class="meta"><a href="index.html">← Journal</a> &nbsp;/&nbsp; <span class="topic" data-topic="5">Tech Observation</span></p>
+        <h1 data-split>AI Weekly: Agent Platforms Scale Up, Models Keep Advancing, and AI Hardware Moves Toward the Edge</h1>
         <p class="lede rise"></p>
-        <div class="article-meta meta rise" style="--d:120ms"><span>2026.04.27</span><span>9 min</span><span>No. 29</span></div>
+        <div class="article-meta meta rise" style="--d:120ms"><span>2026.04.27</span><span>11 min</span><span>No. 29</span></div>
     </header>
     <div class="article-layout">
-        <nav class="toc" aria-label="Contents"><a href="#intro">Once offline metrics pass, the real work begins</a><a href="#metric-gap">mAP cannot answer every engineering question</a><a href="#online-signals">What signals to watch after launch</a><a href="#rollout">Gradual rollout matters more than replacement</a><a href="#ownership">The data loop is the long-term moat</a><a href="#takeaway">Final Thoughts</a></nav>
+        <nav class="toc" aria-label="Contents"><a href="#intro">This week, AI product shape moved one step further</a><a href="#models">Model layer: GPT-5.5 and DeepSeek-V4 point to two product routes</a><a href="#multimodal">Multimodal generation: Images 2.0 feels closer to deliverable design output</a><a href="#agent-platform">Agent platforms: Google, Adobe, and Microsoft are turning Agents into infrastructure</a><a href="#dev-stack">Developer stack: MCP, A2A, skills, and runtimes are becoming platform keywords</a><a href="#hardware">Hardware and devices: AI compute is beginning to move from cloud to edge</a><a href="#takeaway">This week’s takeaway: AI is moving from capability demos to system delivery</a></nav>
         <div class="page-surface"><div class="prose"><section class="detail-section" id="intro">
-            <h2 class="">Once offline metrics pass, the real work begins</h2>
-            <p class="">Many vision projects converge around one acceptance number: mAP. The dataset is split, validation runs, the curve looks good, and the model feels like it has already cleared the hardest part.</p>
-            <p class="">But once that model is connected to a production line, monitoring system, or business workflow, mAP is usually only the beginning. Online images bring lighting changes, angles, compression, occlusion, camera vibration, and aging devices that never politely follow the validation distribution.</p>
-            <p class="">I increasingly think the most underestimated part of vision engineering is not training technique, but <strong class="">post-launch observability and rollback design</strong>. A model that can prove accuracy in a notebook but cannot explain when it is failing online is not yet a reliable system.</p>
+            <h2 class="">This week, AI product shape moved one step further</h2>
+            <p class="">The biggest AI shift this week was not simply stronger models. Several product lines are converging at once: models are behaving more like work engines, Agents are moving from concept to platform, and AI hardware is starting to spread from data centers into edge devices.</p>
+            <p class="">Put together, the week’s keywords are clear: stronger models, heavier Agents, closer-to-device AI, and more explicit platform infrastructure.</p>
+            <p class=""><strong class="">For developers, the important signal is that AI competition is shifting from single-feature demos to full system delivery.</strong> The question is no longer just what a model can answer, but whether it can complete real work under tools, permissions, hardware limits, and business constraints.</p>
         </section>
 
-        <section class="detail-section" id="metric-gap">
-            <h2 class="">mAP cannot answer every engineering question</h2>
-            <p class="">mAP matters. It measures overall detection quality on labeled data. But it is naturally offline, averaged, and dataset-bound. Real engineering environments ask different questions: which false positives are expensive? Which shifts have more misses? Did one camera suddenly get worse? If the threshold rises, will the human review queue collapse?</p>
-            <p class="">That is not mAP’s fault; those questions are not its job. Treating mAP as the only answer is like judging a backend service by average CPU usage alone. The average can look fine while tail latency, error rate, and dependency jitter are already flashing red.</p>
+        <section class="detail-section" id="models">
+            <h2 class="">Model layer: GPT-5.5 and DeepSeek-V4 point to two product routes</h2>
+            <p class="">OpenAI released GPT-5.5 on April 23. The official framing emphasized long-chain work across coding, online research, data analysis, document and spreadsheet creation, and software operation rather than single-turn Q&amp;A benchmarks. It looks more like a work model suited for an Agent control loop than a pure chat model.</p>
+            <p class="">That matters because future AI application design will revolve more around model plus tools plus state plus evaluation, not around wrapping a chat interface. The model is expected to understand goals, break work into steps, keep moving, and operate through uncertainty.</p>
+            <p class="">A different route comes from DeepSeek. DeepSeek-V4 Preview, released on April 24, launched with both Pro and Flash variants and leaned into million-token context, agentic coding, complex-task handling, and aggressive efficiency. With weights and APIs available together, it clearly targets open ecosystems, developer adaptation, and lower-cost deployment.</p>
             <ul class="">
-                <li class=""><strong class="">Average metrics hide local risk</strong> — a small class, one production line, or one lighting condition may already be degrading</li>
-                <li class=""><strong class="">Offline sets cannot cover online change</strong> — devices, environments, and operating procedures gradually shift the input distribution</li>
-                <li class=""><strong class="">Business cost is not the same as detection score</strong> — the same false detection has very different cost in alerts, inspection, and automated sorting</li>
+                <li class=""><strong class="">Signal from GPT-5.5</strong> — a general productivity work core, suitable as the primary model for complex tasks</li>
+                <li class=""><strong class="">Signal from DeepSeek-V4</strong> — stronger emphasis on long context, open compatibility, and cost efficiency, especially relevant for private deployment and domestic compute ecosystems</li>
+                <li class=""><strong class="">Engineering implication</strong> — model choice is becoming less about who is strongest overall and more about who best fits the workflow</li>
+            </ul>
+            <p class="">Another notable point is how quickly the Ascend ecosystem started publishing deployment paths around DeepSeek-V4. That suggests model and compute-stack coupling is accelerating. The combination of model architecture, inference framework, chip, and cluster is becoming more important than parameter counts alone.</p>
+        </section>
+
+        <section class="detail-section" id="multimodal">
+            <h2 class="">Multimodal generation: Images 2.0 feels closer to deliverable design output</h2>
+            <p class="">OpenAI also launched ChatGPT Images 2.0 on April 21. More than “better images,” the stronger signal is that image generation is moving toward deliverable assets: more stable text rendering, layout, multilingual visuals, comics, infographics, and branded graphics.</p>
+            <p class="">That means image generation works better as part of a content pipeline rather than as an isolated creativity button. Many image models could produce concept art before, but they struggled to create text-heavy or layout-sensitive outputs that could move directly into business workflows. That is starting to change.</p>
+            <ul class="">
+                <li class=""><strong class="">Likely product use cases</strong> — posters, ecommerce assets, promotional cards, educational diagrams, social covers, and brand visuals</li>
+                <li class=""><strong class="">Product design implication</strong> — do not treat multimodality as “generate one image”; connect it into full workflows for copy, visuals, resizing, and multi-platform output</li>
             </ul>
         </section>
 
-        <section class="detail-section" id="online-signals">
-            <h2 class="">What signals to watch after launch</h2>
-            <p class="">I prefer treating a vision model like an online service, not a static file. In addition to normal service metrics, the system needs signals related to images, boxes, and confidence distributions.</p>
+        <section class="detail-section" id="agent-platform">
+            <h2 class="">Agent platforms: Google, Adobe, and Microsoft are turning Agents into infrastructure</h2>
+            <p class="">The clearest product signal this week came from Agent platformization. At Next, Google Cloud introduced Gemini Enterprise Agent Platform and paired it with its eighth-generation TPU strategy. The message was not how to make an Agent demo, but how to build, govern, optimize, and scale enterprise Agents.</p>
+            <p class="">Adobe moved Agents deeper into customer-experience and marketing workflows. CX Enterprise Coworker is not a general assistant; it is a vertical business system that can orchestrate work across data, content, decisions, and multi-channel execution. Adobe also explicitly embraced MCP and A2A, showing that interoperability is becoming a first-class product feature.</p>
+            <p class="">Microsoft is moving in the same direction. Copilot’s agentic capabilities in Word, Excel, and PowerPoint now focus on multi-step native actions inside the application: updating tables, formulas, charts, document structure, and presentation content. AI is no longer floating beside the interface; it is entering the interface itself.</p>
             <ul class="">
-                <li class=""><strong class="">Input distribution</strong> — whether brightness, blur, resolution, compression quality, camera source, and capture time have drifted from training</li>
-                <li class=""><strong class="">Output distribution</strong> — whether per-class counts, box sizes, confidence histograms, and empty-result ratios suddenly change</li>
-                <li class=""><strong class="">Human review feedback</strong> — which false positives are repeatedly rejected, and which misses come from the same device or scene</li>
-                <li class=""><strong class="">System-level consequences</strong> — whether alert volume, review queue length, latency, and downstream action failures are amplified by model output</li>
-            </ul>
-            <p class="">These signals do not require a complex platform from day one. Even daily statistics grouped by camera and class are far more reliable than storing only a model weight file.</p>
-        </section>
-
-        <section class="detail-section" id="rollout">
-            <h2 class="">Gradual rollout matters more than replacement</h2>
-            <p class="">Upgrading a vision model should not feel like swapping a static image. A new model can score higher offline and still create new false-positive patterns online. In industrial inspection, security alerts, or medical assistance, changed model behavior is itself a risk.</p>
-            <p class="">A steadier path is treating launch as a <strong class="">canary experiment</strong>: run old and new models on the same inputs, compare differences first, then gradually increase traffic. Do not only ask whether the new model is more accurate; ask where it disagrees with the old one.</p>
-            <ul class="">
-                <li class=""><strong class="">Shadow mode</strong> — the new model does not affect the business path yet; it only records predictions and differences</li>
-                <li class=""><strong class="">Scenario-based rollout</strong> — start with low-risk cameras, low-value alerts, or workflows with human fallback</li>
-                <li class=""><strong class="">Explicit rollback thresholds</strong> — if false positives, misses, latency, or review pressure exceed limits, automatically switch back</li>
+                <li class=""><strong class="">The real platform questions</strong> — how Agents connect to data, manage permissions, monitor execution, evaluate outcomes, control cost, and recover from failure</li>
+                <li class=""><strong class="">Product shape change</strong> — many future AI products will not be new chat apps, but intelligent execution layers inside existing business interfaces</li>
             </ul>
         </section>
 
-        <section class="detail-section" id="ownership">
-            <h2 class="">The data loop is the long-term moat</h2>
-            <p class="">Whether a vision system improves over time depends on whether online failures can flow back into training. Without a loop, every iteration feels like another draw from the lottery. With a loop, error samples become fuel for the next improvement.</p>
-            <p class="">The loop is not simply dumping every online image back into training. The useful part is context: source device, time, environment, model version, threshold, human decision, and downstream impact. That context lets the team distinguish drift, labeling policy, model architecture, and business threshold mistakes.</p>
-            <p class=""><strong class="">Model launch is not the end of development; it is where the data system starts breathing.</strong> The team that can detect failure faster, locate causes more precisely, and convert errors into training assets more consistently is closer to sustainable AI vision engineering.</p>
+        <section class="detail-section" id="dev-stack">
+            <h2 class="">Developer stack: MCP, A2A, skills, and runtimes are becoming platform keywords</h2>
+            <p class="">This week, multiple products repeated the same ideas: MCP, A2A, agent skills, agent runtime, orchestrator, and registry. That is a sign the industry is moving beyond prompt craft toward system integration.</p>
+            <p class="">For AI application engineering, four capabilities matter more and more: MCP servers that expose databases, file systems, and business APIs; permission and audit boundaries for risky tools; observability into every call, failure, and cost; and evaluation systems for complex tasks rather than single-turn outputs.</p>
+            <p class=""><strong class="">This matters more than learning a few extra prompt tricks.</strong> What decides whether an AI application reaches production is tool integration, permission boundaries, observability, and rollback strength.</p>
+        </section>
+
+        <section class="detail-section" id="hardware">
+            <h2 class="">Hardware and devices: AI compute is beginning to move from cloud to edge</h2>
+            <p class="">On hardware, two signals stood out. First, Google’s eighth-generation TPU strategy separates training and inference more clearly: TPU 8t for training and TPU 8i for low-latency inference. That reflects how sensitive Agent-era products are to inference cost, latency, and efficiency because one task may require multiple model calls, tool calls, reflection, and verification loops.</p>
+            <p class="">Second, the more device-oriented signal came from Anker’s Thus chip. It aims to bring local AI into audio devices, mobile accessories, and IoT hardware, with first use in flagship Soundcore earbuds. The point is not flashy specs, but the fact that AI hardware is continuing to move from data centers into tiny, power-constrained consumer devices.</p>
+            <ul class="">
+                <li class=""><strong class="">Cloud trend</strong> — training and inference are being optimized more separately, and inference cost will become a core scaling constraint for Agent products</li>
+                <li class=""><strong class="">Edge trend</strong> — small local chips are starting to carry more capable audio models, which will affect noise reduction, voice enhancement, real-time translation, and ambient awareness</li>
+            </ul>
         </section>
 
         <section class="detail-section" id="takeaway">
-            <h2 class="">Final Thoughts</h2>
-            <p class="">If mAP is the only way we judge success, we reduce the problem to whether the model was trained well enough. In practice, the harder engineering question is whether the model can still be observed, explained, and controlled in a changing world.</p>
-            <p class="">A mature vision launch should answer at least three questions: is the model still seeing familiar data, what business consequences do its errors create, and can the system quickly detect and roll back when failure begins?</p>
-            <p class="">mAP is an entry ticket, not a finish line. Monitoring, canary rollout, rollback, and the data loop decide whether a vision model is a demo or a production system.</p>
+            <h2 class="">This week’s takeaway: AI is moving from capability demos to system delivery</h2>
+            <p class="">Put all of these updates together, and the biggest shift is not a single stronger benchmark. AI is moving from “enter a prompt, get an answer” to “define a goal, combine model, tools, data, permissions, and hardware, then deliver an executable result.”</p>
+            <p class="">That means the AI application skill stack is changing too. Calling one model API is not enough. What matters more now is multi-model selection, context engineering, Agent orchestration, MCP integration, permissions and audit, observability, cost control, and cloud-edge coordination.</p>
+            <p class=""><strong class="">If I had to turn this week into action items, I would give three: build a truly executable Agent project, invest in MCP and tool integration, and start paying serious attention to edge AI working together with cloud AI.</strong> The most valuable AI products ahead may not be the ones that chat best, but the ones that deliver work most reliably.</p>
         </section></div></div>
     </div>
-    <section class="related" aria-labelledby="related-title"><p class="kicker">Continue reading</p><h2 id="related-title">Related <em>writing</em></h2><ol class="journal-list" style="list-style:none"><li><a class="journal-row" href="article-17.html" data-topic="3" data-cursor="Read">
-        <span class="journal-date">2026.05 · 17</span>
-        <span class="journal-title"><span class="static">U-Net Did Not Lose to a Newer Model: In Industrial Vision, Define the Task Before Choosing the Model</span><span class="marquee" aria-hidden="true"><span>U-Net Did Not Lose to a Newer Model: In Industrial Vision, Define the Task Before Choosing the Model —&nbsp;</span><span>U-Net Did Not Lose to a Newer Model: In Industrial Vision, Define the Task Before Choosing the Model —&nbsp;</span><span>U-Net Did Not Lose to a Newer Model: In Industrial Vision, Define the Task Before Choosing the Model —&nbsp;</span></span></span>
-        <span class="topic" data-topic="3">Vision &amp; Multimodal</span><span class="journal-time">8 min</span></a></li><li><a class="journal-row" href="article-24.html" data-topic="3" data-cursor="Read">
-        <span class="journal-date">2026.04 · 24</span>
-        <span class="journal-title"><span class="static">Vision Algorithm Engineers: Do Not Become Process Operators</span><span class="marquee" aria-hidden="true"><span>Vision Algorithm Engineers: Do Not Become Process Operators —&nbsp;</span><span>Vision Algorithm Engineers: Do Not Become Process Operators —&nbsp;</span><span>Vision Algorithm Engineers: Do Not Become Process Operators —&nbsp;</span></span></span>
-        <span class="topic" data-topic="3">Vision &amp; Multimodal</span><span class="journal-time">8 min</span></a></li><li><a class="journal-row" href="article-35.html" data-topic="3" data-cursor="Read">
-        <span class="journal-date">2026.03 · 35</span>
-        <span class="journal-title"><span class="static">From DETR to YOLOv8: Transformer Evolution in Object Detection</span><span class="marquee" aria-hidden="true"><span>From DETR to YOLOv8: Transformer Evolution in Object Detection —&nbsp;</span><span>From DETR to YOLOv8: Transformer Evolution in Object Detection —&nbsp;</span><span>From DETR to YOLOv8: Transformer Evolution in Object Detection —&nbsp;</span></span></span>
-        <span class="topic" data-topic="3">Vision &amp; Multimodal</span><span class="journal-time">12 min</span></a></li></ol></section>
+    <section class="related" aria-labelledby="related-title"><p class="kicker">Continue reading</p><h2 id="related-title">Related <em>writing</em></h2><ol class="journal-list" style="list-style:none"><li><a class="journal-row" href="article-07.html" data-topic="5" data-cursor="Read">
+        <span class="journal-date">2026.09 · 07</span>
+        <span class="journal-title"><span class="static">Who Gets to Train on Whom?</span><span class="marquee" aria-hidden="true"><span>Who Gets to Train on Whom? —&nbsp;</span><span>Who Gets to Train on Whom? —&nbsp;</span><span>Who Gets to Train on Whom? —&nbsp;</span></span></span>
+        <span class="topic" data-topic="5">Tech Observation</span><span class="journal-time">7 min</span></a></li><li><a class="journal-row" href="article-08.html" data-topic="5" data-cursor="Read">
+        <span class="journal-date">2026.08 · 08</span>
+        <span class="journal-title"><span class="static">The Three Clocks of Robotics</span><span class="marquee" aria-hidden="true"><span>The Three Clocks of Robotics —&nbsp;</span><span>The Three Clocks of Robotics —&nbsp;</span><span>The Three Clocks of Robotics —&nbsp;</span></span></span>
+        <span class="topic" data-topic="5">Tech Observation</span><span class="journal-time">8 min</span></a></li><li><a class="journal-row" href="article-10.html" data-topic="5" data-cursor="Read">
+        <span class="journal-date">2026.05 · 10</span>
+        <span class="journal-title"><span class="static">When a Technology Roadmap Becomes a Law</span><span class="marquee" aria-hidden="true"><span>When a Technology Roadmap Becomes a Law —&nbsp;</span><span>When a Technology Roadmap Becomes a Law —&nbsp;</span><span>When a Technology Roadmap Becomes a Law —&nbsp;</span></span></span>
+        <span class="topic" data-topic="5">Tech Observation</span><span class="journal-time">6 min</span></a></li></ol></section>
     <nav class="pager" aria-label="More articles">
-        <a href="article-28.html" data-cursor="Prev"><span class="meta">← Previous</span><strong>AI Weekly: Agent Platforms Scale Up, Models Keep Advancing, and AI Hardware Moves Toward the Edge</strong></a>
-        <a href="article-30.html" data-cursor="Next"><span class="meta">Next →</span><strong>Code Review Debt in the Age of AI Coding</strong></a>
+        <a href="article-28.html" data-cursor="Prev"><span class="meta">← Previous</span><strong>The AI Workflow Battle: Why the Real Endgame Is Not Tools but the Work Agent Layer</strong></a>
+        <a href="article-30.html" data-cursor="Next"><span class="meta">Next →</span><strong>After a Vision Model Ships: Do Not Let mAP Become the Only Answer</strong></a>
     </nav>
 </div>
 </main>

@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>视觉算法工程师，别把自己做成 流程操作员 — Eric</title>
-<meta name="description" content="视觉算法工程师，别把自己做成 流程操作员">
+<title>技术债不是代码坏味道，而是 组织对未来的定价 — Eric</title>
+<meta name="description" content="技术债不是代码坏味道，而是 组织对未来的定价">
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#ede8df">
 <script>(()=>{const r=document.documentElement;let t,m;try{t=localStorage.getItem('ink-theme');m=localStorage.getItem('ink-motion')}catch(e){}t=t||(matchMedia('(prefers-color-scheme: dark)').matches?'night':'day');if(matchMedia('(prefers-reduced-motion: reduce)').matches)m='off';r.dataset.theme=t;r.dataset.motion=m||'on'})()</script>
@@ -43,64 +43,75 @@
 <div class="progress" aria-hidden="true"><i></i></div>
 <div class="page">
     <header class="article-head">
-        <p class="meta"><a href="index.html">← 文章</a> &nbsp;/&nbsp; <span class="topic" data-topic="3">视觉多模态</span></p>
-        <h1 data-split>视觉算法工程师，别把自己做成 <em>流程操作员</em></h1>
+        <p class="meta"><a href="index.html">← 文章</a> &nbsp;/&nbsp; <span class="topic" data-topic="4">系统架构</span></p>
+        <h1 data-split>技术债不是代码坏味道，而是 <em>组织对未来的定价</em></h1>
         <p class="lede rise"></p>
-        <div class="article-meta meta rise" style="--d:120ms"><span>2026.04.28</span><span>8 分钟</span><span>No. 24</span></div>
+        <div class="article-meta meta rise" style="--d:120ms"><span>2026.04.29</span><span>10 分钟</span><span>No. 24</span></div>
     </header>
     <div class="article-layout">
-        <nav class="toc" aria-label="目录"><a href="#operator">岗位正在被流程化压缩</a><a href="#modeling">先定义问题，而不是先选模型</a><a href="#data-loop">数据不是越多越好，而是要形成闭环</a><a href="#diagnosis">会启动训练，不等于会诊断模型</a><a href="#delivery">部署不是转换模型，而是建立可信系统</a><a href="#assets">把能力沉淀成工程资产</a></nav>
-        <div class="page-surface"><div class="prose"><section class="detail-section" id="operator">
-            <h2 class="">岗位正在被流程化压缩</h2>
-            <p class="">很多视觉算法岗位，表面上还叫“算法工程师”，实际工作却越来越像流程操作员：收数据、催标注、改配置、跑训练、看指标、转模型、部署接口。项目一轮不行，就继续补数据、重新训练、再次上线。久而久之，工程师的价值会被压缩成数据标注员、训练启动员和模型部署员。</p>
-            <p class="">这些工作不是不重要。没有数据、训练和部署，模型没有任何业务价值。但问题在于，如果一个工程师只停留在这些动作本身，开源模型、自动训练平台和部署工具越成熟，他的替代风险就越高。</p>
-            <p class="">视觉算法工程师真正的价值，不是把模型跑起来，而是把一个视觉问题变成可验证、可迭代、可落地的系统方案。</p>
+        <nav class="toc" aria-label="目录"><a href="#engineering">技术债当然先表现为工程问题</a><a href="#permission">真正难的是组织是否允许你改</a><a href="#arbitrage">技术债是一种时间套利</a><a href="#game">技术债为什么更像组织博弈</a><a href="#behavior">债务会改变团队行为</a><a href="#ai-debt">AI 应用时代，债务会更隐蔽</a><a href="#takeaway">写在最后</a></nav>
+        <div class="page-surface"><div class="prose"><section class="detail-section" id="engineering">
+            <h2 class="">技术债当然先表现为工程问题</h2>
+            <p class="">技术债首先有非常具体的工程形态。后端系统里相同的权限判断散落在不同接口里，相同的数据转换在多个 service 中复制，某个字段的含义在不同场景下被反复复用。前端系统里页面逻辑、接口请求、缓存状态、用户交互和异常处理缠绕在一起，组件逐渐变成无法复用、无法测试、无法理解的大泥球。</p>
+            <p class="">AI 应用也会产生新型技术债：模型调用链路缺少可观测性，prompt 版本没有管理，向量库索引策略不清晰，评测集缺失，线上效果只能靠人工感知。项目初期看似跑通了 demo，但进入真实业务场景后，结果不稳定、问题难复现、优化无抓手、上线不可控。</p>
+            <p class="">这些不是研发人员的情绪，而是系统复杂度的累积。技术债会提高修改成本，降低系统可理解性，扩大回归风险。一个系统真正危险的时候，不一定是 bug 很多，而是团队已经不敢改它。</p>
         </section>
 
-        <section class="detail-section" id="modeling">
-            <h2 class="">先定义问题，而不是先选模型</h2>
-            <p class="">很多项目一开始就问错了问题。业务方说要检测某个目标，工程师马上开始选 YOLO、准备数据、训练模型。但真实需求可能不是单纯目标检测，而是检测、分类、跟踪、区域判断、时序分析和业务规则的组合。</p>
-            <p class="">比如“判断工人是否违规”，并不只是检测人和安全帽。它还可能涉及人与设备的位置关系、动作持续时间、误报容忍度和报警策略。低阶执行者会问“用哪个模型”，真正的视觉算法工程师应该先问“这个问题应该怎么建模”。</p>
+        <section class="detail-section" id="permission">
+            <h2 class="">真正难的是组织是否允许你改</h2>
+            <p class="">很多技术债并不是因为工程师不知道更好的写法。工程师往往知道某个接口不应该继续堆参数，知道某个模块应该拆分，知道系统缺少测试和监控，也知道某个临时方案继续用下去会出问题。</p>
+            <p class="">但知道，并不意味着能做。工程方案要嵌入业务节奏，研发排期要服从版本计划，技术治理要面对资源分配。更合理的方案在技术上可行，在组织上却未必可行。</p>
+            <p class="">技术债的困境在于：它的成本通常是长期、分散、滞后的，而偿还成本却是短期、集中、显性的。一个新功能延期两周，所有人都能看到；一次重构避免了未来三个月的维护成本，却很难被准确证明。</p>
         </section>
 
-        <section class="detail-section" id="data-loop">
-            <h2 class="">数据不是越多越好，而是要形成闭环</h2>
-            <p class="">模型效果不好时，很多团队第一反应是继续标数据。但数据不是越多越好，而是越针对问题越好。模型到底错在哪里？是小目标漏检，还是遮挡误检？是类别混淆，还是标注规范不一致？是训练集和线上场景分布不一致，还是验证集本身不可靠？</p>
-            <p class="">如果不能回答这些问题，补数据就只是体力劳动。算法工程师要做的，是把线上失败样本回流，分析错误类型，针对性补充数据，再通过回归测试验证改进效果。数据不只是训练材料，而是系统持续进化的燃料。</p>
+        <section class="detail-section" id="arbitrage">
+            <h2 class="">技术债是一种时间套利</h2>
+            <p class="">技术债更像一种组织层面的时间套利：当前团队用未来的维护成本，换取当下的交付速度。</p>
+            <p class="">这种套利在某些阶段是合理的。项目还在验证商业模式，功能还不知道有没有用户，AI 应用还处在 demo 到 MVP 的探索阶段，此时追求完美架构可能反而是浪费。过早抽象、过度设计、过度工程化，本身也会形成另一种技术债。</p>
+            <p class="">真正的问题不在于组织是否欠债，而在于组织是否知道自己正在欠债，是否知道债务规模，是否知道偿还条件。很多“临时方案”最后会被默认为“既然能跑，就继续跑”，临时补丁变成长期架构，局部绕路变成主干路径。</p>
         </section>
 
-        <section class="detail-section" id="diagnosis">
-            <h2 class="">会启动训练，不等于会诊断模型</h2>
-            <p class="">现在跑一次训练并不难，难的是判断模型为什么失败。看到 mAP 低就换模型，看到 loss 不降就调学习率，看到线上效果差就补数据，这些都太粗糙。</p>
-            <p class="">一个合格的视觉算法工程师，应该能判断模型是欠拟合还是过拟合，数据划分是否合理，类别是否长尾，输入分辨率是否适合目标尺度，NMS 是否影响密集目标，线上误检到底来自模型能力、数据分布，还是业务规则设计。会跑训练脚本不等于会训练模型，会看日志也不等于会诊断模型。</p>
+        <section class="detail-section" id="game">
+            <h2 class="">技术债为什么更像组织博弈</h2>
+            <p class="">技术债难处理，是因为它牵涉到多个角色之间的目标差异。业务侧希望快速响应市场，产品侧希望功能尽快上线，研发侧希望系统保持可维护，测试侧希望质量可控，平台侧希望部署稳定，管理层希望成本、进度和结果都可衡量。</p>
+            <p class="">这些目标都合理，但它们并不天然一致。于是，技术债就不再只是“应该怎么设计”的问题，而变成“谁为长期质量付费”的问题。</p>
+            <p class="">长期质量的成本和收益在组织内部并不均匀分布。制造技术债的人，未必是偿还技术债的人；决定压缩排期的人，未必是深夜修线上 bug 的人；享受短期交付收益的团队，未必在未来继续维护这个系统。当收益和成本错配时，技术债就会自然增长。</p>
         </section>
 
-        <section class="detail-section" id="delivery">
-            <h2 class="">部署不是转换模型，而是建立可信系统</h2>
-            <p class="">部署不是把 .pt 转成 .onnx，也不是把模型塞进 TensorRT 就结束了。真实视觉系统面对的是摄像头角度、光照变化、帧率波动、设备算力、网络延迟、误报容忍度、人工复核机制和线上监控。</p>
-            <p class="">部署员关心模型能不能跑，视觉算法工程师关心系统能不能被业务长期信任。很多项目失败，不是模型完全不能识别，而是系统不稳定、不可靠、不可解释。要解决这些问题，靠的不是单纯换模型，而是时序平滑、置信度策略、错误样本回流、监控告警、规则层设计和持续迭代机制。</p>
+        <section class="detail-section" id="behavior">
+            <h2 class="">债务会改变团队行为</h2>
+            <p class="">技术债不只是影响代码，也会影响团队的行为模式。当债务积累到一定程度后，研发开始避免触碰核心模块，产品开始默认某些需求“技术上很麻烦”，测试开始依赖大量人工回归，新人开始依赖老人口头解释，线上问题开始依赖经验排查。</p>
+            <p class="">系统越复杂，越难解释；越难解释，越难争取治理资源；越缺少治理资源，系统继续复杂化。最后，团队会形成一种低效稳定态：大家都在忙，系统也一直在运行，但真正的工程能力没有增长。</p>
+            <p class="">技术债最终会塑造一种工程文化：不是追求清晰，而是追求绕过；不是追求演进，而是追求不出事；不是追求理解系统，而是追求在系统中生存。</p>
         </section>
 
-        <section class="detail-section" id="assets">
-            <h2 class="">把能力沉淀成工程资产</h2>
-            <p class="">今天是 YOLO，明天是 RT-DETR，后天是 SAM 或多模态模型。模型会更新，框架会替换，工具会自动化。真正能留下来的，是你对问题定义、数据闭环、模型诊断、系统设计和工程交付的能力。</p>
-            <p class="">所以，视觉算法工程师要避免变成流程操作员，不是要拒绝标注、训练和部署，而是不能只做这些事情。标注时，要思考数据分布和失败模式；训练时，要思考实验设计和模型诊断；部署时，要思考系统可靠性和业务闭环。</p>
-            <p class="">未来真正稀缺的，不是会启动训练脚本的人，而是能把视觉问题拆清楚、把模型能力嵌入系统、把线上反馈转化为持续改进机制的人。视觉算法工程师的终点，不是把模型跑起来，而是让视觉系统在真实世界中持续有效。</p>
+        <section class="detail-section" id="ai-debt">
+            <h2 class="">AI 应用时代，债务会更隐蔽</h2>
+            <p class="">传统软件中的技术债通常沉积在代码、架构、数据库和流程里；AI 应用中的技术债还会沉积在数据、模型、prompt、评测体系、工具链和人机协作流程里。</p>
+            <p class="">一个 RAG 系统可能看起来已经能回答问题，但文档切分策略混乱，embedding 模型版本不清晰，召回和重排没有评测指标，知识库更新没有流程，失败案例没有沉淀。短期看，它是一个可演示的 AI 应用；长期看，它可能是一个不可验证、不可优化、不可解释的黑箱系统。</p>
+            <p class="">AI 系统尤其容易制造一种幻觉：只要效果看起来不错，工程基础就可以暂时忽略。但真实情况恰恰相反。AI 应用越不确定，越需要工程治理；模型行为越难预测，越需要评测、观测、回滚和版本管理。</p>
+        </section>
+
+        <section class="detail-section" id="takeaway">
+            <h2 class="">写在最后</h2>
+            <p class="">技术债的表现是工程问题，根源是组织博弈，治理则需要工程能力和组织机制共同作用。更准确地说，技术债是组织对未来的一种定价。</p>
+            <p class="">当组织选择快速上线，它是在用未来维护成本购买当前速度；当组织选择跳过测试，它是在用未来风险购买当前进度；当组织选择推迟重构，它是在用未来复杂度购买当前资源。这些选择不一定错误，但它们必须被看见、被记录、被管理、被偿还。</p>
+            <p class="">技术债不是某一段代码的失败，而是组织连续决策的沉积物。代码只是债务的载体，架构只是债务的形状，真正决定债务规模的，是组织如何看待时间、成本、风险和未来。</p>
         </section></div></div>
     </div>
-    <section class="related" aria-labelledby="related-title"><p class="kicker">继续阅读</p><h2 id="related-title">相关<em>文章</em></h2><ol class="journal-list" style="list-style:none"><li><a class="journal-row" href="article-17.html" data-topic="3" data-cursor="阅读">
-        <span class="journal-date">2026.05 · 17</span>
-        <span class="journal-title"><span class="static">U-Net 没有输给新模型：工业视觉里，先定义任务再选择模型</span><span class="marquee" aria-hidden="true"><span>U-Net 没有输给新模型：工业视觉里，先定义任务再选择模型 —&nbsp;</span><span>U-Net 没有输给新模型：工业视觉里，先定义任务再选择模型 —&nbsp;</span><span>U-Net 没有输给新模型：工业视觉里，先定义任务再选择模型 —&nbsp;</span></span></span>
-        <span class="topic" data-topic="3">视觉多模态</span><span class="journal-time">8 分钟</span></a></li><li><a class="journal-row" href="article-29.html" data-topic="3" data-cursor="阅读">
-        <span class="journal-date">2026.04 · 29</span>
-        <span class="journal-title"><span class="static">视觉模型上线后：别让 mAP 变成唯一答案</span><span class="marquee" aria-hidden="true"><span>视觉模型上线后：别让 mAP 变成唯一答案 —&nbsp;</span><span>视觉模型上线后：别让 mAP 变成唯一答案 —&nbsp;</span><span>视觉模型上线后：别让 mAP 变成唯一答案 —&nbsp;</span></span></span>
-        <span class="topic" data-topic="3">视觉多模态</span><span class="journal-time">9 分钟</span></a></li><li><a class="journal-row" href="article-35.html" data-topic="3" data-cursor="阅读">
-        <span class="journal-date">2026.03 · 35</span>
-        <span class="journal-title"><span class="static">从 DETR 到 YOLOv8：Transformer 在目标检测中的演进与工程实践</span><span class="marquee" aria-hidden="true"><span>从 DETR 到 YOLOv8：Transformer 在目标检测中的演进与工程实践 —&nbsp;</span><span>从 DETR 到 YOLOv8：Transformer 在目标检测中的演进与工程实践 —&nbsp;</span><span>从 DETR 到 YOLOv8：Transformer 在目标检测中的演进与工程实践 —&nbsp;</span></span></span>
-        <span class="topic" data-topic="3">视觉多模态</span><span class="journal-time">12 分钟</span></a></li></ol></section>
+    <section class="related" aria-labelledby="related-title"><p class="kicker">继续阅读</p><h2 id="related-title">相关<em>文章</em></h2><ol class="journal-list" style="list-style:none"><li><a class="journal-row" href="article-04.html" data-topic="4" data-cursor="阅读">
+        <span class="journal-date">2026.10 · 04</span>
+        <span class="journal-title"><span class="static">当每个系统都在自保：3.8 GW 负载退出之后</span><span class="marquee" aria-hidden="true"><span>当每个系统都在自保：3.8 GW 负载退出之后 —&nbsp;</span><span>当每个系统都在自保：3.8 GW 负载退出之后 —&nbsp;</span><span>当每个系统都在自保：3.8 GW 负载退出之后 —&nbsp;</span></span></span>
+        <span class="topic" data-topic="4">系统架构</span><span class="journal-time">16 分钟</span></a></li><li><a class="journal-row" href="article-05.html" data-topic="4" data-cursor="阅读">
+        <span class="journal-date">2026.10 · 05</span>
+        <span class="journal-title"><span class="static">加密后的数据，真的还能做模糊查询吗？</span><span class="marquee" aria-hidden="true"><span>加密后的数据，真的还能做模糊查询吗？ —&nbsp;</span><span>加密后的数据，真的还能做模糊查询吗？ —&nbsp;</span><span>加密后的数据，真的还能做模糊查询吗？ —&nbsp;</span></span></span>
+        <span class="topic" data-topic="4">系统架构</span><span class="journal-time">33 分钟</span></a></li><li><a class="journal-row" href="article-09.html" data-topic="4" data-cursor="阅读">
+        <span class="journal-date">2026.07 · 09</span>
+        <span class="journal-title"><span class="static">Mac 正在成为个人 AI 应用的理想运行时</span><span class="marquee" aria-hidden="true"><span>Mac 正在成为个人 AI 应用的理想运行时 —&nbsp;</span><span>Mac 正在成为个人 AI 应用的理想运行时 —&nbsp;</span><span>Mac 正在成为个人 AI 应用的理想运行时 —&nbsp;</span></span></span>
+        <span class="topic" data-topic="4">系统架构</span><span class="journal-time">9 分钟</span></a></li></ol></section>
     <nav class="pager" aria-label="更多文章">
-        <a href="article-23.html" data-cursor="上一篇"><span class="meta">← 上一篇</span><strong>技术债不是代码坏味道，而是 组织对未来的定价</strong></a>
-        <a href="article-25.html" data-cursor="下一个"><span class="meta">下一篇 →</span><strong>别再把业务系统做成 CRUD 套壳</strong></a>
+        <a href="article-23.html" data-cursor="上一篇"><span class="meta">← 上一篇</span><strong>如果没有数据库，系统如何设计？</strong></a>
+        <a href="article-25.html" data-cursor="下一个"><span class="meta">下一篇 →</span><strong>视觉算法工程师，别把自己做成 流程操作员</strong></a>
     </nav>
 </div>
 </main>

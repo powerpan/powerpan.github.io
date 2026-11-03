@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>The Core of AI Engineering Is Not Making Models Omnipotent. It Is Defining Boundaries — Eric</title>
-<meta name="description" content="Mature AI engineering does not package a model as a universal assistant. It places the model inside a system with clear boundaries, responsibility, and risk control.">
+<title>I Ran a Multi-Agent Architecture Experiment: Complex Systems Are Not Automatically Smarter — Eric</title>
+<meta name="description" content="I Ran a Multi-Agent Architecture Experiment: Complex Systems Are Not Automatically Smarter">
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#ede8df">
 <script>(()=>{const r=document.documentElement;let t,m;try{t=localStorage.getItem('ink-theme');m=localStorage.getItem('ink-motion')}catch(e){}t=t||(matchMedia('(prefers-color-scheme: dark)').matches?'night':'day');if(matchMedia('(prefers-reduced-motion: reduce)').matches)m='off';r.dataset.theme=t;r.dataset.motion=m||'on'})()</script>
@@ -43,88 +43,74 @@
 <div class="progress" aria-hidden="true"><i></i></div>
 <div class="page">
     <header class="article-head">
-        <p class="meta"><a href="index.html">← Journal</a> &nbsp;/&nbsp; <span class="topic" data-topic="1">AI Engineering</span></p>
-        <h1 data-split>The Core of AI Engineering Is Not Making Models Omnipotent. It Is <em>Defining Boundaries</em></h1>
-        <p class="lede rise">Mature AI engineering does not package a model as a universal assistant. It places the model inside a system with clear boundaries, responsibility, and risk control.</p>
-        <div class="article-meta meta rise" style="--d:120ms"><span>2026.05.10</span><span>8 min</span><span>No. 15</span></div>
+        <p class="meta"><a href="index.html">← Journal</a> &nbsp;/&nbsp; <span class="topic" data-topic="2">Agent Automation</span></p>
+        <h1 data-split>I Ran a Multi-Agent Architecture Experiment: Complex Systems Are Not Automatically <em>Smarter</em></h1>
+        <p class="lede rise"></p>
+        <div class="article-meta meta rise" style="--d:120ms"><span>2026.05.12</span><span>8 min</span><span>No. 15</span></div>
     </header>
     <div class="article-layout">
-        <nav class="toc" aria-label="Contents"><a href="#wish">Universal AI Is Not a Deliverable Requirement</a><a href="#scope">Translate Wishes Into Tasks</a><a href="#responsibility">AI Handles Semantics; It Does Not Bear Responsibility</a><a href="#risk">Without Boundaries, Efficiency Tools Become Risk Systems</a><a href="#guardrails">Six Boundaries Must Become Engineering Design</a><a href="#levels">Layered Automation Is More Reliable Than One-Step Autonomy</a><a href="#engineer">The Engineer’s Value Is Designing Guardrails</a></nav>
-        <div class="page-surface"><div class="prose"><section class="detail-section" id="wish">
-            <h2 class="">Universal AI Is Not a Deliverable Requirement</h2>
-            <p class="">In enterprise AI projects, the common misunderstanding is not underestimating AI, but overestimating it. When customers first see large model capabilities, it is natural to imagine that if AI can write, summarize, and call tools, it might also manage projects, analyze operations, reply to customers, or even make decisions.</p>
-            <p class="">That idea is not strange. Every new technology invites people to imagine whether it can replace an entire old workflow. But in real engineering, the hard part is often not making the model do more. It is deciding what the model should not do.</p>
-            <blockquote class="">Mature AI engineering is not packaging a model as a universal assistant. It is placing the model inside a system with clear boundaries, explicit responsibility, and controllable risk.</blockquote>
+        <nav class="toc" aria-label="Contents"><a href="#intro">Introduction</a><a href="#setup">How the Experiment Worked</a><a href="#single">Single Agent Is Still a Strong Baseline</a><a href="#planner">Planner Helps, but Output Must Be Controlled</a><a href="#reviewer">Reviewer Value Has to Be Visible</a><a href="#debate">Debate Only Fits Real Trade-Offs</a><a href="#cost">The Cost of Complexity Is Concrete</a><a href="#takeaway">Final Thoughts</a></nav>
+        <div class="page-surface"><div class="prose"><section class="detail-section" id="intro">
+            <p class="">In earlier pieces about multi-agent architecture, I mostly discussed boundaries, context, and collaboration patterns. This time I built a small Agent Architecture Lab and ran different architectures against the same task set.</p>
+            <p class="">The experiment was small, but the conclusion was clear: complexity is not a quality amplifier. It amplifies cost, context pressure, and failure surface. Multi-agent design is only worth considering when the task truly needs decomposition, review, or multiple positions.</p>
         </section>
 
-        <section class="detail-section" id="scope">
-            <h2 class="">Translate Wishes Into Tasks</h2>
-            <p class="">When a customer asks whether AI can automatically manage projects, that is not a deliverable requirement. It is a target imagination. Engineering must first break it into concrete tasks such as project status summaries, delay risk alerts, blocker identification, and weekly report drafts.</p>
-            <p class="">When a customer asks whether AI can replace customer service, it should not be interpreted as fully automated support. It can become FAQ retrieval, standard reply suggestions, ticket classification, low-risk automatic replies, and high-risk escalation to humans.</p>
-            <p class="">This translation process is the first boundary in AI engineering. The customer describes a target state; engineers define the executable scope.</p>
+        <section class="detail-section" id="setup">
+            <h2 class="">How the Experiment Worked</h2>
+            <p class="">The tasks covered four types: generating a platform proposal, expanding it into detailed design, reviewing that design, and choosing the most ambiguous trade-off from the review report to make a technical judgment.</p>
+            <p class="">I compared four architectures: <code class="">single</code>, <code class="">planner_executor</code>, <code class="">planner_executor_reviewer</code>, and <code class="">debate</code>. The observations included latency, token usage, estimated cost, truncation, final answer usefulness, and whether the intermediate process had review value.</p>
+            <p class="">This was not a rigorous large-sample study, but it was enough to expose typical engineering problems.</p>
         </section>
 
-        <section class="detail-section" id="responsibility">
-            <h2 class="">AI Handles Semantics; It Does Not Bear Responsibility</h2>
-            <p class="">Large models are good at language, context, and semantic relationships. That makes them useful for retrieval, summarization, classification, extraction, draft generation, candidate suggestions, anomaly hints, and natural-language interaction.</p>
-            <p class="">Those capabilities are valuable, but they do not mean AI can bear final responsibility. It is reasonable for AI to summarize contract risks, but dangerous for it to decide whether a contract can be signed. It is reasonable for AI to analyze production anomalies, but automatic shutdown, line scheduling, or key parameter changes require strict rules and human confirmation.</p>
-            <p class="">The maturity of an enterprise AI system is not whether it can answer more questions. It is whether it can stop at the right place.</p>
+        <section class="detail-section" id="single">
+            <h2 class="">Single Agent Is Still a Strong Baseline</h2>
+            <p class="">In the experiment, <code class="">single</code> had the lowest cost and latency, and the best stability. None of the four tasks were truncated, and its output was not weak on simple proposals or clear technical decisions.</p>
+            <p class="">That means Single Agent is not obsolete. It is the baseline every complex architecture must beat. When the task boundary is clear, the input is sufficient, and the output shape is explicit, adding more Agents often just adds process cost.</p>
         </section>
 
-        <section class="detail-section" id="risk">
-            <h2 class="">Without Boundaries, Efficiency Tools Become Risk Systems</h2>
-            <p class="">Many AI demos look smooth, but real business introduces old documents, conflicting definitions, incomplete data, and questions with no standard answer. Without boundaries, AI can quickly turn from an efficiency tool into a risk system.</p>
-            <ul class="">
-                <li class=""><strong class="">Fact risk</strong>: treating historical versions as current rules.</li>
-                <li class=""><strong class="">Permission risk</strong>: centralizing permission problems that used to be scattered.</li>
-                <li class=""><strong class="">Execution risk</strong>: once tools, data edits, or emails are involved, mistakes enter the workflow directly.</li>
-                <li class=""><strong class="">Responsibility risk</strong>: without sources, context, and execution traces, errors are hard to audit.</li>
-                <li class=""><strong class="">Scope expansion risk</strong>: once customers see AI do one thing, they keep asking it to do more.</li>
-            </ul>
-            <p class="">AI projects are not more advanced because they are more open. The closer they get to production, the more they need to narrow and control scope.</p>
+        <section class="detail-section" id="planner">
+            <h2 class="">Planner Helps, but Output Must Be Controlled</h2>
+            <p class=""><code class="">planner_executor</code> worked well for review tasks because review naturally requires multiple dimensions. A Planner can first separate the checklist, then an Executor can handle each part, which improves coverage.</p>
+            <p class="">But Planner also creates output expansion. In the detailed-design task, it pushed the Executor to cover more sections and eventually hit <code class="">finish_reason=length</code>. A Planner should not only make the model think more; it should manage section budget, length constraints, and output boundaries.</p>
         </section>
 
-        <section class="detail-section" id="guardrails">
-            <h2 class="">Six Boundaries Must Become Engineering Design</h2>
-            <p class="">An AI system should define at least six boundary types: data, task, risk, permission, output, and responsibility.</p>
-            <p class="">Data boundaries define which data can enter the knowledge base, what must be desensitized, and what only certain roles can access. Task boundaries define whether AI is a search assistant, a drafting assistant, or an executor. Risk boundaries define whether errors are reversible and whether money, contracts, safety, or compliance are involved.</p>
-            <p class="">Permission boundaries include not only menu permissions but natural-language permissions. Output boundaries require sources, scope, uncertainty, and human confirmation cues. Responsibility boundaries preserve logs, audits, and feedback mechanisms.</p>
-            <p class="">Boundaries cannot stay in slides. They must become permission systems, knowledge-base partitions, tool-call permissions, human confirmations, rollback paths, low-confidence refusal, citations, and audit logs.</p>
+        <section class="detail-section" id="reviewer">
+            <h2 class="">Reviewer Value Has to Be Visible</h2>
+            <p class=""><code class="">planner_executor_reviewer</code> had the highest cost and latency, but it did not produce a stable quality jump in this run. Even with a Reviewer, the detailed-design task was still truncated.</p>
+            <p class="">Reviewer value is not the extra model call itself. It is the evidence chain: what the draft said, what the review found, and what changed in the final answer. If that is not structured and visible, the Reviewer becomes expensive ceremony.</p>
         </section>
 
-        <section class="detail-section" id="levels">
-            <h2 class="">Layered Automation Is More Reliable Than One-Step Autonomy</h2>
-            <p class="">Many companies want full automation from the start, but a better rollout path is to raise automation gradually according to risk level.</p>
-            <ul class="">
-                <li class=""><strong class="">L1: Assisted retrieval</strong>, only helping people find material.</li>
-                <li class=""><strong class="">L2: Assisted summarization</strong>, organizing information without final judgment.</li>
-                <li class=""><strong class="">L3: Candidate generation</strong>, producing reports, plans, code, or reply drafts for human confirmation.</li>
-                <li class=""><strong class="">L4: Low-risk automation</strong>, handling reversible tasks under clear rules.</li>
-                <li class=""><strong class="">L5: High-risk decision support</strong>, giving suggestions while humans retain final responsibility.</li>
-            </ul>
-            <p class="">In many cases, L1 to L3 already create clear value with better control. High-risk scenarios should not chase full automation. They should prioritize traceability, intervention, and rollback.</p>
+        <section class="detail-section" id="debate">
+            <h2 class="">Debate Only Fits Real Trade-Offs</h2>
+            <p class=""><code class="">debate</code> made the most sense for technical trade-offs. Snapshot Mode vs Chain Mode is a good example: one side emphasizes fairness, isolation, and reproducibility; the other emphasizes continuity, state transfer, and realistic workflow.</p>
+            <p class="">But Debate does not fit every task. Without real disagreement, it often degrades into one Agent proposing, another adding risks, and a Judge summarizing. Cost goes up without necessarily adding true adversarial thinking.</p>
         </section>
 
-        <section class="detail-section" id="engineer">
-            <h2 class="">The Engineer’s Value Is Designing Guardrails</h2>
-            <p class="">AI project documents should not only say what the system can do. They should also say what it cannot do: no policy answers without sources, no automatic contract, quote, or financial-data changes, no bypassing approval for high-risk actions, and no access to unauthorized data.</p>
-            <p class="">In AI projects, engineers cannot be only implementers. They must also design boundaries, because customer AI requirements are often technical imagination rather than precise requirements.</p>
-            <blockquote class="">A mature AI engineer does not answer every customer “can it” with “we can try.” They know where to brake. Good AI engineering does not remove the brakes; it installs them before acceleration.</blockquote>
+        <section class="detail-section" id="cost">
+            <h2 class="">The Cost of Complexity Is Concrete</h2>
+            <p class="">In this experiment, <code class="">planner_executor</code> cost about 2.42 times as much as <code class="">single</code>, <code class="">debate</code> about 3.90 times, and <code class="">planner_executor_reviewer</code> about 6.17 times.</p>
+            <p class="">That is only model-call cost. Real systems also need result storage, intermediate-process UI, retries, timeouts, visualization, human review effort, and a more complex debugging path.</p>
+        </section>
+
+        <section class="detail-section" id="takeaway">
+            <h2 class="">Final Thoughts</h2>
+            <p class="">The value of multi-agent architecture is not making the model suddenly stronger. It is organizing uncertainty inside complex tasks. Planner organizes task structure, Reviewer organizes quality feedback, Debate organizes conflicting positions, and Judge organizes final merging.</p>
+            <p class="">But every structure has cost and failure modes. The real engineering question is not whether we can add Agents, but whether the system becomes more controllable, more reliable, and more worth its cost after we add them.</p>
         </section></div></div>
     </div>
-    <section class="related" aria-labelledby="related-title"><p class="kicker">Continue reading</p><h2 id="related-title">Related <em>writing</em></h2><ol class="journal-list" style="list-style:none"><li><a class="journal-row" href="article-01.html" data-topic="1" data-cursor="Read">
-        <span class="journal-date">2026.11 · 01</span>
-        <span class="journal-title"><span class="static">The Model Fits. Why Is It Still Slow?</span><span class="marquee" aria-hidden="true"><span>The Model Fits. Why Is It Still Slow? —&nbsp;</span><span>The Model Fits. Why Is It Still Slow? —&nbsp;</span><span>The Model Fits. Why Is It Still Slow? —&nbsp;</span></span></span>
-        <span class="topic" data-topic="1">AI Engineering</span><span class="journal-time">15 min</span></a></li><li><a class="journal-row" href="article-02.html" data-topic="1" data-cursor="Read">
-        <span class="journal-date">2026.10 · 02</span>
-        <span class="journal-title"><span class="static">When the Exam Is Wrong: What Do AI Scores Measure?</span><span class="marquee" aria-hidden="true"><span>When the Exam Is Wrong: What Do AI Scores Measure? —&nbsp;</span><span>When the Exam Is Wrong: What Do AI Scores Measure? —&nbsp;</span><span>When the Exam Is Wrong: What Do AI Scores Measure? —&nbsp;</span></span></span>
-        <span class="topic" data-topic="1">AI Engineering</span><span class="journal-time">16 min</span></a></li><li><a class="journal-row" href="article-16.html" data-topic="1" data-cursor="Read">
-        <span class="journal-date">2026.05 · 16</span>
-        <span class="journal-title"><span class="static">For Enterprise AI On-Prem, the First Step Is Not Buying GPUs. It Is Cleaning Data</span><span class="marquee" aria-hidden="true"><span>For Enterprise AI On-Prem, the First Step Is Not Buying GPUs. It Is Cleaning Data —&nbsp;</span><span>For Enterprise AI On-Prem, the First Step Is Not Buying GPUs. It Is Cleaning Data —&nbsp;</span><span>For Enterprise AI On-Prem, the First Step Is Not Buying GPUs. It Is Cleaning Data —&nbsp;</span></span></span>
-        <span class="topic" data-topic="1">AI Engineering</span><span class="journal-time">7 min</span></a></li></ol></section>
+    <section class="related" aria-labelledby="related-title"><p class="kicker">Continue reading</p><h2 id="related-title">Related <em>writing</em></h2><ol class="journal-list" style="list-style:none"><li><a class="journal-row" href="article-06.html" data-topic="2" data-cursor="Read">
+        <span class="journal-date">2026.09 · 06</span>
+        <span class="journal-title"><span class="static">AI Can Cross Permission Boundaries Without Malice</span><span class="marquee" aria-hidden="true"><span>AI Can Cross Permission Boundaries Without Malice —&nbsp;</span><span>AI Can Cross Permission Boundaries Without Malice —&nbsp;</span><span>AI Can Cross Permission Boundaries Without Malice —&nbsp;</span></span></span>
+        <span class="topic" data-topic="2">Agent Automation</span><span class="journal-time">13 min</span></a></li><li><a class="journal-row" href="article-19.html" data-topic="2" data-cursor="Read">
+        <span class="journal-date">2026.05 · 19</span>
+        <span class="journal-title"><span class="static">The Real Problem in Multi-Agent Architecture Is Context Boundaries, Not Roles</span><span class="marquee" aria-hidden="true"><span>The Real Problem in Multi-Agent Architecture Is Context Boundaries, Not Roles —&nbsp;</span><span>The Real Problem in Multi-Agent Architecture Is Context Boundaries, Not Roles —&nbsp;</span><span>The Real Problem in Multi-Agent Architecture Is Context Boundaries, Not Roles —&nbsp;</span></span></span>
+        <span class="topic" data-topic="2">Agent Automation</span><span class="journal-time">10 min</span></a></li><li><a class="journal-row" href="article-20.html" data-topic="2" data-cursor="Read">
+        <span class="journal-date">2026.05 · 20</span>
+        <span class="journal-title"><span class="static">When Multi-Agent Is Actually Needed: Splitting, Collaboration, and Result Merging</span><span class="marquee" aria-hidden="true"><span>When Multi-Agent Is Actually Needed: Splitting, Collaboration, and Result Merging —&nbsp;</span><span>When Multi-Agent Is Actually Needed: Splitting, Collaboration, and Result Merging —&nbsp;</span><span>When Multi-Agent Is Actually Needed: Splitting, Collaboration, and Result Merging —&nbsp;</span></span></span>
+        <span class="topic" data-topic="2">Agent Automation</span><span class="journal-time">10 min</span></a></li></ol></section>
     <nav class="pager" aria-label="More articles">
-        <a href="article-14.html" data-cursor="Prev"><span class="meta">← Previous</span><strong>I Ran a Multi-Agent Architecture Experiment: Complex Systems Are Not Automatically Smarter</strong></a>
-        <a href="article-16.html" data-cursor="Next"><span class="meta">Next →</span><strong>For Enterprise AI On-Prem, the First Step Is Not Buying GPUs. It Is Cleaning Data</strong></a>
+        <a href="article-14.html" data-cursor="Prev"><span class="meta">← Previous</span><strong>After Google I/O, AI Competition Is Shifting Toward Workflow Control</strong></a>
+        <a href="article-16.html" data-cursor="Next"><span class="meta">Next →</span><strong>The Core of AI Engineering Is Not Making Models Omnipotent. It Is Defining Boundaries</strong></a>
     </nav>
 </div>
 </main>

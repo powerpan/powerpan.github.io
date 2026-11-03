@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>如果没有数据库，系统如何设计？ — Eric</title>
-<meta name="description" content="如果没有数据库，系统如何设计？">
+<title>AI Agent 正在重塑系统架构：从功能系统到任务系统 — Eric</title>
+<meta name="description" content="AI Agent 正在重塑系统架构：从功能系统到任务系统">
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#ede8df">
 <script>(()=>{const r=document.documentElement;let t,m;try{t=localStorage.getItem('ink-theme');m=localStorage.getItem('ink-motion')}catch(e){}t=t||(matchMedia('(prefers-color-scheme: dark)').matches?'night':'day');if(matchMedia('(prefers-reduced-motion: reduce)').matches)m='off';r.dataset.theme=t;r.dataset.motion=m||'on'})()</script>
@@ -43,68 +43,75 @@
 <div class="progress" aria-hidden="true"><i></i></div>
 <div class="page">
     <header class="article-head">
-        <p class="meta"><a href="index.html">← 文章</a> &nbsp;/&nbsp; <span class="topic" data-topic="4">系统架构</span></p>
-        <h1 data-split>如果没有数据库，<em>系统如何设计？</em></h1>
+        <p class="meta"><a href="index.html">← 文章</a> &nbsp;/&nbsp; <span class="topic" data-topic="2">Agent 自动化</span></p>
+        <h1 data-split>AI Agent 正在重塑系统架构：从<em>功能系统</em>到任务系统</h1>
         <p class="lede rise"></p>
-        <div class="article-meta meta rise" style="--d:120ms"><span>2026.04.29</span><span>9 分钟</span><span>No. 22</span></div>
+        <div class="article-meta meta rise" style="--d:120ms"><span>2026.04.30</span><span>10 分钟</span><span>No. 22</span></div>
     </header>
     <div class="article-layout">
-        <nav class="toc" aria-label="目录"><a href="#table-first">数据库不是问题，表优先才是问题</a><a href="#facts">先识别事实，再决定如何落库</a><a href="#state-rules">状态应该来自规则，而不是字段赋值</a><a href="#views">查询是视图，不是系统本体</a><a href="#consistency">一致性要靠协议，而不只靠事务</a><a href="#takeaway">写在最后：数据库承载数据，不承包思考</a></nav>
-        <div class="page-surface"><div class="prose"><section class="detail-section" id="table-first">
-            <h2 class="">数据库不是问题，表优先才是问题</h2>
-            <p class="">很多业务系统一开始就问“需要几张表”，然后顺着表单、接口、Service、ORM、数据库表一路往下做。这个顺序很高效，也很熟悉，但它会悄悄把系统设计压缩成表结构设计。</p>
-            <p class="">数据库本身当然不是问题。它提供持久化、事务、索引、约束和查询能力，对大多数业务系统都很重要。真正的问题不是使用数据库，而是让数据库表成为思考的起点。</p>
-            <p class="">一旦系统从表开始，业务行为就容易被压缩成增删改查，复杂流程被压缩成几个状态字段，系统边界被压缩成表之间的关系。开发者看似在设计系统，实际可能只是在给表结构套接口和页面。</p>
+        <nav class="toc" aria-label="目录"><a href="#not-chat">不是聊天框问题</a><a href="#traditional-boundary">传统系统擅长明确操作</a><a href="#orchestration-layer">Agent 是任务编排层</a><a href="#not-prompt">一个可用 Agent 不是一个 Prompt</a><a href="#engineering-risks">真正困难的是状态、权限和可观测性</a><a href="#rag-memory">RAG、Memory 与知识反写</a><a href="#takeaway">写在最后</a></nav>
+        <div class="page-surface"><div class="prose"><section class="detail-section" id="not-chat">
+            <h2 class="">不是聊天框问题</h2>
+            <p class="">很多人谈 AI Agent 时，容易把它理解成更聪明的聊天机器人，或者一个能调用工具的大模型。这种说法没有错，但只看到了表层形态。真正重要的变化，是软件系统的组织方式正在从“功能集合”转向“任务推进”。</p>
+            <p class="">传统软件围绕功能设计：页面、按钮、表单、接口、数据库表决定了用户能做什么。用户想完成一件事，必须先理解系统有哪些功能，再把这些功能按自己的目标组合起来。系统负责提供能力，用户负责规划路径。</p>
+            <p class="">Agent 的变化在于，系统开始围绕任务目标组织能力。用户不一定要先知道进入哪个页面、调用哪个接口，而是直接表达目标。系统要做的也不只是响应操作，而是理解目标、拆解任务、检索上下文、调用工具、观察结果，并在必要时修正路径。</p>
         </section>
 
-        <section class="detail-section" id="facts">
-            <h2 class="">先识别事实，再决定如何落库</h2>
-            <p class="">以订单系统为例，订单状态是“已支付”只能说明系统现在相信什么，却无法说明支付是谁发起的、平台是否重复回调、金额是否校验、库存是否锁定、发货通知是否成功。</p>
-            <p class="">如果先从业务事实出发，系统会更自然地识别出订单创建、支付提交、支付成功、库存锁定、订单发货这类事件。它们记录的不是某一时刻的结果，而是系统为什么走到现在。</p>
-            <p class="">表记录的是系统现在相信什么，事件记录的是系统为什么相信。复杂系统需要的不只是最终状态，还需要能解释状态形成过程的事实链条。</p>
+        <section class="detail-section" id="traditional-boundary">
+            <h2 class="">传统系统擅长明确操作</h2>
+            <p class="">传统架构的优势是确定性。前端负责交互，后端负责业务逻辑，数据库负责持久化，权限系统负责边界控制。只要业务规则明确、输入输出可预测，这套结构依然是最可靠的工程组织方式。</p>
+            <p class="">它的边界在于开放目标。用户想“优化一个项目”时，传统系统可以提供代码仓库、日志系统、文档系统和任务系统，但“应该先看哪里”“哪些信息相关”“结果如何沉淀”，仍然要由人来组织。</p>
+            <p class="">所以问题不是传统系统没有能力，而是能力分散在不同入口里。用户面对的是一组工具，而不是一个能协同推进任务的系统。</p>
         </section>
 
-        <section class="detail-section" id="state-rules">
-            <h2 class="">状态应该来自规则，而不是字段赋值</h2>
-            <p class="">很多 CRUD 系统把状态当成一个可以直接修改的字段。几个枚举值看起来简单，但字段本身无法表达它为什么能变，也无法阻止不合法的变化。</p>
-            <p class="">订单从待支付进入已支付，不应该只是执行一次更新语句。更合理的过程是：支付成功事件发生后，系统检查订单是否存在、是否仍处于待支付、金额是否匹配、回调是否处理过、订单是否超时关闭。全部满足后，状态才被推进。</p>
-            <p class="">这时状态不再是字段，而是规则运行后的结果。系统越复杂，越需要把状态理解成状态机，而不是散落在表里的枚举值。</p>
+        <section class="detail-section" id="orchestration-layer">
+            <h2 class="">Agent 是任务编排层</h2>
+            <p class="">Agent 不应该替代后端，而应该成为传统系统之上的目标理解与任务编排层。后端继续负责稳定业务逻辑、权限、事务和规则，Agent 负责理解目标、选择工具、组织上下文和整合结果。</p>
+            <p class="">更合理的结构是：用户目标进入 Agent Layer，由它完成目标理解、任务规划和工具选择；Tool / API Layer 暴露搜索、代码执行、文件系统和业务接口；Business Service Layer 保证稳定规则；Data / Knowledge Layer 提供数据库、文档、向量库、日志和知识库。</p>
+            <p class="">这一区分很关键。Agent 化不是把系统重写成大模型，而是让大模型站在已有系统之上，成为能力的组织者。传统系统负责“能力是否可靠”，Agent 负责“能力如何围绕目标被调用”。</p>
         </section>
 
-        <section class="detail-section" id="views">
-            <h2 class="">查询是视图，不是系统本体</h2>
-            <p class="">数据库容易成为系统中心，还有一个原因：它同时服务写入、查询、后台管理、运营报表、审计追踪和数据分析。于是同一张表会不断被塞入展示字段、统计字段、冗余字段、标记字段和历史兼容字段。</p>
-            <p class="">从业务建模角度看，写入关心事实是否成立，读取关心不同场景如何看见这些事实。用户订单列表、商家发货视图、财务对账视图、风控分析视图都可以来自同一批事实，但它们不必共享同一种结构。</p>
-            <p class="">把查询看成场景化视图，系统就不会被迫让核心表同时满足所有人的需求。核心模型保持清晰，不同读模型围绕使用场景构建，复杂度也更容易被隔离。</p>
+        <section class="detail-section" id="not-prompt">
+            <h2 class="">一个可用 Agent 不是一个 Prompt</h2>
+            <p class="">很多 Agent demo 看起来惊艳，但进入工程场景后会暴露状态丢失、工具不稳定、权限模糊、错误不可追踪、结果不可复现等问题。根源在于，Agent 系统不是一个 prompt，也不是“模型 + 工具调用”这么简单。</p>
+            <p class="">一个可用 Agent 至少需要 Goal、Planner、Tool Router、Retriever、Memory、Evaluator 和 Human-in-the-loop。Goal 判断用户真正要完成什么；Planner 把复杂目标拆成可执行步骤；Tool Router 决定什么时候查知识库、调 API、读文件或停止；Retriever 和 Memory 管理外部依据与长期背景；Evaluator 和人工确认负责校验关键节点。</p>
+            <p class="">Agent 工程的核心不是让模型更自由，而是把模型的自由度放进可控边界里。</p>
         </section>
 
-        <section class="detail-section" id="consistency">
-            <h2 class="">一致性要靠协议，而不只靠事务</h2>
-            <p class="">数据库事务能解决局部一致性，但真实系统常常包含支付回调、物流发货、短信通知、异步审核、AI 推理任务、跨服务库存锁定和外部系统同步。这些动作无法被一个数据库事务完整包住。</p>
-            <p class="">这时系统需要的是业务协议：幂等协议保证重复请求不会重复处理，重试协议保证失败任务可以安全重试，补偿协议处理局部失败，状态机协议约束合法流转，对账协议发现并修复不一致。</p>
-            <p class="">数据库事务保证“这一次写库不写一半”，业务协议保证“系统最终能回到可解释、可恢复、可追踪的状态”。越复杂的系统，越不能只把可靠性寄托在事务上。</p>
+        <section class="detail-section" id="engineering-risks">
+            <h2 class="">真正困难的是状态、权限和可观测性</h2>
+            <p class="">传统接口往往是短生命周期：request 到 response。Agent 任务则是长生命周期：goal、plan、step、observation、retry、confirm、complete。系统必须记录任务执行到哪一步，调用过哪些工具，中间结果是什么，失败原因是什么，哪些动作需要人工确认。</p>
+            <p class="">权限也会更复杂。读取文件、查询数据库、修改代码、发送邮件、删除数据、发布内容，风险等级完全不同。Agent 的能力越强，权限边界越重要，否则所谓智能执行很容易变成不可控执行。</p>
+            <p class="">可靠性和可观测性同样不能缺位。结构化输出、Schema 校验、工具返回校验、异常重试、结果验证、日志记录、回滚机制和人工确认，才是 Agent 从 demo 走向生产的基础。Agent 系统能不能产品化，取决于它是否可控、可追踪、可恢复，而不只是回答是否聪明。</p>
+        </section>
+
+        <section class="detail-section" id="rag-memory">
+            <h2 class="">RAG、Memory 与知识反写</h2>
+            <p class="">如果说 Tool 决定 Agent 能做什么，那么 RAG 和 Memory 决定 Agent 知道什么、记得什么，以及能否越用越贴合具体场景。Agent 不应该只依赖模型参数里的通用知识，而应该能访问项目文档、历史记录、业务规则、代码说明、日志和长期问题库。</p>
+            <p class="">但只会检索还不够。普通 Agent 的问题是，任务结束后，结果只停留在对话里。下一次处理类似问题，系统仍然要重新理解、重新检索、重新组织。</p>
+            <p class="">更完整的闭环应该是：任务执行、结果总结、经验抽取、结构化归档、写入知识库、下次检索复用。没有知识反写的 Agent，每次任务都像从零开始；有知识反写的 Agent，才可能把一次次任务转化为长期系统能力。</p>
         </section>
 
         <section class="detail-section" id="takeaway">
-            <h2 class="">写在最后：数据库承载数据，不承包思考</h2>
-            <p class="">讨论“如果没有数据库”，不是为了得出不要数据库的结论。大多数业务系统仍然应该使用数据库，因为它成熟、稳定、经济、易维护。</p>
-            <p class="">真正需要警惕的是把系统设计退化成表设计。更合理的顺序应该是：先理解业务事实，再分析状态流转，再定义业务规则，再设计协作过程，再考虑查询视图，最后决定数据如何落库。</p>
-            <p class="">数据库应该承载数据，但不应该承包思考。系统设计的起点不是表，而是事实、状态、规则和过程。当我们能在没有数据库的假设下重新设计系统，回过头再使用数据库，反而会更清醒。</p>
+            <h2 class="">写在最后</h2>
+            <p class="">AI Agent 对系统架构最大的改变，不是让大模型替代传统后端，而是在原有系统之上增加一层目标理解与任务编排能力。传统系统围绕功能模块设计，Agent 系统围绕任务目标设计；传统系统响应明确操作，Agent 系统尝试推进开放任务。</p>
+            <p class="">这不会让架构变简单，反而会让架构问题从“模块如何拆分”推进到“目标如何理解、任务如何执行、过程如何追踪、结果如何验证、经验如何沉淀”。</p>
+            <p class="">未来的软件系统，不一定会消失在一个聊天框里。更可能出现的是：聊天框成为入口，Agent 成为编排层，传统后端继续提供稳定能力，知识库提供长期上下文，工具系统提供执行能力。真正有价值的 Agent，不是一个能说会道的模型，而是一个被工程边界约束起来、能够持续推进任务并沉淀经验的系统组件。</p>
         </section></div></div>
     </div>
-    <section class="related" aria-labelledby="related-title"><p class="kicker">继续阅读</p><h2 id="related-title">相关<em>文章</em></h2><ol class="journal-list" style="list-style:none"><li><a class="journal-row" href="article-03.html" data-topic="4" data-cursor="阅读">
-        <span class="journal-date">2026.10 · 03</span>
-        <span class="journal-title"><span class="static">当每个系统都在自保：3.8 GW 负载退出之后</span><span class="marquee" aria-hidden="true"><span>当每个系统都在自保：3.8 GW 负载退出之后 —&nbsp;</span><span>当每个系统都在自保：3.8 GW 负载退出之后 —&nbsp;</span><span>当每个系统都在自保：3.8 GW 负载退出之后 —&nbsp;</span></span></span>
-        <span class="topic" data-topic="4">系统架构</span><span class="journal-time">18 分钟</span></a></li><li><a class="journal-row" href="article-04.html" data-topic="4" data-cursor="阅读">
-        <span class="journal-date">2026.10 · 04</span>
-        <span class="journal-title"><span class="static">加密后的数据，真的还能做模糊查询吗？</span><span class="marquee" aria-hidden="true"><span>加密后的数据，真的还能做模糊查询吗？ —&nbsp;</span><span>加密后的数据，真的还能做模糊查询吗？ —&nbsp;</span><span>加密后的数据，真的还能做模糊查询吗？ —&nbsp;</span></span></span>
-        <span class="topic" data-topic="4">系统架构</span><span class="journal-time">34 分钟</span></a></li><li><a class="journal-row" href="article-08.html" data-topic="4" data-cursor="阅读">
-        <span class="journal-date">2026.07 · 08</span>
-        <span class="journal-title"><span class="static">Mac 正在成为个人 AI 应用的理想运行时</span><span class="marquee" aria-hidden="true"><span>Mac 正在成为个人 AI 应用的理想运行时 —&nbsp;</span><span>Mac 正在成为个人 AI 应用的理想运行时 —&nbsp;</span><span>Mac 正在成为个人 AI 应用的理想运行时 —&nbsp;</span></span></span>
-        <span class="topic" data-topic="4">系统架构</span><span class="journal-time">9 分钟</span></a></li></ol></section>
+    <section class="related" aria-labelledby="related-title"><p class="kicker">继续阅读</p><h2 id="related-title">相关<em>文章</em></h2><ol class="journal-list" style="list-style:none"><li><a class="journal-row" href="article-06.html" data-topic="2" data-cursor="阅读">
+        <span class="journal-date">2026.09 · 06</span>
+        <span class="journal-title"><span class="static">AI 不需要恶意，也能越过权限边界</span><span class="marquee" aria-hidden="true"><span>AI 不需要恶意，也能越过权限边界 —&nbsp;</span><span>AI 不需要恶意，也能越过权限边界 —&nbsp;</span><span>AI 不需要恶意，也能越过权限边界 —&nbsp;</span></span></span>
+        <span class="topic" data-topic="2">Agent 自动化</span><span class="journal-time">13 分钟</span></a></li><li><a class="journal-row" href="article-15.html" data-topic="2" data-cursor="阅读">
+        <span class="journal-date">2026.05 · 15</span>
+        <span class="journal-title"><span class="static">我做了一次多 Agent 架构实验：复杂架构并不天然更聪明</span><span class="marquee" aria-hidden="true"><span>我做了一次多 Agent 架构实验：复杂架构并不天然更聪明 —&nbsp;</span><span>我做了一次多 Agent 架构实验：复杂架构并不天然更聪明 —&nbsp;</span><span>我做了一次多 Agent 架构实验：复杂架构并不天然更聪明 —&nbsp;</span></span></span>
+        <span class="topic" data-topic="2">Agent 自动化</span><span class="journal-time">8 分钟</span></a></li><li><a class="journal-row" href="article-19.html" data-topic="2" data-cursor="阅读">
+        <span class="journal-date">2026.05 · 19</span>
+        <span class="journal-title"><span class="static">多 Agent 架构的真正问题：不是角色分工，而是上下文边界</span><span class="marquee" aria-hidden="true"><span>多 Agent 架构的真正问题：不是角色分工，而是上下文边界 —&nbsp;</span><span>多 Agent 架构的真正问题：不是角色分工，而是上下文边界 —&nbsp;</span><span>多 Agent 架构的真正问题：不是角色分工，而是上下文边界 —&nbsp;</span></span></span>
+        <span class="topic" data-topic="2">Agent 自动化</span><span class="journal-time">10 分钟</span></a></li></ol></section>
     <nav class="pager" aria-label="更多文章">
-        <a href="article-21.html" data-cursor="上一篇"><span class="meta">← 上一篇</span><strong>AI Agent 正在重塑系统架构：从功能系统到任务系统</strong></a>
-        <a href="article-23.html" data-cursor="下一个"><span class="meta">下一篇 →</span><strong>技术债不是代码坏味道，而是 组织对未来的定价</strong></a>
+        <a href="article-21.html" data-cursor="上一篇"><span class="meta">← 上一篇</span><strong>工程师的成长本质是抽象层上移</strong></a>
+        <a href="article-23.html" data-cursor="下一个"><span class="meta">下一篇 →</span><strong>如果没有数据库，系统如何设计？</strong></a>
     </nav>
 </div>
 </main>

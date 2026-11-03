@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Can You Search Inside Encrypted Data? — Eric</title>
-<meta name="description" content="From a phone number&#x27;s last four digits to arbitrary substrings: how to build search tags, why candidates can be false positives, and what the index reveals.">
+<title>When Data Centers Protect Themselves: A 3.8 GW Load Transfer — Eric</title>
+<meta name="description" content="Each data center protected its own workload. The grid had to absorb a sudden 3.8 GW load transfer. The cost of a protection strategy travels through the system.">
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#ede8df">
 <script>(()=>{const r=document.documentElement;let t,m;try{t=localStorage.getItem('ink-theme');m=localStorage.getItem('ink-motion')}catch(e){}t=t||(matchMedia('(prefers-color-scheme: dark)').matches?'night':'day');if(matchMedia('(prefers-reduced-motion: reduce)').matches)m='off';r.dataset.theme=t;r.dataset.motion=m||'on'})()</script>
@@ -44,265 +44,106 @@
 <div class="page">
     <header class="article-head">
         <p class="meta"><a href="index.html">← Journal</a> &nbsp;/&nbsp; <span class="topic" data-topic="4">System Architecture</span></p>
-        <h1 data-split>Can You Search Inside <em>Encrypted Data</em>?</h1>
-        <p class="lede rise">From a phone number&#x27;s last four digits to arbitrary substrings: how to build search tags, why candidates can be false positives, and what the index reveals.</p>
-        <div class="article-meta meta rise" style="--d:120ms"><span>2026.10.06</span><span>34 min</span><span>No. 04</span></div>
+        <h1 data-split>When Data Centers Protect Themselves: <em>A <span class="power-quantity">3.8 GW</em> Load Transfer</span></h1>
+        <p class="lede rise">Each data center protected its own workload. The grid had to absorb a sudden 3.8 GW load transfer. The cost of a protection strategy travels through the system.</p>
+        <div class="article-meta meta rise" style="--d:120ms"><span>2026.10.08</span><span>16 min</span><span>No. 04</span></div>
     </header>
     <div class="article-layout">
-        <nav class="toc" aria-label="Contents"><a href="#intro">Introduction</a><a href="#query-types">Last-four-digit lookup, substring search, and typo correction</a><a href="#options">Scanning, database-side decryption, and plaintext copies</a><a href="#blind-index">A blind index alongside the ciphertext</a><a href="#suffix">A suffix search needs only a suffix tag</a><a href="#ngram">Building a substring candidate index with 4-grams</a><a href="#verification">All fragments can be present in the wrong order</a><a href="#cost">How many candidates remain out of ten million records?</a><a href="#leakage">The database still sees frequencies and correlations</a><a href="#operations">Write consistency, key rotation, and search permissions</a><a href="#extensions">What the substring index has not solved</a><a href="#choice">Choosing a search for the support dashboard</a></nav>
+        <nav class="toc" aria-label="Contents"><a href="#intro">Introduction</a><a href="#disturbance-counter">Three disturbances in a minute, then no automatic return</a><a href="#load-response">Why using less power can also trouble the grid</a><a href="#local-objectives">The data center keeps running; the grid takes the swing</a><a href="#retry-storm">This sequence reminds me of a retry storm</a><a href="#testing-boundary">Testing cannot stop at the UPS output</a><a href="#ride-through">Agree in advance on ride-through and recovery</a><a href="#power-shaping">A compiler can reshape the power profile too</a><a href="#agent-budgets">More persistent agents, more congested services?</a></nav>
         <div class="page-surface"><div class="prose"><section class="detail-section" id="intro">
-            <p class="">Imagine a customer-support dashboard. Phone numbers must not be stored in plaintext, so the <code class="">phone</code> column is encrypted and the database holds unreadable bytes. Then a customer who cannot remember the full number wants to find an order using its last four digits. A few days later, the request expands to searching for digits in the middle as well.</p>
-            <p class="">The old SQL query no longer works on that column:</p>
-            <pre class=""><code class="language-sql">SELECT id FROM users WHERE phone LIKE '%0138%';</code></pre>
-            <p class="">Randomized field encryption is supposed to hide relationships between plaintext values. A database that cannot read the values cannot simply recognize which ciphertexts contain the same fragment. That loss of visible structure is part of the protection.</p>
-            <p class="">Search is still possible. I would keep the original value in ciphertext and build a separate index for a limited set of queries. <a href="https://ciphersweet.paragonie.com/internals/blind-index" target="_blank" rel="noopener" class="">Blind indexes</a> and some <a href="https://docs.aws.amazon.com/database-encryption-sdk/latest/devguide/searchable-encryption.html" target="_blank" rel="noopener" class="">commercial encryption SDKs</a> take this approach. The limit matters: the index provides a capability by exposing relationships that encryption would otherwise hide.</p>
-            <p class="">Before implementation, specify which queries are needed and what the database will learn from them.</p>
+            <p class="">At 7:56 a.m. on July 22, 2026, a mechanical fault struck a 230 kV transmission line in Northern Virginia. Protection cleared the fault normally; the relays and breakers did their jobs. The trouble followed those successful local responses.</p>
+            <p class="">The trouble followed. A voltage disturbance caused some data centers to switch to backup power. The sudden reduction in grid demand raised voltage, triggering a second wave of transfers. In less than two minutes, roughly 3,800 MW, or 3.8 GW, of load left the public grid. <a href="https://www.pjm.com/-/media/DotCom/committees-groups/committees/oc/2026/20260806/20260806-item-05---dominion-july-loss-of-load-event---presentation.pdf" target="_blank" rel="noopener" class="">PJM and Dominion's preliminary investigation</a> identified it as the largest such load transfer PJM had experienced.</p>
+            <p class="">The facilities moved to backup power and kept operating, while demand on the public grid dropped abruptly. Frequency reached 60.092 Hz. Operators reduced generation and adjusted reactive resources; the balancing-area control limit excursion ended within nine minutes, and Dominion reported customer reconnection within thirty minutes. PJM's later <a href="https://insidelines.pjm.com/pjm-dominion-review-large-load-transfer-event/" target="_blank" rel="noopener" class="">event account</a> records that grid reliability was maintained through the response.</p>
+            <p class="">The interesting bill arrives after “data-center protection succeeded.” One campus transfers its load and changes the electrical conditions facing others. Successive campuses then send more balancing work back to the grid. Treating uninterrupted servers as the end of acceptance testing leaves half the reliability picture out.</p>
         </section>
 
-        <section class="detail-section" id="query-types">
-            <h2 class="">Last-four-digit lookup, substring search, and typo correction</h2>
-            <p class="">'Support fuzzy search' is too vague to implement. Several operations may share one search box while requiring quite different designs.</p>
-            <div class="article-table-scroll" tabindex="0" aria-label="Search semantics">
-                <table class="">
-                    <thead class=""><tr class=""><th scope="col" class="">User request</th><th scope="col" class="">Query semantics</th><th scope="col" class="">Example</th></tr></thead>
-                    <tbody class="">
-                        <tr class=""><td class="">Find someone using the full number</td><td class="">Exact match</td><td class="">The complete phone number is equal</td></tr>
-                        <tr class=""><td class="">Find an order using the last four digits</td><td class="">Fixed-length suffix match</td><td class="">Ends with <code class="">8000</code></td></tr>
-                        <tr class=""><td class="">Search using the first few digits</td><td class="">Prefix match</td><td class="">Starts with <code class="">1380</code></td></tr>
-                        <tr class=""><td class="">Search using digits in the middle</td><td class="">Substring match</td><td class="">Contains <code class="">0138</code></td></tr>
-                        <tr class=""><td class="">Find a value despite a typo</td><td class="">Approximate match</td><td class="">Match <code class="">Erci</code> to <code class="">Eric</code></td></tr>
-                    </tbody>
-                </table>
-            </div>
-            <p class="">SQL <code class="">LIKE '%xxx%'</code> here means substring matching, not <a href="https://www.postgresql.org/docs/18/fuzzystrmatch.html" target="_blank" rel="noopener" class="">typo correction</a>. Approximate matching also needs a definition of allowed errors, a distance function, and ranking rules. This article handles literal substrings; it does not implement arbitrary SQL wildcard expressions.</p>
-            <p class="">Query semantics determine which indexes are needed and which relationships become visible. Searching the last four digits does not require indexing every four-digit fragment. Exact email lookup does not require indexing every substring of an address. Preparing all searchable features for an unconfirmed future requirement can enlarge the information exposed by the system.</p>
-            <p class="">The other question is who the protection is meant to resist. A stolen disk, a leaked database backup, an attacker with query access, and a fully compromised application server are different threats. Disk encryption cannot stop someone who can already query the running database. Conversely, a database's ability to decrypt does not mean an offline backup without the keys can necessarily be decrypted. Choose the encryption layer against the <a href="https://cheatsheetseries.owasp.org/cheatsheets/Cryptographic_Storage_Cheat_Sheet.html" target="_blank" rel="noopener" class="">threat model</a>.</p>
-            <p class="">The main boundary here is an application that may handle plaintext, with a database that stores only ciphertext and search indexes. An attacker may read the database but does not hold the application's keys. Later sections consider continuous query observation, chosen inputs, and compromise of the application itself.</p>
+        <section class="detail-section" id="disturbance-counter">
+            <h2 class="">Three disturbances in a minute, then no automatic return</h2>
+            <p class="">To understand the response, we need to unpack "switching to backup power." A UPS may use batteries to sustain critical loads during a voltage sag and quickly resume drawing from the grid. A diesel rotary UPS using a flywheel and engine may stay on backup longer. Even with the same hardware, an operator's additional control rules can change the recovery behavior. To a server, these all provide uninterrupted power. To the grid, they are not necessarily the same kind of load.</p>
+            <p class="">A separate event on July 10, 2024 made this difference concrete. After a lightning arrester failed on a 230 kV line, automatic reclosing produced six successive faults and clearances over 82 seconds. Each lasted 42 to 66 milliseconds and was cleared properly, yet approximately 1,500 MW of data center load left the grid. <a href="https://www.nerc.com/globalassets/our-work/reports/event-reports/incident_review_large_load_loss.pdf" target="_blank" rel="noopener" class="">NERC's incident report</a> documented a typical customer-side rule: count three voltage disturbances within a minute, switch to backup, and stay there until manually reconnected.</p>
+            <p class="">The line's reclosing sequence was trying to restore supply. The facility's disturbance counter interpreted repeated abnormalities as a reason not to trust the external source. Around the third voltage depression, about 1,260 MW dropped off and did not return for hours. NERC attributed most of the sustained reduction to the interaction between the reclosing sequence and disturbance-counting controls.</p>
+            <p class="">Control rules turned brief disturbances into a sustained change in demand. The 2024 report identified the interaction between disturbance counting and reclosing; the preliminary 2026 investigation recorded two waves of load transfer. Following each event's equipment settings and restoration rules leads to configurations that can actually be changed.</p>
+            <p class="">The distinction matters for remediation. If equipment cannot tolerate the disturbance, hardware may need to change. If additional controls move it prematurely into a prolonged backup state, trigger conditions and recovery rules deserve scrutiny. Calling all of it "oversensitive data centers" does not tell us which layer to change.</p>
         </section>
 
-        <section class="detail-section" id="options">
-            <h2 class="">Scanning, database-side decryption, and plaintext copies</h2>
-            <h3 class="">Decrypting a scan can work when its scope is small</h3>
-            <p class="">The simplest implementation reads records from the database, decrypts them in the application, and runs <code class="">contains</code> on each value.</p>
-            <p class="">An authorized tenant with a few hundred records, or a rare offline investigation, may be a reasonable fit. A cursor or batches also avoid holding every plaintext value in memory at once.</p>
-            <p class="">Streaming reduces memory pressure; it does not eliminate the scan. Without a selective preliminary filter, checking ten million records still means reading and processing ten million records. Storage, network transfer, object handling, decryption, and string comparison can all contribute to the cost.</p>
-            <p class="">I would assess the scope of the scan, query frequency, and acceptable latency before ruling this option out.</p>
-            <h3 class="">Moving decryption into SQL changes whom you trust</h3>
-            <p class="">Another option performs decryption inside SQL. This is pseudocode illustrating the idea, not a portable database function:</p>
-            <pre class=""><code class="language-text">WHERE decrypt(phone_ciphertext) LIKE '%0138%'</code></pre>
-            <p class="">It avoids transferring every ciphertext to the application, but it does not automatically reduce filtering work. An index on the existing ciphertext generally cannot tell the database whether the decrypted value contains a substring.</p>
-            <p class="">It would be wrong to claim that expressions can never be indexed, or that every query with a leading wildcard is impossible to optimize. PostgreSQL supports <a href="https://www.postgresql.org/docs/18/indexes-expressional.html" target="_blank" rel="noopener" class="">expression indexes</a>, and <a href="https://www.postgresql.org/docs/18/pgtrgm.html" target="_blank" rel="noopener" class=""><code class="">pg_trgm</code></a> GIN/GiST indexes support certain <code class="">LIKE</code> searches with leading wildcards. <a href="https://www.postgresql.org/docs/18/indexes-types.html" target="_blank" rel="noopener" class="">An ordinary B-tree</a> is not a general solution for arbitrary substring searches.</p>
-            <p class="">Materializing decrypted text or directly recoverable plaintext features in an index puts sensitive information back inside the database. That changes the security boundary as well as the query plan.</p>
-            <p class="">Giving the database decryption capability also means trusting the execution environment and the parties with the relevant permissions. Plaintext appears there. SQL parameters, diagnostic output, and logging need review. It is inaccurate to say that all plaintext necessarily enters backups or slow-query logs, but each exposure path needs assessment.</p>
-            <h3 class="">The search column belongs in the threat model</h3>
-            <p class="">One straightforward design encrypts the main field and adds a <code class="">phone_search</code> column containing the full plaintext number.</p>
-            <p class="">If the goal is to protect phone numbers when the database leaks, the attacker can simply read that search column. Decrypting the main field becomes unnecessary.</p>
-            <p class="">Even storing just the last four digits deliberately reveals those digits to the database. Encryption of the full number does not protect a separate plaintext suffix.</p>
-            <p class="">Security assessment must cover copies, indexes, and execution paths. A column called <code class="">ciphertext</code> does not establish that the data remains protected after a database leak.</p>
+        <section class="detail-section" id="load-response">
+            <h2 class="">Why using less power can also trouble the grid</h2>
+            <p class="">When we discuss data centers and AI, we often ask whether there is enough electricity and how much new capacity GPUs will consume. July's event raised the opposite question: can the grid follow when a large block of demand suddenly stops drawing power?</p>
+            <p class="">Generation and demand must remain balanced. A sudden demand reduction before generation falls leaves an active-power surplus and raises frequency. Voltage also depends on reactive balance, impedance, and control equipment. One load change can put both balancing problems on the operator's desk.</p>
+            <p class="">Higher voltage after the first transfer triggered a second set of facilities. PJM's two recorded waves make the feedback visible: the response to the original fault became an input to the next disturbance. The sequence continued after the faulted line had been cleared.</p>
+            <p class="">Peak power and projected annual consumption therefore cannot fully describe a large facility's grid impact. Two campuses of the same size can require very different dispatch responses if one resumes demand promptly after fault clearance and the other stays on backup for half an hour. Equal average consumption does not imply equal dynamic behavior.</p>
+            <p class="">Redundancy meets a common trigger here. Each facility can own separate UPS systems, generators, and controllers while seeing the same voltage trajectory. Similar thresholds create correlated actions, and many independent devices can transfer together. That collective response belongs in interconnection studies.</p>
         </section>
 
-        <section class="detail-section" id="blind-index">
-            <h2 class="">A blind index alongside the ciphertext</h2>
-            <p class="">I would preserve normal randomized encryption of the original value rather than alter its encryption to make search easier.</p>
-            <p class="">A <a href="https://cheatsheetseries.owasp.org/cheatsheets/Cryptographic_Storage_Cheat_Sheet.html" target="_blank" rel="noopener" class="">maintained cryptographic library</a> offering <a href="https://csrc.nist.gov/pubs/sp/800/38/d/final" target="_blank" rel="noopener" class="">AES-GCM</a> is one option for this example; <a href="https://www.rfc-editor.org/rfc/rfc8439" target="_blank" rel="noopener" class="">ChaCha20-Poly1305</a> is another standardized authenticated-encryption construction. Decryption should verify integrity as well as recover the value. A new system has no reason to inherit DES from an old tutorial or invent an algorithm that preserves character patterns for search.</p>
-            <p class="">An AES-GCM envelope typically includes an algorithm or format version, a key version, the <a href="https://cryptography.io/en/latest/hazmat/primitives/aead/" target="_blank" rel="noopener" class="">nonce</a>, and the authentication tag. The nonce need not be secret, but must not repeat under the same key. Random nonces still require appropriate randomness, usage limits, and rotation. 'Generate a random number each time' is not an unlimited guarantee.</p>
-            <p class="">Search has its own path. Start with exact matching: the application calculates a deterministic keyed tag over the normalized phone number.</p>
-            <pre class=""><code class="language-text">Original phone number --authenticated encryption--&gt; phone_envelope
-
-Normalized phone number --HMAC-SHA-256(K_search, value)--&gt; phone_index</code></pre>
-            <p class="">For a full-number lookup, the application generates a query tag using the same rules. The database matches tags for equality; the application then decrypts and checks the candidates.</p>
-            <p class="">This auxiliary structure is usually called a <a href="https://ciphersweet.paragonie.com/internals/blind-index" target="_blank" rel="noopener" class="">blind index</a>. Implementations differ in keyed hashing, key derivation, and truncation. <a href="https://www.rfc-editor.org/rfc/rfc2104" target="_blank" rel="noopener" class="">HMAC-SHA-256</a> here illustrates a deterministic search-tag construction; it is not a complete implementation of any particular library.</p>
-            <p class="">The tag is not another decryptable ciphertext or proof of anonymization. Although the database does not know which number a tag represents, it can recognize identical tags within the same index domain.</p>
-            <h3 class="">Unkeyed hashes of four digits are easy to enumerate</h3>
-            <p class="">There are only ten thousand four-digit inputs, from <code class="">0000</code> to <code class="">9999</code>. If the index is <code class="">SHA256("1380")</code>, someone who obtains the database can hash every input and build a lookup table. A longer hash output does not create more possible inputs.</p>
-            <p class=""><a href="https://www.rfc-editor.org/rfc/rfc2104" target="_blank" rel="noopener" class="">HMAC</a> introduces a secret key that is not given to the database. If that key remains secret and the attacker has no usable tag-generation oracle, the attacker cannot independently build the same lookup table. A public fixed salt does not provide that property.</p>
-            <p class="">Statistics, correlations, and interface feedback may still reveal what tags mean. Preventing direct computation of a lookup table addresses only one route to inference.</p>
+        <section class="detail-section" id="local-objectives">
+            <h2 class="">The data center keeps running; the grid takes the swing</h2>
+            <p class="">From an operator's perspective, leaving an abnormal external supply quickly is understandable: keep servers and cooling powered and the business running. The grid's objective is regional active and reactive power balance and frequency stability. A choice that protects one business can increase the public system's control workload.</p>
+            <p class="">A facility sets thresholds around its business risk. The grid must plan reserves, generation, and voltage control around the regional response. Decision-making sits at the campus while some adjustment costs land outside it. Individually reasonable settings can combine into a much harder operating state.</p>
+            <p class="">That externality is the problem. A transfer reduces local business risk while the grid absorbs the disappearing load. Interconnection requirements, dynamic models, and restoration agreements should put the bill on the table beforehand. Asking afterward whether one UPS met its specification starts a step too late.</p>
+            <p class="">Backup transfers can be uneventful when small, dispersed, and planned for. The difficult combination is a shared disturbance, similar triggers, large loads, and tightly clustered actions. Those quantities belong in the model; organizational boundaries should not draw the edge of the test.</p>
         </section>
 
-        <section class="detail-section" id="suffix">
-            <h2 class="">A suffix search needs only a suffix tag</h2>
-            <p class="">Before considering n-grams, narrow the index to the actual requirement. If only the last four digits are needed, generate one tag for that suffix in a separate index domain. For <code class="">13800138000</code>, that means one tag corresponding to <code class="">8000</code>.</p>
-            <p class="">Apply the same rule to the four digits supplied by the user, match tags for equality, and decrypt and verify the candidates.</p>
-            <p class="">The database then needs no tags for this number's <code class="">1380</code>, <code class="">3800</code>, or <code class="">0013</code> fragments. There are fewer index entries to maintain and fewer features exposed than if a full fragment index were added to the same field.</p>
-            <p class="">A four-digit suffix is still a low-cardinality feature. Many numbers share it, and it must not serve as an authentication credential. Query scope, returned fields, and protection against bulk enumeration remain necessary.</p>
-            <p class="">I would use a full-value index for exact lookup, a suffix index for a fixed suffix, and only the prefix lengths the business needs. Arbitrary-position fragment indexing comes after a confirmed requirement for it.</p>
+        <section class="detail-section" id="retry-storm">
+            <h2 class="">This sequence reminds me of a retry storm</h2>
+            <p class="">Software engineers know the pattern: a backend slows, clients time out, and they retry. For one caller, another attempt may succeed. For an overloaded backend, thousands of callers trying once more can lengthen the queue and cause still more timeouts.</p>
+            <p class="">Software engineers know this feedback loop. Participants observe a shared environment and compensate for their own tasks; their compensation changes the environment and triggers more compensation. Google's <a href="https://sre.google/sre-book/addressing-cascading-failures/" target="_blank" rel="noopener" class="">SRE Book</a> addresses it through retry budgets, jittered backoff, bounded attempts, and shedding work under overload.</p>
+            <p class="">Consider three nested layers allowing three attempts each. The downstream service can receive 27 calls. Each local setting looks restrained, yet their product can overwhelm shared capacity. A budget spanning the whole chain places a total limit on all those local retries.</p>
+            <p class="">Electrical protection clears dangerous faults in milliseconds; HTTP backoff timings belong in software. The transferable idea is the control structure: budget additional actions, coordinate restoration, and test the collective response. Essential protection stays fast, and the consequences of that protection get an owner too.</p>
+            <p class="">Autoscaling poses a related problem. If several upstream services add instances because their CPUs are busy, but the bottleneck is a shared database, they may merely add more concurrent connections. A test that measures only upstream service throughput can mistake displaced pressure for improvement. Downstream queues, aggregate successes, and recovery time must also be measured.</p>
         </section>
 
-        <section class="detail-section" id="ngram">
-            <h2 class="">Building a substring candidate index with 4-grams</h2>
-            <p class="">Suppose the requirement really is to search for any run of four or more consecutive digits in a phone number. Split the normalized value using a sliding window of length four. For <code class="">13800138000</code>, the 4-grams are:</p>
-            <pre class=""><code class="language-text">Original: 13800138000
-
-4-grams by position:
-1380  3800  8001  0013  0138  1380  3800  8000
-
-Distinct fragments:
-1380  3800  8001  0013  0138  8000</code></pre>
-            <p class="">Eight window positions produce six distinct fragments. Repeated fragments within one record can be deduplicated for a presence-based candidate filter. Generate an HMAC tag for each fragment and store which records contain each tag. Concatenating every tag into one string and applying <code class="">LIKE '%tag%'</code> would miss the advantage of equality lookup.</p>
-            <p class="">A separate tag table forms a simple <a href="https://www.postgresql.org/docs/18/indexes-types.html" target="_blank" rel="noopener" class="">inverted index</a> from a tag to record IDs. Searching a concatenated tag string can reintroduce scanning work.</p>
-            <p class="">The following minimal PostgreSQL schema illustrates that structure. Business fields and authorization policies are omitted:</p>
-            <pre class=""><code class="language-sql">CREATE TABLE users (
-    tenant_id      BIGINT NOT NULL,
-    id             BIGINT NOT NULL,
-    phone_envelope BYTEA NOT NULL,
-    PRIMARY KEY (tenant_id, id)
-);
-
-CREATE TABLE phone_search_tokens (
-    tenant_id     BIGINT NOT NULL,
-    user_id       BIGINT NOT NULL,
-    index_version INTEGER NOT NULL,
-    token         BYTEA NOT NULL CHECK (octet_length(token) = 32),
-    PRIMARY KEY (tenant_id, index_version, token, user_id),
-    FOREIGN KEY (tenant_id, user_id)
-        REFERENCES users (tenant_id, id) ON DELETE CASCADE
-);
-
-CREATE INDEX phone_search_tokens_by_user
-    ON phone_search_tokens (tenant_id, user_id, index_version);</code></pre>
-            <p class="">The example stores the full 32-byte HMAC-SHA-256 output. <code class="">index_version</code> identifies the key version, normalization rules, and fragment rules. The primary key supports tenant/version/tag lookup and prevents duplicate tags for a record. The second index supports maintaining and deleting a record's tags.</p>
-            <h3 class="">For <code class="">01380</code>, intersect two tag matches</h3>
-            <p class="">The query splits into <code class="">0138</code> and <code class="">1380</code>. The application generates both query tags and asks for records containing both.</p>
-            <p class="">More generally, use this parameterized query. The third parameter must be a deduplicated, nonempty tag array with no NULL elements. It is not the user's plaintext input:</p>
-            <pre class=""><code class="language-sql">PREPARE search_phone (BIGINT, INTEGER, BYTEA[]) AS
-SELECT user_id
-FROM phone_search_tokens
-WHERE tenant_id = $1
-  AND index_version = $2
-  AND token = ANY ($3)
-GROUP BY user_id
-HAVING COUNT(*) = cardinality($3)
-ORDER BY user_id;</code></pre>
-            <p class="">This uses PostgreSQL <a href="https://www.postgresql.org/docs/18/sql-prepare.html" target="_blank" rel="noopener" class="">prepared statements</a> and <a href="https://www.postgresql.org/docs/18/functions-array.html" target="_blank" rel="noopener" class="">array parameters</a>. <code class="">COUNT(*)</code> works because the primary key prevents duplicate tags per record and the query array is also deduplicated.</p>
-            <p class="">The example assumes the caller may search every record in that tenant. Record-level permissions require additional authorization conditions in candidate selection. The tenant ID must come from a verified identity context rather than an arbitrary request parameter.</p>
-            <p class="">The output at this point is a set of candidate IDs, not verified search results.</p>
+        <section class="detail-section" id="testing-boundary">
+            <h2 class="">Testing cannot stop at the UPS output</h2>
+            <p class="">A facility tests UPS transfers, generator starts, and whether servers stay powered. The grid tests fault clearance, breaker operation, and reclosing timing. Those tests are necessary, but passing on both sides does not establish how the two systems behave together.</p>
+            <p class="">Nancy Leveson's <a href="https://psas.scripts.mit.edu/home/books-and-handbooks/" target="_blank" rel="noopener" class="">STAMP approach to system safety</a> includes unsafe interactions among functioning components. Interconnection tests should take that wider view: examine each device and the control signals its behavior sends upstream and downstream. Equipment and organizational handoffs are precisely where testing tends to stop too soon.</p>
+            <p class="">If I were reviewing this interconnection study, I would ask for explicit load-response behavior: which voltage or frequency conditions trigger a transfer, how long they must persist, whether brief disturbances accumulate, whether an off-grid state latches, and who decides to return. A normal power profile cannot explain these state transitions.</p>
+            <p class="">Then I would examine many facilities under one disturbance rather than copy a single model hundreds of times and assume independent actions. Similar thresholds exposed to the same voltage trace may cross a boundary together. The grid state changed by the first wave must also feed into the subsequent simulation.</p>
+            <p class="">Dynamic models need measurement-based calibration. NERC's March 2026 <a href="https://www.nerc.com/globalassets/our-work/guidelines/reliability/white-paper---assessment-of-gaps.pdf" target="_blank" rel="noopener" class="">large-load gap assessment</a> identifies gaps in model validation and measurement. Simulation, equipment tests, real disturbance records, and hardware-in-the-loop where needed can build evidence for parameters and responses. Field testing must respect equipment and grid constraints and be designed for the load being studied.</p>
+            <p class="">I would also review recovery separately. Dispatch may have reduced generation while facilities are off-grid. A large, abrupt reconnection can create an imbalance in the opposite direction. When demand returns, how fast, and with what external coordination deserves testing just as much as the exit. NERC's report on the 2024 event also flags controlled reconnection and ramp rates.</p>
         </section>
 
-        <section class="detail-section" id="verification">
-            <h2 class="">All fragments can be present in the wrong order</h2>
-            <p class="">Consider these two illustrative digit strings:</p>
-            <pre class=""><code class="language-text">A: 13800138000
-B: 13801110138
-
-Query: 01380
-Query fragments: 0138, 1380</code></pre>
-            <p class="">A contains <code class="">01380</code>. B does not, but it has <code class="">1380</code> at the beginning and <code class="">0138</code> at the end. An index that stores only fragment presence includes B in the candidate set too.</p>
-            <p class="">This is neither an HMAC collision nor failed encryption. Even collision-free tags would produce the same candidates: the index does not retain order or adjacency between fragments.</p>
-            <p class="">Multiplicity causes a similar issue. Deduplicating the query <code class="">11111</code> leaves one fragment, <code class="">1111</code>. A record containing four consecutive ones does not necessarily contain five.</p>
-            <p class="">The full query path therefore needs these steps:</p>
-            <pre class=""><code class="language-text">Check query permissions and input
-    -&gt; Normalize with the selected rule version
-    -&gt; Split, generate tags, and deduplicate
-    -&gt; Find candidate IDs within the authorized scope
-    -&gt; Fetch, authenticate, and decrypt candidate ciphertext
-    -&gt; Check the actual substring against normalized plaintext
-    -&gt; Return results permitted by the caller's access</code></pre>
-            <p class="">The filter is useful because every n-gram of a real substring must also occur in the field containing that substring.</p>
-            <p class="">With a complete and consistent index, identical normalization rules, query length at least n, and no arbitrary candidate truncation, requiring all query fragments does not itself discard true substring matches. The converse does not hold, so candidates still need verification.</p>
-            <p class="">A 4-gram index has no query fragments for inputs shorter than four digits. Reject those inputs, ask for more constraints, or route them through another deliberately designed flow. Do not let empty-input handling accidentally become a full scan.</p>
-            <p class="">Pagination must account for verification. A hundred candidates may yield fewer than a hundred matches, and candidate counts are not result counts. Capping retrieval at the first hundred candidates cannot justify reporting that no more results exist. Continue verifying batches or explicitly ask the user to narrow the query; the API must describe what it actually did.</p>
+        <section class="detail-section" id="ride-through">
+            <h2 class="">Agree in advance on ride-through and recovery</h2>
+            <p class="">Interconnection agreements need three concrete answers: which disturbances to ride through, when transfer is permitted, and how load returns afterward. Facilities must protect server, cooling, and business limits; operators need advance knowledge of the load response. Coordination starts by putting both sets of requirements on the table.</p>
+            <p class="">PJM's <a href="https://www.pjm.com/-/media/DotCom/committees-groups/committees/pc/2026/20260908/20260908-item-05---1-large-load-ride-through---presentation.pdf" target="_blank" rel="noopener" class="">September 8, 2026 proposal</a> defines operating regions by voltage magnitude and duration. In the specified regions, loads may temporarily reduce active power. Once voltage returns above 0.9 and below 1.1 p.u., they must recover to more than 90% of pre-disturbance demand within two seconds. Per unit expresses values relative to nominal. Magnitude, duration, and recovery speed become parts of one requirement.</p>
+            <p class="">The scheme was still a proposal at the time. <a href="https://insidelines.pjm.com/reliability-standards-to-manage-large-load-disconnection-events-proposed-by-pjm/" target="_blank" rel="noopener" class="">PJM's September 10 account</a> also discusses transition arrangements for existing facilities. Thresholds, duration, equipment capabilities, and transition costs all need to be settled in the interconnection study.</p>
+            <p class="">Cost allocation matters too. If better ride-through, monitoring, and dynamic modeling mainly reduce public-grid risk while the facility bears the investment alone, technical feasibility may not produce voluntary adoption. Interconnection requirements, responsibilities, and compensation influence that choice. A UPS controller cannot settle all of them.</p>
+            <p class="">On September 17, PJM activated demand response during tight supply and received <a href="https://insidelines.pjm.com/pjm-operations-update-sept-17-2026/" target="_blank" rel="noopener" class="">emergency authorization</a> to require large customers such as data centers to use backup generation if needed. The same transfer can be a coordinated demand-reduction tool during a shortage or an unexpected collective exit during a disturbance. Timing, scale, and coordination determine its system effect.</p>
         </section>
 
-        <section class="detail-section" id="cost">
-            <h2 class="">How many candidates remain out of ten million records?</h2>
-            <p class="">Replacing a scan's <code class="">O(N)</code> with an indexed lookup's <code class="">O(log N)</code> is an incomplete cost model. The system must also read posting lists, intersect them, fetch candidate ciphertexts, and decrypt and verify them. A B-tree does not remove the work of processing hundreds of thousands of matches for a common tag.</p>
-            <p class="">For a deliberately simplified estimate, assume ten million eleven-digit strings, eight four-digit windows per string, and approximately independent uniform digits. A rare-event approximation for the number of records containing one fixed four-digit fragment is:</p>
-            <pre class=""><code class="language-text">10,000,000 × 8 ÷ 10,000 ≈ 8,000</code></pre>
-            <p class="">This estimates an order of magnitude, not a benchmark on real phone numbers. Actual prefixes, repeated fragments, and business distributions can substantially change it. A diagram claiming that ten million records become twenty-three candidates would need evidence.</p>
-            <p class="">Storage also matters. A length-L string has <code class="">max(L - n + 1, 0)</code> windows for a fixed n. An eleven-digit value yields at most eight 4-gram tags. At 32 bytes each, the tag values alone occupy at most 256 bytes; the repeated number above yields six distinct tags, or 192 bytes. Tenant IDs, record IDs, versions, row overhead, and database indexes add further storage.</p>
-            <p class="">Window count and selectivity respond differently to n. Decreasing n does not necessarily make a record's index size explode: changing an eleven-digit string from 4-grams to 2-grams increases its undeduplicated window count from eight to ten. The distinct count depends on the value. Fragment selectivity and candidate volume often change much more.</p>
-            <p class="">Indexing several fragment lengths, or every possible substring, can instead generate a number of candidate fragments quadratic in string length. That is a different design from indexing one fixed n.</p>
-            <p class="">Before release, I would use appropriately masked or synthetic data that represents the real distribution and measure candidate counts, tail latency, index size, write amplification, and maintenance costs. Those measurements should guide longer fragments, minimum query length, and preliminary tenant or business filters. A generic recommendation to start at four digits is insufficient.</p>
+        <section class="detail-section" id="power-shaping">
+            <h2 class="">A compiler can reshape the power profile too</h2>
+            <p class="">There is another route that does not directly concern UPS controls: reducing fluctuations on the compute side. In traditional clusters, unrelated workloads can partly offset one another's power variation. Large synchronized training can make many accelerators compute together and then move together into communication or waiting. Time correlation matters to electrical infrastructure alongside GPU count and total peak power.</p>
+            <p class="">In a February 2025 <a href="https://cloud.google.com/blog/topics/systems/mitigating-power-and-thermal-fluctuations-in-ml-infrastructure" target="_blank" rel="noopener" class="">technical article</a>, Google reported cluster-level fluctuations in the tens of MW and described a TPU-compiler intervention. It detects synchronization flags associated with power variation and adjusts activity in major compute blocks around those flags, smoothing utilization over time. In the disclosed test case, fluctuation magnitude fell by nearly 50%, with less than 1% performance impact.</p>
+            <p class="">The reduction is in fluctuation amplitude, while average power rises slightly. Smoothing computational activity gives the facility a smoother load. This opens a control lever at the scheduling layer, alongside the separate work of improving UPS voltage protection.</p>
+            <p class="">The useful direction, to me, is extending scheduling beyond "keep devices busy" to facility constraints. Job start order, movable batch windows, and campus power ramps may become optimization variables. But synchronized training has dependencies, and shifting computation can add waiting. Measure useful throughput, training time, energy use, and the power profile to decide whether it pays off. GPU utilization alone is insufficient, and business costs cannot be ignored when requesting staggered work.</p>
         </section>
 
-        <section class="detail-section" id="leakage">
-            <h2 class="">The database still sees frequencies and correlations</h2>
-            <p class="">An attacker holding a database snapshot may not know whether a tag means <code class="">1380</code> or <code class="">8000</code>, but can see which records share it, how many records each tag matches, which tags co-occur, and how many distinct tags each record has.</p>
-            <p class="">Continuous query observation can reveal repeated query tags, accessed records, and candidate counts. That exposes a different set of information from a static snapshot.</p>
-            <p class="">An attacker who can insert chosen values through normal business operations and observe the resulting database changes may gradually map known inputs to tags. Merely omitting an API named <code class="">generateHmac</code> does not rule out that capability.</p>
-            <p class="">Searchable-encryption research calls attacks that use side information and leakage to recover queries or plaintext leakage-abuse attacks. <a href="https://eprint.iacr.org/2016/718" target="_blank" rel="noopener" class="">Cash and colleagues</a> demonstrated such attacks under specified leakage models and attacker-knowledge conditions. Relationships between data can be exploited without breaking the underlying cryptographic algorithm.</p>
-            <p class="">I would be cautious about recommending a full HMAC n-gram index for structured values such as phone numbers or short identifiers. Each four-digit fragment has only ten thousand possibilities, fragments overlap, and correlated fields in other tables may help narrow the guesses.</p>
-            <p class="">The <a href="https://docs.aws.amazon.com/database-encryption-sdk/latest/devguide/searchable-encryption.html" target="_blank" rel="noopener" class="">AWS Database Encryption SDK documentation</a> also describes distribution leakage and risks from skewed or correlated fields. An algorithm name alone cannot establish whether an index fits a dataset.</p>
-            <h3 class="">Fragment length and tag length affect different things</h3>
-            <p class="">The n in n-gram is the plaintext fragment length. The retained bit count of an HMAC tag is the cryptographic output length. They are separate parameters.</p>
-            <p class="">Truncating a tag from 256 bits to 128 bits reduces storage without giving ten thousand four-digit inputs 128 bits of entropy. Random collisions remain negligible for that small domain, so the tags still preserve almost the same equality relationships.</p>
-            <p class=""><a href="https://ciphersweet.paragonie.com/internals/blind-index" target="_blank" rel="noopener" class="">Some implementations</a> truncate more aggressively so that distinct inputs share tags. The resulting false positives reduce distinguishability and are filtered after decryption. This needs dataset-specific analysis of distribution, correlation, and <a href="https://docs.aws.amazon.com/database-encryption-sdk/latest/devguide/choosing-beacon-length.html" target="_blank" rel="noopener" class="">verification costs</a>. Shorter is not automatically safe, and a product's configuration guidance cannot simply be transferred to a custom n-gram index.</p>
-            <p class="">Longer n-grams do not deserve a blanket 'more secure' rating. They may improve selectivity while making rare values easier to distinguish. Risk depends on the dataset and the attacker's information, rather than one parameter changing in a single direction.</p>
-            <p class="">Calling leakage controlled requires specifying what is exposed, checking what can be inferred by combining those exposures, and deciding whether the remaining risk is acceptable.</p>
-        </section>
+        <section class="detail-section" id="agent-budgets">
+            <h2 class="">More persistent agents, more congested services?</h2>
+            <p class="">Consider an agent platform whose external API slows down. Each agent adds retries, searches, and cross-checks to finish its task. The extra calls extend response times, and the next plan calls for still more checking. Each task looks more persistent while the platform becomes more congested.</p>
+            <p class="">Suppose an agent raises its task success rate from 95% to 98% while making other tasks wait several times longer. Who gets credited for that optimization? Platform acceptance has to account for the displaced resources and users. Those three percentage points reveal very little of the system's bill.</p>
+            <p class="">In an implementation, I would put total API budgets, concurrency limits, and retry allowances in the tool-execution layer, not just ask for restraint in a prompt. Budgets should cover the whole task and actual call chain. Spawning a child Agent must not issue a fresh allowance. Exhaustion should return an explicit limit or backoff state so the planner does not treat it as an ordinary failure and keep trying.</p>
+            <p class="">Restoration also belongs under execution-layer control. Admit work gradually as a service recovers and increase concurrency according to errors and queueing. Measure total completions, tail latency, waits imposed on other tasks, and recovery time. Returning the system to a stable state is a task in its own right.</p>
+            <p class="">After reading this investigation, I would add a scenario to an architecture review: assume every component correctly executes its own protective strategy; what happens next? Tests that prove each facility keeps power, each client retries, or each Agent works harder may still miss the costs of their combined actions.</p>
+            <p class="">I would end a reliability review with a different question: once every component has protected itself according to its rules, who manages the environment they changed together? Northern Virginia's two transfer waves put that question on the operator's desk. Software architecture reviews should ask it before an incident does.</p>
 
-        <section class="detail-section" id="operations">
-            <h2 class="">Write consistency, key rotation, and search permissions</h2>
-            <h3 class="">Version the normalization rules</h3>
-            <p class="">Removing spaces on writes but retaining them on queries, preserving country codes in one version but dropping them in another, or using different Unicode representations can make equivalent inputs produce different tags.</p>
-            <p class="">A full-number normalization function that completes or parses a phone number is not automatically suitable for a partial query. For <code class="">0138</code>, validate an allowed search fragment rather than try to interpret a complete number.</p>
-            <p class="">Names, addresses, and email addresses need explicit semantics for case, punctuation, and character normalization. Blanket removal or conversion for convenience can change meaning. Index generation and final verification must use the same semantics for the selected version.</p>
-            <p class="">Changing these rules requires rebuilding the index, not merely replacing a utility function.</p>
-            <h3 class="">Separate keys by tenant, field, and purpose</h3>
-            <p class="">Field encryption and all search tags should not share one key. Use independently generated keys or a mature key-derivation scheme to create distinct subkeys for each purpose.</p>
-            <p class="">An index domain can include tenant, table, field, query type, fragment length, and normalization version. <a href="https://www.rfc-editor.org/rfc/rfc5869" target="_blank" rel="noopener" class="">HKDF</a>'s <code class="">info</code> parameter provides a standard way to bind application context. Encode that context unambiguously rather than concatenate strings without clear boundaries.</p>
-            <p class="">The same <code class="">1380</code> then need not have an identical tag across tenants or fields. This reduces direct cross-domain linking; it does not remove correlations inherent in the business data.</p>
-            <p class="">A separate random salt per record would also make identical inputs yield different tags across records. That removes the direct single-tag equality lookup described here. Randomization must be designed together with the query procedure.</p>
-            <p class="">Key separation limits purposes and some compromise effects, but does not protect everything if the application is fully controlled. A process that can obtain both encryption and search keys can expose both. A leaked search key alone also enables enumeration of low-entropy fragments and inference about original values.</p>
-            <p class="">KMS can protect and manage keys, including wrapping data keys through <a href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html" target="_blank" rel="noopener" class="">envelope encryption</a>. It does not require a remote KMS call for every fragment tag. Plaintext-key lifetime, caching, permissions, and auditing inside the application still need design.</p>
-            <h3 class="">AAD authenticates ciphertext, not an entire result set</h3>
-            <p class="">Bind context such as tenant ID, record ID, and field identifier as additional authenticated data, or <a href="https://cryptography.io/en/latest/hazmat/primitives/aead/" target="_blank" rel="noopener" class="">AAD</a>. It participates in authentication without being encrypted. <a href="https://ciphersweet.paragonie.com/security" target="_blank" rel="noopener" class="">Moving ciphertext into a different record or field</a> will then normally fail verification under that different context.</p>
-            <p class="">The database can still omit index entries so the application misses results, or return a previously valid old ciphertext in the same context. Authenticating one ciphertext does not establish that a query result is complete and current.</p>
-            <p class="">Resisting those malicious-server behaviors requires additional integrity, freshness, or verifiable-query mechanisms. The tag table and decryption checks here do not provide those guarantees.</p>
-            <h3 class="">Maintain ciphertext and indexes together</h3>
-            <p class="">Changing a phone number requires removing old tags, generating new ones, and updating the ciphertext. A transaction in one relational database can commit those changes together. Concurrent searches also need a defined read-consistency model so candidate selection and ciphertext retrieval do not observe incompatible versions.</p>
-            <p class="">An external search index introduces asynchronous synchronization, retries, idempotency, and version alignment. Accepting eventual consistency means immediate searchability after an update cannot be guaranteed without further coordination.</p>
-            <p class="">Rotating a search key changes the tags. Plan dual writes or another migration strategy, backfill existing records, query the required versions, and safely retire the old index. Normalization changes need a similar migration.</p>
-            <p class="">Distinguish replacing actual data or search keys from changing the upper-level key that wraps them. <a href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html" target="_blank" rel="noopener" class="">Rewrapping</a> may leave search tags unchanged; replacing a data or search key generally requires migrating ciphertext or indexes.</p>
-            <p class="">Deletion must cover indexes, caches, search-engine copies, and backup-retention rules as well as the main table.</p>
-            <h3 class="">The search interface can become an enumeration oracle</h3>
-            <p class="">Hiding search terms from the database does not hide them from callers. An API allowing unlimited fragment guesses, returning complete customer records, and imposing no business scope can enable bulk enumeration even when every tag uses HMAC.</p>
-            <p class="">Design authorization, query scope, rate limits, enumeration detection, and minimal returned fields together. HMAC tags in logs are still stable identifiers linking requests and records, so those logs are not automatically harmless.</p>
-            <p class="">These controls do not eliminate index leakage. They reduce the additional exposure created when the system hands out sensitive information through its normal functionality.</p>
-        </section>
 
-        <section class="detail-section" id="extensions">
-            <h2 class="">What the substring index has not solved</h2>
-            <h3 class="">Edit distance cannot recover records that were never retrieved</h3>
-            <p class="">To match <code class="">Erci</code> to <code class="">Eric</code>, the application could calculate edit distance after decryption. That handles candidate verification, but leaves candidate retrieval unresolved.</p>
-            <p class="">Requiring all query n-grams is generally too strict for approximate matching. One character change can disrupt several fragments.</p>
-            <p class="">Requiring at least one shared fragment is not a complete fix either. <code class="">abc</code> and <code class="">axc</code> differ by one substitution, but their unpadded 2-grams are <code class="">{ab, bc}</code> and <code class="">{ax, xc}</code>. They share none.</p>
-            <p class="">Approximate-search retrieval must be designed against the chosen distance function, length range, and allowed error count. Short strings may need another retrieval path or a scan over a restricted authorized set. State whether full recall is guaranteed and test it. <a href="https://www.postgresql.org/docs/18/fuzzystrmatch.html" target="_blank" rel="noopener" class="">Levenshtein distance</a> counts insertions, deletions, and substitutions; counting adjacent transposition as one error needs a suitable alternative definition.</p>
-            <p class="">Edit distance can remove false positives among retrieved candidates. Missing records require changing the retrieval conditions.</p>
-            <h3 class="">Elasticsearch can execute the tag queries</h3>
-            <p class="">A dedicated search engine may be worth evaluating when tag volume, query concurrency, or combined-search requirements exceed what the relational design handles well.</p>
-            <p class="">Store application-generated stable tags in Elasticsearch rather than decrypted phone numbers. Treat them as exact values, typically using <a href="https://www.elastic.co/docs/reference/elasticsearch/mapping-reference/keyword" target="_blank" rel="noopener" class=""><code class="">keyword</code></a>, instead of sending them through a normal text analyzer. <a href="https://www.elastic.co/docs/reference/query-languages/query-dsl/query-dsl-terms-set-query" target="_blank" rel="noopener" class="">Exact set-matching queries</a> can express the conditions on several tags.</p>
-            <p class="">The engine still exposes tag frequencies, record relationships, query patterns, and result sizes. Ten million records alone do not imply a migration is necessary. Posting-list lengths, tenant partitions, update patterns, and measured load are better inputs to that decision.</p>
-            <h3 class="">Evaluate SSE as a specific protocol</h3>
-            <p class=""><a href="https://eprint.iacr.org/2006/210" target="_blank" rel="noopener" class="">Searchable symmetric encryption</a>, or SSE, is a research area with multiple constructions. It studies search over outsourced encrypted storage and defines and proves security properties in explicit models.</p>
-            <p class="">Custom HMAC tags, SSE, and fully homomorphic encryption cannot be ranked with a simple sequence of security stars. Query support, leakage, updates, trust, and interaction requirements vary by protocol. Formal security holds relative to a particular definition and does not imply that <a href="https://eprint.iacr.org/2016/718" target="_blank" rel="noopener" class="">remaining leakage</a> cannot be exploited.</p>
-            <p class="">Hiding repeated queries or the records they access requires evaluating specialized protocols and their computation, communication, and operational costs. Increasing the hash length of the existing table does not address those requirements.</p>
-        </section>
-
-        <section class="detail-section" id="choice">
-            <h2 class="">Choosing a search for the support dashboard</h2>
-            <p class="">For the original support workflow, I would first check whether full-number lookup is enough. If staff really need the last four digits, build only that suffix index and restrict queries to the required tenant and order scope. For small datasets and infrequent queries, measure a filtered decrypt-and-scan implementation too: it avoids maintaining a persistent search index.</p>
-            <p class="">Arbitrary substring search needs a stronger case. Once the requirement is confirmed, measure candidate volumes against real distributions and assess inference from frequencies, correlations, and known inputs. Highly sensitive fields with small domains or strong correlations may call for a revised support workflow.</p>
-            <p class="">Randomized authenticated encryption, a minimal search index, authorized candidate retrieval, and decryption-based verification form a design to evaluate. Key isolation, versioned normalization, consistent writes, and API restrictions must hold alongside it. Listing 'AEAD + HMAC + n-gram' does not deliver the whole system.</p>
-            <p class="">Encrypted data can support some searches, but indexes leave relationships visible. Alongside verifying decryption and query correctness, I would ask what someone who obtains the database could infer about customers from the search structures.</p>
-
-            <p class="">This article began as a reconsideration of the Chinese post 'How Do You Perform Fuzzy Queries on Encrypted Data?' It uses independently derived tag structures, SQL, and counterexamples rather than adopting that post's algorithm choices or performance estimates. Writing context: <a href="https://mp.weixin.qq.com/s/YHrq4fxoRkjtQyMXtmvuKw" target="_blank" rel="noopener" class="">original post</a>.</p>
-            <p class="">The digit strings are teaching examples, and the candidate-count estimate is not a production benchmark. This is architectural analysis with minimal examples, not a claim that any deployment has passed a cryptographic audit.</p>
         </section></div></div>
     </div>
-    <section class="related" aria-labelledby="related-title"><p class="kicker">Continue reading</p><h2 id="related-title">Related <em>writing</em></h2><ol class="journal-list" style="list-style:none"><li><a class="journal-row" href="article-03.html" data-topic="4" data-cursor="Read">
-        <span class="journal-date">2026.10 · 03</span>
-        <span class="journal-title"><span class="static">When Data Centers Protect Themselves: A 3.8 GW Load Transfer</span><span class="marquee" aria-hidden="true"><span>When Data Centers Protect Themselves: A 3.8 GW Load Transfer —&nbsp;</span><span>When Data Centers Protect Themselves: A 3.8 GW Load Transfer —&nbsp;</span><span>When Data Centers Protect Themselves: A 3.8 GW Load Transfer —&nbsp;</span></span></span>
-        <span class="topic" data-topic="4">System Architecture</span><span class="journal-time">18 min</span></a></li><li><a class="journal-row" href="article-08.html" data-topic="4" data-cursor="Read">
-        <span class="journal-date">2026.07 · 08</span>
+    <section class="related" aria-labelledby="related-title"><p class="kicker">Continue reading</p><h2 id="related-title">Related <em>writing</em></h2><ol class="journal-list" style="list-style:none"><li><a class="journal-row" href="article-05.html" data-topic="4" data-cursor="Read">
+        <span class="journal-date">2026.10 · 05</span>
+        <span class="journal-title"><span class="static">Can You Search Inside Encrypted Data?</span><span class="marquee" aria-hidden="true"><span>Can You Search Inside Encrypted Data? —&nbsp;</span><span>Can You Search Inside Encrypted Data? —&nbsp;</span><span>Can You Search Inside Encrypted Data? —&nbsp;</span></span></span>
+        <span class="topic" data-topic="4">System Architecture</span><span class="journal-time">33 min</span></a></li><li><a class="journal-row" href="article-09.html" data-topic="4" data-cursor="Read">
+        <span class="journal-date">2026.07 · 09</span>
         <span class="journal-title"><span class="static">Mac Is Becoming the Ideal Runtime for Personal AI Apps</span><span class="marquee" aria-hidden="true"><span>Mac Is Becoming the Ideal Runtime for Personal AI Apps —&nbsp;</span><span>Mac Is Becoming the Ideal Runtime for Personal AI Apps —&nbsp;</span><span>Mac Is Becoming the Ideal Runtime for Personal AI Apps —&nbsp;</span></span></span>
-        <span class="topic" data-topic="4">System Architecture</span><span class="journal-time">9 min</span></a></li><li><a class="journal-row" href="article-22.html" data-topic="4" data-cursor="Read">
-        <span class="journal-date">2026.04 · 22</span>
+        <span class="topic" data-topic="4">System Architecture</span><span class="journal-time">9 min</span></a></li><li><a class="journal-row" href="article-23.html" data-topic="4" data-cursor="Read">
+        <span class="journal-date">2026.04 · 23</span>
         <span class="journal-title"><span class="static">How Would We Design Systems Without Starting From a Database?</span><span class="marquee" aria-hidden="true"><span>How Would We Design Systems Without Starting From a Database? —&nbsp;</span><span>How Would We Design Systems Without Starting From a Database? —&nbsp;</span><span>How Would We Design Systems Without Starting From a Database? —&nbsp;</span></span></span>
         <span class="topic" data-topic="4">System Architecture</span><span class="journal-time">9 min</span></a></li></ol></section>
     <nav class="pager" aria-label="More articles">
-        <a href="article-03.html" data-cursor="Prev"><span class="meta">← Previous</span><strong>When Data Centers Protect Themselves: A 3.8 GW Load Transfer</strong></a>
-        <a href="article-05.html" data-cursor="Next"><span class="meta">Next →</span><strong>AI Can Cross Permission Boundaries Without Malice</strong></a>
+        <a href="article-03.html" data-cursor="Prev"><span class="meta">← Previous</span><strong>When the Exam Is Wrong: What Do AI Scores Measure?</strong></a>
+        <a href="article-05.html" data-cursor="Next"><span class="meta">Next →</span><strong>Can You Search Inside Encrypted Data?</strong></a>
     </nav>
 </div>
 </main>

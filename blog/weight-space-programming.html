@@ -1,0 +1,280 @@
+<!DOCTYPE html><html lang="zh-CN"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>模型出错，为什么总想着重新训练？ — Eric</title>
+    <!-- SEO:START -->
+    <meta name="description" content="从 Qwen 循环修复、Gemma 失败对照和游戏策略网络，讨论权重编程怎样把机制分析、局部编辑、回归测试与模型维护接起来。">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://erichz.site/blog/weight-space-programming">
+    <link rel="alternate" type="application/rss+xml" title="Eric Blog RSS" href="https://erichz.site/feed.xml">
+    <meta property="og:site_name" content="Eric">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="模型出错，为什么总想着重新训练？ — Eric">
+    <meta property="og:description" content="从 Qwen 循环修复、Gemma 失败对照和游戏策略网络，讨论权重编程怎样把机制分析、局部编辑、回归测试与模型维护接起来。">
+    <meta property="og:url" content="https://erichz.site/blog/weight-space-programming">
+    <meta property="og:image" content="https://erichz.site/assets/og-default.svg">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="模型出错，为什么总想着重新训练？ — Eric">
+    <meta name="twitter:description" content="从 Qwen 循环修复、Gemma 失败对照和游戏策略网络，讨论权重编程怎样把机制分析、局部编辑、回归测试与模型维护接起来。">
+    <meta name="twitter:image" content="https://erichz.site/assets/og-default.svg">
+    <meta property="article:published_time" content="2026-11-03">
+    <meta property="article:modified_time" content="2026-11-03">
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "模型出错，为什么总想着重新训练？",
+  "description": "从 Qwen 循环修复、Gemma 失败对照和游戏策略网络，讨论权重编程怎样把机制分析、局部编辑、回归测试与模型维护接起来。",
+  "url": "https://erichz.site/blog/weight-space-programming",
+  "mainEntityOfPage": "https://erichz.site/blog/weight-space-programming",
+  "datePublished": "2026-11-03",
+  "dateModified": "2026-11-03",
+  "author": {
+    "@type": "Person",
+    "name": "Eric Pan",
+    "url": "https://erichz.site",
+    "sameAs": [
+      "https://github.com/powerpan"
+    ]
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "Eric Pan",
+    "url": "https://erichz.site",
+    "sameAs": [
+      "https://github.com/powerpan"
+    ]
+  },
+  "image": "https://erichz.site/assets/og-default.svg",
+  "articleSection": "AI 工程",
+  "keywords": [
+    "AI 工程",
+    "ai"
+  ],
+  "inLanguage": "zh-CN"
+}
+    </script>
+    <!-- SEO:END -->
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&amp;family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,300&amp;display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/detail.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body>
+    <div class="detail-scroll-progress" id="detailScrollProgress"></div>
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor-dot" id="cursorDot"></div>
+    <canvas id="particleCanvas"></canvas>
+
+    <nav id="nav">
+        <a href="../index.html" class="nav-logo magnetic" data-hover="">ERIC<span class="dot">.</span></a>
+        <ul class="nav-center">
+            <li><a href="../index.html#about" data-hover="" data-i18n="nav_about">// 关于</a></li>
+            <li><a href="../index.html#projects" data-hover="" data-i18n="nav_projects">// 项目</a></li>
+            <li><a href="../index.html#blog" data-hover="" data-i18n="nav_blog">// 博客</a></li>
+            <li><a href="../index.html#contact" data-hover="" data-i18n="nav_contact">// 联系</a></li>
+        </ul>
+        <div class="nav-status"><span class="status-dot"></span>Open to work</div>
+        <button class="nav-hamburger" id="navHamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+    </nav>
+    <div class="mobile-nav" id="mobileNav">
+        <button class="mobile-nav-close" id="mobileNavClose" aria-label="Close menu">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"></path></svg>
+        </button>
+        <ul class="mobile-nav-links">
+            <li><a href="../index.html#about" data-i18n="nav_about">// 关于</a></li>
+            <li><a href="../index.html#projects" data-i18n="nav_projects">// 项目</a></li>
+            <li><a href="../index.html#blog" data-i18n="nav_blog">// 博客</a></li>
+            <li><a href="../index.html#contact" data-i18n="nav_contact">// 联系</a></li>
+            <li><button class="mobile-lang-btn" id="mobileLangBtn" onclick="toggleLang()" data-i18n="nav_lang">中 / EN</button></li>
+        </ul>
+    </div>
+
+    <section class="blog-article-hero">
+        <div class="detail-hero-bg"></div>
+        <a href="../index.html#blog" class="detail-back" data-hover="">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"></path></svg>
+            <span data-i18n="detail_back_blog">返回博客</span>
+        </a>
+        <div class="blog-article-tag reveal" data-i18n="blog_tag_ai">AI 工程</div>
+        <h1 data-i18n-html="bwsp_title" class="blog-article-title reveal reveal-d1">模型出错，为什么总想着<span class="hl">重新训练</span>？</h1>
+        <div class="blog-article-meta reveal reveal-d2"><span>2026.11.03</span><span>13 min</span><span>Eric Pan</span></div>
+        <p data-i18n="bwsp_sub" class="detail-subtitle reveal reveal-d3">Qwen 的数学成绩从 7.9% 涨到 48.1%，动的只有 0.016% 的权重。先看它究竟修好了什么，再谈模型调试该怎样做。</p>
+    </section>
+
+    <article class="blog-article-body">
+<section class="detail-section reveal" id="intro">
+<p data-i18n="bwsp_p1">模型数学题做得差，我们通常先补数据、改训练、加参数。MIT CSAIL 这次给出了另一个诊断：它可能一直在想，却没能把答案写出来。</p>
+
+<p data-i18n-html="bwsp_p2">在 11 月 2 日发布的<a href="https://rikiyat.github.io/blog/weight-space-programming/" target="_blank" rel="noopener">Weight-Space Programming 研究</a>中，GPT-6 Astra 直接检查并修改 Qwen3.5-0.8B 的权重，把 MATH-500 平均准确率从 7.9% 拉到了 48.1%。改动约占 0.016%，全程没有反向传播。</p>
+
+<p data-i18n="bwsp_p3">比涨分更值得盯住的是另一列：原模型有 93.0% 的 MATH-500 输出耗尽了 32,768 token，修改后降到 33.1%。大量失败发生在重复推理里。Astra 先找出了这类故障，再动了内部参数。</p>
+
+<p data-i18n="bwsp_p4">我更愿意把这件事放进模型维修的工具箱。分数低只是症状，背后可能是能力欠缺，也可能是已有能力被某个失效机制卡住。连这两类问题都没分清就重训，计算花出去了，故障还可能留在原处。</p>
+</section>
+
+<section class="detail-section reveal" id="loop-repair">
+<h2 data-i18n="bwsp_s1">它一直在推理，就是交不出答案</h2>
+
+<p data-i18n-html="bwsp_p5">Qwen 的实验允许 Astra 使用一个能读写权重的 Python 环境，以及有限次数的前向测试。练习材料来自 GSM8K 和 MATH 的训练集等，正式评测留在运行结束后，编辑器看不到测试结果。<a href="https://github.com/RikiyaT/lm_understand-logs/blob/main/exp8_math/README.md" target="_blank" rel="noopener">实验日志</a>把每次操作和最终评测都保留了下来。</p>
+
+<p data-i18n-html="bwsp_p6">Astra 对比能正常推进的推理和反复绕圈的推理，检查内部激活，再用干预测试缩小范围。最终补丁落在第 15 层和第 19 层 MLP 的 <code>down_proj</code>：各选 64 列，削弱它们向残差流写入的循环相关方向，共涉及 131,072 个权重。</p>
+
+<p data-i18n="bwsp_p7">这里动的是特征方向和矩阵列之间的关系。一个方向由很多参数共同写出，某个参数也可能同时服务于多种计算。把它想成删掉两个“坏神经元”，反而会丢掉这次诊断最有价值的部分。</p>
+
+<p data-i18n="bwsp_p8">最终运行记录还列了几种检验：改变干预强度、单独测试不同层，以及用等范数的随机方向作对照。看到某种激活跟循环一起出现，只能得到线索；对相关位置动手后，故障能否按预期减轻，才开始回答因果问题。这类实验应当成为调试器的基本能力。</p>
+
+<p data-i18n="bwsp_p9">下面是研究公开的 Qwen 结果。评测开启 Thinking，输出上限为 32,768 token，采样设置在修改前后保持一致；MATH-500 每题采样 4 次，GSM8K 和 IFEval 每题 2 次，报告所有样本的平均准确率。</p>
+
+<div class="article-table-scroll" tabindex="0" role="region" aria-labelledby="bwsp_table_heading"><table>
+<thead id="bwsp_table_heading"><tr><th data-i18n="bwsp_t1" scope="col">运行</th><th data-i18n="bwsp_t2" scope="col">MATH-500</th><th data-i18n="bwsp_t3" scope="col">GSM8K</th><th data-i18n="bwsp_t4" scope="col">IFEval</th><th data-i18n="bwsp_t5" scope="col">触及 token 上限</th></tr></thead>
+<tbody>
+<tr><th data-i18n="bwsp_r1" scope="row">原模型</th><td>7.9%</td><td>13.8%</td><td>21.0%</td><td>93.0%</td></tr>
+<tr><th data-i18n="bwsp_r2" scope="row">10 次前向预算</th><td>12.3%</td><td>25.7%</td><td>49.0%</td><td>87.2%</td></tr>
+<tr><th data-i18n="bwsp_r3" scope="row">25 次前向预算</th><td>14.1%</td><td>25.1%</td><td>39.9%</td><td>86.4%</td></tr>
+<tr><th data-i18n="bwsp_r4" scope="row">50 次前向预算</th><td>48.1%</td><td>67.1%</td><td>62.3%</td><td>33.1%</td></tr>
+</tbody>
+</table></div>
+
+<p data-i18n-html="bwsp_p10">指令遵循也跟着上涨，这和修复循环的解释相吻合：一个总在重复的模型，连执行格式要求、正常结束回答都容易失败。研究的<a href="https://github.com/RikiyaT/lm_understand-logs/blob/main/exp8_math/runs/p50c/final_answer.md" target="_blank" rel="noopener">最终练习确认记录</a>还区分了原本被截断与原本能完成的输出，改善主要来自前一类。分数回升有了可追踪的行为解释。</p>
+</section>
+
+<section class="detail-section reveal" id="gemma-control">
+<h2 data-i18n="bwsp_s2">换成 Gemma，为什么几乎没涨分？</h2>
+
+<p data-i18n="bwsp_p11">研究团队又让 Astra 修改 Gemma 3 270M。这次碰到的是算术错误、无效的代数步骤等普通推理失误。模型很少陷入 Qwen 那样的长循环，寻找局部补丁就没有那么顺利。</p>
+
+<p data-i18n="bwsp_p12">Gemma 原来的 MATH-500 为 6.8%，50 次前向预算后为 7.0%。它使用自己的采样配置和 8,192 token 上限。这个对照告诉我，定位到一种稳定、集中的异常，比笼统要求“提高数学能力”更适合现在的权重编程。</p>
+
+<p data-i18n="bwsp_p13">两种诊断对应两种工作。反复生成同一段话，可以收集正常和循环的上下文，设计干预，观察行为是否随之改变。缺少某类推理能力，则要处理知识、表示和跨层计算。把后者也交给一个局部补丁，往往只是换个位置碰运气。</p>
+
+<p data-i18n="bwsp_p14">所以我会先找“本来能做，却稳定地做不出来”的故障：重复生成、某种格式下持续失效、某个状态触发异常动作。成功标准也随之具体起来：能否消除这类失败，原本正常的任务又保留了多少。</p>
+</section>
+
+<section class="detail-section reveal" id="car-patch">
+<h2 data-i18n="bwsp_s3">这辆车缺的，是先倒一下</h2>
+
+<p data-i18n="bwsp_p15">另一个实验更像给控制程序打补丁。一个 PPO 网络负责让汽车爬坡，却学成了不断向前冲、不断卡住。Astra 拿到权重、场景说明和一段运行记录后，给网络加入一条读取位置与速度的控制路径：先倒车留出加速距离，再向前冲。</p>
+
+<p data-i18n-html="bwsp_p16">汽车越过特定位置后，新路径退出，后续继续由原网络控制。<a href="https://github.com/RikiyaT/lm_understand-logs/blob/main/exp4_fix_car/README.md" target="_blank" rel="noopener">这次单次修改</a>改了约 3.5% 的权重，在 1,024 次该关卡测试中全部成功。补丁接管的时机、执行的动作和退出条件，都能和任务过程对应上。</p>
+
+<p data-i18n="bwsp_p17">这个案例抓住了维修的要点：原系统已经有大量可用行为，缺的是一个特定阶段的动作。保留已经学会的部分，把故障发生处修好，比把整个策略再丢进训练器里更有针对性。</p>
+</section>
+
+<section class="detail-section reveal" id="reading-computation">
+<h2 data-i18n="bwsp_s4">读懂权重，得读到计算关系</h2>
+
+<p data-i18n="bwsp_p18">这些补丁靠什么找出来？研究先做了一组读取实验：四个形状相同、各有 17,253 个参数的游戏网络，Astra 根据权重和输入输出含义，辨认出了各自训练的游戏。进一步的实验则拿掉约 720 万参数字符模型的输入、输出层，只留下中间 Transformer Blocks。</p>
+
+<p data-i18n="bwsp_p19">拿掉首尾层，等于收走字符到向量、向量到字符的直接映射，也收走了跑一段文本看结果的捷径。Astra 可以用 Python 分析中间权重，却不能把任何输入送进网络。这使问题落在了矩阵本身透露出的计算结构上。</p>
+
+<p data-i18n-html="bwsp_p20">Astra 区分了学习 Python、英语和罗马字日语的网络，并找到了与实测吻合的归纳头。它通过矩阵之间的组合关系，寻找读取前文、匹配片段和复制后续内容的结构。这些<a href="https://transformer-circuits.pub/2022/in-context-learning-and-induction-heads/" target="_blank" rel="noopener">归纳头机制</a>已有研究基础；有意思的是，推理模型开始自己选择分析步骤，去找这样的计算。</p>
+
+<p data-i18n-html="bwsp_p21">这种分析还得跨过参数表示的差异。把隐藏神经元重新排列，同时调整前后连接，网络功能可以完全不变。<a href="https://arxiv.org/abs/2209.04836" target="_blank" rel="noopener">Git Re-Basin</a>讨论的权重置换对称性，恰好提醒我们：某个编号的神经元很难成为跨模型通用的维修接口。</p>
+
+<p data-i18n="bwsp_p22">我更关心工具能否描述稳定的计算关系：什么状态被读入，经过哪些变换，最后写入哪个方向。描述越接近可验证的计算过程，换模型、换训练种子时，才越有机会重新定位。只给一个“第几层有问题”的答案，还远远不够动手维修。</p>
+</section>
+
+<section class="detail-section reveal" id="writing-networks">
+<h2 data-i18n="bwsp_s5">把打砖块的规则，直接编进矩阵</h2>
+
+<p data-i18n="bwsp_p23">读取之外，Astra 还从零写了 MinAtar 游戏网络。研究给它规则、环境源代码和输入输出定义，要求直接生成权重，期间不能运行游戏检查效果。在 Breakout 中，它先估算小球落点，再根据挡板位置决定动作，把这套算法写成矩阵和激活函数。</p>
+
+<p data-i18n="bwsp_p24">最终平均得分为 517.4；对照 PPO 训练 1 亿步和 5 亿步分别为 15.8、25.3。这里最有意思的是求解路径：Astra 拿着明文规则设计控制算法，再把算法放进指定网络；PPO 通过与环境交互和奖励学习策略。网络成了执行一个已知算法的载体。</p>
+
+<p data-i18n="bwsp_p25">9×9 围棋实验又向前走了一步。Astra 在约 148 万参数的网络里分层表达棋子、气、危险棋块和落子评分；得到有限对局反馈后，再修改导致失败的计算部分。写出的网络可以继续接受调试反馈，算法构造和实验修正接在了一起。</p>
+
+<p data-i18n="bwsp_p26">这让我想到训练模型与编写模型可以怎样配合。规则明确的状态机、局部控制逻辑、特殊情况处理，适合尝试直接构造；复杂的视觉表示和语言知识继续从数据里学习。工程师多了一种组合方式：在已有能力上接入一段能解释、能测试的计算。</p>
+</section>
+
+<section class="detail-section reveal" id="debugging-cost">
+<h2 data-i18n="bwsp_s6">0.016% 的补丁，花了约 20 个小时</h2>
+
+<p data-i18n-html="bwsp_p27">直接改权重已有很长的研究积累。<a href="https://arxiv.org/abs/2202.05262" target="_blank" rel="noopener">ROME</a>通过修改前馈层权重定向更新事实关联，机制可解释性也一直用激活和参数干预检验内部计算。Weight-Space Programming 把诊断、选择实验、构造修改这些步骤，交给通用推理模型来组织。</p>
+
+<p data-i18n="bwsp_p28">这很像代码代理从写一段函数，走到了读项目、跑测试、按错误继续修改。只是它现在面对的工件换成了张量和激活，报错换成了行为故障。</p>
+
+<p data-i18n="bwsp_p29">但小补丁照样可能花很久。Qwen 效果最好的运行用了 50 次批量前向测试、80 次 Python 操作和 158 轮交互，墙钟时间约 20.3 小时，其中约 4.7 小时是服务不可用后的等待。一次前向工具调用最多可以生成 512 道练习题，或读取 1,024 条文本的内部状态。</p>
+
+<p data-i18n="bwsp_p30">表里的 10、25、50 次预算也各自对应独立运行和不同补丁。25 次运行最后关掉了一个注意力头；50 次才找到了两个 MLP 的循环相关方向。这个过程需要机制搜索，预算增加并不会自动兑换成同样比例的收益。</p>
+
+<p data-i18n="bwsp_p31">所以我会把采样调整、外部控制、常规微调和内部编辑放在同一张成本表里：解决的是不是同一个故障，需要多少数据和计算，成功能否重复，维护又要多花多少。省掉反向传播当然有价值，完整的诊断与验证成本同样得付账。</p>
+</section>
+
+<section class="detail-section reveal" id="patch-and-regression">
+<h2 data-i18n="bwsp_s7">模型维修，也得留下补丁和回滚按钮</h2>
+
+<p data-i18n="bwsp_p32">如果把这条路用进项目，我会从稳定故障的回放集开始。保存触发问题的输入、模型版本、采样参数与运行环境，再配一组本来正常的样本。诊断代理每提出一种内部机制，就给它一个能推翻这个解释的对照实验，最后才决定动哪些张量。</p>
+
+<p data-i18n="bwsp_p33">放到视觉任务里，也可以从某种目标姿态或成像条件下持续误判的样本入手，对照正常样本的激活。这里值得投入的是诊断流程：把“这一类图总是错”逐步追到可干预的计算，再检验修改后的结果。沿着指标盲目换模型，只会重新积累一套不理解的失败。</p>
+
+<p data-i18n="bwsp_p34">补丁则应该绑定原始 Checkpoint 的哈希，保存修改的张量、索引、精度和差分，以及生成它的实验记录。部署时校验基座，出现副作用时回到原版。神经元排列、模型版本或量化方式一变，就重新确认补丁还作用在原来的计算上。</p>
+
+<p data-i18n="bwsp_p35">连续修两个故障时，还要测补丁组合。第二次编辑面对的是第一次改过的内部表示，单个补丁分别有效，叠起来仍可能互相抵消。原版、补丁 A、补丁 B、A 后接 B，都留下同一组回放结果，才能判断该接受增量修改，还是重新诊断。</p>
+
+<p data-i18n-html="bwsp_p36">回归范围要超出目标分数。<a href="https://proceedings.neurips.cc/paper_files/paper/2024/hash/370fa2e691f57eb319bc263a07dad4a5-Abstract-Conference.html" target="_blank" rel="noopener">NeurIPS 2024 的模型编辑评估</a>记录了连续编辑对通用能力的损害；<a href="https://arxiv.org/abs/2601.17343" target="_blank" rel="noopener">后续局部性研究</a>又发现，一些常用指标对副作用不够敏感。参数改得少，行为影响仍可能很广，测试必须去找这些影响。</p>
+
+<p data-i18n="bwsp_p37">对 Qwen 这样的循环修复，我会同时测答案质量、截断率、输出长度、格式遵循和原本能正常完成的任务。只看更早结束，很容易把“修好循环”做成“更快放弃”。再加上多次独立诊断、未参与搜索的回放样本和明确的回滚条件，才能知道工具是否值得持续使用。</p>
+
+<p data-i18n="bwsp_p38">我期待模型开发把维修认真补起来。Checkpoint 可以保留训练得到的能力，也可以接受有记录、有测试的局部改造。下次再遇到稳定失败，先问它卡在了哪里。能定位、能干预、能回归，再决定需要补丁，还是确实需要一次新的训练。</p>
+</section>
+</article>
+
+    <!-- RELATED POSTS:START -->
+    <section class="related-posts reveal" aria-labelledby="relatedPostsTitle">
+        <div class="related-posts-kicker" data-i18n="related_posts_kicker">RELATED</div>
+        <h2 id="relatedPostsTitle" data-i18n="related_posts_title">相关文章</h2>
+        <div class="related-posts-grid">
+            <a href="gaac-kv-cache-bandwidth.html" class="related-post-card" data-hover>
+                <span class="related-post-tag" data-i18n="blog_tag_ai">AI 工程</span>
+                <h3 data-i18n="blog_card41_title">模型装得下，为什么还是跑不快？</h3>
+                <p data-i18n="blog_card41_desc">从 GAAC 无损 KV 压缩拆解本地推理：缓存容量、融合重建、Amdahl 定律、并发吞吐，以及 FP8 与 Apple M4 结果的适用范围。</p>
+                <span class="related-post-more" data-i18n="related_posts_more">继续阅读</span>
+            </a>
+            <a href="physics-benchmark-grading.html" class="related-post-card" data-hover>
+                <span class="related-post-tag" data-i18n="blog_tag_ai">AI 工程</span>
+                <h3 data-i18n="blog_card40_title">当考卷本身有错：我们在测量 AI 的什么？</h3>
+                <p data-i18n="blog_card40_desc">从等价公式被判零分到修订题库后的涨分，拆开评分错误、任务变化、重复尝试和测试契约，讨论 AI 评测怎样保留可比较的证据。</p>
+                <span class="related-post-more" data-i18n="related_posts_more">继续阅读</span>
+            </a>
+            <a href="ai-engineering-boundaries.html" class="related-post-card" data-hover>
+                <span class="related-post-tag" data-i18n="blog_tag_ai">AI 工程</span>
+                <h3 data-i18n="blog_card27_title">AI 工程的核心不是让模型万能，而是定义边界</h3>
+                <p data-i18n="blog_card27_desc">成熟的 AI 工程不是把模型包装成万能助手，而是把模型放进边界清晰、责任明确、风险可控的系统里。</p>
+                <span class="related-post-more" data-i18n="related_posts_more">继续阅读</span>
+            </a>
+        </div>
+    </section>
+    <!-- RELATED POSTS:END -->
+
+    <div class="detail-toc" id="detailToc">
+<div class="detail-toc-item" data-target="loop-repair" data-label="它一直在推理，就是交不出答案"></div>
+<div class="detail-toc-item" data-target="gemma-control" data-label="换成 Gemma，为什么几乎没涨分？"></div>
+<div class="detail-toc-item" data-target="car-patch" data-label="这辆车缺的，是先倒一下"></div>
+<div class="detail-toc-item" data-target="reading-computation" data-label="读懂权重，得读到计算关系"></div>
+<div class="detail-toc-item" data-target="writing-networks" data-label="把打砖块的规则，直接编进矩阵"></div>
+<div class="detail-toc-item" data-target="debugging-cost" data-label="0.016% 的补丁，花了约 20 个小时"></div>
+<div class="detail-toc-item" data-target="patch-and-regression" data-label="模型维修，也得留下补丁和回滚按钮"></div>
+</div>
+
+    <footer class="detail-footer">
+        <div class="detail-footer-copy">© 2026 Eric. Built with <span class="heart">♥</span> and too much coffee.</div>
+        <div class="detail-footer-links">
+            <a href="../index.html">← Back to Home</a>
+            <a href="https://github.com/powerpan" target="_blank">GitHub</a>
+        </div>
+    </footer>
+    <button class="back-to-top" id="backToTop" title="回到顶部" data-i18n-title="back_to_top">↑</button>
+    <script src="../js/i18n.js"></script>
+    <script src="../js/i18n/core.js"></script>
+    <script src="../js/i18n/blog-list.js"></script>
+    <script src="../js/i18n/articles/weight-space-programming.js"></script>
+    <script src="../js/motion.js"></script>
+    <script src="../js/cursor.js"></script>
+    <script src="../js/detail.js"></script>
+
+
+</body></html>

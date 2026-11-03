@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>当技术路线被包装成定律 — Eric</title>
-<meta name="description" content="韬定律背后指向后摩尔时代的真实工程问题，但媒体叙事容易把系统级优化包装成从零发明的新神话。">
+<title>Mac 正在成为个人 AI 应用的理想运行时 — Eric</title>
+<meta name="description" content="个人 AI 的关键不只是本地模型，而是把上下文、模型路由、工具执行、长期状态与用户控制组织在同一台设备上。">
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#ede8df">
 <script>(()=>{const r=document.documentElement;let t,m;try{t=localStorage.getItem('ink-theme');m=localStorage.getItem('ink-motion')}catch(e){}t=t||(matchMedia('(prefers-color-scheme: dark)').matches?'night':'day');if(matchMedia('(prefers-reduced-motion: reduce)').matches)m='off';r.dataset.theme=t;r.dataset.motion=m||'on'})()</script>
@@ -43,82 +43,85 @@
 <div class="progress" aria-hidden="true"><i></i></div>
 <div class="page">
     <header class="article-head">
-        <p class="meta"><a href="index.html">← 文章</a> &nbsp;/&nbsp; <span class="topic" data-topic="5">技术观察</span></p>
-        <h1 data-split>当技术路线被包装成<em>定律</em></h1>
-        <p class="lede rise">韬定律背后指向后摩尔时代的真实工程问题，但媒体叙事容易把系统级优化包装成从零发明的新神话。</p>
-        <div class="article-meta meta rise" style="--d:120ms"><span>2026.05.28</span><span>6 分钟</span><span>No. 09</span></div>
+        <p class="meta"><a href="index.html">← 文章</a> &nbsp;/&nbsp; <span class="topic" data-topic="4">系统架构</span></p>
+        <h1 data-split>Mac 正在成为个人 AI 应用的<em>理想运行时</em></h1>
+        <p class="lede rise">个人 AI 的关键不只是本地模型，而是把上下文、模型路由、工具执行、长期状态与用户控制组织在同一台设备上。</p>
+        <div class="article-meta meta rise" style="--d:120ms"><span>2026.07.20</span><span>9 分钟</span><span>No. 09</span></div>
     </header>
     <div class="article-layout">
-        <nav class="toc" aria-label="目录"><a href="#intro">引言</a><a href="#system-efficiency">后摩尔时代确实需要系统级效率</a><a href="#not-new">方向合理，不等于全新发明</a><a href="#media">媒体会把工程问题包装成历史节点</a><a href="#metrics">判断技术路线，要回到硬指标</a><a href="#support">支持国产技术，不等于接受所有包装</a><a href="#takeaway">写在最后</a></nav>
+        <nav class="toc" aria-label="目录"><a href="#intro">引言</a><a href="#runtime">个人 AI 缺少的不是聊天入口</a><a href="#why-mac">为什么是 Mac</a><a href="#routing">模型是资源，上下文才是资产</a><a href="#workflow">AI 必须进入工作流</a><a href="#control-plane">Mac 更像个人智能的控制平面</a><a href="#governance">记忆与自主都需要边界</a><a href="#limits">Mac 不是完美答案</a><a href="#takeaway">写在最后</a></nav>
         <div class="page-surface"><div class="prose"><section class="detail-section" id="intro">
-            <p class="">华为提出“韬定律”之后，相关报道很快进入一种熟悉的叙事节奏：突破摩尔定律、绕开先进制程、国产芯片换道超车、重新定义半导体未来。</p>
-            <p class="">这样的标题有传播力，但也容易把复杂工程压缩成情绪判断。更有价值的讨论，应该先区分三件事：真实的工程创新、企业的战略叙事，以及媒体为了传播效果制造出的技术神话。</p>
-            <p class="">把所有企业叙事都当宣传话术，会错过真实进展；只要冠以“国产突破”就全部接受，也会把复杂产业问题简化成口号。</p>
+            <p class="">最近我在设计一款 macOS 专业英语学习工具。最初的想法只是输入术语、调用模型解释、保存到本地。但继续拆解后，问题很快变成：应用如何知道当前课程？如何保留原句与来源？哪些任务留在本地，哪些内容可以上云？</p>
+            <p class="">我原本想做一个 AI 词典，最后发现真正需要的是一套学习上下文系统。也正是在这个过程中，我开始重新理解 Mac 在 AI 应用时代的位置：它不只是能运行本地模型，而是有机会成为个人 AI 应用的理想运行时。</p>
         </section>
 
-        <section class="detail-section" id="system-efficiency">
-            <h2 class="">后摩尔时代确实需要系统级效率</h2>
-            <p class="">韬定律并不是完全空洞的概念。它抓住的是一个真实趋势：传统摩尔定律放缓之后，芯片性能提升不可能只靠晶体管继续变小。</p>
-            <p class="">先进制程越来越昂贵，工艺迭代越来越困难，功耗、散热、互连延迟、存储访问和系统通信都在成为新的瓶颈。</p>
-            <p class="">尤其在 AI 计算场景中，很多时候真正限制系统效率的，不是单个计算单元不够快，而是数据搬运太昂贵、芯片之间通信太慢、存储与计算之间距离太远。</p>
-            <p class="">所以，从单点晶体管密度转向系统级效率，这个方向本身是合理的。现代芯片竞争早已不是单纯比谁的晶体管更小，而是制程、封装、互连、架构、编译器、软件生态和系统工程的综合竞赛。</p>
+        <section class="detail-section" id="runtime">
+            <h2 class="">个人 AI 缺少的不是聊天入口</h2>
+            <p class="">今天多数 AI 产品仍以聊天窗口为中心。它知道当前输入、用户上传的文件和少量历史偏好，却不知道用户正在阅读哪篇论文、一个术语来自哪门课，或当前问题与几个月前的哪次决策有关。</p>
+            <p class="">模型越来越通用，真正有价值的个人上下文却分散在文件、代码仓库、PDF、笔记、日历和剪贴板里。下一阶段的关键不只是更强的模型，而是谁能长期承载模型、上下文、工具、状态和权限。</p>
+            <p class="">一个成熟的个人 AI 运行时至少需要模型调度、上下文管理、工具执行、长期状态和权限控制。缺少任何一项，它都很容易退化成一个功能更多的聊天机器人。</p>
         </section>
 
-        <section class="detail-section" id="not-new">
-            <h2 class="">方向合理，不等于全新发明</h2>
-            <p class="">问题在于，技术方向合理，不等于它是全新发明；有工程价值，也不等于它已经成为产业定律。</p>
-            <p class="">3D 堆叠、先进封装、异构集成、Chiplet、高速互连、HBM 与计算芯片协同，都是后摩尔时代全球半导体行业长期探索的方向。TSMC、Intel、AMD、NVIDIA 都在各自体系里推进类似路线。</p>
-            <p class="">更准确的说法不是“华为发明了堆叠芯片”，而是：华为在先进制程受限的背景下，把若干后摩尔时代的工程路线重新组织成一套自己的技术叙事，并试图通过 LogicFolding、互连优化、系统协同等方式形成产品化路径。</p>
+        <section class="detail-section" id="why-mac">
+            <h2 class="">为什么是 Mac</h2>
+            <p class="">浏览器擅长分发服务，却与本地系统保持距离；手机最贴近个人生活，却不适合复杂知识工作；云端拥有强大算力，却需要用户上传更多上下文。</p>
+            <p class="">Mac 位于三者之间。它既是个人设备，也是完整生产环境；既能访问云端模型，也能运行本地模型；既能连接文件、应用和命令行工具，也能通过系统权限和人工确认控制风险。</p>
+            <p class="">Mac 的优势不是每项能力都最强，而是数据、上下文、模型、工具和控制可以在同一台个人设备上形成闭环。</p>
         </section>
 
-        <section class="detail-section" id="media">
-            <h2 class="">媒体会把工程问题包装成历史节点</h2>
-            <p class="">一项技术不是首次出现，并不代表它没有价值。很多工程进步的关键不在于“谁第一个提出”，而在于谁能把它做进产品、做成规模、做出可靠性和成本优势。</p>
-            <p class="">但反过来说，不是首次出现的东西，也不能被包装成从零发明。把已有行业趋势重新命名为一个“定律”，本身就是一种叙事行为。</p>
-            <p class="">科技媒体最常见的放大机制，就是把枯燥的工程表达换成容易转发的历史节点。降低互连延迟、优化关键路径、改善封装密度、缩短数据移动距离、提高系统级吞吐，这些词不适合流量传播。</p>
-            <p class="">“新定律”“突破摩尔定律”“换道超车”更适合标题，也更容易激发情绪。国产芯片议题又天然带有情绪放大效应，所以越是困难的长期任务，越需要冷静讨论。</p>
+        <section class="detail-section" id="routing">
+            <h2 class="">模型是资源，上下文才是资产</h2>
+            <p class="">个人 AI 不应该把所有任务交给同一个模型。输入分类和去重可以由规则或小模型完成，专业解释可以调用更强的云端模型，私人资料的索引与筛选则更适合留在本地。</p>
+            <p class="">Local-first 不等于 Local-only。真正重要的是运行时能根据隐私、成本、延迟和任务复杂度选择合适的模型。</p>
+            <p class="">模型会更换，但一个人积累的文件、笔记、项目、课程和历史决策不会失去价值。完整资料应留在本地，由本地上下文层筛选最小必要信息，再交给合适的模型，结果最终写回本地系统。</p>
         </section>
 
-        <section class="detail-section" id="metrics">
-            <h2 class="">判断技术路线，要回到硬指标</h2>
-            <p class="">真正判断韬定律有没有产业价值，不能只看名字，也不能只看发布会，更不能只看“等效 1.4nm”这样的传播表达。芯片技术最后一定要回到几个硬指标上：</p>
-            <ul class="">
-                <li class="">性能是否真的提升，是否能在真实负载中提高计算吞吐、降低延迟。</li>
-                <li class="">功耗和散热是否可控，高密度集成是否会被功耗墙抵消。</li>
-                <li class="">成本和良率是否能够规模化，能否从样品走向商业量产。</li>
-                <li class="">软件生态和应用场景是否能承接，包括编译器、算子库、框架适配、集群互连和开发者迁移成本。</li>
-            </ul>
-            <p class="">这些指标远比“定律”这个名字重要。一个技术路线是否成立，不是由命名决定，而是由产品能力、量产能力和生态能力共同决定。</p>
+        <section class="detail-section" id="workflow">
+            <h2 class="">AI 必须进入工作流</h2>
+            <p class="">聊天机器人返回的是文字，但真实任务需要的是闭环：理解、决策、执行、记录和更新状态。</p>
+            <p class="">对英语学习工具来说，更自然的流程不是打开聊天窗口，而是在 PDF 中选中术语、按下快捷键，由系统取得课程上下文，本地完成分类，必要时调用云端模型，再让用户确认解释并保存到复习计划。</p>
+            <p class="">用户只看到一次操作，背后完成了上下文提取、模型路由、结构化生成和数据写入。聊天框更像 AI 的通用调试界面，而不是个人 AI 应用的最终形态。</p>
         </section>
 
-        <section class="detail-section" id="support">
-            <h2 class="">支持国产技术，不等于接受所有包装</h2>
-            <p class="">理性看待韬定律，不是为了否定华为。华为在受限环境下继续探索制程之外的性能提升路径，本身值得关注。</p>
-            <p class="">后摩尔时代确实不会只剩下先进制程一条路，先进封装、3D 集成、系统级互连和软硬协同都会越来越重要。</p>
-            <p class="">但支持国产技术，不等于接受所有媒体包装。真正成熟的产业信心，不应该建立在“又发明一个新定律”的兴奋上，而应该建立在对工程难度、产业周期和验证标准的清醒理解上。</p>
+        <section class="detail-section" id="control-plane">
+            <h2 class="">Mac 更像个人智能的控制平面</h2>
+            <p class="">一个成熟架构可以分成五层：用户工作环境、本地上下文层、模型路由层、工具行动层，以及控制与审计层。</p>
+            <p class="">本地数据保存长期资产，上下文层决定模型能看到什么，模型路由层选择合适的智能，工具层推进任务，控制层负责权限、确认、日志和撤销。模型可以更换，数据和工作流仍然保留。</p>
+            <p class="">这才是 Mac 的真正价值。它不只是模型运行器，更像个人智能的控制平面。</p>
+        </section>
+
+        <section class="detail-section" id="governance">
+            <h2 class="">记忆与自主都需要边界</h2>
+            <p class="">“更懂你”不等于无限收集。低质量和过时记忆会污染检索，个人设备中的私密数据也要求系统清楚说明哪些内容被索引、哪些数据发往云端，以及用户如何修改、删除和导出记忆。</p>
+            <p class="">当 AI 可以修改文件、日历和现实状态时，自主性必须按风险逐步提升：先建议，再生成草稿，之后由用户确认执行，最后才是在明确范围内自动执行。</p>
+            <p class="">入口权、上下文权和执行权之外，个人 AI 还需要控制权。真正成熟的系统应该可以被观察、限制、纠正和撤销。</p>
+        </section>
+
+        <section class="detail-section" id="limits">
+            <h2 class="">Mac 不是完美答案</h2>
+            <p class="">Mac 不能替代数据中心，本地内存也会限制模型规模。Apple 生态的封闭性还可能带来设备绑定和数据迁移问题。</p>
+            <p class="">因此，理想运行时的目标从来不是所有任务都在本地完成，而是能本地完成的不上云，需要强推理时按需上云，敏感资料先裁剪，高风险操作保留人工确认，同时提供标准数据导出和可替换的模型接口。</p>
         </section>
 
         <section class="detail-section" id="takeaway">
             <h2 class="">写在最后</h2>
-            <p class="">韬定律真正值得讨论的地方，不是它是不是华为凭空发明的新技术，而是它暴露出后摩尔时代的共同现实：当几何缩微越来越困难，芯片竞争正在从单点工艺竞赛转向系统工程竞赛。</p>
-            <p class="">未来的芯片性能，越来越取决于制程、封装、互连、架构、软件和应用生态之间的协同能力。华为提出韬定律，是在这种背景下给出的一套自我路线表达。</p>
-            <blockquote class=""><strong class="">对它最理性的态度，不是盲目欢呼，也不是条件反射式嘲讽，而是等待它进入产品、进入量产、进入真实负载，然后用数据说话。</strong></blockquote>
-            <p class="">技术宣传可以制造热度，但真正决定产业位置的，永远是可验证的产品能力。</p>
+            <p class="">个人 AI 的终点，不是在电脑里塞进一个更小的 ChatGPT，而是让电脑本身逐渐理解上下文、调度智能并参与工作。</p>
+            <blockquote class=""><strong class="">云端仍会提供最强智能，但 Mac 有机会成为管理这些智能的个人控制平面。</strong></blockquote>
         </section></div></div>
     </div>
-    <section class="related" aria-labelledby="related-title"><p class="kicker">继续阅读</p><h2 id="related-title">相关<em>文章</em></h2><ol class="journal-list" style="list-style:none"><li><a class="journal-row" href="article-06.html" data-topic="5" data-cursor="阅读">
-        <span class="journal-date">2026.09 · 06</span>
-        <span class="journal-title"><span class="static">谁有权训练谁？</span><span class="marquee" aria-hidden="true"><span>谁有权训练谁？ —&nbsp;</span><span>谁有权训练谁？ —&nbsp;</span><span>谁有权训练谁？ —&nbsp;</span></span></span>
-        <span class="topic" data-topic="5">技术观察</span><span class="journal-time">8 分钟</span></a></li><li><a class="journal-row" href="article-07.html" data-topic="5" data-cursor="阅读">
-        <span class="journal-date">2026.08 · 07</span>
-        <span class="journal-title"><span class="static">机器人的三个时钟</span><span class="marquee" aria-hidden="true"><span>机器人的三个时钟 —&nbsp;</span><span>机器人的三个时钟 —&nbsp;</span><span>机器人的三个时钟 —&nbsp;</span></span></span>
-        <span class="topic" data-topic="5">技术观察</span><span class="journal-time">8 分钟</span></a></li><li><a class="journal-row" href="article-10.html" data-topic="5" data-cursor="阅读">
-        <span class="journal-date">2026.05 · 10</span>
-        <span class="journal-title"><span class="static">中国具身智能的真正考验：不是翻跟头，而是商业闭环</span><span class="marquee" aria-hidden="true"><span>中国具身智能的真正考验：不是翻跟头，而是商业闭环 —&nbsp;</span><span>中国具身智能的真正考验：不是翻跟头，而是商业闭环 —&nbsp;</span><span>中国具身智能的真正考验：不是翻跟头，而是商业闭环 —&nbsp;</span></span></span>
-        <span class="topic" data-topic="5">技术观察</span><span class="journal-time">8 分钟</span></a></li></ol></section>
+    <section class="related" aria-labelledby="related-title"><p class="kicker">继续阅读</p><h2 id="related-title">相关<em>文章</em></h2><ol class="journal-list" style="list-style:none"><li><a class="journal-row" href="article-04.html" data-topic="4" data-cursor="阅读">
+        <span class="journal-date">2026.10 · 04</span>
+        <span class="journal-title"><span class="static">当每个系统都在自保：3.8 GW 负载退出之后</span><span class="marquee" aria-hidden="true"><span>当每个系统都在自保：3.8 GW 负载退出之后 —&nbsp;</span><span>当每个系统都在自保：3.8 GW 负载退出之后 —&nbsp;</span><span>当每个系统都在自保：3.8 GW 负载退出之后 —&nbsp;</span></span></span>
+        <span class="topic" data-topic="4">系统架构</span><span class="journal-time">16 分钟</span></a></li><li><a class="journal-row" href="article-05.html" data-topic="4" data-cursor="阅读">
+        <span class="journal-date">2026.10 · 05</span>
+        <span class="journal-title"><span class="static">加密后的数据，真的还能做模糊查询吗？</span><span class="marquee" aria-hidden="true"><span>加密后的数据，真的还能做模糊查询吗？ —&nbsp;</span><span>加密后的数据，真的还能做模糊查询吗？ —&nbsp;</span><span>加密后的数据，真的还能做模糊查询吗？ —&nbsp;</span></span></span>
+        <span class="topic" data-topic="4">系统架构</span><span class="journal-time">33 分钟</span></a></li><li><a class="journal-row" href="article-23.html" data-topic="4" data-cursor="阅读">
+        <span class="journal-date">2026.04 · 23</span>
+        <span class="journal-title"><span class="static">如果没有数据库，系统如何设计？</span><span class="marquee" aria-hidden="true"><span>如果没有数据库，系统如何设计？ —&nbsp;</span><span>如果没有数据库，系统如何设计？ —&nbsp;</span><span>如果没有数据库，系统如何设计？ —&nbsp;</span></span></span>
+        <span class="topic" data-topic="4">系统架构</span><span class="journal-time">9 分钟</span></a></li></ol></section>
     <nav class="pager" aria-label="更多文章">
-        <a href="article-08.html" data-cursor="上一篇"><span class="meta">← 上一篇</span><strong>Mac 正在成为个人 AI 应用的理想运行时</strong></a>
-        <a href="article-10.html" data-cursor="下一个"><span class="meta">下一篇 →</span><strong>中国具身智能的真正考验：不是翻跟头，而是商业闭环</strong></a>
+        <a href="article-08.html" data-cursor="上一篇"><span class="meta">← 上一篇</span><strong>机器人的三个时钟</strong></a>
+        <a href="article-10.html" data-cursor="下一个"><span class="meta">下一篇 →</span><strong>当技术路线被包装成定律</strong></a>
     </nav>
 </div>
 </main>

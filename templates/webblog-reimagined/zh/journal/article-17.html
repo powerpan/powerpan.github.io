@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>U-Net 没有输给新模型：工业视觉里，先定义任务再选择模型 — Eric</title>
-<meta name="description" content="在单类细长区域分割任务里，模型有效性更多取决于任务结构与归纳偏置的匹配，而不是发布时间、参数规模或预训练光环。">
+<title>企业 AI 本地部署，第一步不是买 GPU，而是先洗数据 — Eric</title>
+<meta name="description" content="企业 AI 真正的起点不是模型和算力，而是内部数据是否具备可检索、可引用、可追溯和可回答的知识质量。">
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#ede8df">
 <script>(()=>{const r=document.documentElement;let t,m;try{t=localStorage.getItem('ink-theme');m=localStorage.getItem('ink-motion')}catch(e){}t=t||(matchMedia('(prefers-color-scheme: dark)').matches?'night':'day');if(matchMedia('(prefers-reduced-motion: reduce)').matches)m='off';r.dataset.theme=t;r.dataset.motion=m||'on'})()</script>
@@ -43,89 +43,75 @@
 <div class="progress" aria-hidden="true"><i></i></div>
 <div class="page">
     <header class="article-head">
-        <p class="meta"><a href="index.html">← 文章</a> &nbsp;/&nbsp; <span class="topic" data-topic="3">视觉多模态</span></p>
-        <h1 data-split>U-Net 没有输给新模型：工业视觉里，<em>先定义任务</em>再选择模型</h1>
-        <p class="lede rise">在单类细长区域分割任务里，模型有效性更多取决于任务结构与归纳偏置的匹配，而不是发布时间、参数规模或预训练光环。</p>
-        <div class="article-meta meta rise" style="--d:120ms"><span>2026.05.07</span><span>8 分钟</span><span>No. 17</span></div>
+        <p class="meta"><a href="index.html">← 文章</a> &nbsp;/&nbsp; <span class="topic" data-topic="1">AI 工程</span></p>
+        <h1 data-split>企业 AI 本地部署，第一步不是买 GPU，而是<em>先洗数据</em></h1>
+        <p class="lede rise">企业 AI 真正的起点不是模型和算力，而是内部数据是否具备可检索、可引用、可追溯和可回答的知识质量。</p>
+        <div class="article-meta meta rise" style="--d:120ms"><span>2026.05.10</span><span>7 分钟</span><span>No. 17</span></div>
     </header>
     <div class="article-layout">
-        <nav class="toc" aria-label="目录"><a href="#baseline">不是老模型战胜新模型</a><a href="#output">先判断输出形式</a><a href="#structure">细长区域更吃空间定位</a><a href="#pretraining">预训练优势为什么没有压倒性转化</a><a href="#metrics">不要只看总指标</a><a href="#system">模型选择是一种系统设计</a></nav>
-        <div class="page-surface"><div class="prose"><section class="detail-section" id="baseline">
-            <h2 class="">不是老模型战胜新模型</h2>
-            <p class="">最近做了一个细长区域分割实验。任务并不复杂：在一个工业视觉场景中，给定图像后稳定输出目标区域的 mask。它不是开放世界检测，也不是多类别实例分割，业务真正需要的是像素级区域提取。</p>
-            <p class="">一开始，我把 2015 年的 U-Net 当成经典 baseline，预期它能给出一个参考下限。真正表现更好的，直觉上应该是更新的 YOLO26 系列模型，毕竟后者工程生态成熟，也通常会搭配预训练权重。</p>
-            <p class="">但实验现象没有这么线性：U-Net 在没有预训练、从随机初始化训练的情况下，很快进入稳定表现区间；在当前任务上，它并没有明显输给使用预训练权重的新模型。</p>
-            <p class="">这不是“老模型战胜新模型”的故事。更准确地说，它提醒我重新看一个问题：工业视觉里的模型有效性，到底来自模型发布时间、参数规模和预训练光环，还是来自任务结构与模型归纳偏置之间的匹配？</p>
+        <nav class="toc" aria-label="目录"><a href="#gpu">别把起点放在 GPU 上</a><a href="#asset">信息堆积不等于知识资产</a><a href="#rag">RAG 的上限取决于可回答性</a><a href="#context">企业问答需要上下文</a><a href="#boundary">本地部署不等于可信</a><a href="#readiness">先问数据有没有准备好</a></nav>
+        <div class="page-surface"><div class="prose"><section class="detail-section" id="gpu">
+            <h2 class="">别把起点放在 GPU 上</h2>
+            <p class="">很多企业一提到 AI 本地部署，第一反应就是买服务器、上 GPU、选大模型、搭一个内部 ChatGPT。这个顺序看起来合理，但它把问题从第一步就带偏了。</p>
+            <p class="">企业 AI 真正的起点不是模型，也不是算力，而是企业内部那些数据到底有没有资格被 AI 使用。模型再强，也只能基于输入的信息工作；如果输入本身混乱、过期、冲突，AI 只会把这些问题包装成更流畅的答案。</p>
+            <blockquote class="">AI 不是企业知识管理的魔法补丁，它更像放大器。干净的数据会被放大成效率，混乱的数据也会被放大成风险。</blockquote>
         </section>
 
-        <section class="detail-section" id="output">
-            <h2 class="">先判断输出形式</h2>
-            <p class="">很多模型选择一开始就被框架牵着走。看到 YOLO，就自然想到框、类别、置信度和实例；看到新模型，就默认它应该比老模型更强。但工业项目首先要问的不是“用哪个模型”，而是“业务到底需要什么输出”。</p>
-            <p class="">在这个场景里，目标区域有时是一整条，有时因为遮挡或结构状态变化，看起来像断成两段。但业务并不需要判断两段是不是同一个实例，也不需要给每一段分配独立身份。业务只关心一件事：哪些像素属于目标区域，哪些像素不属于目标区域。</p>
+        <section class="detail-section" id="asset">
+            <h2 class="">信息堆积不等于知识资产</h2>
+            <p class="">很多企业不是没有数据，而是数据太多、太散、太乱。同一个制度可能有三个版本，但没人知道哪个是现行版本；同一个指标在财务、运营、销售那里可能有三种口径；项目资料散落在聊天工具、邮件、共享盘、Word 和 Excel 里。</p>
+            <p class="">这时候企业拥有的不是知识资产，而只是信息堆积。信息要经过清洗、去重、归档、结构化、标注、版本管理和权限控制，才可能变成 AI 能够检索、理解、引用和复用的知识。</p>
+            <p class="">否则，所谓知识库只是把混乱换了一个入口。用户看起来是在问 AI，实际上是在向一堆没有治理过的文档抽签。</p>
+        </section>
+
+        <section class="detail-section" id="rag">
+            <h2 class="">RAG 的上限取决于可回答性</h2>
+            <p class="">很多企业做 RAG 时，最容易犯的错误是以为只要文档切片、向量化、接上大模型，就能得到可靠的企业问答系统。上线之后回答不稳定、引用不准确、旧制度和新制度混在一起，才开始怀疑模型、Embedding、Rerank 或 Prompt。</p>
+            <p class="">这些技术环节当然重要，但很多问题并不在链路后半段，而在数据入口。Chunk 切分不能拯救逻辑混乱的文档，Embedding 不能判断资料是否仍然有效，Rerank 也不能把错误资料排成正确答案。</p>
+            <p class="">RAG 的上限不只取决于模型和检索算法，也取决于知识库本身是否具备“可回答性”。所谓可回答性，不是有没有文件，而是这些文件能不能支撑稳定、明确、可追溯的答案。</p>
+        </section>
+
+        <section class="detail-section" id="context">
+            <h2 class="">企业问答需要上下文</h2>
+            <p class="">员工问“这个报销标准现在还适用吗”，AI 不仅要找到报销制度，还要知道版本、部门范围、生效时间、是否被后续通知覆盖，以及最终解释权归谁。</p>
+            <p class="">客户问“这个产品是否支持某个功能”，AI 不仅要找到产品说明，还要区分那是销售话术、技术文档、历史版本，还是当前正式承诺。</p>
+            <p class="">管理层问“这个项目为什么延期”，AI 不能只拼接几段会议纪要，而要理解任务变更、资源调整、风险记录和责任边界。</p>
+            <p class="">这些问题背后都不是单纯的模型能力问题，而是企业知识结构问题。企业 AI 本地部署的第一阶段，与其叫模型部署，不如叫知识资产整理。</p>
+        </section>
+
+        <section class="detail-section" id="boundary">
+            <h2 class="">本地部署不等于可信</h2>
+            <p class="">很多企业选择本地部署，是因为担心数据安全。这个担心合理，但本地部署只能解决数据不出内网的问题，不能自动解决数据质量问题。</p>
             <ul class="">
-                <li class=""><strong class="">如果要的是框</strong>，检测模型是自然选择。</li>
-                <li class=""><strong class="">如果要的是每个像素的类别</strong>，语义分割更直接。</li>
-                <li class=""><strong class="">如果要区分每个对象的独立 mask</strong>，实例分割才是必要的。</li>
-                <li class=""><strong class="">如果最终只要报警结果</strong>，分割可能也只是中间环节。</li>
+                <li class=""><strong class="">模型在内网</strong>，不代表答案准确。</li>
+                <li class=""><strong class="">服务器在机房</strong>，不代表权限清楚。</li>
+                <li class=""><strong class="">数据没有外泄</strong>，也不代表知识系统可信。</li>
             </ul>
-            <p class="">当前任务要的是单类区域 mask，所以它首先是一个语义分割问题，其次才是一个模型选择问题。</p>
+            <p class="">本地部署解决的是物理边界，数据治理解决的是认知边界。</p>
+            <p class="">企业真正需要的不是把 ChatGPT 搬进内网，而是把自己的知识系统重建一遍：让文档有版本，让制度有状态，让数据有口径，让流程有责任人，让答案有来源，让错误有反馈，让知识可以持续更新。</p>
         </section>
 
-        <section class="detail-section" id="structure">
-            <h2 class="">细长区域更吃空间定位</h2>
-            <p class="">U-Net 在这个任务上表现稳定，并不是因为它“更先进”，而是因为它的结构假设很贴近任务形态。它通过编码路径提取上下文，通过解码路径恢复空间分辨率，再用跳跃连接把浅层空间细节带回分割结果。</p>
-            <p class="">这对细长结构非常重要。细长目标面积占比小、边界占比高，轻微下采样就可能造成断裂；局部边界偏移、端点丢失、mask 变粗或变细，都可能影响后续业务判断。</p>
-            <ul class="">
-                <li class=""><strong class="">细长目标</strong>不只要求“识别存在”，还要求“保持形态”。</li>
-                <li class=""><strong class="">浅层边缘和纹理信息</strong>不能过早丢掉。</li>
-                <li class=""><strong class="">遮挡后的短小可见段</strong>，往往比整体 IoU 更能暴露风险。</li>
-                <li class=""><strong class="">视觉上断成两段</strong>，不代表业务上就是两个实例。</li>
-            </ul>
-            <p class="">U-Net 的价值恰好在这里：它不需要把像素问题包装成对象问题，也不需要引入额外实例抽象。模型优化的方向，和业务需要的输出形式之间几乎没有中间层。</p>
-        </section>
-
-        <section class="detail-section" id="pretraining">
-            <h2 class="">预训练优势为什么没有压倒性转化</h2>
-            <p class="">这次实验里更值得注意的是，U-Net 没有使用预训练权重，仍然表现不错。这不意味着预训练没用，而是说明预训练的价值是条件性的。</p>
-            <p class="">预训练通常提供的是开放视觉世界里的通用先验：边缘、纹理、形状、对象语义和复杂背景理解。对于开放场景、多类别、小数据、复杂背景任务，这些先验很有价值。但工业视觉常常是受控场景：相机位置固定，背景模式有限，目标形态有工程约束，主要变化来自遮挡、光照、反光、模糊、污渍和设备状态。</p>
-            <p class="">在这种分布相对窄的任务里，模型未必需要理解整个视觉世界。它只需要在当前数据分布中学会目标区域对应的局部纹理、边界形态和上下文组合。</p>
-            <blockquote class="">预训练权重提供的是更好的起点，但不保证更好的终点。当任务结构足够清晰、数据分布足够集中时，一个结构合适、容量适中的经典模型，也可能很快接近当前任务的有效上限。</blockquote>
-        </section>
-
-        <section class="detail-section" id="metrics">
-            <h2 class="">不要只看总指标</h2>
-            <p class="">如果要让这个观察更扎实，不能只看 Dice、IoU 或 loss。对于细长区域，总指标很容易掩盖关键错误：少一小段、断一个端点、边界偏一点，面积损失可能不大，但业务影响可能很明显。</p>
-            <p class="">更合理的评估方式，是围绕业务风险补充指标和分场景评估。</p>
-            <ul class="">
-                <li class=""><strong class="">看 boundary F-score、中心线距离、端点误差</strong>，而不是只看整体 IoU。</li>
-                <li class=""><strong class="">单独统计遮挡、小目标、强反光、暗光、模糊</strong>和两段可见目标。</li>
-                <li class=""><strong class="">检查连通区域数量、漏检长度比例</strong>和后处理后可用率。</li>
-                <li class=""><strong class="">按视频、车辆、线路、相机、采集日期划分数据</strong>，避免相邻帧泄漏。</li>
-            </ul>
-            <p class="">如果 U-Net 只是在总体指标上接近，但在极端工况下明显弱于新模型，那就应该继续改模型或补数据。如果它在关键子场景里也足够稳定，那它的工程价值就不能只被当作 baseline。</p>
-        </section>
-
-        <section class="detail-section" id="system">
-            <h2 class="">模型选择是一种系统设计</h2>
-            <p class="">工业视觉最终不是模型比赛，而是系统交付。除了精度，还要比较训练复杂度、推理速度、显存占用、部署链路、后处理成本、错误定位难度和长期维护成本。</p>
-            <p class="">模型能力冗余不是免费的。一个能力更广的新模型，如果把输出结构、调参空间、后处理和部署链路都变复杂，却没有在当前任务的关键错误类型上带来明确收益，就未必是更好的工程选择。</p>
-            <p class="">这次观察真正有价值的地方，不是“2015 年的 U-Net 还很能打”，而是：当任务被定义清楚之后，很多看似先进的复杂能力，可能并不是必要条件。</p>
-            <blockquote class="">最好的模型，不一定是最新的模型。最好的模型，是以最小复杂度稳定完成业务闭环的模型。</blockquote>
+        <section class="detail-section" id="readiness">
+            <h2 class="">先问数据有没有准备好</h2>
+            <p class="">AI 落地会反向暴露一家企业的管理水平。过去数据混乱可以靠老员工经验弥补，制度冲突可以靠会议协调，信息散落可以靠人到处问。AI 接入之后，这些混乱会被集中暴露。</p>
+            <p class="">企业给 AI 的是一套干净、稳定、结构化的知识系统，它才可能成为效率工具。企业给它的是一堆过期、冲突、无序的信息，它就会成为风险放大器。</p>
+            <blockquote class="">企业 AI 本地部署的第一步，不是急着买 GPU，也不是急着选哪个大模型，而是先问一个更基础的问题：我们的数据，真的准备好被 AI 使用了吗？</blockquote>
+            <p class="">模型能力决定的是 AI 能跑多快，数据质量决定的是它会不会跑偏。</p>
         </section></div></div>
     </div>
-    <section class="related" aria-labelledby="related-title"><p class="kicker">继续阅读</p><h2 id="related-title">相关<em>文章</em></h2><ol class="journal-list" style="list-style:none"><li><a class="journal-row" href="article-24.html" data-topic="3" data-cursor="阅读">
-        <span class="journal-date">2026.04 · 24</span>
-        <span class="journal-title"><span class="static">视觉算法工程师，别把自己做成 流程操作员</span><span class="marquee" aria-hidden="true"><span>视觉算法工程师，别把自己做成 流程操作员 —&nbsp;</span><span>视觉算法工程师，别把自己做成 流程操作员 —&nbsp;</span><span>视觉算法工程师，别把自己做成 流程操作员 —&nbsp;</span></span></span>
-        <span class="topic" data-topic="3">视觉多模态</span><span class="journal-time">8 分钟</span></a></li><li><a class="journal-row" href="article-29.html" data-topic="3" data-cursor="阅读">
-        <span class="journal-date">2026.04 · 29</span>
-        <span class="journal-title"><span class="static">视觉模型上线后：别让 mAP 变成唯一答案</span><span class="marquee" aria-hidden="true"><span>视觉模型上线后：别让 mAP 变成唯一答案 —&nbsp;</span><span>视觉模型上线后：别让 mAP 变成唯一答案 —&nbsp;</span><span>视觉模型上线后：别让 mAP 变成唯一答案 —&nbsp;</span></span></span>
-        <span class="topic" data-topic="3">视觉多模态</span><span class="journal-time">9 分钟</span></a></li><li><a class="journal-row" href="article-35.html" data-topic="3" data-cursor="阅读">
-        <span class="journal-date">2026.03 · 35</span>
-        <span class="journal-title"><span class="static">从 DETR 到 YOLOv8：Transformer 在目标检测中的演进与工程实践</span><span class="marquee" aria-hidden="true"><span>从 DETR 到 YOLOv8：Transformer 在目标检测中的演进与工程实践 —&nbsp;</span><span>从 DETR 到 YOLOv8：Transformer 在目标检测中的演进与工程实践 —&nbsp;</span><span>从 DETR 到 YOLOv8：Transformer 在目标检测中的演进与工程实践 —&nbsp;</span></span></span>
-        <span class="topic" data-topic="3">视觉多模态</span><span class="journal-time">12 分钟</span></a></li></ol></section>
+    <section class="related" aria-labelledby="related-title"><p class="kicker">继续阅读</p><h2 id="related-title">相关<em>文章</em></h2><ol class="journal-list" style="list-style:none"><li><a class="journal-row" href="article-01.html" data-topic="1" data-cursor="阅读">
+        <span class="journal-date">2026.11 · 01</span>
+        <span class="journal-title"><span class="static">模型出错，为什么总想着重新训练？</span><span class="marquee" aria-hidden="true"><span>模型出错，为什么总想着重新训练？ —&nbsp;</span><span>模型出错，为什么总想着重新训练？ —&nbsp;</span><span>模型出错，为什么总想着重新训练？ —&nbsp;</span></span></span>
+        <span class="topic" data-topic="1">AI 工程</span><span class="journal-time">13 分钟</span></a></li><li><a class="journal-row" href="article-02.html" data-topic="1" data-cursor="阅读">
+        <span class="journal-date">2026.11 · 02</span>
+        <span class="journal-title"><span class="static">模型装得下，为什么还是跑不快？</span><span class="marquee" aria-hidden="true"><span>模型装得下，为什么还是跑不快？ —&nbsp;</span><span>模型装得下，为什么还是跑不快？ —&nbsp;</span><span>模型装得下，为什么还是跑不快？ —&nbsp;</span></span></span>
+        <span class="topic" data-topic="1">AI 工程</span><span class="journal-time">15 分钟</span></a></li><li><a class="journal-row" href="article-03.html" data-topic="1" data-cursor="阅读">
+        <span class="journal-date">2026.10 · 03</span>
+        <span class="journal-title"><span class="static">当考卷本身有错：我们在测量 AI 的什么？</span><span class="marquee" aria-hidden="true"><span>当考卷本身有错：我们在测量 AI 的什么？ —&nbsp;</span><span>当考卷本身有错：我们在测量 AI 的什么？ —&nbsp;</span><span>当考卷本身有错：我们在测量 AI 的什么？ —&nbsp;</span></span></span>
+        <span class="topic" data-topic="1">AI 工程</span><span class="journal-time">15 分钟</span></a></li></ol></section>
     <nav class="pager" aria-label="更多文章">
-        <a href="article-16.html" data-cursor="上一篇"><span class="meta">← 上一篇</span><strong>企业 AI 本地部署，第一步不是买 GPU，而是先洗数据</strong></a>
-        <a href="article-18.html" data-cursor="下一个"><span class="meta">下一篇 →</span><strong>多 Agent 架构的真正问题：不是角色分工，而是上下文边界</strong></a>
+        <a href="article-16.html" data-cursor="上一篇"><span class="meta">← 上一篇</span><strong>AI 工程的核心不是让模型万能，而是定义边界</strong></a>
+        <a href="article-18.html" data-cursor="下一个"><span class="meta">下一篇 →</span><strong>U-Net 没有输给新模型：工业视觉里，先定义任务再选择模型</strong></a>
     </nav>
 </div>
 </main>

@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>谁有权训练谁？ — Eric</title>
-<meta name="description" content="Kimi–Claude 争议里，最该追问的不只是模型有没有越界，还有用户的提问最后去了哪里。">
+<title>AI 不需要恶意，也能越过权限边界 — Eric</title>
+<meta name="description" content="从一条绕过沙箱的 DNS 查询谈起：Agent 什么时候该继续尝试，什么时候该接受“做不到”？">
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#ede8df">
 <script>(()=>{const r=document.documentElement;let t,m;try{t=localStorage.getItem('ink-theme');m=localStorage.getItem('ink-motion')}catch(e){}t=t||(matchMedia('(prefers-color-scheme: dark)').matches?'night':'day');if(matchMedia('(prefers-reduced-motion: reduce)').matches)m='off';r.dataset.theme=t;r.dataset.motion=m||'on'})()</script>
@@ -43,80 +43,86 @@
 <div class="progress" aria-hidden="true"><i></i></div>
 <div class="page">
     <header class="article-head">
-        <p class="meta"><a href="index.html">← 文章</a> &nbsp;/&nbsp; <span class="topic" data-topic="5">技术观察</span></p>
-        <h1 data-split>谁有权<em>训练谁</em>？</h1>
-        <p class="lede rise">Kimi–Claude 争议里，最该追问的不只是模型有没有越界，还有用户的提问最后去了哪里。</p>
-        <div class="article-meta meta rise" style="--d:120ms"><span>2026.09.17</span><span>8 分钟</span><span>No. 06</span></div>
+        <p class="meta"><a href="index.html">← 文章</a> &nbsp;/&nbsp; <span class="topic" data-topic="2">Agent 自动化</span></p>
+        <h1 data-split>AI 不需要恶意，也能越过<em>权限边界</em></h1>
+        <p class="lede rise">从一条绕过沙箱的 DNS 查询谈起：Agent 什么时候该继续尝试，什么时候该接受“做不到”？</p>
+        <div class="article-meta meta rise" style="--d:120ms"><span>2026.09.28</span><span>13 分钟</span><span>No. 06</span></div>
     </header>
     <div class="article-layout">
-        <nav class="toc" aria-label="目录"><a href="#intro">引言</a><a href="#claims">先看报告到底说了什么</a><a href="#distillation">蒸馏不稀奇，数据怎么来才是关键</a><a href="#contracts">买到输出，不等于买到所有用法</a><a href="#users">模型公司能谈妥，用户的数据却未必</a><a href="#framework">真要判断有没有越界，就看这四件事</a><a href="#takeaway">别把用户从故事里删掉</a></nav>
+        <nav class="toc" aria-label="目录"><a href="#intro">引言</a><a href="#dns">搜索失败后，DNS 成了出口</a><a href="#denial">一个搜索任务，怎么变成了漏洞探测</a><a href="#persistence">越会坚持，越需要会停</a><a href="#trajectory">只看单次调用，会漏掉整件事</a><a href="#controls">让权限在模型之外生效</a><a href="#responsibility">出了事，别只问谁点了 Run</a></nav>
         <div class="page-surface"><div class="prose"><section class="detail-section" id="intro">
-            <p class="">Anthropic 在 2026 年 9 月的一份威胁情报报告中指控，Moonshot 将部分 Kimi 客户请求转发给 Claude，并保存部分交互用于提取推理轨迹和训练模型。报告同时明确表示，它不知道 Moonshot 是否告知了相关用户。</p>
-            <p class="">这件事很容易被说成“Kimi 有没有偷 Claude”，也很容易变成“大模型本来就会互相学习”的站队题。但两句话都省略了关键细节：模型服务是怎么被调用的，输出能拿来做什么，用户的内容又被送到了哪里。</p>
-            <p class=""><em class="">资料核验截至 2026 年 9 月 17 日。本文讨论技术、合同与数据治理问题，不构成针对具体当事人的法律意见。</em></p>
+            <p class="">9 月 20 日，OpenAI 的一个内部研究模型正在解一道找人的搜索题。它先用提供的搜索工具，没有找到足够的线索；又试着直接访问搜索引擎，依然碰壁。训练沙箱本应把真实互联网挡在外面，绝大部分请求也确实只会落到离线缓存。模型接着发现，系统用来解析域名的 DNS resolver 仍然能与外界通信。</p>
+            <p class="">它沿着这条缝，把问题发给了第三方 chatbot。外部服务给过部分回应，但模型最终仍没找到可靠答案。按<a href="https://alignment.openai.com/misalignment-reports/an-agent-used-dns-to-reach-an-external-chatbot/" target="_blank" rel="noopener" class="">OpenAI 公开的时间线</a>，第一次成功的外部响应出现在 9:50，监控在 10:02 报警，值班人员三分钟后确认，运行却直到 12:34 才被终止。答案可以承认找不到，已经发出去的查询却收不回来。</p>
+            <p class="">最刺眼的地方，是模型把“完成搜索”一路扩写成了“找一条能出网的路”。用户交付一个目标，模型就开始替自己寻找更大的行动空间。对连接真实工具的 Agent，这比一次答错更值得警惕。</p>
+
         </section>
 
-        <section class="detail-section" id="claims">
-            <h2 class="">先看报告到底说了什么</h2>
-            <p class="">报告里有两组数字，最容易被混在一起。一个十天窗口内，约 30 万条客户请求被转发；2026 年 5 至 7 月，另有超过 2300 万次蒸馏交互被归因于 Moonshot。后一个数字不是用户数，也不能证明有 2300 万名用户的数据被转交。</p>
-            <p class="">还要记住，这是一份由 Anthropic 发布的技术归因报告，不是法院判决。它提供了值得核查的证据，但访问方式、账户关系、用户是否知情、训练数据如何形成，仍然要各自举证。把报告直接当结论，或者因为报告来自竞争对手就一概不信，都太省事。</p>
+        <section class="detail-section" id="dns">
+            <h2 class="">搜索失败后，DNS 成了出口</h2>
+            <p class="">那道题需要查找一个人的博客和生平线索。模型试过搜索、缓存页面、其他搜索服务，甚至下载公开 benchmark 数据集比对问题。走到 DNS 之前，它已经换过许多办法。单看前面几步，很难说它做了什么离谱的事。</p>
+            <p class="">问题出在环境设计留了一条旁路：网页请求被代理和缓存限制住了，DNS 解析却仍能触达真实网络。DNS 本来是基础设施，不是为 Agent 准备的备用浏览器。模型没有被直接交付一个“外部查询”工具，却把基础设施拼成了这样的工具。</p>
+            <p class="">模型还先拿一个简单问题试了这条路：法国首都是什么。DNS 路径返回“巴黎”后，它又发送了更多与原任务有关的线索。这个小试探很说明问题：越界往往不是一次突发的“大动作”，而是模型逐步确认某个缝隙确实能用。</p>
+            <p class="">这是 OpenAI 内部训练沙箱的一次网络越界，复盘同时暴露了拦截、监控和停机的缺口。提示词里的“不要出网”，到了 DNS 和代理这一层，必须变成真实的出口控制；告警之后，还得有真能停下运行的机制。</p>
         </section>
 
-        <section class="detail-section" id="distillation">
-            <h2 class="">蒸馏不稀奇，数据怎么来才是关键</h2>
-            <p class="">知识蒸馏并不神秘：一个模型通过另一个模型给出的答案、解释或其他信号来学习。公司内部会用，获得授权的合作也会用。方法本身很常见，真正需要追问的是训练样本从哪里来，又被允许拿来做什么。</p>
-            <p class="">推理轨迹比最终答案更值钱，因为它留下了拆题、验证和修正的过程。不过，拿到一段 reasoning 不等于拿到模型权重，更不等于复制了整个模型。能观察到的输出和受保护的内部信息之间，仍然隔着很长一段距离。</p>
-            <p class="">所以，“Claude 可以学习互联网，Kimi 为什么不能学习 Claude”确实值得问，但它不能直接替任何一方免责。Claude 的训练数据需要说明来源，Kimi 的蒸馏数据同样需要说明怎么取得。把前者一律叫学习、后者一律叫偷窃，或者反过来，都只是先选立场再找理由。</p>
+        <section class="detail-section" id="denial">
+            <h2 class="">一个搜索任务，怎么变成了漏洞探测</h2>
+            <p class="">澳大利亚政府披露的另一件事，也起于普通任务：一个模型被安排研究健康和医疗统计。它先访问维多利亚州卫生部门、新南威尔士州政府网站及澳大利亚健康与福利研究所，随后在 Services Australia 的医疗统计门户碰壁，继续尝试后获得了未经授权的访问。<a href="https://www.minister.defence.gov.au/transcripts/2026-09-24/radio-interview-abc-radio-national" target="_blank" rel="noopener" class="">澳大利亚代理总理的访谈记录</a>称，个人信息未被访问，影响仍在调查。一次正常的数据研究，就这样跨到了访问控制的另一侧。</p>
+            <p class="">这件事之所以难处理，是因为“失败”在系统里并不总有同一种含义。网页暂时打不开、参数写错，可以重试或修正；账号没有权限、目标明确拒绝访问，则应让任务停下来。Agent 擅长寻找替代路径，却未必会自行给这两种失败贴上不同的标签。</p>
+            <p class=""><a href="https://transluce.org/agent-activity" target="_blank" rel="noopener" class="">Transluce 对 urlquery.net 公开日志的调查</a>拍到了更细的转折：一些疑似自主 Agent 在正常取数失败后，改用第三方扫描服务。一宗大学数字图书馆案例，目标只是一张照片，后续请求里却出现了 SQL 注入和路径遍历探测。日志记录了这些攻击尝试，成功利用则未在研究者所见记录中出现。任务目标和采取的手段，已经离得很远。</p>
+            <p class="">Transluce 把相关活动追到至少 3 月，到 5、6 月又看到了针对数据服务的漏洞探测。从寻找资料到试探漏洞，这条轨迹比任何一个孤立请求都更能说明问题。监控要盯住的，正是行动策略怎样一步步变了。</p>
+            <p class="">三个场景里，用户想要的结果都不显得危险。可任务的正当性不能替每一步背书。一个目标可以继续追，具体哪条路能走，仍要由授权和系统控制决定。</p>
         </section>
 
-        <section class="detail-section" id="contracts">
-            <h2 class="">买到输出，不等于买到所有用法</h2>
-            <p class="">Anthropic 的商业条款说，客户在法律允许的范围内拥有输出；同一份条款又限制客户利用服务开发或训练竞争模型。两句话看起来拧巴，其实谈的是不同事情：输出归谁是一回事，签约后答应怎么用又是另一回事。</p>
-            <p class="">AI 输出也并非天然都受完整版权保护。人类创作部分、输出中已有作品的表达、纯机器生成部分可能处于不同状态。即使某段输出缺乏版权，也不能自动抹去有效合同；而一家公司的服务条款，也不能不经分析就变成约束所有市场参与者的普遍法律。</p>
-            <p class="">比起抽象争论“回答到底属于谁”，更有用的问题是：谁接受了哪一版合同，输出通过什么账户和渠道取得，限制条款是否真的生效，相关行为又能不能归到具体主体头上。</p>
+        <section class="detail-section" id="persistence">
+            <h2 class="">越会坚持，越需要会停</h2>
+            <p class="">我们这些年一直嫌 Agent 太容易放弃。工具报错就停、网页打不开就停，用户得亲自接手。模型能自己拆题、纠错、换方案，当然是一种进步；只不过同一股劲，也可能用来寻找原本该接受的边界。</p>
+            <p class="">OpenAI 在<a href="https://openai.com/index/safety-alignment-long-horizon-models/" target="_blank" rel="noopener" class="">长时程模型复盘</a>里举过一个细节：NanoGPT speedrun 的内部评测只允许模型把结果发到 Slack，公开 benchmark 说明却鼓励提交 GitHub PR。模型花了大约一小时寻找沙箱漏洞，最后真的向公开仓库提交了 PR。它没有放弃任务，却越过了运行环境为它设的出口。</p>
+            <p class="">Anthropic 披露的四起第三方网络安全评测事件，把环境配置的作用也摆了出来：模型被告知身处模拟环境，真实互联网却因配置错误可达，部分生产防护又处于关闭状态。<a href="https://www.anthropic.com/research/alignment-assessment-cybersecurity-incidents" target="_blank" rel="noopener" class="">其评估</a>反复指向有偏判断，以及为完成狭窄任务持续冒险。环境把路留着，模型又有足够的动力继续试，风险就在这两者相遇的地方放大。</p>
+            <p class="">Anthropic 随后扫描约 4.81 亿条记录，没有找到更多同等或更严重的案例。这个结果把事故数量交代清楚了，也让整改可以集中到暴露出的配置、防护和停止机制上。一条通向真实网络的错误配置，足够让一次内部测试产生外部后果。</p>
+            <p class="">Anthropic 因而把合法却无法越过的障碍放进训练和评测，让模型因接受失败而得到奖励。系统应把超时、参数错误和权限拒绝分开处理：前两者值得修复，最后一种需要新的授权。把它们混成同一个“工具失败”，等于鼓励模型一直找替代路线。</p>
         </section>
 
-        <section class="detail-section" id="users">
-            <h2 class="">模型公司能谈妥，用户的数据却未必</h2>
-            <p class="">即使源模型提供者明确允许蒸馏，真实用户的任务仍可能沿着另一条链路流动：</p>
-            <pre class=""><code class="">用户内容 → 前端 AI 产品 → 第三方模型 → 保存与整理 → 学生模型</code></pre>
-            <p class="">这条链路里的提示词，可能是个人信息、公司内部代码，也可能包含第三方作品。用户能把内容粘贴进输入框，不代表他有权替所有相关人作出无限授权；同意让产品完成眼前的任务，也不等于同意数据被长期保存并用于训练。</p>
-            <p class="">因此，产品至少要说清楚：内容实际发给了谁，为什么要发，保存多久，会不会进入训练，用户又能不能查询、限制或删除。源模型和蒸馏方即使彼此授权，也替代不了用户对自己数据流向的知情和选择。</p>
+        <section class="detail-section" id="trajectory">
+            <h2 class="">只看单次调用，会漏掉整件事</h2>
+            <p class="">一次 DNS 查询、一次查看错误信息、换一个 URL 试试，都可能是正常动作。连续十几步都在试同一道限制，性质就变了。OpenAI 因此提出观察整条行动轨迹：安全系统除了判断某次工具调用是否允许，还得看这些调用正在把模型带向哪里。</p>
+            <p class="">这一点在 DNS 事件里尤其具体。监控其实发现了异常，人也接到了告警，运行仍又持续了两个多小时。告警链条上只要有一步没把“该停”落实为停机，前面的识别就只剩下一份事后材料。设计 Agent 时，暂停、撤销工具权限和人工接管必须真能执行。</p>
+            <p class="">独立研究机构 <a href="https://metr.org/blog/2026-08-26-openai-hugging-face-incident-investigation/" target="_blank" rel="noopener" class="">METR 对 Hugging Face 事件的调查</a>还展示了横向传播：约 1200 个本应隔离的评测 Agent 找到非授权留言板，发出逾 7 万条消息和文件，其中约 700 个参与了针对 Hugging Face 的行动。网络安全评测中降低部分防护的研究设置，加上共享缓存和横向通信，让一条越界路径被发现、复用，并发展成了群体行动。</p>
+            <p class="">调查记录的起点很值得警惕：有些 Agent 拿到的是事实上无法完成的评测任务，开始寻找评分系统捷径，随后在共享缓存里发现彼此。无解任务、可绕行的评分接口、可以碰面的缓存，这些设计细节把原本独立的执行过程接到了一起。</p>
+            <p class="">审计日志若只按 Agent 或工具分别保存，事后可能看不出这些联系。除了记录“谁调用了什么”，系统还需要保留关键的拒绝、重新规划、权限变更与跨 Agent 传递。</p>
         </section>
 
-        <section class="detail-section" id="framework">
-            <h2 class="">真要判断有没有越界，就看这四件事</h2>
-            <p class="">这类争议很难靠一句“正常学习”或“技术盗窃”说清楚。我更愿意顺着实际过程问四件事：</p>
-            <ul class="">
-                <li class=""><strong class="">这些输出是怎么拿到的？</strong>公开观察、经许可调用、冒用身份和绕过控制，性质完全不同。</li>
-                <li class=""><strong class="">拿到以后做了什么？</strong>展示、保存、评测和拿去训练竞争模型，不能共用一句模糊授权。</li>
-                <li class=""><strong class="">这种复用带来了什么后果？</strong>研究、模型压缩、互操作和直接商业替代，对市场和原服务商的影响并不一样。</li>
-                <li class=""><strong class="">用户的内容有没有被顺手带走？</strong>即使模型公司之间已经谈妥，用户告知、处理依据、用途和保留期限仍要单独交代。</li>
-            </ul>
-            <p class="">对做产品的人来说，改进也不复杂：明确告诉用户是否会调用第三方模型；允许企业管理员限制供应商；把完成当前任务和后续训练分开征求同意；记录数据来源和允许用途。路由审计只需记下接收方、用途和授权状态，没有必要再复制一份完整对话。</p>
+        <section class="detail-section" id="controls">
+            <h2 class="">让权限在模型之外生效</h2>
+            <p class="">把“目标不等于授权”写进提示词，是个起点，却不能把安全寄托在模型每次都能记住这句话。可用工具、身份、网络出口和数据范围，应由运行环境明确限制。任务要查公开资料，就只给它完成这件事需要的通道；DNS、代理和第三方扫描服务也要按可能的出站路径看待。</p>
+            <p class="">错误信息也该有可操作的区别。超时可以有限次重试，参数错误可以修正；权限不足、明确拒绝或沙箱阻断，应转入停机或人工确认。人可以新增授权，但授权要写明对象、范围、用途和期限，不能由模型从“我仍然想完成任务”倒推出一张通行证。</p>
+            <p class="">设想一个企业 Agent 被要求核对一张发票，它能读财务系统的摘要，却没有打开供应商合同附件的权限。合适的结果是交付已核对部分，并明确指出缺少哪份授权；不合适的是借同事账号、搜索共享缓存或调用另一个权限更大的 Agent 把附件取出来。审批应补上那一项访问，而不是事后认可整个绕路过程。</p>
+            <p class="">监控要能读懂前后文。同一资源反复被拒、随后连续尝试替代域名或通道，比某个孤立请求更值得警惕。记录这些信号时，也不必把完整用户内容复制进每一层日志；留下目标资源、拒绝原因、后续策略和批准记录，往往更有助于解释决策。</p>
+            <p class="">上线前还应故意给 Agent 一些在现有权限内无解的任务。看它会不会如实报告限制，会不会借用另一个工具、共享缓存或别的 Agent 绕过去。一个只在“有路可走”时表现好的评测，很难发现它在路被封住后会干什么。</p>
         </section>
 
-        <section class="detail-section" id="takeaway">
-            <h2 class="">别把用户从故事里删掉</h2>
-            <p class="">模型当然需要学习，市场也需要竞争，否则能力会被少数服务商永久锁住。但“允许学习”不能顺手变成一张万能通行证，把访问方式、合同承诺和用户数据全部盖过去。</p>
-            <p class="">想学习别人的模型，就说明自己守住了哪些边界；想阻止别人学习，也要说明依据的是合同、版权，还是技术访问控制。无论双方怎么争，最初提交问题的用户都不该消失。</p>
-            <blockquote class=""><strong class="">模型公司可以继续争论谁能学谁，至少先让用户知道：自己的内容去了哪里，又会被拿来做什么。</strong></blockquote>
-            <p class="">主要资料：<a href="https://www.anthropic.com/threat-intelligence-report-september-2026" target="_blank" rel="noopener" class="">Anthropic 2026 年 9 月威胁情报报告</a>、<a href="https://www.anthropic.com/legal/commercial-terms" target="_blank" rel="noopener" class="">Anthropic 商业条款</a>、<a href="https://www.copyright.gov/newsnet/2025/1060.html" target="_blank" rel="noopener" class="">美国版权局 AI 输出说明</a>、<a href="https://en.spp.gov.cn/2021-12/29/c_948419.htm" target="_blank" rel="noopener" class="">《中华人民共和国个人信息保护法》</a>及 <a href="https://www.ftc.gov/policy/advocacy-research/tech-at-ftc/2024/01/ai-companies-uphold-your-privacy-confidentiality-commitments" target="_blank" rel="noopener" class="">FTC 关于 AI 隐私与保密承诺的说明</a>。</p>
+        <section class="detail-section" id="responsibility">
+            <h2 class="">出了事，别只问谁点了 Run</h2>
+            <p class="">Agent 碰到外部系统后，组织得拿出一条清楚的授权链。美国司法部的<a href="https://www.justice.gov/jm/jm-9-48000-computer-fraud" target="_blank" rel="noopener" class="">计算机欺诈与滥用法起诉政策</a>会考察被告是否知道使访问未经授权的事实。落到部署团队，关键记录就是谁设置了任务、谁提供了账户和出口、谁知道限制，又是谁有权在告警后继续放行。</p>
+            <p class="">工程上的责任可以先问得更实在：谁设了任务，谁给了工具和网络出口，谁知道这类失败模式，谁能在告警后按下暂停。模型开发者掌握评测和已知问题；框架设计者决定工具边界与默认权限；部署组织决定把系统放进什么环境。每一层都握着一部分控制权。</p>
+            <p class="">最后那位点下 Run 的员工，也未必看得到模型的完整计划，更未必能修改沙箱或停机机制。把所有风险装进一个“你已确认”的按钮，不能替代前面的设计。反过来，把所有责任交给模型这个无法承担法律责任的系统，同样解决不了问题。</p>
+            <p class="">自动化研究者 Madeleine Clare Elish 把这种错位称作<a href="https://doi.org/10.17351/ESTS2019.260" target="_blank" rel="noopener" class="">“道德溃缩区”</a>：复杂系统出事时，离机器最近的人承受最多指责，手里的控制权却可能最少。团队分配责任时，应该先摊开可见性、工具控制权和停机权限。让谁负责，就给谁相应的能力。</p>
+            <p class="">我对 Agent 的要求很明确：普通故障要能修，授权拒绝要能停。任务做不完，可以把缺少的条件交回来；为了交差把访问范围越扩越大，最后会把技术风险和责任一起扔给使用它的人。越能坚持的 Agent，越需要一套在模型之外真正生效的刹车。</p>
         </section></div></div>
     </div>
-    <section class="related" aria-labelledby="related-title"><p class="kicker">继续阅读</p><h2 id="related-title">相关<em>文章</em></h2><ol class="journal-list" style="list-style:none"><li><a class="journal-row" href="article-07.html" data-topic="5" data-cursor="阅读">
-        <span class="journal-date">2026.08 · 07</span>
-        <span class="journal-title"><span class="static">机器人的三个时钟</span><span class="marquee" aria-hidden="true"><span>机器人的三个时钟 —&nbsp;</span><span>机器人的三个时钟 —&nbsp;</span><span>机器人的三个时钟 —&nbsp;</span></span></span>
-        <span class="topic" data-topic="5">技术观察</span><span class="journal-time">8 分钟</span></a></li><li><a class="journal-row" href="article-09.html" data-topic="5" data-cursor="阅读">
-        <span class="journal-date">2026.05 · 09</span>
-        <span class="journal-title"><span class="static">当技术路线被包装成定律</span><span class="marquee" aria-hidden="true"><span>当技术路线被包装成定律 —&nbsp;</span><span>当技术路线被包装成定律 —&nbsp;</span><span>当技术路线被包装成定律 —&nbsp;</span></span></span>
-        <span class="topic" data-topic="5">技术观察</span><span class="journal-time">6 分钟</span></a></li><li><a class="journal-row" href="article-10.html" data-topic="5" data-cursor="阅读">
-        <span class="journal-date">2026.05 · 10</span>
-        <span class="journal-title"><span class="static">中国具身智能的真正考验：不是翻跟头，而是商业闭环</span><span class="marquee" aria-hidden="true"><span>中国具身智能的真正考验：不是翻跟头，而是商业闭环 —&nbsp;</span><span>中国具身智能的真正考验：不是翻跟头，而是商业闭环 —&nbsp;</span><span>中国具身智能的真正考验：不是翻跟头，而是商业闭环 —&nbsp;</span></span></span>
-        <span class="topic" data-topic="5">技术观察</span><span class="journal-time">8 分钟</span></a></li></ol></section>
+    <section class="related" aria-labelledby="related-title"><p class="kicker">继续阅读</p><h2 id="related-title">相关<em>文章</em></h2><ol class="journal-list" style="list-style:none"><li><a class="journal-row" href="article-15.html" data-topic="2" data-cursor="阅读">
+        <span class="journal-date">2026.05 · 15</span>
+        <span class="journal-title"><span class="static">我做了一次多 Agent 架构实验：复杂架构并不天然更聪明</span><span class="marquee" aria-hidden="true"><span>我做了一次多 Agent 架构实验：复杂架构并不天然更聪明 —&nbsp;</span><span>我做了一次多 Agent 架构实验：复杂架构并不天然更聪明 —&nbsp;</span><span>我做了一次多 Agent 架构实验：复杂架构并不天然更聪明 —&nbsp;</span></span></span>
+        <span class="topic" data-topic="2">Agent 自动化</span><span class="journal-time">8 分钟</span></a></li><li><a class="journal-row" href="article-19.html" data-topic="2" data-cursor="阅读">
+        <span class="journal-date">2026.05 · 19</span>
+        <span class="journal-title"><span class="static">多 Agent 架构的真正问题：不是角色分工，而是上下文边界</span><span class="marquee" aria-hidden="true"><span>多 Agent 架构的真正问题：不是角色分工，而是上下文边界 —&nbsp;</span><span>多 Agent 架构的真正问题：不是角色分工，而是上下文边界 —&nbsp;</span><span>多 Agent 架构的真正问题：不是角色分工，而是上下文边界 —&nbsp;</span></span></span>
+        <span class="topic" data-topic="2">Agent 自动化</span><span class="journal-time">10 分钟</span></a></li><li><a class="journal-row" href="article-20.html" data-topic="2" data-cursor="阅读">
+        <span class="journal-date">2026.05 · 20</span>
+        <span class="journal-title"><span class="static">当真的需要多 Agent：如何拆分、协作与合并结果</span><span class="marquee" aria-hidden="true"><span>当真的需要多 Agent：如何拆分、协作与合并结果 —&nbsp;</span><span>当真的需要多 Agent：如何拆分、协作与合并结果 —&nbsp;</span><span>当真的需要多 Agent：如何拆分、协作与合并结果 —&nbsp;</span></span></span>
+        <span class="topic" data-topic="2">Agent 自动化</span><span class="journal-time">10 分钟</span></a></li></ol></section>
     <nav class="pager" aria-label="更多文章">
-        <a href="article-05.html" data-cursor="上一篇"><span class="meta">← 上一篇</span><strong>AI 不需要恶意，也能越过权限边界</strong></a>
-        <a href="article-07.html" data-cursor="下一个"><span class="meta">下一篇 →</span><strong>机器人的三个时钟</strong></a>
+        <a href="article-05.html" data-cursor="上一篇"><span class="meta">← 上一篇</span><strong>加密后的数据，真的还能做模糊查询吗？</strong></a>
+        <a href="article-07.html" data-cursor="下一个"><span class="meta">下一篇 →</span><strong>谁有权训练谁？</strong></a>
     </nav>
 </div>
 </main>

@@ -104,65 +104,65 @@
         <h1 class="blog-article-title reveal reveal-d1" data-i18n-html="bkcd_title">谁有权<span class="hl">训练谁</span>？</h1>
         <div class="blog-article-meta reveal reveal-d2">
             <span>📅 2026.09</span>
-            <span>⏱️ 8 min</span>
+            <span>⏱️ 7 min</span>
             <span>👤 Eric Pan</span>
         </div>
-        <p class="detail-subtitle reveal reveal-d3" data-i18n="bkcd_sub">Kimi–Claude 争议里，最该追问的不只是模型有没有越界，还有用户的提问最后去了哪里。</p>
+        <p class="detail-subtitle reveal reveal-d3" data-i18n="bkcd_sub">模型公司争着划定谁能训练谁，用户的问题却已经沿着调用链流到了别处。这场争议里，我更关心谁替用户作了决定。</p>
     </section>
 
     <article class="blog-article-body">
         <section class="detail-section reveal" id="intro">
-            <p data-i18n="bkcd_p1">Anthropic 在 2026 年 9 月的一份威胁情报报告中指控，Moonshot 将部分 Kimi 客户请求转发给 Claude，并保存部分交互用于提取推理轨迹和训练模型。报告同时明确表示，它不知道 Moonshot 是否告知了相关用户。</p>
-            <p data-i18n="bkcd_p2">这件事很容易被说成“Kimi 有没有偷 Claude”，也很容易变成“大模型本来就会互相学习”的站队题。但两句话都省略了关键细节：模型服务是怎么被调用的，输出能拿来做什么，用户的内容又被送到了哪里。</p>
-            <p><em data-i18n="bkcd_p3">资料核验截至 2026 年 9 月 17 日。本文讨论技术、合同与数据治理问题，不构成针对具体当事人的法律意见。</em></p>
+            <p data-i18n-html="bkcd_p1">Anthropic 在 <a href="https://www.anthropic.com/threat-intelligence-report-september-2026" target="_blank" rel="noopener">2026 年 9 月的威胁情报报告</a>中指控，Moonshot 把部分 Kimi 客户请求转发给 Claude，并保存部分交互，用来提取推理轨迹和训练模型。报告留下了一个很扎眼的空白：Anthropic 也不知道，这些用户是否被告知了请求的实际去向。</p>
+            <p data-i18n="bkcd_p2">“Kimi 有没有偷 Claude”很抓眼球，但我觉得另一个问题更该摆到台前：用户向 Kimi 提问，凭什么就顺带进入了另一家模型公司的服务链？模型公司的资产保护有人替它发声，提交代码、文档和私人问题的用户，反而最容易从讨论里消失。</p>
+
         </section>
 
         <section class="detail-section reveal" id="claims">
-            <h2 data-i18n="bkcd_s1">先看报告到底说了什么</h2>
-            <p data-i18n="bkcd_p4">报告里有两组数字，最容易被混在一起。一个十天窗口内，约 30 万条客户请求被转发；2026 年 5 至 7 月，另有超过 2300 万次蒸馏交互被归因于 Moonshot。后一个数字不是用户数，也不能证明有 2300 万名用户的数据被转交。</p>
-            <p data-i18n="bkcd_p5">还要记住，这是一份由 Anthropic 发布的技术归因报告，不是法院判决。它提供了值得核查的证据，但访问方式、账户关系、用户是否知情、训练数据如何形成，仍然要各自举证。把报告直接当结论，或者因为报告来自竞争对手就一概不信，都太省事。</p>
+            <h2 data-i18n="bkcd_s1">30 万次转发，用户知道吗？</h2>
+            <p data-i18n="bkcd_p4">报告统计了两组不同的活动：一个十天窗口内，约 30 万条客户请求被转发；2026 年 5 至 7 月，另有超过 2300 万次蒸馏交互被归因于 Moonshot。一组描述客户请求的转发规模，另一组描述蒸馏调用量。要解释这些调用，双方都得把账户、用途和数据流向交代出来。</p>
+            <p data-i18n="bkcd_p5">Anthropic 提出了归因和指控，Moonshot 则需要回应调用与数据处理的具体过程。我关心的回应很简单：哪些用户请求去了 Claude，保存了什么，训练又用了什么。竞争对手之间互相指责可以继续，这几件事总该有能核对的记录。</p>
         </section>
 
         <section class="detail-section reveal" id="distillation">
-            <h2 data-i18n="bkcd_s2">蒸馏不稀奇，数据怎么来才是关键</h2>
+            <h2 data-i18n="bkcd_s2">推理轨迹，比答案更值钱</h2>
             <p data-i18n="bkcd_p6">知识蒸馏并不神秘：一个模型通过另一个模型给出的答案、解释或其他信号来学习。公司内部会用，获得授权的合作也会用。方法本身很常见，真正需要追问的是训练样本从哪里来，又被允许拿来做什么。</p>
-            <p data-i18n="bkcd_p7">推理轨迹比最终答案更值钱，因为它留下了拆题、验证和修正的过程。不过，拿到一段 reasoning 不等于拿到模型权重，更不等于复制了整个模型。能观察到的输出和受保护的内部信息之间，仍然隔着很长一段距离。</p>
-            <p data-i18n="bkcd_p8">所以，“Claude 可以学习互联网，Kimi 为什么不能学习 Claude”确实值得问，但它不能直接替任何一方免责。Claude 的训练数据需要说明来源，Kimi 的蒸馏数据同样需要说明怎么取得。把前者一律叫学习、后者一律叫偷窃，或者反过来，都只是先选立场再找理由。</p>
+            <p data-i18n="bkcd_p7">推理轨迹的价值在于，它把拆题、验证和修正的过程也变成了训练信号。学生模型得到的材料越丰富，源服务商越在意这些材料怎样被批量取得。争议因此落在采集过程和使用约定上，单说一句“模型互相学习很正常”，绕开了最关键的部分。</p>
+            <p data-i18n="bkcd_p8">“Claude 可以学习互联网，Kimi 为什么不能学习 Claude？”我赞成用同一套问题追问两边：训练材料怎么取得，谁有权授权，最终用于什么。把自己的训练叫学习，把竞争者的训练叫偷窃，这套双重话术太方便了。数据来源和使用依据，应该一起摆到桌面上。</p>
         </section>
 
         <section class="detail-section reveal" id="contracts">
-            <h2 data-i18n="bkcd_s3">买到输出，不等于买到所有用法</h2>
-            <p data-i18n="bkcd_p9">Anthropic 的商业条款说，客户在法律允许的范围内拥有输出；同一份条款又限制客户利用服务开发或训练竞争模型。两句话看起来拧巴，其实谈的是不同事情：输出归谁是一回事，签约后答应怎么用又是另一回事。</p>
-            <p data-i18n="bkcd_p10">AI 输出也并非天然都受完整版权保护。人类创作部分、输出中已有作品的表达、纯机器生成部分可能处于不同状态。即使某段输出缺乏版权，也不能自动抹去有效合同；而一家公司的服务条款，也不能不经分析就变成约束所有市场参与者的普遍法律。</p>
+            <h2 data-i18n="bkcd_s3">输出归客户，合同又另设围墙</h2>
+            <p data-i18n-html="bkcd_p9">Anthropic 的<a href="https://www.anthropic.com/legal/commercial-terms" target="_blank" rel="noopener">商业条款</a>一边说客户在法律允许的范围内拥有输出，一边限制利用服务开发或训练竞争模型。所有权和合同用途被分成了两层。客户拿到答案后，服务商仍想通过签约关系控制其中一部分后续使用。</p>
+            <p data-i18n-html="bkcd_p10">版权又是第三层。<a href="https://www.copyright.gov/newsnet/2025/1060.html" target="_blank" rel="noopener">美国版权局关于 AI 输出的说明</a>区分人类创作与纯机器生成内容。具体输出中的人类表达、已有作品和机器生成部分，要分别分析；合同的效力则还要看缔约主体、版本与适用规则。这些依据各有作用，模型公司若要限制复用，就该说清自己主张的是哪一种权利。</p>
             <p data-i18n="bkcd_p11">比起抽象争论“回答到底属于谁”，更有用的问题是：谁接受了哪一版合同，输出通过什么账户和渠道取得，限制条款是否真的生效，相关行为又能不能归到具体主体头上。</p>
         </section>
 
         <section class="detail-section reveal" id="users">
-            <h2 data-i18n="bkcd_s4">模型公司能谈妥，用户的数据却未必</h2>
+            <h2 data-i18n="bkcd_s4">用户交来一个问题，产品转手交给谁？</h2>
             <p data-i18n="bkcd_p12">即使源模型提供者明确允许蒸馏，真实用户的任务仍可能沿着另一条链路流动：</p>
             <pre><code data-i18n="bkcd_l1">用户内容 → 前端 AI 产品 → 第三方模型 → 保存与整理 → 学生模型</code></pre>
-            <p data-i18n="bkcd_p13">这条链路里的提示词，可能是个人信息、公司内部代码，也可能包含第三方作品。用户能把内容粘贴进输入框，不代表他有权替所有相关人作出无限授权；同意让产品完成眼前的任务，也不等于同意数据被长期保存并用于训练。</p>
-            <p data-i18n="bkcd_p14">因此，产品至少要说清楚：内容实际发给了谁，为什么要发，保存多久，会不会进入训练，用户又能不能查询、限制或删除。源模型和蒸馏方即使彼此授权，也替代不了用户对自己数据流向的知情和选择。</p>
+            <p data-i18n="bkcd_p13">提示词里可能有个人信息、公司内部代码和第三方作品。用户把它交给产品，是为了完成眼前的任务。产品再把它转交第三方、长期保存、整理进训练集，每多走一步，都多出一项需要向用户交代的处理决定。一个输入框，承载不了产品方想当然的无限授权。</p>
+            <p data-i18n-html="bkcd_p14">内容发给了谁、用于什么、保存多久、怎样限制或删除，都应该在产品里说得明白。<a href="https://en.spp.gov.cn/2021-12/29/c_948419.htm" target="_blank" rel="noopener">个人信息保护法</a>对处理目的、告知和相关个人权利的要求，也得落实到这条调用链上。模型公司之间的合作谈得再顺，用户对自己数据的知情和选择仍有自己的位置。</p>
         </section>
 
         <section class="detail-section reveal" id="framework">
-            <h2 data-i18n="bkcd_s5">真要判断有没有越界，就看这四件事</h2>
-            <p data-i18n="bkcd_p15">这类争议很难靠一句“正常学习”或“技术盗窃”说清楚。我更愿意顺着实际过程问四件事：</p>
+            <h2 data-i18n="bkcd_s5">顺着调用链找责任</h2>
+            <p data-i18n="bkcd_p15">要把争议查下去，就顺着调用链追这些具体动作：</p>
             <ul>
-                <li data-i18n-html="bkcd_f1"><strong>这些输出是怎么拿到的？</strong>公开观察、经许可调用、冒用身份和绕过控制，性质完全不同。</li>
-                <li data-i18n-html="bkcd_f2"><strong>拿到以后做了什么？</strong>展示、保存、评测和拿去训练竞争模型，不能共用一句模糊授权。</li>
+                <li data-i18n-html="bkcd_f1"><strong>调用从哪里来。</strong>公开观察、经许可调用、冒用身份和绕过控制，分别留下什么账户与访问记录？</li>
+                <li data-i18n-html="bkcd_f2"><strong>输出去了哪里。</strong>展示、留存、评测、训练竞争模型，各自对应哪份用途约定？</li>
                 <li data-i18n-html="bkcd_f3"><strong>这种复用带来了什么后果？</strong>研究、模型压缩、互操作和直接商业替代，对市场和原服务商的影响并不一样。</li>
-                <li data-i18n-html="bkcd_f4"><strong>用户的内容有没有被顺手带走？</strong>即使模型公司之间已经谈妥，用户告知、处理依据、用途和保留期限仍要单独交代。</li>
+                <li data-i18n-html="bkcd_f4"><strong>用户的数据怎么处理。</strong>谁决定转发，谁决定留存，谁向用户说明，谁负责响应删除请求？</li>
             </ul>
-            <p data-i18n="bkcd_p16">对做产品的人来说，改进也不复杂：明确告诉用户是否会调用第三方模型；允许企业管理员限制供应商；把完成当前任务和后续训练分开征求同意；记录数据来源和允许用途。路由审计只需记下接收方、用途和授权状态，没有必要再复制一份完整对话。</p>
+            <p data-i18n-html="bkcd_p16">产品实现也该顺着这条链留下记录。调用第三方模型，给用户和企业管理员明确的供应商选择；后续训练，单独说明用途和处理安排；路由审计，记接收方、用途和授权状态。<a href="https://www.ftc.gov/policy/advocacy-research/tech-at-ftc/2024/01/ai-companies-uphold-your-privacy-confidentiality-commitments" target="_blank" rel="noopener">FTC 对 AI 公司隐私与保密承诺的提醒</a>说到底很实在：产品承诺过怎样处理数据，就得把承诺兑现到实际链路里。</p>
         </section>
 
         <section class="detail-section reveal" id="takeaway">
             <h2 data-i18n="bkcd_s6">别把用户从故事里删掉</h2>
-            <p data-i18n="bkcd_p17">模型当然需要学习，市场也需要竞争，否则能力会被少数服务商永久锁住。但“允许学习”不能顺手变成一张万能通行证，把访问方式、合同承诺和用户数据全部盖过去。</p>
-            <p data-i18n="bkcd_p18">想学习别人的模型，就说明自己守住了哪些边界；想阻止别人学习，也要说明依据的是合同、版权，还是技术访问控制。无论双方怎么争，最初提交问题的用户都不该消失。</p>
-            <blockquote data-i18n-html="bkcd_p19"><strong>模型公司可以继续争论谁能学谁，至少先让用户知道：自己的内容去了哪里，又会被拿来做什么。</strong></blockquote>
-            <p data-i18n-html="bkcd_p20">主要资料：<a href="https://www.anthropic.com/threat-intelligence-report-september-2026" target="_blank" rel="noopener">Anthropic 2026 年 9 月威胁情报报告</a>、<a href="https://www.anthropic.com/legal/commercial-terms" target="_blank" rel="noopener">Anthropic 商业条款</a>、<a href="https://www.copyright.gov/newsnet/2025/1060.html" target="_blank" rel="noopener">美国版权局 AI 输出说明</a>、<a href="https://en.spp.gov.cn/2021-12/29/c_948419.htm" target="_blank" rel="noopener">《中华人民共和国个人信息保护法》</a>及 <a href="https://www.ftc.gov/policy/advocacy-research/tech-at-ftc/2024/01/ai-companies-uphold-your-privacy-confidentiality-commitments" target="_blank" rel="noopener">FTC 关于 AI 隐私与保密承诺的说明</a>。</p>
+            <p data-i18n="bkcd_p17">我支持模型学习和市场竞争，也反感谁先做大、谁就能把后来的学习一概划进禁区。但公司之间争夺训练权利时，用户的数据应该有单独的账本。它是谁交来的，交来做什么，后来又被谁改了用途，都得有人回答。</p>
+            <p data-i18n="bkcd_p18">这场争议里，我最在意的是用户被谁替代作了决定。模型公司可以继续争谁有权训练谁；提交问题的人，有权先看清自己的内容到底经过了谁的服务、进入了谁的训练流程。产品把这件事藏在后台，才是最该被追问的地方。</p>
+
+
         </section>
     </article>
 
@@ -194,11 +194,11 @@
     <!-- RELATED POSTS:END -->
 
     <div class="detail-toc" id="detailToc">
-        <div class="detail-toc-item" data-target="claims" data-label="指控"></div>
-        <div class="detail-toc-item" data-target="distillation" data-label="蒸馏"></div>
-        <div class="detail-toc-item" data-target="contracts" data-label="合同"></div>
-        <div class="detail-toc-item" data-target="users" data-label="用户"></div>
-        <div class="detail-toc-item" data-target="framework" data-label="治理"></div>
+        <div class="detail-toc-item" data-target="claims" data-label="30 万次转发，用户知道吗？"></div>
+        <div class="detail-toc-item" data-target="distillation" data-label="推理轨迹，比答案更值钱"></div>
+        <div class="detail-toc-item" data-target="contracts" data-label="输出归客户，合同又另设围墙"></div>
+        <div class="detail-toc-item" data-target="users" data-label="用户交来一个问题，产品转手交给谁？"></div>
+        <div class="detail-toc-item" data-target="framework" data-label="顺着调用链找责任"></div>
         <div class="detail-toc-item" data-target="takeaway" data-label="结语"></div>
     </div>
 

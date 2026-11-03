@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>我做了一次多 Agent 架构实验：复杂架构并不天然更聪明 — Eric</title>
-<meta name="description" content="我做了一次多 Agent 架构实验：复杂架构并不天然更聪明">
+<title>Google I/O 之后：AI 竞争正在转向工作流控制权 — Eric</title>
+<meta name="description" content="Google I/O 之后：AI 竞争正在转向工作流控制权">
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#ede8df">
 <script>(()=>{const r=document.documentElement;let t,m;try{t=localStorage.getItem('ink-theme');m=localStorage.getItem('ink-motion')}catch(e){}t=t||(matchMedia('(prefers-color-scheme: dark)').matches?'night':'day');if(matchMedia('(prefers-reduced-motion: reduce)').matches)m='off';r.dataset.theme=t;r.dataset.motion=m||'on'})()</script>
@@ -43,74 +43,74 @@
 <div class="progress" aria-hidden="true"><i></i></div>
 <div class="page">
     <header class="article-head">
-        <p class="meta"><a href="index.html">← 文章</a> &nbsp;/&nbsp; <span class="topic" data-topic="2">Agent 自动化</span></p>
-        <h1 data-split>我做了一次多 Agent 架构实验：复杂架构并不天然<em>更聪明</em></h1>
+        <p class="meta"><a href="index.html">← 文章</a> &nbsp;/&nbsp; <span class="topic" data-topic="5">技术观察</span></p>
+        <h1 data-split>Google I/O 之后：AI 竞争正在转向<em>工作流控制权</em></h1>
         <p class="lede rise"></p>
-        <div class="article-meta meta rise" style="--d:120ms"><span>2026.05.12</span><span>8 分钟</span><span>No. 14</span></div>
+        <div class="article-meta meta rise" style="--d:120ms"><span>2026.05.20</span><span>8 分钟</span><span>No. 14</span></div>
     </header>
     <div class="article-layout">
-        <nav class="toc" aria-label="目录"><a href="#intro">引言</a><a href="#setup">实验怎么做</a><a href="#single">Single Agent 仍然是强基线</a><a href="#planner">Planner 有用，但要管住输出</a><a href="#reviewer">Reviewer 的价值必须被看见</a><a href="#debate">Debate 只适合真实取舍</a><a href="#cost">复杂架构的代价很具体</a><a href="#takeaway">写在最后</a></nav>
+        <nav class="toc" aria-label="目录"><a href="#intro">引言</a><a href="#model">模型从回答器变成执行底座</a><a href="#entry">入口不再只是聊天框</a><a href="#agent">个人 Agent 的难点是可控</a><a href="#search">搜索从信息入口变成任务入口</a><a href="#control">真正的竞争是工作流控制权</a><a href="#takeaway">写在最后</a></nav>
         <div class="page-surface"><div class="prose"><section class="detail-section" id="intro">
-            <p class="">之前关于多 Agent 架构，我更多是在讲边界、上下文和协作方式。这次我做了一个小型实验平台 Agent Architecture Lab，把不同 Agent 架构放到同一批任务下面跑了一遍。</p>
-            <p class="">实验规模不大，但结论很明确：复杂架构不是质量放大器，而是成本、上下文和失败面的放大器。只有当任务确实需要拆解、审查或多立场权衡时，多 Agent 才可能值得。</p>
+            <p class="">Google I/O 2026 表面上是一场 AI 发布会：新模型、新 Gemini App、新个人 Agent、新搜索体验。但把这些更新放在一起看，它们指向的不是单个产品升级，而是一条更清晰的路线：Google 正在把 Gemini 从 AI 助手，推进成覆盖搜索、办公、个人任务和应用入口的工作流操作层。</p>
+            <p class="">这次 I/O 最值得关注的信号是，AI 竞争正在从“谁的模型更强”，转向“谁能控制用户的任务链路”。再强的模型，如果不能进入用户每天真实发生任务的地方，仍然只是外部工具。</p>
         </section>
 
-        <section class="detail-section" id="setup">
-            <h2 class="">实验怎么做</h2>
-            <p class="">实验任务分成四类：生成平台方案、扩展详细设计、审查详细设计，以及从审查报告里选择一个最有取舍的问题给出技术判断。</p>
-            <p class="">我比较了四种架构：<code class="">single</code>、<code class="">planner_executor</code>、<code class="">planner_executor_reviewer</code> 和 <code class="">debate</code>。观察指标包括耗时、token 消耗、估算成本、是否截断、最终答案可用性，以及中间过程是否有复盘价值。</p>
-            <p class="">这不是严格的大样本实验，但它足够暴露工程运行中的典型问题。</p>
+        <section class="detail-section" id="model">
+            <h2 class="">模型从回答器变成执行底座</h2>
+            <p class="">这次 Google 把 Gemini 3.5 Flash 放到更核心的位置，强调速度、agentic tasks 和 coding 能力，并将其作为 Gemini App 和 Search AI Mode 的默认模型。这说明默认模型的选择逻辑正在变化。</p>
+            <p class="">过去，一个模型最重要的是能不能回答准确、完整、有逻辑。但当 AI 被放进工作流之后，单次回答能力已经不够。它还必须支持长任务、拆解目标、调用外部工具、处理中间状态，并在多个步骤之间保持一致。</p>
+            <p class="">真正进入工作流的模型，不能只在 benchmark 上领先，还必须足够稳定、足够快、成本足够可控。最强模型不一定总是默认模型，默认模型往往是那个最适合被频繁调度、持续调用、嵌入产品流程的模型。</p>
         </section>
 
-        <section class="detail-section" id="single">
-            <h2 class="">Single Agent 仍然是强基线</h2>
-            <p class="">实验里，<code class="">single</code> 是成本和延迟最低的架构，稳定性也最好。四个任务都没有截断，在简单方案和明确技术取舍任务中，输出质量并不弱。</p>
-            <p class="">这说明 Single Agent 不是过时方案，而是所有复杂架构必须证明自己值得超过的基线。如果任务边界清楚、输入充分、输出结构明确，引入多个 Agent 很可能只是增加过程成本。</p>
+        <section class="detail-section" id="entry">
+            <h2 class="">入口不再只是聊天框</h2>
+            <p class="">Gemini App 的改版同样关键。它不只是把界面做得更好看，而是把 AI 入口从聊天窗口推进成多模态任务入口。用户可以通过语音、文本、图片、文件、视频等方式进入任务，系统则给出更适合消费和操作的结果。</p>
+            <p class="">传统聊天框把大量组织任务的压力交还给用户。用户必须知道怎么问、怎么拆任务、怎么追问、怎么判断结果是否可用。对普通用户来说，自由输入并不总是优势，反而可能成为负担。</p>
+            <p class="">所以，AI 产品的关键不是让用户更会提问，而是让用户更少需要组织问题。入口形态越接近真实任务，AI 就越可能从“回答问题”走向“推进任务”。</p>
         </section>
 
-        <section class="detail-section" id="planner">
-            <h2 class="">Planner 有用，但要管住输出</h2>
-            <p class=""><code class="">planner_executor</code> 在审查类任务中效果不错，因为审查天然需要覆盖多个维度。Planner 先拆检查项，Executor 再逐项执行，确实有助于提高覆盖度。</p>
-            <p class="">但 Planner 也会制造输出膨胀。在详细设计任务中，它推动 Executor 覆盖更多章节，最终出现 <code class="">finish_reason=length</code>。Planner 不应该只是让模型多想一点，还应该管理章节预算、长度约束和输出边界。</p>
+        <section class="detail-section" id="agent">
+            <h2 class="">个人 Agent 的难点是可控</h2>
+            <p class="">Gemini Spark 代表了另一个方向：个人 Agent 开始进入云端持续工作，并与 Gmail、Docs、Slides 等 Workspace 工具深度集成。它可以整理会议记录、生成文档、起草邮件，同时在花钱、发邮件等高风险操作前请求用户确认。</p>
+            <p class="">这正是个人 Agent 产品化的核心矛盾。一个聊天机器人说错话，用户可以忽略；但一个 Agent 如果能进入邮件、文档、日程和第三方应用，它的行动就会影响真实世界。</p>
+            <p class="">因此，个人 Agent 真正难的不是更主动，而是权限、确认、责任和可撤销性。它能读哪些数据，能写入哪些系统，哪些动作可以自动完成，哪些动作必须确认，这些问题决定了 Agent 能否从 demo 进入日常工作流。</p>
         </section>
 
-        <section class="detail-section" id="reviewer">
-            <h2 class="">Reviewer 的价值必须被看见</h2>
-            <p class=""><code class="">planner_executor_reviewer</code> 成本最高、延迟最高，但这次没有带来稳定的质量跃迁。即使引入 Reviewer，详细设计任务仍然截断。</p>
-            <p class="">Reviewer 的价值不在于多一次模型调用，而在于能留下证据链：草稿是什么，审查意见是什么，最终答案改了什么。如果这些信息没有被结构化呈现，用户只能看到最终答案，那 Reviewer 就只是昂贵的形式主义。</p>
+        <section class="detail-section" id="search">
+            <h2 class="">搜索从信息入口变成任务入口</h2>
+            <p class="">Search AI Mode 的变化也很关键。新的 AI 搜索框支持更长问题和多模态输入，并把 Gemini 3.5 Flash 作为默认模型。Google 还提出 Search agents，让用户在搜索中创建和管理 AI agents，用于持续监控信息、生成更新，甚至进一步完成预订、购物、生成 UI 和构建 mini apps。</p>
+            <p class="">传统搜索解决的是“找资料”。生成式搜索开始解决“整理答案”。而 Agent 化搜索要解决的是“推进任务”。用户提出的可能不再是关键词或单个问题，而是一个目标：持续关注某个活动、比较符合条件的房源、生成一个计划，或者构建一个可复用的追踪器。</p>
+            <p class="">搜索不会简单被 AI 取代。更准确地说，搜索正在被 AI 改造成 Agent 系统的一部分。过去搜索的价值来自流量分发，未来搜索的价值可能来自任务控制。</p>
         </section>
 
-        <section class="detail-section" id="debate">
-            <h2 class="">Debate 只适合真实取舍</h2>
-            <p class=""><code class="">debate</code> 在技术取舍判断中最有意义。比如 Snapshot Mode vs Chain Mode，一个强调公平、隔离和可复现，另一个强调连续性、状态传递和真实工作流，这种任务天然适合多立场辩论。</p>
-            <p class="">但 Debate 不适合所有任务。没有真实分歧的任务里，它往往退化成一个 Agent 给方案、另一个 Agent 补风险、Judge 做汇总，成本增加了，但不一定带来真正的对抗性思考。</p>
-        </section>
-
-        <section class="detail-section" id="cost">
-            <h2 class="">复杂架构的代价很具体</h2>
-            <p class="">这次实验里，<code class="">planner_executor</code> 的成本约为 <code class="">single</code> 的 2.42 倍，<code class="">debate</code> 约为 3.90 倍，<code class="">planner_executor_reviewer</code> 约为 6.17 倍。</p>
-            <p class="">这还只是模型调用成本。实际工程里，还要考虑结果存储、中间过程展示、失败重试、超时处理、前端可视化、人工复盘成本和更复杂的调试路径。</p>
+        <section class="detail-section" id="control">
+            <h2 class="">真正的竞争是工作流控制权</h2>
+            <p class="">把这些发布连起来看，Google 的路线很清楚：Gemini 3.5 Flash 是模型底座，Gemini App 是用户入口，Gemini Spark 是个人 Agent，Search AI Mode 是意图捕捉和任务启动入口，Gmail、Docs、Calendar、Chrome、Android 等产品则提供上下文和工具权限。</p>
+            <blockquote class=""><strong class="">AI 工作流控制权 = 模型能力 × 入口位置 × 上下文资产 × 工具权限。</strong></blockquote>
+            <p class="">模型能力决定 AI 能不能理解和执行任务。入口位置决定用户会不会自然使用它。上下文资产决定 AI 是否理解用户的真实情况。工具权限决定它能不能把建议变成行动。</p>
+            <p class="">单独看，Gemini 只是一个模型或助手；放进 Google 生态里，它就可能变成一层任务操作系统。搜索是意图入口，Gmail 和 Docs 是工作入口，Android 是设备入口，Chrome 是浏览入口。Gemini 一旦把这些入口连接起来，AI 就不再只是一个工具，而是一层覆盖用户数字生活的操作层。</p>
         </section>
 
         <section class="detail-section" id="takeaway">
             <h2 class="">写在最后</h2>
-            <p class="">多 Agent 架构的价值不是让模型突然变强，而是把复杂任务里的不确定性组织起来。Planner 组织任务结构，Reviewer 组织质量反馈，Debate 组织立场冲突，Judge 组织最终合并。</p>
-            <p class="">但这些结构都有成本，也都有失败方式。真正的工程判断不是能不能加 Agent，而是加了以后，系统是否真的更可控、更可靠、更值得。</p>
+            <p class="">从发布会愿景到稳定产品还有距离。Agent 真正进入个人工作流之后，隐私、权限、安全、误操作、责任边界都会成为硬问题。尤其是当 AI 能读邮件、写文档、连接第三方服务、调用支付和预订能力时，信任问题会比模型能力更关键。</p>
+            <p class="">但方向已经很明确。AI 行业的上半场，是模型能力之争；下半场，是工作流控制权之争。未来真正有优势的 AI 产品，不只是回答得更好，而是能进入用户每天真实发生任务的地方，理解目标、组织上下文、调用工具，并把结果交付出来。</p>
+            <p class="">这才是 Google I/O 这次发布背后的核心信号：Gemini 不只是一个模型更新，而是 Google 正在尝试把 AI 做成整个生态里的任务操作层。</p>
         </section></div></div>
     </div>
-    <section class="related" aria-labelledby="related-title"><p class="kicker">继续阅读</p><h2 id="related-title">相关<em>文章</em></h2><ol class="journal-list" style="list-style:none"><li><a class="journal-row" href="article-05.html" data-topic="2" data-cursor="阅读">
-        <span class="journal-date">2026.09 · 05</span>
-        <span class="journal-title"><span class="static">AI 不需要恶意，也能越过权限边界</span><span class="marquee" aria-hidden="true"><span>AI 不需要恶意，也能越过权限边界 —&nbsp;</span><span>AI 不需要恶意，也能越过权限边界 —&nbsp;</span><span>AI 不需要恶意，也能越过权限边界 —&nbsp;</span></span></span>
-        <span class="topic" data-topic="2">Agent 自动化</span><span class="journal-time">12 分钟</span></a></li><li><a class="journal-row" href="article-18.html" data-topic="2" data-cursor="阅读">
-        <span class="journal-date">2026.05 · 18</span>
-        <span class="journal-title"><span class="static">多 Agent 架构的真正问题：不是角色分工，而是上下文边界</span><span class="marquee" aria-hidden="true"><span>多 Agent 架构的真正问题：不是角色分工，而是上下文边界 —&nbsp;</span><span>多 Agent 架构的真正问题：不是角色分工，而是上下文边界 —&nbsp;</span><span>多 Agent 架构的真正问题：不是角色分工，而是上下文边界 —&nbsp;</span></span></span>
-        <span class="topic" data-topic="2">Agent 自动化</span><span class="journal-time">10 分钟</span></a></li><li><a class="journal-row" href="article-19.html" data-topic="2" data-cursor="阅读">
-        <span class="journal-date">2026.05 · 19</span>
-        <span class="journal-title"><span class="static">当真的需要多 Agent：如何拆分、协作与合并结果</span><span class="marquee" aria-hidden="true"><span>当真的需要多 Agent：如何拆分、协作与合并结果 —&nbsp;</span><span>当真的需要多 Agent：如何拆分、协作与合并结果 —&nbsp;</span><span>当真的需要多 Agent：如何拆分、协作与合并结果 —&nbsp;</span></span></span>
-        <span class="topic" data-topic="2">Agent 自动化</span><span class="journal-time">10 分钟</span></a></li></ol></section>
+    <section class="related" aria-labelledby="related-title"><p class="kicker">继续阅读</p><h2 id="related-title">相关<em>文章</em></h2><ol class="journal-list" style="list-style:none"><li><a class="journal-row" href="article-07.html" data-topic="5" data-cursor="阅读">
+        <span class="journal-date">2026.09 · 07</span>
+        <span class="journal-title"><span class="static">谁有权训练谁？</span><span class="marquee" aria-hidden="true"><span>谁有权训练谁？ —&nbsp;</span><span>谁有权训练谁？ —&nbsp;</span><span>谁有权训练谁？ —&nbsp;</span></span></span>
+        <span class="topic" data-topic="5">技术观察</span><span class="journal-time">7 分钟</span></a></li><li><a class="journal-row" href="article-08.html" data-topic="5" data-cursor="阅读">
+        <span class="journal-date">2026.08 · 08</span>
+        <span class="journal-title"><span class="static">机器人的三个时钟</span><span class="marquee" aria-hidden="true"><span>机器人的三个时钟 —&nbsp;</span><span>机器人的三个时钟 —&nbsp;</span><span>机器人的三个时钟 —&nbsp;</span></span></span>
+        <span class="topic" data-topic="5">技术观察</span><span class="journal-time">8 分钟</span></a></li><li><a class="journal-row" href="article-10.html" data-topic="5" data-cursor="阅读">
+        <span class="journal-date">2026.05 · 10</span>
+        <span class="journal-title"><span class="static">当技术路线被包装成定律</span><span class="marquee" aria-hidden="true"><span>当技术路线被包装成定律 —&nbsp;</span><span>当技术路线被包装成定律 —&nbsp;</span><span>当技术路线被包装成定律 —&nbsp;</span></span></span>
+        <span class="topic" data-topic="5">技术观察</span><span class="journal-time">6 分钟</span></a></li></ol></section>
     <nav class="pager" aria-label="更多文章">
-        <a href="article-13.html" data-cursor="上一篇"><span class="meta">← 上一篇</span><strong>Google I/O 之后：AI 竞争正在转向工作流控制权</strong></a>
-        <a href="article-15.html" data-cursor="下一个"><span class="meta">下一篇 →</span><strong>AI 工程的核心不是让模型万能，而是定义边界</strong></a>
+        <a href="article-13.html" data-cursor="上一篇"><span class="meta">← 上一篇</span><strong>AI 不会消灭白领，但会消灭虚假安全感</strong></a>
+        <a href="article-15.html" data-cursor="下一个"><span class="meta">下一篇 →</span><strong>我做了一次多 Agent 架构实验：复杂架构并不天然更聪明</strong></a>
     </nav>
 </div>
 </main>

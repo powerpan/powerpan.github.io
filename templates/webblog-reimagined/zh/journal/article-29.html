@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>视觉模型上线后：别让 mAP 变成唯一答案 — Eric</title>
-<meta name="description" content="视觉模型上线后：别让 mAP 变成唯一答案">
+<title>AI 周报｜Agent 平台化、模型继续升级，AI 硬件开始下沉到终端 — Eric</title>
+<meta name="description" content="AI 周报｜Agent 平台化、模型继续升级，AI 硬件开始下沉到终端">
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#ede8df">
 <script>(()=>{const r=document.documentElement;let t,m;try{t=localStorage.getItem('ink-theme');m=localStorage.getItem('ink-motion')}catch(e){}t=t||(matchMedia('(prefers-color-scheme: dark)').matches?'night':'day');if(matchMedia('(prefers-reduced-motion: reduce)').matches)m='off';r.dataset.theme=t;r.dataset.motion=m||'on'})()</script>
@@ -43,81 +43,91 @@
 <div class="progress" aria-hidden="true"><i></i></div>
 <div class="page">
     <header class="article-head">
-        <p class="meta"><a href="index.html">← 文章</a> &nbsp;/&nbsp; <span class="topic" data-topic="3">视觉多模态</span></p>
-        <h1 data-split>视觉模型上线后：别让 <em>mAP</em> 变成唯一答案</h1>
+        <p class="meta"><a href="index.html">← 文章</a> &nbsp;/&nbsp; <span class="topic" data-topic="5">技术观察</span></p>
+        <h1 data-split>AI 周报｜Agent 平台化、模型继续升级，<em>AI 硬件开始下沉到终端</em></h1>
         <p class="lede rise"></p>
-        <div class="article-meta meta rise" style="--d:120ms"><span>2026.04.27</span><span>9 分钟</span><span>No. 29</span></div>
+        <div class="article-meta meta rise" style="--d:120ms"><span>2026.04.27</span><span>11 分钟</span><span>No. 29</span></div>
     </header>
     <div class="article-layout">
-        <nav class="toc" aria-label="目录"><a href="#intro">离线指标过了，问题才刚开始</a><a href="#metric-gap">mAP 回答不了所有工程问题</a><a href="#online-signals">上线后应该看哪些信号</a><a href="#rollout">灰度上线比一次性替换更重要</a><a href="#ownership">数据闭环才是长期护城河</a><a href="#takeaway">写在最后</a></nav>
+        <nav class="toc" aria-label="目录"><a href="#intro">这一周，AI 产品形态又往前走了一步</a><a href="#models">模型层：GPT-5.5 与 DeepSeek-V4，代表两种产品路线</a><a href="#multimodal">多模态生成：Images 2.0 更像可交付素材引擎</a><a href="#agent-platform">Agent 平台：Google、Adobe、Microsoft 都在把 Agent 做成基础设施</a><a href="#dev-stack">开发栈：MCP、A2A、Skills、Runtime 正在变成平台关键词</a><a href="#hardware">硬件与终端：AI 算力开始从云端进入端侧</a><a href="#takeaway">本周判断：AI 正从能力展示走向系统交付</a></nav>
         <div class="page-surface"><div class="prose"><section class="detail-section" id="intro">
-            <h2 class="">离线指标过了，问题才刚开始</h2>
-            <p class="">很多视觉项目在验收时都会盯着同一个数字：mAP。训练集切好，验证集跑完，曲线足够漂亮，模型就像已经完成了最难的部分。</p>
-            <p class="">但真正把模型接进产线、监控或业务系统之后，mAP 往往只是一个起点。线上图像的光照、角度、压缩、遮挡、相机抖动、设备老化，都不会按验证集的分布来排队。离线表现稳定，不代表系统上线后稳定。</p>
-            <p class="">我越来越觉得，视觉模型工程化最容易被低估的部分，不是训练技巧，而是 <strong class="">上线后的可观测性和回退设计</strong>。如果一个模型只能在 notebook 里证明自己准确，却不能在线上解释自己什么时候失效，那它还不是一个可靠系统。</p>
+            <h2 class="">这一周，AI 产品形态又往前走了一步</h2>
+            <p class="">过去一周，AI 行业最值得关注的变化，不只是“模型更强了”，而是几个产品方向开始同时收敛：模型越来越像能够承担复杂任务的工作模型，Agent 正从概念走向平台化和工程化，AI 硬件也开始从数据中心往端侧设备扩散。</p>
+            <p class="">如果把这些更新放到一起看，这一周的关键词其实很清楚：更强模型、更重 Agent、更近端侧、更清晰的平台化基础设施。</p>
+            <p class=""><strong class="">对开发者来说，这些信号的重要性在于：AI 应用的竞争焦点，正在从单点能力展示转向系统交付能力。</strong>不再只是“模型能回答什么”，而是“模型能不能在真实业务里完成任务、调用工具、接受约束，并和硬件与软件系统一起交付结果”。</p>
         </section>
 
-        <section class="detail-section" id="metric-gap">
-            <h2 class="">mAP 回答不了所有工程问题</h2>
-            <p class="">mAP 很重要，它能衡量模型在标注数据上的整体检测质量。但它天然是一个离线、平均化、数据集内的指标。工程现场关心的却常常是另一组问题：哪一类误报最贵？漏检发生在哪些班次？某台摄像头的误差是不是突然变多？阈值调高之后，会不会把人工复核队列压垮？</p>
-            <p class="">这些问题不是 mAP 的错，而是它本来就不负责回答。把 mAP 当作唯一答案，就像只看 CPU 平均使用率来判断一个后端服务是否健康。平均值可能很好看，但尾部延迟、错误率和依赖抖动已经在报警。</p>
+        <section class="detail-section" id="models">
+            <h2 class="">模型层：GPT-5.5 与 DeepSeek-V4，代表两种产品路线</h2>
+            <p class="">OpenAI 在 4 月 23 日发布了 GPT-5.5。官方强调的不是单轮问答成绩，而是它在编码、在线研究、数据分析、文档与表格生成、软件操作等真实工作任务里的长链路执行能力。它更像一个适合被放进 Agent 系统中的“工作模型”，而不是单纯的聊天模型。</p>
+            <p class="">这一点很关键。后续 AI 应用的设计，会越来越围绕“模型 + 工具 + 状态 + 评估”展开，而不是简单封装一个聊天框。模型要做的不是回答一次问题，而是理解目标、拆解步骤、持续推进，并在不确定条件下继续工作。</p>
+            <p class="">另一条路线来自 DeepSeek。4 月 24 日上线的 DeepSeek-V4 Preview 同时推出了 Pro 和 Flash 两个版本，重点押注在百万上下文、Agentic Coding、复杂任务和更激进的成本效率上。它还同时开放权重和 API，明显更偏向开源生态、开发者适配和低成本部署。</p>
             <ul class="">
-                <li class=""><strong class="">平均指标会掩盖局部风险</strong> —— 某个小类别、某条产线或某种光照条件可能已经明显退化</li>
-                <li class=""><strong class="">离线集无法覆盖线上变化</strong> —— 设备、环境和操作流程都会缓慢改变输入分布</li>
-                <li class=""><strong class="">业务成本不等于检测分数</strong> —— 同样一次误检，在告警系统、质检系统和自动分拣系统里的代价完全不同</li>
+                <li class=""><strong class="">GPT-5.5 的信号</strong> —— 更像通用生产力工作中枢，适合负责复杂任务的主控模型</li>
+                <li class=""><strong class="">DeepSeek-V4 的信号</strong> —— 更看重长上下文、开源兼容和成本效率，适合观察其在私有化、国产算力和低成本推理中的落地潜力</li>
+                <li class=""><strong class="">工程启发</strong> —— 模型选型越来越不只是“谁最强”，而是“谁最适合这个工作流”</li>
+            </ul>
+            <p class="">值得注意的是，DeepSeek-V4 发布后，Ascend 社区也很快给出了相应的部署与适配路径，这说明模型与算力栈之间的绑定正在加速形成。后续“模型架构 - 推理框架 - 芯片 - 集群”的一体化协同，会比单看模型参数更重要。</p>
+        </section>
+
+        <section class="detail-section" id="multimodal">
+            <h2 class="">多模态生成：Images 2.0 更像可交付素材引擎</h2>
+            <p class="">OpenAI 在 4 月 21 日发布了 ChatGPT Images 2.0。相比过去“更会画图”的更新，这次更值得关注的点在于：它明显在向可交付视觉素材靠近，包括更稳定的文字渲染、版式表达、多语言图像、漫画分镜、信息图和品牌视觉资产生成。</p>
+            <p class="">这意味着图像生成不再只是一个独立的创意按钮，而更适合作为内容生产流程的一部分。过去很多图像模型能生成概念图，却很难稳定地产出带文字、带版式、适合直接进入业务系统的图片。现在方向正在改变。</p>
+            <ul class="">
+                <li class=""><strong class="">适合落地的场景</strong> —— 海报、电商素材、宣传图、教育图解、社交媒体封面、品牌视觉资产</li>
+                <li class=""><strong class="">产品设计启发</strong> —— 不要只把多模态当成“生成一张图”，而是把它接进“文案 - 配图 - 改尺寸 - 多平台输出”的完整链路</li>
             </ul>
         </section>
 
-        <section class="detail-section" id="online-signals">
-            <h2 class="">上线后应该看哪些信号</h2>
-            <p class="">我更倾向于把视觉模型当成一个线上服务来监控，而不是一个静态文件。除了传统服务指标，还要补上和图像、检测框、置信度分布相关的信号。</p>
+        <section class="detail-section" id="agent-platform">
+            <h2 class="">Agent 平台：Google、Adobe、Microsoft 都在把 Agent 做成基础设施</h2>
+            <p class="">这一周最强的产品信号来自 Agent 平台化。Google Cloud 在 Next 上推出 Gemini Enterprise Agent Platform，同时发布面向 Agent 时代的第 8 代 TPU。Google 给出的重点不是“怎么做一个 Agent demo”，而是如何构建、治理、优化和规模化部署企业 Agent。</p>
+            <p class="">Adobe 则把 Agent 深度放进客户体验和营销工作流。CX Enterprise Coworker 不再是一个泛用聊天助手，而是能在数据、内容、决策和多渠道执行之间编排工作流的垂直业务系统。它还明确拥抱 MCP、A2A 等开放标准，意味着大厂已经开始把 Agent 的互操作性当成正式产品能力来讲。</p>
+            <p class="">Microsoft 的方向同样清晰。Copilot 在 Word、Excel、PowerPoint 中的 agentic capabilities 已经正式可用，重点是它可以在应用内部执行多步骤原生操作，比如修改表格、更新公式和图表、重写文档结构、调整演示内容。AI 不再悬浮在聊天面板里，而是直接进入原来的工作界面。</p>
             <ul class="">
-                <li class=""><strong class="">输入分布</strong> —— 亮度、模糊度、分辨率、压缩质量、摄像头来源和采集时间是否偏离训练期</li>
-                <li class=""><strong class="">输出分布</strong> —— 每类目标数量、框大小、置信度直方图、空结果比例是否突然变化</li>
-                <li class=""><strong class="">人工复核反馈</strong> —— 哪些误报被频繁驳回，哪些漏检来自相同设备或相同场景</li>
-                <li class=""><strong class="">系统级后果</strong> —— 告警量、复核队列长度、处理延迟和下游动作失败率是否被模型输出放大</li>
-            </ul>
-            <p class="">这些信号不一定都要做成复杂平台。哪怕先把关键统计按天落表、按摄像头分组、按类别画趋势，也比只保存一个模型权重文件要可靠得多。</p>
-        </section>
-
-        <section class="detail-section" id="rollout">
-            <h2 class="">灰度上线比一次性替换更重要</h2>
-            <p class="">视觉模型的升级不应该像替换一张静态图片。新模型离线分数更高，也可能在线上制造新的误报模式。尤其是工业质检、安防告警、医疗辅助这类场景，模型行为的变化本身就是风险。</p>
-            <p class="">更稳妥的方式是把模型上线做成 <strong class="">灰度实验</strong>：同一批输入同时跑旧模型和新模型，先比较输出差异，再逐步放量。不要只问“新模型准不准”，还要问“它和旧模型在哪些场景下判断不一致”。</p>
-            <ul class="">
-                <li class=""><strong class="">影子模式</strong> —— 新模型先不影响业务，只记录预测和旧模型差异</li>
-                <li class=""><strong class="">分场景放量</strong> —— 先从低风险摄像头、低价值告警或可人工兜底的流程开始</li>
-                <li class=""><strong class="">明确回退阈值</strong> —— 误报、漏检、延迟或人工复核压力超过阈值时，自动切回旧版本</li>
+                <li class=""><strong class="">平台化的真正问题</strong> —— Agent 如何接入数据、管理权限、监控执行、评估结果、控制成本、处理失败与回退</li>
+                <li class=""><strong class="">产品形态变化</strong> —— 未来很多 AI 应用不是新做一个聊天产品，而是在原有业务界面中加入可执行的智能层</li>
             </ul>
         </section>
 
-        <section class="detail-section" id="ownership">
-            <h2 class="">数据闭环才是长期护城河</h2>
-            <p class="">一个视觉系统能不能长期变好，最终取决于它能不能把线上问题带回训练流程。没有闭环，模型每次迭代都像重新抽奖；有闭环，错误样本会变成下一轮提升的燃料。</p>
-            <p class="">这里的闭环不是简单地“把线上图片全扔回训练集”。更关键的是给样本打上足够有用的上下文：来源设备、时间、环境、模型版本、阈值、人工裁决、下游影响。这样下一次复盘时，团队才能知道问题是数据漂移、标注口径、模型结构，还是业务阈值设置错了。</p>
-            <p class=""><strong class="">模型上线不是研发终点，而是数据系统开始呼吸的地方。</strong>谁能更快发现失效、更准定位原因、更稳定地把错误样本变成训练资产，谁就更接近真正可持续的 AI 视觉工程。</p>
+        <section class="detail-section" id="dev-stack">
+            <h2 class="">开发栈：MCP、A2A、Skills、Runtime 正在变成平台关键词</h2>
+            <p class="">本周多个产品都反复出现一些共同概念：MCP、A2A、agent skills、agent runtime、orchestrator、registry。这说明行业已经从“怎么写 prompt”走向“怎么把 Agent 接进真实系统”。</p>
+            <p class="">对 AI 应用工程来说，后面更值得补齐的是四种能力：把数据库、文件系统和业务 API 暴露给模型使用的 MCP Server；对高风险工具调用做权限和审计控制；让 Agent 的每一次工具调用、失败和成本都可追踪的可观测性；以及针对复杂任务而不是单轮回答的评估体系。</p>
+            <p class=""><strong class="">这部分的价值，已经明显大于再多学几个 prompt 技巧。</strong>真正决定 AI 应用能否从 demo 走到生产环境的，是工具接入、权限边界、可观测性和回滚能力。</p>
+        </section>
+
+        <section class="detail-section" id="hardware">
+            <h2 class="">硬件与终端：AI 算力开始从云端进入端侧</h2>
+            <p class="">硬件方向这周同样有两个很明确的信号。第一是 Google 第 8 代 TPU 把训练和推理拆成了两套更明确的优化路径：TPU 8t 面向训练，TPU 8i 面向低时延推理。这反映出 Agent 时代对推理成本、延迟和能效的敏感度正在上升，因为一个 Agent 完成任务常常需要多轮模型调用、工具调用、反思和验证。</p>
+            <p class="">第二个信号更贴近终端。Anker 发布了自研 AI 芯片 Thus，目标是把本地 AI 能力带到音频设备、移动配件和 IoT 产品中。首批应用会落到 Soundcore 旗舰耳机上，重点不是炫参数，而是说明 AI 硬件正在从数据中心继续下沉到空间和电池都极度受限的小设备。</p>
+            <ul class="">
+                <li class=""><strong class="">云端趋势</strong> —— 训练与推理被进一步分化优化，推理成本会成为 Agent 产品规模化的关键约束</li>
+                <li class=""><strong class="">端侧趋势</strong> —— 本地小芯片开始承接更复杂的音频模型，未来会影响降噪、语音增强、实时翻译和环境感知体验</li>
+            </ul>
         </section>
 
         <section class="detail-section" id="takeaway">
-            <h2 class="">写在最后</h2>
-            <p class="">如果只用 mAP 来判断视觉模型是否成功，我们很容易把问题简化成“训练得够不够好”。但工程现场真正难的，是模型在不断变化的世界里还能不能被观察、被解释、被控制。</p>
-            <p class="">一个成熟的视觉模型上线方案，至少应该同时回答三个问题：它现在是否还在面对熟悉的数据？它的错误会造成什么业务后果？一旦它开始失效，系统能不能快速发现并回退？</p>
-            <p class="">mAP 是一张入场券，不是终点线。上线后的监控、灰度、回退和数据闭环，才决定一个视觉模型到底是 demo，还是生产系统。</p>
+            <h2 class="">本周判断：AI 正从能力展示走向系统交付</h2>
+            <p class="">如果把这一周的产品更新放在一起看，最重要的变化并不是某个模型单点更强，而是 AI 正在从“输入 prompt，得到回答”走向“给定目标，调用模型、工具、数据、权限和硬件资源，最后交付可执行结果”。</p>
+            <p class="">这也意味着 AI 应用开发的能力栈正在变化。只会调模型 API 已经不够，后续更重要的是多模型选择、上下文工程、Agent 编排、MCP 工具接入、权限与审计、可观测性、成本控制，以及端侧 AI 与云端 AI 的协同设计。</p>
+            <p class=""><strong class="">如果要把本周的信号转成行动建议，我会给三个方向：做一个真正可执行的 Agent 项目，补齐 MCP 与工具接入能力，开始认真关注端侧 AI 与云端协同。</strong>未来最有价值的 AI 产品，不一定是最会聊天的那个，而是最能稳定交付工作的那个。</p>
         </section></div></div>
     </div>
-    <section class="related" aria-labelledby="related-title"><p class="kicker">继续阅读</p><h2 id="related-title">相关<em>文章</em></h2><ol class="journal-list" style="list-style:none"><li><a class="journal-row" href="article-17.html" data-topic="3" data-cursor="阅读">
-        <span class="journal-date">2026.05 · 17</span>
-        <span class="journal-title"><span class="static">U-Net 没有输给新模型：工业视觉里，先定义任务再选择模型</span><span class="marquee" aria-hidden="true"><span>U-Net 没有输给新模型：工业视觉里，先定义任务再选择模型 —&nbsp;</span><span>U-Net 没有输给新模型：工业视觉里，先定义任务再选择模型 —&nbsp;</span><span>U-Net 没有输给新模型：工业视觉里，先定义任务再选择模型 —&nbsp;</span></span></span>
-        <span class="topic" data-topic="3">视觉多模态</span><span class="journal-time">8 分钟</span></a></li><li><a class="journal-row" href="article-24.html" data-topic="3" data-cursor="阅读">
-        <span class="journal-date">2026.04 · 24</span>
-        <span class="journal-title"><span class="static">视觉算法工程师，别把自己做成 流程操作员</span><span class="marquee" aria-hidden="true"><span>视觉算法工程师，别把自己做成 流程操作员 —&nbsp;</span><span>视觉算法工程师，别把自己做成 流程操作员 —&nbsp;</span><span>视觉算法工程师，别把自己做成 流程操作员 —&nbsp;</span></span></span>
-        <span class="topic" data-topic="3">视觉多模态</span><span class="journal-time">8 分钟</span></a></li><li><a class="journal-row" href="article-35.html" data-topic="3" data-cursor="阅读">
-        <span class="journal-date">2026.03 · 35</span>
-        <span class="journal-title"><span class="static">从 DETR 到 YOLOv8：Transformer 在目标检测中的演进与工程实践</span><span class="marquee" aria-hidden="true"><span>从 DETR 到 YOLOv8：Transformer 在目标检测中的演进与工程实践 —&nbsp;</span><span>从 DETR 到 YOLOv8：Transformer 在目标检测中的演进与工程实践 —&nbsp;</span><span>从 DETR 到 YOLOv8：Transformer 在目标检测中的演进与工程实践 —&nbsp;</span></span></span>
-        <span class="topic" data-topic="3">视觉多模态</span><span class="journal-time">12 分钟</span></a></li></ol></section>
+    <section class="related" aria-labelledby="related-title"><p class="kicker">继续阅读</p><h2 id="related-title">相关<em>文章</em></h2><ol class="journal-list" style="list-style:none"><li><a class="journal-row" href="article-07.html" data-topic="5" data-cursor="阅读">
+        <span class="journal-date">2026.09 · 07</span>
+        <span class="journal-title"><span class="static">谁有权训练谁？</span><span class="marquee" aria-hidden="true"><span>谁有权训练谁？ —&nbsp;</span><span>谁有权训练谁？ —&nbsp;</span><span>谁有权训练谁？ —&nbsp;</span></span></span>
+        <span class="topic" data-topic="5">技术观察</span><span class="journal-time">7 分钟</span></a></li><li><a class="journal-row" href="article-08.html" data-topic="5" data-cursor="阅读">
+        <span class="journal-date">2026.08 · 08</span>
+        <span class="journal-title"><span class="static">机器人的三个时钟</span><span class="marquee" aria-hidden="true"><span>机器人的三个时钟 —&nbsp;</span><span>机器人的三个时钟 —&nbsp;</span><span>机器人的三个时钟 —&nbsp;</span></span></span>
+        <span class="topic" data-topic="5">技术观察</span><span class="journal-time">8 分钟</span></a></li><li><a class="journal-row" href="article-10.html" data-topic="5" data-cursor="阅读">
+        <span class="journal-date">2026.05 · 10</span>
+        <span class="journal-title"><span class="static">当技术路线被包装成定律</span><span class="marquee" aria-hidden="true"><span>当技术路线被包装成定律 —&nbsp;</span><span>当技术路线被包装成定律 —&nbsp;</span><span>当技术路线被包装成定律 —&nbsp;</span></span></span>
+        <span class="topic" data-topic="5">技术观察</span><span class="journal-time">6 分钟</span></a></li></ol></section>
     <nav class="pager" aria-label="更多文章">
-        <a href="article-28.html" data-cursor="上一篇"><span class="meta">← 上一篇</span><strong>AI 周报｜Agent 平台化、模型继续升级，AI 硬件开始下沉到终端</strong></a>
-        <a href="article-30.html" data-cursor="下一个"><span class="meta">下一篇 →</span><strong>AI 编程时代的代码审查债务</strong></a>
+        <a href="article-28.html" data-cursor="上一篇"><span class="meta">← 上一篇</span><strong>AI 工作流争夺战：为什么真正的终局不是工具，而是工作代理层</strong></a>
+        <a href="article-30.html" data-cursor="下一个"><span class="meta">下一篇 →</span><strong>视觉模型上线后：别让 mAP 变成唯一答案</strong></a>
     </nav>
 </div>
 </main>

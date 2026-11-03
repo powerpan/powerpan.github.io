@@ -86,7 +86,7 @@ window.registerI18nChunk({
     "blog_card11_desc": "Context Rot 的两种机制——注意力稀释与上下文中毒，以及行业正在给出的不同答案。为什么「清空重开」目前仍然是最有效的解法？",
     "blog_back": "← 返回首页",
     "blog_list_title": "// 全部文章",
-    "blog_list_sub": "All Posts — 41 articles and counting",
+    "blog_list_sub": "All Posts — 42 articles and counting",
     "blog_filter_kicker": "SIGNAL ROUTER",
     "blog_filter_title": "按主题轨道切换阅读流",
     "blog_filter_sub": "把文章列表切成不同信道，快速定位 AI 工程、Agent、视觉多模态、系统架构、技术观察和社会随笔内容。",
@@ -143,7 +143,10 @@ window.registerI18nChunk({
     "blog_card40_desc": "从等价公式被判零分到修订题库后的涨分，拆开评分错误、任务变化、重复尝试和测试契约，讨论 AI 评测怎样保留可比较的证据。",
     "blog41_title": "模型装得下，为什么还是跑不快？",
     "blog_card41_title": "模型装得下，为什么还是跑不快？",
-    "blog_card41_desc": "从 GAAC 无损 KV 压缩拆解本地推理：缓存容量、融合重建、Amdahl 定律、并发吞吐，以及 FP8 与 Apple M4 结果的适用范围。"
+    "blog_card41_desc": "从 GAAC 无损 KV 压缩拆解本地推理：缓存容量、融合重建、Amdahl 定律、并发吞吐，以及 FP8 与 Apple M4 结果的适用范围。",
+    "blog42_title": "模型出错，为什么总想着重新训练？",
+    "blog_card42_title": "模型出错，为什么总想着重新训练？",
+    "blog_card42_desc": "从 Qwen 循环修复、Gemma 失败对照和游戏策略网络，讨论权重编程怎样把机制分析、局部编辑、回归测试与模型维护接起来。"
   },
   "en": {
     "blog38_title": "Can You Search Inside Encrypted Data?",
@@ -232,7 +235,7 @@ window.registerI18nChunk({
     "blog_card11_desc": "Two mechanisms behind Context Rot — attention dilution and context poisoning — and the different answers the industry is giving. Why is \"starting fresh\" still the most effective fix?",
     "blog_back": "← Back to Home",
     "blog_list_title": "// All Posts",
-    "blog_list_sub": "All Posts — 41 articles and counting",
+    "blog_list_sub": "All Posts — 42 articles and counting",
     "blog_filter_kicker": "SIGNAL ROUTER",
     "blog_filter_title": "Switch Reading Lanes by Topic",
     "blog_filter_sub": "Slice the archive into AI engineering, Agent automation, vision and multimodal work, system architecture, technical observation, and social essays.",
@@ -289,6 +292,9 @@ window.registerI18nChunk({
     "blog_card40_desc": "From equivalent formulas graded as wrong to higher scores on repaired tasks: separating grader errors, task changes, repeated attempts, and test contracts in AI evaluation.",
     "blog41_title": "The Model Fits. Why Is It Still Slow?",
     "blog_card41_title": "The Model Fits. Why Is It Still Slow?",
-    "blog_card41_desc": "Reading GAAC lossless KV compression through cache capacity, fused reconstruction, Amdahl's law, concurrent throughput, and the limits of FP8 and Apple M4 comparisons."
+    "blog_card41_desc": "Reading GAAC lossless KV compression through cache capacity, fused reconstruction, Amdahl's law, concurrent throughput, and the limits of FP8 and Apple M4 comparisons.",
+    "blog42_title": "Why Retrain Every Time a Model Breaks?",
+    "blog_card42_title": "Why Retrain Every Time a Model Breaks?",
+    "blog_card42_desc": "Qwen's looping fix, a failed Gemma intervention, and handcrafted game networks show what weight-space programming could bring to model debugging and maintenance."
   }
 });

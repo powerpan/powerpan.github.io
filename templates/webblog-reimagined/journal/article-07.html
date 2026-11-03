@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>The Three Clocks of Robotics — Eric</title>
-<meta name="description" content="Unitree&#x27;s post-IPO repricing is a reminder that hardware, intelligence, and capital move at different speeds, while productivity can only be proven by reliable operation over time.">
+<title>Who Gets to Train on Whom? — Eric</title>
+<meta name="description" content="Model companies argue over who may train on whose outputs while users&#x27; questions travel down the service chain. I want to know who made that decision for the user.">
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#ede8df">
 <script>(()=>{const r=document.documentElement;let t,m;try{t=localStorage.getItem('ink-theme');m=localStorage.getItem('ink-motion')}catch(e){}t=t||(matchMedia('(prefers-color-scheme: dark)').matches?'night':'day');if(matchMedia('(prefers-reduced-motion: reduce)').matches)m='off';r.dataset.theme=t;r.dataset.motion=m||'on'})()</script>
@@ -44,87 +44,79 @@
 <div class="page">
     <header class="article-head">
         <p class="meta"><a href="index.html">← Journal</a> &nbsp;/&nbsp; <span class="topic" data-topic="5">Tech Observation</span></p>
-        <h1 data-split>The <em>Three Clocks</em> of Robotics</h1>
-        <p class="lede rise">Unitree&#x27;s post-IPO repricing is a reminder that hardware, intelligence, and capital move at different speeds, while productivity can only be proven by reliable operation over time.</p>
-        <div class="article-meta meta rise" style="--d:120ms"><span>2026.08.23</span><span>8 min</span><span>No. 07</span></div>
+        <h1 data-split>Who Gets to <em>Train on Whom</em>?</h1>
+        <p class="lede rise">Model companies argue over who may train on whose outputs while users&#x27; questions travel down the service chain. I want to know who made that decision for the user.</p>
+        <div class="article-meta meta rise" style="--d:120ms"><span>2026.09.17</span><span>7 min</span><span>No. 07</span></div>
     </header>
     <div class="article-layout">
-        <nav class="toc" aria-label="Contents"><a href="#intro">Introduction</a><a href="#scorecard">After the IPO, the Scorecard Changed</a><a href="#reliability">A Reliability Chasm Separates Demos From Production</a><a href="#clocks">Why the Three Clocks Fall Out of Sync</a><a href="#bottleneck">The Engineering Bottleneck Is Changing</a><a href="#metrics">Move From Shipments to Production KPIs</a><a href="#takeaway">Final Thoughts</a></nav>
+        <nav class="toc" aria-label="Contents"><a href="#intro">Introduction</a><a href="#claims">Were users told about 300,000 forwarded requests?</a><a href="#distillation">Reasoning traces are worth more than answers</a><a href="#contracts">The customer owns the output; the contract sets another wall</a><a href="#users">A user submits a question. Who receives it next?</a><a href="#framework">Follow the calls to find responsibility</a><a href="#takeaway">Do Not Write Users Out of the Story</a></nav>
         <div class="page-surface"><div class="prose"><section class="detail-section" id="intro">
-            <p class="">In August 2026, Unitree's surge and pullback after its listing pulled humanoid robotics out of demo videos and into financial statements and valuation models. The offer price, first-day peak, and subsequent decline were dramatic, but price action is not a referendum on the future of robotics.</p>
-            <p class="">The more important change is the scorecard. The industry used to answer whether a robot could do something. A public company must also answer whether it can do it reliably, deploy it at scale, and earn sustainable returns. That shift exposes the different speeds of hardware, intelligence, and capital.</p>
-            <p class=""><em class="">Data and public disclosures were checked through the market close on August 21, 2026. This article discusses industry and engineering issues and is not investment advice.</em></p>
+            <p class="">In its <a href="https://www.anthropic.com/threat-intelligence-report-september-2026" target="_blank" rel="noopener" class="">September 2026 threat intelligence report</a>, Anthropic accused Moonshot of forwarding some Kimi customer requests to Claude and retaining some interactions to extract reasoning traces and train models. The report leaves a striking gap: Anthropic also says it does not know whether those users were told where their requests went.</p>
+            <p class="">“Did Kimi steal from Claude?” is an attention-grabbing question. I think another belongs in front of it: what authorizes a question submitted to Kimi to enter another model provider's service chain? Model companies have advocates for their assets. The people submitting code, documents, and personal questions are much easier to lose from the discussion.</p>
+
         </section>
 
-        <section class="detail-section" id="scorecard">
-            <h2 class="">After the IPO, the Scorecard Changed</h2>
-            <p class="">Unitree has already shown that it is more than a concept company. Revenue reached about RMB 1.699 billion in 2025, and shipments exceeded 5,500 fully humanoid robots. High-dynamic robots can now be manufactured repeatedly and sold at meaningful scale.</p>
-            <p class="">Selling a robot and putting one to work are different achievements. Disclosures show that research and education still dominated humanoid revenue in the first three quarters of 2025, while industry applications remained a small share and included many enterprise-guidance deployments. Research platforms matter to an ecosystem, but they do not validate a production asset.</p>
-            <p class="">A listing forces the technology narrative to accept another set of constraints. Where orders come from, whether customers buy again, how R&amp;D converts into capability, and whether field deployments improve margins and cash flow now recur every quarter. Technology is not being dismissed; it must explain how it becomes productivity.</p>
+        <section class="detail-section" id="claims">
+            <h2 class="">Were users told about 300,000 forwarded requests?</h2>
+            <p class="">The report counts two different activities: about 300,000 forwarded customer requests in a ten-day window, and more than 23 million distillation interactions attributed to Moonshot from May through July 2026. One measures customer-request forwarding; the other measures distillation interactions. Explaining those calls requires accounts, purposes, and data flows to be put on the record.</p>
+            <p class="">Anthropic has made an attribution and an accusation. Moonshot needs to answer with the actual calling and data-handling process: which user requests reached Claude, what was retained, and what went into training. The companies can continue arguing; these questions should have records that can be checked.</p>
         </section>
 
-        <section class="detail-section" id="reliability">
-            <h2 class="">A Reliability Chasm Separates Demos From Production</h2>
-            <p class="">A demo asks whether a capability exists. A production system asks whether it persists. If a task has 20 critical steps and each succeeds 99% of the time, a deliberately simplified independent model gives the full task only an 81.8% chance of first-pass success. At 50 steps, it falls to about 60.5%.</p>
-            <p class="">Real systems can retry, inspect state, and replan, but the calculation exposes the core issue: long-horizon reliability cannot be replaced by the success rate of one polished action. A factory cares how often a hundred tasks fail, whether a person must intervene, whether small placement shifts break the process, and how many hours actually produce useful output.</p>
-            <p class="">A language model can regenerate a bad answer, and a software agent can roll back a failed tool call. A robot's bad action can damage a part, stop a line, or create a safety hazard. Robotics brings the unresolved reliability problem of long agent chains into a physical world where undo is limited.</p>
+        <section class="detail-section" id="distillation">
+            <h2 class="">Reasoning traces are worth more than answers</h2>
+            <p class="">Knowledge distillation is not mysterious: one model learns from answers, explanations, or other signals produced by another. Companies use it internally, and partners use it with permission. The method is ordinary. The harder questions are where the examples came from and what the recipient was allowed to do with them.</p>
+            <p class="">Reasoning traces turn decomposition, verification, and revision into training signals. Richer material for a student model gives the source provider more reason to scrutinize how it is collected at scale. Collection and permitted use sit at the center of this dispute; calling it ordinary learning leaves those questions unanswered.</p>
+            <p class="">“If Claude can learn from the internet, why can't Kimi learn from Claude?” I would ask both sides the same questions: how was the material obtained, who could authorize its use, and what was it used for? Calling one's own training learning and a competitor's training theft is a convenient double standard. Put both provenance and permission on the table.</p>
         </section>
 
-        <section class="detail-section" id="clocks">
-            <h2 class="">Why the Three Clocks Fall Out of Sync</h2>
-            <p class="">Embodied AI today can be understood as three clocks running in parallel:</p>
+        <section class="detail-section" id="contracts">
+            <h2 class="">The customer owns the output; the contract sets another wall</h2>
+            <p class="">Anthropic's <a href="https://www.anthropic.com/legal/commercial-terms" target="_blank" rel="noopener" class="">commercial terms</a> give customers output ownership to the extent permitted by law while restricting use of the service to develop or train competing models. Ownership and contractual use operate as separate layers. After delivering an answer, the provider still seeks contractual control over part of its subsequent use.</p>
+            <p class="">Copyright is a third layer. The <a href="https://www.copyright.gov/newsnet/2025/1060.html" target="_blank" rel="noopener" class="">US Copyright Office's account of AI outputs</a> distinguishes human authorship from purely machine-generated material. Human expression, existing works, and generated components require separate analysis; contract enforceability also depends on parties, versions, and applicable rules. Providers seeking to restrict reuse should specify the right they are asserting.</p>
+            <p class="">Instead of debating in the abstract who owns an answer, ask which version of the contract was accepted, which account and channel produced the output, whether the restriction actually became binding, and whether the conduct can be attributed to a specific party.</p>
+        </section>
+
+        <section class="detail-section" id="users">
+            <h2 class="">A user submits a question. Who receives it next?</h2>
+            <p class="">Even if a source-model provider expressly permits distillation, real user tasks may still move through another chain:</p>
+            <pre class=""><code class="">User content → AI product → third-party model → retention and curation → student model</code></pre>
+            <p class="">Prompts can contain personal information, internal code, and third-party works. Users submit them to get a task done. Forwarding them to another provider, retaining them, and preparing them for training are additional handling decisions that the product owes users an explanation for. A text box is a poor basis for assuming unlimited permission.</p>
+            <p class="">The product should clearly state recipients, purposes, retention, and ways to restrict or delete data. The <a href="https://en.spp.gov.cn/2021-12/29/c_948419.htm" target="_blank" rel="noopener" class="">Personal Information Protection Law's</a> requirements concerning processing purposes, notice, and individual rights also have to reach the service chain. A deal between model companies leaves users with their own interests in knowing and choosing how their data is handled.</p>
+        </section>
+
+        <section class="detail-section" id="framework">
+            <h2 class="">Follow the calls to find responsibility</h2>
+            <p class="">To investigate the dispute, follow the concrete actions along the call chain:</p>
             <ul class="">
-                <li class=""><strong class="">The hardware clock is moving quickly.</strong> Actuators, gearboxes, sensors, control algorithms, and China's supply chain keep improving, pushing motion, cost, and manufacturability across important thresholds.</li>
-                <li class=""><strong class="">The intelligence clock is slower.</strong> Perception, planning, manipulation, recovery, and cross-scene generalization remain constrained by physical data and long-tail environments. A mature body is not the same as an autonomous brain.</li>
-                <li class=""><strong class="">The capital clock is usually fastest.</strong> Markets must price the future early, so they trade assumptions about the eventual market, share, and profit pool of general-purpose embodied AI, not only the robots sold today.</li>
+                <li class=""><strong class="">Where the calls came from.</strong> Public observation, licensed calls, impersonation, and bypasses leave different account and access records.</li>
+                <li class=""><strong class="">Where the outputs went.</strong> Display, retention, evaluation, and competitor training each need their permitted purpose identified.</li>
+                <li class=""><strong class="">What did the reuse change?</strong> Research, compression, interoperability, and direct commercial substitution do not have the same effect on the market or the original provider.</li>
+                <li class=""><strong class="">How user data was handled.</strong> Who decided to forward and retain it, who informed the user, and who handles deletion requests?</li>
             </ul>
-            <p class="">The clocks being out of sync does not mean the industry direction is wrong. A sound and enormous technology trend can still be priced too early, while a price correction does not prove the technology has no future. The question is whether technical and commercial delivery can gradually catch up with expectations.</p>
-        </section>
-
-        <section class="detail-section" id="bottleneck">
-            <h2 class="">The Engineering Bottleneck Is Changing</h2>
-            <p class="">Robot foundation models are advancing from isolated actions toward longer tasks, self-correction, and transfer across embodiments, yet reliability still varies sharply for complex manipulation. The deeper constraint is that robotics has no ready-made physical-world equivalent of Common Crawl.</p>
-            <p class="">High-quality robot data requires real hardware, sensors, staged environments, teleoperators, and time, and it is naturally tied to an embodiment and setting. Lighting, packaging, friction, occlusion, and unexpected human movement all create long tails. A model must decide what to do and then verify after every action that the world still matches its assumptions.</p>
-            <p class="">Even if robotics reaches a ChatGPT moment, its adoption curve will not mirror software. Every new site needs additional hardware, shipping, installation, maintenance, and support. Software intelligence can be copied across servers; physical intelligence must be replicated with a body and field engineering.</p>
-            <p class="">Humanoids also compete with mature automation. When a fixed task can be structured cheaply, a conventional line is usually faster, cheaper, and more reliable. Humanoids must prove that switching tasks costs less, sites need fewer modifications, adaptation is faster, and the total economics beat labor or conventional automation.</p>
-        </section>
-
-        <section class="detail-section" id="metrics">
-            <h2 class="">Move From Shipments to Production KPIs</h2>
-            <p class="">To move from demos to productivity, the industry needs to replace speed, degrees of freedom, parameter counts, and shipments with harder operating metrics:</p>
-            <ul class="">
-                <li class=""><strong class="">End-to-end task success:</strong> the probability that a complete production task finishes on the first pass, not the best result of one action.</li>
-                <li class=""><strong class="">Human intervention rate:</strong> how often a person must step in per 100 hours or 1,000 tasks.</li>
-                <li class=""><strong class="">Autonomous recovery rate:</strong> how many failed grasps, drops, or blocked paths the system resolves by itself.</li>
-                <li class=""><strong class="">MTBF and availability:</strong> how long the system runs between failures and how much time maintenance and downtime consume.</li>
-                <li class=""><strong class="">Effective work hours:</strong> the hours of measurable output produced within total powered-on time.</li>
-                <li class=""><strong class="">Task-switching cost and TCO:</strong> the data, tuning, engineering effort, deployment, maintenance, and intervention required before the economics pay back.</li>
-                <li class=""><strong class="">Repeat purchase and scaled deployment:</strong> whether a customer that trials one unit buys more for the same site or additional sites.</li>
-            </ul>
-            <p class="">The metric most worth publishing over time may be cumulative effective work hours without intervention. A shipment proves that a transaction happened. Hours of useful output at a customer site are much closer to real activity and productive capacity.</p>
+            <p class="">Implementation should leave records along that chain. Give users and enterprise administrators clear provider choices for third-party calls; explain subsequent training purposes and handling separately; log recipients, purposes, and authorization states for routing. The <a href="https://www.ftc.gov/policy/advocacy-research/tech-at-ftc/2024/01/ai-companies-uphold-your-privacy-confidentiality-commitments" target="_blank" rel="noopener" class="">FTC's reminder about AI privacy and confidentiality promises</a> has a practical point: make the actual data path honor what the product promised.</p>
         </section>
 
         <section class="detail-section" id="takeaway">
-            <h2 class="">Final Thoughts</h2>
-            <p class="">Public demos optimize for the technical ceiling; factories depend on the engineering floor. A backflip lasts seconds in a cleared environment and can be recorded again. An industrial job faces endless variation in parts, floors, lighting, networks, batteries, and upstream processes.</p>
-            <p class="">Unitree's clearest strengths today are embodiment, motion control, supply chain execution, and scaled manufacturing. Its next test is whether deployed bodies can become real-world data, continuous intelligence gains, and customer productivity.</p>
-            <p class="">Capital markets can trade the day after tomorrow, founders must build tomorrow, and engineers still have to make today's failure rate, intervention rate, and effective work hours real one metric at a time.</p>
-            <blockquote class=""><strong class="">The real inflection point is not another spectacular move. It is when the hardware, intelligence, and capital clocks begin to run together again.</strong></blockquote>
+            <h2 class="">Do Not Write Users Out of the Story</h2>
+            <p class="">I support model learning and market competition, and I dislike incumbents treating every subsequent learner as out of bounds. But disputes over training rights need a separate ledger for user data: who supplied it, for what purpose, and who later changed that purpose. Someone has to answer those questions.</p>
+            <p class="">What matters most to me is who made the decision on the user's behalf. Model companies can continue arguing over training rights. The person submitting a question deserves a clear view of whose services handled it and whose training pipeline received it. Hiding that path behind the product is what deserves scrutiny.</p>
+
+
         </section></div></div>
     </div>
-    <section class="related" aria-labelledby="related-title"><p class="kicker">Continue reading</p><h2 id="related-title">Related <em>writing</em></h2><ol class="journal-list" style="list-style:none"><li><a class="journal-row" href="article-06.html" data-topic="5" data-cursor="Read">
-        <span class="journal-date">2026.09 · 06</span>
-        <span class="journal-title"><span class="static">Who Gets to Train on Whom?</span><span class="marquee" aria-hidden="true"><span>Who Gets to Train on Whom? —&nbsp;</span><span>Who Gets to Train on Whom? —&nbsp;</span><span>Who Gets to Train on Whom? —&nbsp;</span></span></span>
-        <span class="topic" data-topic="5">Tech Observation</span><span class="journal-time">8 min</span></a></li><li><a class="journal-row" href="article-09.html" data-topic="5" data-cursor="Read">
-        <span class="journal-date">2026.05 · 09</span>
-        <span class="journal-title"><span class="static">When a Technology Roadmap Becomes a Law</span><span class="marquee" aria-hidden="true"><span>When a Technology Roadmap Becomes a Law —&nbsp;</span><span>When a Technology Roadmap Becomes a Law —&nbsp;</span><span>When a Technology Roadmap Becomes a Law —&nbsp;</span></span></span>
-        <span class="topic" data-topic="5">Tech Observation</span><span class="journal-time">6 min</span></a></li><li><a class="journal-row" href="article-10.html" data-topic="5" data-cursor="Read">
+    <section class="related" aria-labelledby="related-title"><p class="kicker">Continue reading</p><h2 id="related-title">Related <em>writing</em></h2><ol class="journal-list" style="list-style:none"><li><a class="journal-row" href="article-08.html" data-topic="5" data-cursor="Read">
+        <span class="journal-date">2026.08 · 08</span>
+        <span class="journal-title"><span class="static">The Three Clocks of Robotics</span><span class="marquee" aria-hidden="true"><span>The Three Clocks of Robotics —&nbsp;</span><span>The Three Clocks of Robotics —&nbsp;</span><span>The Three Clocks of Robotics —&nbsp;</span></span></span>
+        <span class="topic" data-topic="5">Tech Observation</span><span class="journal-time">8 min</span></a></li><li><a class="journal-row" href="article-10.html" data-topic="5" data-cursor="Read">
         <span class="journal-date">2026.05 · 10</span>
+        <span class="journal-title"><span class="static">When a Technology Roadmap Becomes a Law</span><span class="marquee" aria-hidden="true"><span>When a Technology Roadmap Becomes a Law —&nbsp;</span><span>When a Technology Roadmap Becomes a Law —&nbsp;</span><span>When a Technology Roadmap Becomes a Law —&nbsp;</span></span></span>
+        <span class="topic" data-topic="5">Tech Observation</span><span class="journal-time">6 min</span></a></li><li><a class="journal-row" href="article-11.html" data-topic="5" data-cursor="Read">
+        <span class="journal-date">2026.05 · 11</span>
         <span class="journal-title"><span class="static">The Real Test for Embodied AI in China Is Not Acrobatics, but a Commercial Loop</span><span class="marquee" aria-hidden="true"><span>The Real Test for Embodied AI in China Is Not Acrobatics, but a Commercial Loop —&nbsp;</span><span>The Real Test for Embodied AI in China Is Not Acrobatics, but a Commercial Loop —&nbsp;</span><span>The Real Test for Embodied AI in China Is Not Acrobatics, but a Commercial Loop —&nbsp;</span></span></span>
         <span class="topic" data-topic="5">Tech Observation</span><span class="journal-time">8 min</span></a></li></ol></section>
     <nav class="pager" aria-label="More articles">
-        <a href="article-06.html" data-cursor="Prev"><span class="meta">← Previous</span><strong>Who Gets to Train on Whom?</strong></a>
-        <a href="article-08.html" data-cursor="Next"><span class="meta">Next →</span><strong>Mac Is Becoming the Ideal Runtime for Personal AI Apps</strong></a>
+        <a href="article-06.html" data-cursor="Prev"><span class="meta">← Previous</span><strong>AI Can Cross Permission Boundaries Without Malice</strong></a>
+        <a href="article-08.html" data-cursor="Next"><span class="meta">Next →</span><strong>The Three Clocks of Robotics</strong></a>
     </nav>
 </div>
 </main>

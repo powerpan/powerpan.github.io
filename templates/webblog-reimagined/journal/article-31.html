@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Context Rot: Why LLMs Get &quot;Dumber&quot; the Longer You Talk — Eric</title>
-<meta name="description" content="Context Rot: Why LLMs Get &quot;Dumber&quot; the Longer You Talk">
+<title>Code Review Debt in the Age of AI Coding — Eric</title>
+<meta name="description" content="Code Review Debt in the Age of AI Coding">
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#ede8df">
 <script>(()=>{const r=document.documentElement;let t,m;try{t=localStorage.getItem('ink-theme');m=localStorage.getItem('ink-motion')}catch(e){}t=t||(matchMedia('(prefers-color-scheme: dark)').matches?'night':'day');if(matchMedia('(prefers-reduced-motion: reduce)').matches)m='off';r.dataset.theme=t;r.dataset.motion=m||'on'})()</script>
@@ -44,83 +44,74 @@
 <div class="page">
     <header class="article-head">
         <p class="meta"><a href="index.html">← Journal</a> &nbsp;/&nbsp; <span class="topic" data-topic="1">AI Engineering</span></p>
-        <h1 data-split>Context Rot: Why LLMs Get "Dumber" the Longer You Talk</h1>
+        <h1 data-split>Code Review Debt in the Age of AI Coding</h1>
         <p class="lede rise"></p>
-        <div class="article-meta meta rise" style="--d:120ms"><span>2026.04.25</span><span>10 min</span><span>No. 31</span></div>
+        <div class="article-meta meta rise" style="--d:120ms"><span>2026.04.26</span><span>9 min</span><span>No. 31</span></div>
     </header>
     <div class="article-layout">
-        <nav class="toc" aria-label="Contents"><a href="#intro">A Frustrating Phenomenon</a><a href="#distraction">First Type: Attention Dilution</a><a href="#poisoning">Second Type: Context Poisoning</a><a href="#deep-diff">The Fundamental Difference</a><a href="#sub-agent">The Sub-Agent Debate: Two Industry Camps</a><a href="#takeaway">Final Thoughts</a></nav>
+        <nav class="toc" aria-label="Contents"><a href="#intro">Code is faster now, but is the team actually faster?</a><a href="#why">Why review debt grows faster in the AI era</a><a href="#signals">Signals that your team is already accumulating review debt</a><a href="#response">The answer is not banning AI</a><a href="#takeaway">Don’t mistake throughput for engineering strength</a></nav>
         <div class="page-surface"><div class="prose"><section class="detail-section" id="intro">
-            <h2 class="">A Frustrating Phenomenon</h2>
-            <p class="">Anyone who's used AI coding tools for complex features has probably experienced this: at the start of a conversation, the model performs like a genius — clear thinking, clean code. But as the conversation grows longer, it starts making the same mistakes repeatedly, even reproducing bugs you've already corrected.</p>
-            <p class="">You explicitly tell it "don't use this API," it politely apologizes, then uses it again in the next generation. You copy the entire context into a new conversation, and it suddenly gives you the correct solution. The model hasn't degraded — the context itself is rotting.</p>
-            <p class="">This topic has been generating a lot of buzz in AI engineering circles lately. Some call it <strong class="">Context Rot</strong>. After digging into it, I found it actually encompasses two completely different mechanisms, and the industry's responses to each are strikingly different.</p>
+            <h2 class="">Code is faster now, but is the team actually faster?</h2>
+            <p class="">Over the last year, the biggest change in AI coding tools has not been whether they can write code, but how aggressively they can compress delivery time. A developer who is fluent with Cursor, Claude Code, or Copilot can now produce in one afternoon what used to take days.</p>
+            <p class="">On the surface, that looks like a clean productivity win. But in real collaboration, I keep noticing a different pattern: once code generation speeds up, the thing teams accumulate fastest is often not capability, but code review debt.</p>
+            <p class="">Code review debt does not mean nobody looks at PRs. It means <strong class="">the rate of incoming changes has outgrown the team’s ability to consistently understand, validate, and own those changes</strong>. Code being written is not the same as code being absorbed.</p>
         </section>
 
-        <section class="detail-section" id="distraction">
-            <h2 class="">First Type: Attention Dilution</h2>
-            <p class="">The first mechanism is relatively easy to understand. Although large model context windows keep expanding — from 4K to 128K to millions of tokens — "fitting" and "using well" are two different things.</p>
-            <p class="">Transformer's attention mechanism dilutes signals when processing long sequences. It's like being in a two-hour meeting: the key decision made in the first 30 minutes might already be buried under subsequent discussions by minute 90. Models are the same: early important information gradually loses its "presence" in attention weights under the flood of massive tokens.</p>
-            <p class="">This isn't a bug — it's determined by the mathematical nature of the attention mechanism. When processing each token, the model needs to "look back" at all previous tokens. When "previous" becomes very long, each token gets less attention. The performance degradation curve often starts well before reaching the context limit.</p>
-            <p class=""><strong class="">The good news: this problem has clear engineering solutions.</strong> Anthropic introduced progressive disclosure in their tech stack, using context compression, summary generation, and Context Folding to shorten effective context length. The results are remarkable — reportedly reducing token consumption by 84% while improving agentic search performance by 39%. Claude's /compact command is a product of this same approach.</p>
-        </section>
-
-        <section class="detail-section" id="poisoning">
-            <h2 class="">Second Type: Context Poisoning</h2>
-            <p class="">The second mechanism is more insidious and far more difficult to deal with.</p>
-            <p class="">It happens like this: the context isn't long — maybe only 10-20K tokens, far from attention dilution levels. But the problem is that an incorrect judgment appeared early in the conversation — the model made a wrong assumption about some API behavior, or misunderstood the requirements — and this incorrect judgment gets repeatedly cited and reinforced in subsequent turns.</p>
-            <p class="">The model continues reasoning on a flawed foundation, like building additional floors on a crooked foundation. Each layer looks "reasonable," but the entire structure has veered off course. Even worse, when you try to correct a specific error, the model finds "evidence" from those poisoned early contexts to defend the mistake.</p>
-            <p class=""><strong class="">This is why asking AI to fix a bug makes things worse.</strong> Not because the model isn't smart enough, but because it's using wrong premises to understand your correction instructions. It's not "fixing" — it's "interpreting your fix in the wrong way."</p>
-            <p class="">Currently, there's essentially no good technical solution for context poisoning. The most effective method is frustratingly simple: <strong class="">start fresh</strong>. Open a new conversation and re-describe the clean requirements. Without those "toxic" contexts, the model can actually give you the correct solution.</p>
-        </section>
-
-        <section class="detail-section" id="deep-diff">
-            <h2 class="">The Fundamental Difference</h2>
-            <p class="">On the surface, both types of rot cause the model to "get dumber," but their root causes are completely different:</p>
+        <section class="detail-section" id="why">
+            <h2 class="">Why review debt grows faster in the AI era</h2>
+            <p class="">In the past, implementation speed acted as a natural gate. Writing a complex feature slowly also forced the author to self-review along the way. That gate is weaker now. AI accelerates scaffolding, edge branches, test skeletons, and API wiring, so a PR can jump from 200 lines to 2000 lines very quickly.</p>
+            <p class="">The problem is that the reviewer’s cognitive bandwidth has not expanded at the same pace. Review still depends on humans understanding business rules, evaluating failure modes, and mapping downstream impact. AI solves generation, but it does not automatically solve trust.</p>
             <ul class="">
-                <li class=""><strong class="">Attention dilution is a mathematical limitation</strong> — an inherent flaw of the attention mechanism on long sequences, addressable through engineering (compression, summarization, segmented processing). It's a "quantity" problem, fundamentally optimizable</li>
-                <li class=""><strong class="">Context poisoning is a cognitive deficiency</strong> — it requires the model to have "metacognition" ability: recognizing that its foundational assumptions are wrong and proactively dismantling established reasoning chains. Current Transformer architectures essentially lack this capability</li>
+                <li class=""><strong class="">Larger change sets</strong> — AI is great at filling in everything at once, so work that should have been split across three PRs often lands as one giant submission</li>
+                <li class=""><strong class="">Everything looks locally reasonable</strong> — generated code is often syntactically correct, decently named, and structurally tidy, while the real risks hide in assumptions, compatibility edges, and failure paths</li>
+                <li class=""><strong class="">Blurred ownership</strong> — when the author mostly orchestrates output instead of handcrafting it, their confidence in every line may be lower than in the fully manual era</li>
             </ul>
-            <p class="">Analogy: attention dilution is like someone who can't hear you clearly in a noisy environment — you can solve it with noise-canceling headphones (compression techniques). Context poisoning is like someone stubbornly believing a false fact and building extensive reasoning on it — it's nearly impossible to correct that initial error without making them "forget" all the downstream deductions.</p>
-            <p class="">Humans have this problem too, but we have a key advantage: we can realize "wait, my earlier assumption might be wrong." This metacognitive ability is what current large models lack most.</p>
         </section>
 
-        <section class="detail-section" id="sub-agent">
-            <h2 class="">The Sub-Agent Debate: Two Industry Camps</h2>
-            <p class="">To combat context poisoning, major companies have widely adopted an architectural strategy: <strong class="">sub-agents</strong>. The core idea is to slice a large task into pieces, each handled by a brand-new, clean sub-agent. The sub-agent returns only results, discarding all intermediate context.</p>
-            <p class="">This is essentially engineered "start fresh" — since a single conversation's context will rot, don't let any conversation live long enough for it to happen. Each sub-agent handles a task small enough and context short enough that neither type of rot has time to develop.</p>
-            <p class="">But this strategy has sparked considerable controversy in the industry.</p>
-            <p class=""><strong class="">Anthropic's position is clear: multi-agent systems are the future.</strong> They claim their multi-agent systems achieve 90% performance improvement over single agents, with clear advantages on complex tasks. From an engineering perspective, this makes sense — using clean contexts for sliced tasks avoids both attention dilution and context poisoning.</p>
-            <p class=""><strong class="">But Cognition (the Devin team) pushed back.</strong> They publicly argued "don't build multi-agent systems," claiming sub-agents don't solve problems but create new ones — how do you determine task slicing granularity? How do you synchronize information between sub-agents? How do you guarantee global consistency? Every new agent boundary is a new potential failure point.</p>
-            <p class="">I think both sides have valid points. Sub-agents are indeed an effective weapon against context poisoning, but they're not a silver bullet. They transform a "context management" problem into a "distributed coordination" problem — and the latter has never been an easy problem in computer science.</p>
+        <section class="detail-section" id="signals">
+            <h2 class="">Signals that your team is already accumulating review debt</h2>
+            <p class="">What makes this debt dangerous is that it is hard to monitor early. The system still runs and the roadmap still moves, but the team’s real sense of control over the codebase quietly degrades.</p>
+            <ul class="">
+                <li class=""><strong class="">PRs merge faster while regressions increase</strong> — that usually means the team is optimizing for throughput rather than understanding</li>
+                <li class=""><strong class="">Review comments become superficial</strong> — naming, formatting, and copy get attention, while business assumptions, state transitions, and failure paths get less discussion</li>
+                <li class=""><strong class="">Authors cannot clearly explain key design choices</strong> — once a reviewer asks “why this approach,” the answer falls back to “the AI suggested it” or “it passed locally”</li>
+                <li class=""><strong class="">The code works, but nobody wants to touch it</strong> — features can be piled on, yet the team becomes nervous about refactors, abstraction changes, or implementation swaps</li>
+            </ul>
+            <p class="">When these signals become frequent, the team is not just taking on doc debt or test debt. It is taking on comprehension debt.</p>
+        </section>
+
+        <section class="detail-section" id="response">
+            <h2 class="">The answer is not banning AI</h2>
+            <p class="">I do not think the answer is returning to a fully manual workflow. AI coding is already real leverage. The important shift is moving from “trust the generation speed by default” to “actively protect review quality.”</p>
+            <ul class="">
+                <li class=""><strong class="">Force smaller PRs</strong> — instead of policing whether AI was used, limit how many modules and behavioral changes a single submission can include</li>
+                <li class=""><strong class="">Require a risk note from the author</strong> — not a feature summary, but a clear explanation of where the change is most likely to break, what edge cases remain uncovered, and where reviewers should focus</li>
+                <li class=""><strong class="">Use AI for review preparation</strong> — let it generate change summaries, call-graph hints, and test ideas so the reviewer can enter the context faster, rather than only helping the author expand code</li>
+                <li class=""><strong class="">Preserve human accountability points</strong> — every critical PR should still have a person who can explain the tradeoffs and own the result</li>
+            </ul>
+            <p class="">Put simply, <strong class="">AI can amplify output, but it cannot own the responsibility of understanding and standing behind the code</strong>. That responsibility has to be designed back into the workflow.</p>
         </section>
 
         <section class="detail-section" id="takeaway">
-            <h2 class="">Final Thoughts</h2>
-            <p class="">The Context Rot concept deserves attention because it reveals a fact many haven't realized: <strong class="">context window size doesn't equal effective utilization length</strong>. A 128K window doesn't mean you can dump 128K of content in and expect the model to understand it all.</p>
-            <p class="">As a developer who uses AI tools daily, my coping strategy is simple:</p>
-            <ul class="">
-                <li class=""><strong class="">Compact regularly</strong> — proactively compress once conversations exceed a certain length, don't wait for the model to start degrading</li>
-                <li class=""><strong class="">Start fresh on wrong assumptions</strong> — once you detect the model reasoning on incorrect premises, don't try to correct it in the current conversation, just open a new one</li>
-                <li class=""><strong class="">Front-load critical context</strong> — place the most important constraints and requirements at the beginning or end of your prompt, leveraging the attention mechanism's U-shaped distribution</li>
-            </ul>
-            <p class="">Context rot isn't model degradation — it's another cognitive calibration of model capability boundaries. Rather than complaining "AI is getting dumber," understand why it happens and use it correctly.</p>
-            <p class="">After all, the tool doesn't get dumber — we just haven't learned how to talk to it properly yet.</p>
+            <h2 class="">Don’t mistake throughput for engineering strength</h2>
+            <p class="">Many teams today are rightly chasing faster delivery. But if the only metrics left are commit count, PR count, and raw completion speed, AI can inflate all of them while quietly draining the scarce things that matter more: understanding, maintainability, and trust.</p>
+            <p class="">In the long run, the moat of an engineering team is not who can generate the most code. It is who can keep the system controllable even when generation speed rises dramatically.</p>
+            <p class="">Shipping faster is good. Without matching review discipline, though, speed eventually becomes a more expensive kind of chaos.</p>
         </section></div></div>
     </div>
     <section class="related" aria-labelledby="related-title"><p class="kicker">Continue reading</p><h2 id="related-title">Related <em>writing</em></h2><ol class="journal-list" style="list-style:none"><li><a class="journal-row" href="article-01.html" data-topic="1" data-cursor="Read">
         <span class="journal-date">2026.11 · 01</span>
+        <span class="journal-title"><span class="static">Why Retrain Every Time a Model Breaks?</span><span class="marquee" aria-hidden="true"><span>Why Retrain Every Time a Model Breaks? —&nbsp;</span><span>Why Retrain Every Time a Model Breaks? —&nbsp;</span><span>Why Retrain Every Time a Model Breaks? —&nbsp;</span></span></span>
+        <span class="topic" data-topic="1">AI Engineering</span><span class="journal-time">13 min</span></a></li><li><a class="journal-row" href="article-02.html" data-topic="1" data-cursor="Read">
+        <span class="journal-date">2026.11 · 02</span>
         <span class="journal-title"><span class="static">The Model Fits. Why Is It Still Slow?</span><span class="marquee" aria-hidden="true"><span>The Model Fits. Why Is It Still Slow? —&nbsp;</span><span>The Model Fits. Why Is It Still Slow? —&nbsp;</span><span>The Model Fits. Why Is It Still Slow? —&nbsp;</span></span></span>
-        <span class="topic" data-topic="1">AI Engineering</span><span class="journal-time">15 min</span></a></li><li><a class="journal-row" href="article-02.html" data-topic="1" data-cursor="Read">
-        <span class="journal-date">2026.10 · 02</span>
+        <span class="topic" data-topic="1">AI Engineering</span><span class="journal-time">15 min</span></a></li><li><a class="journal-row" href="article-03.html" data-topic="1" data-cursor="Read">
+        <span class="journal-date">2026.10 · 03</span>
         <span class="journal-title"><span class="static">When the Exam Is Wrong: What Do AI Scores Measure?</span><span class="marquee" aria-hidden="true"><span>When the Exam Is Wrong: What Do AI Scores Measure? —&nbsp;</span><span>When the Exam Is Wrong: What Do AI Scores Measure? —&nbsp;</span><span>When the Exam Is Wrong: What Do AI Scores Measure? —&nbsp;</span></span></span>
-        <span class="topic" data-topic="1">AI Engineering</span><span class="journal-time">16 min</span></a></li><li><a class="journal-row" href="article-15.html" data-topic="1" data-cursor="Read">
-        <span class="journal-date">2026.05 · 15</span>
-        <span class="journal-title"><span class="static">The Core of AI Engineering Is Not Making Models Omnipotent. It Is Defining Boundaries</span><span class="marquee" aria-hidden="true"><span>The Core of AI Engineering Is Not Making Models Omnipotent. It Is Defining Boundaries —&nbsp;</span><span>The Core of AI Engineering Is Not Making Models Omnipotent. It Is Defining Boundaries —&nbsp;</span><span>The Core of AI Engineering Is Not Making Models Omnipotent. It Is Defining Boundaries —&nbsp;</span></span></span>
-        <span class="topic" data-topic="1">AI Engineering</span><span class="journal-time">8 min</span></a></li></ol></section>
+        <span class="topic" data-topic="1">AI Engineering</span><span class="journal-time">15 min</span></a></li></ol></section>
     <nav class="pager" aria-label="More articles">
-        <a href="article-30.html" data-cursor="Prev"><span class="meta">← Previous</span><strong>Code Review Debt in the Age of AI Coding</strong></a>
-        <a href="article-32.html" data-cursor="Next"><span class="meta">Next →</span><strong>Token Economics: When the &quot;Raw Material&quot; of the AI Era Keeps Getting Pricier</strong></a>
+        <a href="article-30.html" data-cursor="Prev"><span class="meta">← Previous</span><strong>After a Vision Model Ships: Do Not Let mAP Become the Only Answer</strong></a>
+        <a href="article-32.html" data-cursor="Next"><span class="meta">Next →</span><strong>Context Rot: Why LLMs Get &quot;Dumber&quot; the Longer You Talk</strong></a>
     </nav>
 </div>
 </main>

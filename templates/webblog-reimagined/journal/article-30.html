@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Code Review Debt in the Age of AI Coding — Eric</title>
-<meta name="description" content="Code Review Debt in the Age of AI Coding">
+<title>After a Vision Model Ships: Do Not Let mAP Become the Only Answer — Eric</title>
+<meta name="description" content="After a Vision Model Ships: Do Not Let mAP Become the Only Answer">
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#ede8df">
 <script>(()=>{const r=document.documentElement;let t,m;try{t=localStorage.getItem('ink-theme');m=localStorage.getItem('ink-motion')}catch(e){}t=t||(matchMedia('(prefers-color-scheme: dark)').matches?'night':'day');if(matchMedia('(prefers-reduced-motion: reduce)').matches)m='off';r.dataset.theme=t;r.dataset.motion=m||'on'})()</script>
@@ -43,75 +43,81 @@
 <div class="progress" aria-hidden="true"><i></i></div>
 <div class="page">
     <header class="article-head">
-        <p class="meta"><a href="index.html">← Journal</a> &nbsp;/&nbsp; <span class="topic" data-topic="1">AI Engineering</span></p>
-        <h1 data-split>Code Review Debt in the Age of AI Coding</h1>
+        <p class="meta"><a href="index.html">← Journal</a> &nbsp;/&nbsp; <span class="topic" data-topic="3">Vision & Multimodal</span></p>
+        <h1 data-split>After a Vision Model Ships: Do Not Let <em>mAP</em> Become the Only Answer</h1>
         <p class="lede rise"></p>
-        <div class="article-meta meta rise" style="--d:120ms"><span>2026.04.26</span><span>9 min</span><span>No. 30</span></div>
+        <div class="article-meta meta rise" style="--d:120ms"><span>2026.04.27</span><span>9 min</span><span>No. 30</span></div>
     </header>
     <div class="article-layout">
-        <nav class="toc" aria-label="Contents"><a href="#intro">Code is faster now, but is the team actually faster?</a><a href="#why">Why review debt grows faster in the AI era</a><a href="#signals">Signals that your team is already accumulating review debt</a><a href="#response">The answer is not banning AI</a><a href="#takeaway">Don’t mistake throughput for engineering strength</a></nav>
+        <nav class="toc" aria-label="Contents"><a href="#intro">Once offline metrics pass, the real work begins</a><a href="#metric-gap">mAP cannot answer every engineering question</a><a href="#online-signals">What signals to watch after launch</a><a href="#rollout">Gradual rollout matters more than replacement</a><a href="#ownership">The data loop is the long-term moat</a><a href="#takeaway">Final Thoughts</a></nav>
         <div class="page-surface"><div class="prose"><section class="detail-section" id="intro">
-            <h2 class="">Code is faster now, but is the team actually faster?</h2>
-            <p class="">Over the last year, the biggest change in AI coding tools has not been whether they can write code, but how aggressively they can compress delivery time. A developer who is fluent with Cursor, Claude Code, or Copilot can now produce in one afternoon what used to take days.</p>
-            <p class="">On the surface, that looks like a clean productivity win. But in real collaboration, I keep noticing a different pattern: once code generation speeds up, the thing teams accumulate fastest is often not capability, but code review debt.</p>
-            <p class="">Code review debt does not mean nobody looks at PRs. It means <strong class="">the rate of incoming changes has outgrown the team’s ability to consistently understand, validate, and own those changes</strong>. Code being written is not the same as code being absorbed.</p>
+            <h2 class="">Once offline metrics pass, the real work begins</h2>
+            <p class="">Many vision projects converge around one acceptance number: mAP. The dataset is split, validation runs, the curve looks good, and the model feels like it has already cleared the hardest part.</p>
+            <p class="">But once that model is connected to a production line, monitoring system, or business workflow, mAP is usually only the beginning. Online images bring lighting changes, angles, compression, occlusion, camera vibration, and aging devices that never politely follow the validation distribution.</p>
+            <p class="">I increasingly think the most underestimated part of vision engineering is not training technique, but <strong class="">post-launch observability and rollback design</strong>. A model that can prove accuracy in a notebook but cannot explain when it is failing online is not yet a reliable system.</p>
         </section>
 
-        <section class="detail-section" id="why">
-            <h2 class="">Why review debt grows faster in the AI era</h2>
-            <p class="">In the past, implementation speed acted as a natural gate. Writing a complex feature slowly also forced the author to self-review along the way. That gate is weaker now. AI accelerates scaffolding, edge branches, test skeletons, and API wiring, so a PR can jump from 200 lines to 2000 lines very quickly.</p>
-            <p class="">The problem is that the reviewer’s cognitive bandwidth has not expanded at the same pace. Review still depends on humans understanding business rules, evaluating failure modes, and mapping downstream impact. AI solves generation, but it does not automatically solve trust.</p>
+        <section class="detail-section" id="metric-gap">
+            <h2 class="">mAP cannot answer every engineering question</h2>
+            <p class="">mAP matters. It measures overall detection quality on labeled data. But it is naturally offline, averaged, and dataset-bound. Real engineering environments ask different questions: which false positives are expensive? Which shifts have more misses? Did one camera suddenly get worse? If the threshold rises, will the human review queue collapse?</p>
+            <p class="">That is not mAP’s fault; those questions are not its job. Treating mAP as the only answer is like judging a backend service by average CPU usage alone. The average can look fine while tail latency, error rate, and dependency jitter are already flashing red.</p>
             <ul class="">
-                <li class=""><strong class="">Larger change sets</strong> — AI is great at filling in everything at once, so work that should have been split across three PRs often lands as one giant submission</li>
-                <li class=""><strong class="">Everything looks locally reasonable</strong> — generated code is often syntactically correct, decently named, and structurally tidy, while the real risks hide in assumptions, compatibility edges, and failure paths</li>
-                <li class=""><strong class="">Blurred ownership</strong> — when the author mostly orchestrates output instead of handcrafting it, their confidence in every line may be lower than in the fully manual era</li>
+                <li class=""><strong class="">Average metrics hide local risk</strong> — a small class, one production line, or one lighting condition may already be degrading</li>
+                <li class=""><strong class="">Offline sets cannot cover online change</strong> — devices, environments, and operating procedures gradually shift the input distribution</li>
+                <li class=""><strong class="">Business cost is not the same as detection score</strong> — the same false detection has very different cost in alerts, inspection, and automated sorting</li>
             </ul>
         </section>
 
-        <section class="detail-section" id="signals">
-            <h2 class="">Signals that your team is already accumulating review debt</h2>
-            <p class="">What makes this debt dangerous is that it is hard to monitor early. The system still runs and the roadmap still moves, but the team’s real sense of control over the codebase quietly degrades.</p>
+        <section class="detail-section" id="online-signals">
+            <h2 class="">What signals to watch after launch</h2>
+            <p class="">I prefer treating a vision model like an online service, not a static file. In addition to normal service metrics, the system needs signals related to images, boxes, and confidence distributions.</p>
             <ul class="">
-                <li class=""><strong class="">PRs merge faster while regressions increase</strong> — that usually means the team is optimizing for throughput rather than understanding</li>
-                <li class=""><strong class="">Review comments become superficial</strong> — naming, formatting, and copy get attention, while business assumptions, state transitions, and failure paths get less discussion</li>
-                <li class=""><strong class="">Authors cannot clearly explain key design choices</strong> — once a reviewer asks “why this approach,” the answer falls back to “the AI suggested it” or “it passed locally”</li>
-                <li class=""><strong class="">The code works, but nobody wants to touch it</strong> — features can be piled on, yet the team becomes nervous about refactors, abstraction changes, or implementation swaps</li>
+                <li class=""><strong class="">Input distribution</strong> — whether brightness, blur, resolution, compression quality, camera source, and capture time have drifted from training</li>
+                <li class=""><strong class="">Output distribution</strong> — whether per-class counts, box sizes, confidence histograms, and empty-result ratios suddenly change</li>
+                <li class=""><strong class="">Human review feedback</strong> — which false positives are repeatedly rejected, and which misses come from the same device or scene</li>
+                <li class=""><strong class="">System-level consequences</strong> — whether alert volume, review queue length, latency, and downstream action failures are amplified by model output</li>
             </ul>
-            <p class="">When these signals become frequent, the team is not just taking on doc debt or test debt. It is taking on comprehension debt.</p>
+            <p class="">These signals do not require a complex platform from day one. Even daily statistics grouped by camera and class are far more reliable than storing only a model weight file.</p>
         </section>
 
-        <section class="detail-section" id="response">
-            <h2 class="">The answer is not banning AI</h2>
-            <p class="">I do not think the answer is returning to a fully manual workflow. AI coding is already real leverage. The important shift is moving from “trust the generation speed by default” to “actively protect review quality.”</p>
+        <section class="detail-section" id="rollout">
+            <h2 class="">Gradual rollout matters more than replacement</h2>
+            <p class="">Upgrading a vision model should not feel like swapping a static image. A new model can score higher offline and still create new false-positive patterns online. In industrial inspection, security alerts, or medical assistance, changed model behavior is itself a risk.</p>
+            <p class="">A steadier path is treating launch as a <strong class="">canary experiment</strong>: run old and new models on the same inputs, compare differences first, then gradually increase traffic. Do not only ask whether the new model is more accurate; ask where it disagrees with the old one.</p>
             <ul class="">
-                <li class=""><strong class="">Force smaller PRs</strong> — instead of policing whether AI was used, limit how many modules and behavioral changes a single submission can include</li>
-                <li class=""><strong class="">Require a risk note from the author</strong> — not a feature summary, but a clear explanation of where the change is most likely to break, what edge cases remain uncovered, and where reviewers should focus</li>
-                <li class=""><strong class="">Use AI for review preparation</strong> — let it generate change summaries, call-graph hints, and test ideas so the reviewer can enter the context faster, rather than only helping the author expand code</li>
-                <li class=""><strong class="">Preserve human accountability points</strong> — every critical PR should still have a person who can explain the tradeoffs and own the result</li>
+                <li class=""><strong class="">Shadow mode</strong> — the new model does not affect the business path yet; it only records predictions and differences</li>
+                <li class=""><strong class="">Scenario-based rollout</strong> — start with low-risk cameras, low-value alerts, or workflows with human fallback</li>
+                <li class=""><strong class="">Explicit rollback thresholds</strong> — if false positives, misses, latency, or review pressure exceed limits, automatically switch back</li>
             </ul>
-            <p class="">Put simply, <strong class="">AI can amplify output, but it cannot own the responsibility of understanding and standing behind the code</strong>. That responsibility has to be designed back into the workflow.</p>
+        </section>
+
+        <section class="detail-section" id="ownership">
+            <h2 class="">The data loop is the long-term moat</h2>
+            <p class="">Whether a vision system improves over time depends on whether online failures can flow back into training. Without a loop, every iteration feels like another draw from the lottery. With a loop, error samples become fuel for the next improvement.</p>
+            <p class="">The loop is not simply dumping every online image back into training. The useful part is context: source device, time, environment, model version, threshold, human decision, and downstream impact. That context lets the team distinguish drift, labeling policy, model architecture, and business threshold mistakes.</p>
+            <p class=""><strong class="">Model launch is not the end of development; it is where the data system starts breathing.</strong> The team that can detect failure faster, locate causes more precisely, and convert errors into training assets more consistently is closer to sustainable AI vision engineering.</p>
         </section>
 
         <section class="detail-section" id="takeaway">
-            <h2 class="">Don’t mistake throughput for engineering strength</h2>
-            <p class="">Many teams today are rightly chasing faster delivery. But if the only metrics left are commit count, PR count, and raw completion speed, AI can inflate all of them while quietly draining the scarce things that matter more: understanding, maintainability, and trust.</p>
-            <p class="">In the long run, the moat of an engineering team is not who can generate the most code. It is who can keep the system controllable even when generation speed rises dramatically.</p>
-            <p class="">Shipping faster is good. Without matching review discipline, though, speed eventually becomes a more expensive kind of chaos.</p>
+            <h2 class="">Final Thoughts</h2>
+            <p class="">If mAP is the only way we judge success, we reduce the problem to whether the model was trained well enough. In practice, the harder engineering question is whether the model can still be observed, explained, and controlled in a changing world.</p>
+            <p class="">A mature vision launch should answer at least three questions: is the model still seeing familiar data, what business consequences do its errors create, and can the system quickly detect and roll back when failure begins?</p>
+            <p class="">mAP is an entry ticket, not a finish line. Monitoring, canary rollout, rollback, and the data loop decide whether a vision model is a demo or a production system.</p>
         </section></div></div>
     </div>
-    <section class="related" aria-labelledby="related-title"><p class="kicker">Continue reading</p><h2 id="related-title">Related <em>writing</em></h2><ol class="journal-list" style="list-style:none"><li><a class="journal-row" href="article-01.html" data-topic="1" data-cursor="Read">
-        <span class="journal-date">2026.11 · 01</span>
-        <span class="journal-title"><span class="static">The Model Fits. Why Is It Still Slow?</span><span class="marquee" aria-hidden="true"><span>The Model Fits. Why Is It Still Slow? —&nbsp;</span><span>The Model Fits. Why Is It Still Slow? —&nbsp;</span><span>The Model Fits. Why Is It Still Slow? —&nbsp;</span></span></span>
-        <span class="topic" data-topic="1">AI Engineering</span><span class="journal-time">15 min</span></a></li><li><a class="journal-row" href="article-02.html" data-topic="1" data-cursor="Read">
-        <span class="journal-date">2026.10 · 02</span>
-        <span class="journal-title"><span class="static">When the Exam Is Wrong: What Do AI Scores Measure?</span><span class="marquee" aria-hidden="true"><span>When the Exam Is Wrong: What Do AI Scores Measure? —&nbsp;</span><span>When the Exam Is Wrong: What Do AI Scores Measure? —&nbsp;</span><span>When the Exam Is Wrong: What Do AI Scores Measure? —&nbsp;</span></span></span>
-        <span class="topic" data-topic="1">AI Engineering</span><span class="journal-time">16 min</span></a></li><li><a class="journal-row" href="article-15.html" data-topic="1" data-cursor="Read">
-        <span class="journal-date">2026.05 · 15</span>
-        <span class="journal-title"><span class="static">The Core of AI Engineering Is Not Making Models Omnipotent. It Is Defining Boundaries</span><span class="marquee" aria-hidden="true"><span>The Core of AI Engineering Is Not Making Models Omnipotent. It Is Defining Boundaries —&nbsp;</span><span>The Core of AI Engineering Is Not Making Models Omnipotent. It Is Defining Boundaries —&nbsp;</span><span>The Core of AI Engineering Is Not Making Models Omnipotent. It Is Defining Boundaries —&nbsp;</span></span></span>
-        <span class="topic" data-topic="1">AI Engineering</span><span class="journal-time">8 min</span></a></li></ol></section>
+    <section class="related" aria-labelledby="related-title"><p class="kicker">Continue reading</p><h2 id="related-title">Related <em>writing</em></h2><ol class="journal-list" style="list-style:none"><li><a class="journal-row" href="article-18.html" data-topic="3" data-cursor="Read">
+        <span class="journal-date">2026.05 · 18</span>
+        <span class="journal-title"><span class="static">U-Net Did Not Lose to a Newer Model: In Industrial Vision, Define the Task Before Choosing the Model</span><span class="marquee" aria-hidden="true"><span>U-Net Did Not Lose to a Newer Model: In Industrial Vision, Define the Task Before Choosing the Model —&nbsp;</span><span>U-Net Did Not Lose to a Newer Model: In Industrial Vision, Define the Task Before Choosing the Model —&nbsp;</span><span>U-Net Did Not Lose to a Newer Model: In Industrial Vision, Define the Task Before Choosing the Model —&nbsp;</span></span></span>
+        <span class="topic" data-topic="3">Vision &amp; Multimodal</span><span class="journal-time">8 min</span></a></li><li><a class="journal-row" href="article-25.html" data-topic="3" data-cursor="Read">
+        <span class="journal-date">2026.04 · 25</span>
+        <span class="journal-title"><span class="static">Vision Algorithm Engineers: Do Not Become Process Operators</span><span class="marquee" aria-hidden="true"><span>Vision Algorithm Engineers: Do Not Become Process Operators —&nbsp;</span><span>Vision Algorithm Engineers: Do Not Become Process Operators —&nbsp;</span><span>Vision Algorithm Engineers: Do Not Become Process Operators —&nbsp;</span></span></span>
+        <span class="topic" data-topic="3">Vision &amp; Multimodal</span><span class="journal-time">8 min</span></a></li><li><a class="journal-row" href="article-36.html" data-topic="3" data-cursor="Read">
+        <span class="journal-date">2026.03 · 36</span>
+        <span class="journal-title"><span class="static">From DETR to YOLOv8: Transformer Evolution in Object Detection</span><span class="marquee" aria-hidden="true"><span>From DETR to YOLOv8: Transformer Evolution in Object Detection —&nbsp;</span><span>From DETR to YOLOv8: Transformer Evolution in Object Detection —&nbsp;</span><span>From DETR to YOLOv8: Transformer Evolution in Object Detection —&nbsp;</span></span></span>
+        <span class="topic" data-topic="3">Vision &amp; Multimodal</span><span class="journal-time">12 min</span></a></li></ol></section>
     <nav class="pager" aria-label="More articles">
-        <a href="article-29.html" data-cursor="Prev"><span class="meta">← Previous</span><strong>After a Vision Model Ships: Do Not Let mAP Become the Only Answer</strong></a>
-        <a href="article-31.html" data-cursor="Next"><span class="meta">Next →</span><strong>Context Rot: Why LLMs Get &quot;Dumber&quot; the Longer You Talk</strong></a>
+        <a href="article-29.html" data-cursor="Prev"><span class="meta">← Previous</span><strong>AI Weekly: Agent Platforms Scale Up, Models Keep Advancing, and AI Hardware Moves Toward the Edge</strong></a>
+        <a href="article-31.html" data-cursor="Next"><span class="meta">Next →</span><strong>Code Review Debt in the Age of AI Coding</strong></a>
     </nav>
 </div>
 </main>
