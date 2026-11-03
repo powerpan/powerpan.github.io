@@ -18,6 +18,7 @@
 - 不要直接修改已有原始 HTML，除非是在执行正式发文流程时更新站点索引或新增文章页。
 - RAG 底座以 `rag-articles/*.md` 为主。
 - HTML 发布仍然严格遵循 [`NEW_BLOG_POST.md`](/Users/ericpan/game_project/webblog/NEW_BLOG_POST.md)。
+- 当前展示前端为 `templates/webblog-reimagined/`。旧站 HTML/i18n 仍是双语内容源，完成后须用 `--articles-only` 导入新版并构建 `dist/`；不能只做旧版页面，也不能用旧站数据覆盖新版简介或项目。具体步骤见 `NEW_BLOG_POST.md` 的“当前前端与内容入口”和第 6.5 节。
 
 ---
 
@@ -121,6 +122,13 @@ js/i18n/blog-list.js
 | 首页最新文章 | `index.html` | 最新 6 篇 | 只维护首页博客区的最新 6 篇卡片 |
 | 全量文章列表 | `blog/index.html` | 全部文章倒序 | 必须维护总数、筛选计数和连续编号 |
 | 主题使用记录 | `BLOG_TOPIC_POOL.md` | 主题行追加日期 | 每次发文都要记录选用主题 |
+| 新版文章快照 | `templates/webblog-reimagined/content/` | `en.json`、`zh.json`、`source.json`、`seo.json` | 从 `_site/` 用 `--articles-only` 同步，保留新版个人与项目内容 |
+| 新版 RSS | `templates/webblog-reimagined/public/` | `feed.xml` | 文章导入器同步，保留既有 GUID |
+| 新版预览页 | `templates/webblog-reimagined/`、其 `zh/` | `index.html`、`journal/` | 现有构建器生成；编号不是永久文章 ID |
+| 新版生产构建 | `templates/webblog-reimagined/dist/` | 正式 slug 和双语路径 | 仅本地生成、不自动上传；不提交构建产物 |
+| 发布清单与可选 ZIP | `templates/webblog-reimagined/` | `release-manifest.json`、`webblog-reimagined-production.zip` | 构建器/打包器生成，均不提交；未获授权不上传 |
+| 预览验收截图 | `node_modules/.cache/article-qa/` | `{slug}-{lang}-{viewport}-{state}.png` | 项目内临时证据，不提交；临时 QA 脚本检查后删除 |
+| 字体维护 | `templates/webblog-reimagined/assets/fonts/` | 现有 `noto-*-sc-content.woff` | 新字符不全时扩充子集，保留已有字形；原始字体缓存放 `node_modules/.cache/article-fonts/`，不提交 |
 | 转换脚本 | `tools/` | `*.py` | 项目内工具脚本统一放这里 |
 
 站点文章筛选固定使用 6 个主分类：
@@ -319,7 +327,7 @@ NEW_BLOG_POST.md
 6. 更新 `index.html` 最新 6 篇。
 7. 更新 `blog/index.html` 全量列表和计数。
 8. 更新 `BLOG_TOPIC_POOL.md` 使用日期。
-9. 同步 SEO 生成内容和 `_site/` 发布目录。
+9. 同步 SEO 和 `_site/` 中间构建，再以 `--articles-only` 导入新版并生成 `templates/webblog-reimagined/dist/`。
 10. 运行发布前校验。
 11. 默认只留在工作区，除非用户明确要求提交或推送。
 12. 如果用户明确要求提交并推送远程，推送完成后必须提醒用户：把本次新增或更新的 `rag-articles/{slug}.md` 放入实际 RAG 系统。
@@ -333,6 +341,9 @@ node tools/check_i18n.js
 node tools/build_site.js
 node tools/build_site.js --check
 npm run check
+node templates/webblog-reimagined/tools/import-content.cjs --articles-only
+node templates/webblog-reimagined/tools/release.cjs
+node --test templates/webblog-reimagined/tools/release.test.cjs
 ```
 
 ---
@@ -350,12 +361,14 @@ npm run check
 - [ ] `node tools/update_seo.js` 已同步 sitemap、RSS、SEO meta、专题页和相关文章
 - [ ] `node tools/update_seo.js --check` 通过
 - [ ] `node tools/check_i18n.js` 严格项通过
-- [ ] `node tools/build_site.js` 已生成 `_site/` 发布目录
+- [ ] `node tools/build_site.js` 已生成 `_site/` 内容中间构建
 - [ ] `node tools/build_site.js --check` 通过
-- [ ] `npm run check` 通过（包括公开网址、站内链接及旧链接兼容测试）；发布版使用 `npm run preview` 预览
+- [ ] `npm run check` 通过（包括公开网址、站内链接及旧链接兼容测试）；新版生产包使用 `preview-production.cjs` 验收，不把 `npm run preview` 的旧版画面当作新版结果
 - [ ] `npm run locales:check` 通过；构建产物含 `/blog/{slug}` 与 `/en/blog/{slug}`，英文正文无需 JS 即存在，语言入口指向对应版本
 - [ ] 只维护原始 HTML 和对应中英文字典，未手工复制英文镜像、未提交 `_site/`；新环境先用 Node 22.16+ 运行 `npm ci`
 - [ ] 首页最新 6 篇规则正确
+- [ ] 新版双语快照和 `dist/` 已构建，简介/经历/项目未被文章同步覆盖
+- [ ] 新版桌面/移动端详情、目录、语言切换、首页六篇、归档搜索和专题筛选检查通过
 - [ ] 列表页包含全部文章，排序和编号正确
 - [ ] `blog_list_sub` 计数正确
 - [ ] 没有写入 `webblog` 项目之外

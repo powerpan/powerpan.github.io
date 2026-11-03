@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>文明Z — Eric</title>
+<meta name="description" content="我想把 AI 的决策过程放进一张看得见变化的地图里。于是有了《文明Z》：三个文明从各自的首都出发，探索、建设、竞争，而我可以在旁观与接管之间切换。">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#ede8df">
+<script>(()=>{const r=document.documentElement;let t,m;try{t=localStorage.getItem('ink-theme');m=localStorage.getItem('ink-motion')}catch(e){}t=t||(matchMedia('(prefers-color-scheme: dark)').matches?'night':'day');if(matchMedia('(prefers-reduced-motion: reduce)').matches)m='off';r.dataset.theme=t;r.dataset.motion=m||'on'})()</script>
+<link rel="preload" href="../../assets/fonts/instrument-serif-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../css/ink.css">
+<link rel="stylesheet" href="../../css/languages.css">
+<link rel="stylesheet" href="../../css/sound.css">
+<script src="../../js/ink-sound.js" defer></script>
+<noscript><style>[data-sound-toggle],.volume{display:none!important}</style></noscript>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='26' fill='%23f6401a'/%3E%3Ccircle cx='40' cy='26' r='14' fill='%232337f2' fill-opacity='.85'/%3E%3C/svg%3E">
+<link rel="alternate" hreflang="en" href="../../work/project-01.html">
+</head>
+<body data-ink="quiet">
+<canvas id="ink" aria-hidden="true"></canvas>
+<div class="grain" aria-hidden="true"></div>
+
+<div class="cursor" aria-hidden="true"><span class="cursor-label"></span></div>
+<a class="sr-only" href="#main">跳至正文</a>
+<header class="masthead">
+    <a class="brand" href="../index.html" aria-label="Eric — 首页">Eric<sup>®</sup></a>
+    <div class="masthead-meta"><span>作品与手记</span><a href="../../work/project-01.html" data-language-switch hreflang="en" lang="en" aria-label="Read this page in English">EN</a></div>
+    <div class="masthead-right">
+        <nav class="masthead-nav" aria-label="主导航">
+            <a href="../work/index.html" aria-current="page">项目</a><a href="../journal/index.html">文章</a><a href="../index.html#about">关于</a><a href="../index.html#contact">联系</a>
+        </nav>
+        <button class="sound-switch" type="button" data-sound-toggle aria-pressed="false" aria-label="播放背景音乐"><canvas class="sound-wave" aria-hidden="true"></canvas><span class="sound-label">音乐</span></button>
+        <button class="theme-switch" type="button" data-theme-toggle aria-pressed="false"><span class="theme-switch-dot" aria-hidden="true"></span><span class="theme-switch-label">夜间</span></button>
+        <button class="menu-button" type="button" aria-expanded="false" aria-controls="menu">菜单</button>
+    </div>
+</header>
+<nav class="menu" id="menu" aria-label="菜单">
+    <a href="../index.html">目录</a><a href="../work/index.html"><em>项目</em></a><a href="../journal/index.html">文章</a><a href="../index.html#contact"><em>联系</em></a>
+    <div class="menu-foot meta"><span>本地 <span data-clock>--:--:--</span></span><button class="sound-switch" type="button" data-sound-toggle aria-pressed="false" aria-label="播放背景音乐"><canvas class="sound-wave" aria-hidden="true"></canvas><span class="sound-label">音乐</span></button><a href="../../work/project-01.html" data-language-switch hreflang="en" lang="en" aria-label="Read this page in English">EN</a></div>
+</nav>
+<main id="main">
+<div class="page"><p class="kicker"><a href="index.html">项目</a> / AI Agents · Strategy Game · Simulation</p>
+    <header class="case-hero"><h1 data-split>文明Z</h1><p class="lede rise">我想把 AI 的决策过程放进一张看得见变化的地图里。于是有了《文明Z》：三个文明从各自的首都出发，探索、建设、竞争，而我可以在旁观与接管之间切换。</p></header><dl class="case-facts rise"><div><dt class="meta">Role</dt><dd>游戏与 AI 应用开发</dd></div><div><dt class="meta">Status</dt><dd>本地可玩 · 持续迭代</dd></div><div><dt class="meta">Stack</dt><dd>React / TypeScript / Fastify</dd></div><div><dt class="meta">编号</dt><dd>No. 01</dd></div></dl>
+    <div class="case-media"><img src="../../assets/projects/civilization-z/menu.webp" alt="文明Z主菜单，以古代城邦为背景，提供快速观战、自定义世界、挑战、教学与存档入口" width="1920" height="1080" loading="eager" decoding="async"></div><div class="case-body"><section class="case-section"><div class="case-section-label"><span class="num">01</span><span class="meta">章节</span></div>
+            <div class="case-section-copy prose"><h2 data-split>为什么想做一个 AI 文明沙盘</h2><p class="civ-provenance">这里选用的是游戏实机截图。为了集中展示不同玩法，图中的局面经过人工布置，并非 AI 自主完成的一场对局。点击图片可以查看原图。</p>
+<div class="detail-section-label">01 / THE WORLD</div>
+
+            <p class="detail-text">如果让几个 AI 在同一片大陆上发展，它们会怎样选择自己的道路？这是我做《文明Z》最想探索的问题。我给它们准备了一张默认 24 × 18 的六边形地图，让三个文明从首都出发，探索迷雾、建立城市、积累资源。每个文明依次行动，再统一结算，默认一局最多 60 轮。</p>
+            <p class="detail-text">我关心的是这些选择怎样改变地图：一座城建在哪里，科研与扩张怎么分配资源，什么时候需要为冲突做准备。为了让游戏不依赖 API 也能运行，我保留了免费的离线规则策略；它不调用大模型。接入 DeepSeek → Jev 后，则可以在同一套规则下观察模型的决策。游戏目前在本机浏览器里运行，是一个单人沙盘。</p><div class="badges"><span class="tag">TypeScript</span><span class="tag">React 19</span><span class="tag">Canvas 2D</span><span class="tag">Fastify</span><span class="tag">JSON Schema / AJV</span><span class="tag">DeepSeek</span><span class="tag">Jev</span></div><figure class="rise"><img src="../../assets/projects/civilization-z/world.webp" alt="文明Z六边形地图中的三个文明、城市、疆域与部队，采用人工布置的展示局面" width="1920" height="1080" loading="lazy" decoding="async"><figcaption>三境全景：山口、矿带和边界，把三个文明的发展放在同一张地图上。</figcaption></figure></div></section><section class="case-section"><div class="case-section-label"><span class="num">02</span><span class="meta">章节</span></div>
+            <div class="case-section-copy prose"><h2 data-split>让城市建设有取舍</h2><div class="detail-section-label">02 / CITY BUILDING</div>
+
+            <p class="detail-text">我希望建城之后还有持续经营的空间。人口、粮食和生产决定发展的速度，粮仓、工坊、图书馆与新部队都需要跨轮完成。先造一个开拓者，还是先补一座图书馆？同一座城的生产时间有限，这些选择才会有分量。</p>
+            <p class="detail-text">研究、工业和军备专精让城市有了不同的分工，也提供有限的建设投资。操作上，我保留了直接点选城市和部队的方式：接管之后可以安排生产、指定目的地、查看攻击风险。自然语言适合表达意图，但不该成为每一步操作的必经之路。</p><figure class="rise"><img src="../../assets/projects/civilization-z/city.webp" alt="文明Z城市详情抽屉，显示人口、产出、正在建设的工坊与城市专精" width="1920" height="1080" loading="lazy" decoding="async"><figcaption>城邦营造：人口、产出、建设与专精，决定一座城市能承担什么角色。</figcaption></figure></div></section><section class="case-section"><div class="case-section-label"><span class="num">03</span><span class="meta">章节</span></div>
+            <div class="case-section-copy prose"><h2 data-split>给文明留下不同的发展路线</h2><div class="detail-section-label">03 / VICTORY PATHS</div>
+
+            <p class="detail-text">胜利条件决定了文明会为什么而发展。我设置了科技与征服两条提前结束对局的路线：前者需要掌握科学方法，再完成科研工程；后者需要同时控制全部初始首都。到了轮次上限还没有分出胜负，就按综合得分结算。</p>
+            <p class="detail-text">我想保留的，是这几条路线之间的拉扯。科研需要城市产出，扩张要投入建设，准备战争又会占用资源。它们共用一套时间和资源约束，让眼前的选择能影响之后的局面。至于怎样让不同路线都有机会，还需要继续打磨平衡。</p><figure class="rise"><img src="../../assets/projects/civilization-z/research.webp" alt="文明Z科研抽屉，显示科学方法的研究进度、每轮科研产出与已掌握的科技" width="1920" height="1080" loading="lazy" decoding="async"><figcaption>知识之路：科技逐步解锁，研究进度与城市建设一起影响文明的发展方向。</figcaption></figure></div></section><section class="case-section"><div class="case-section-label"><span class="num">04</span><span class="meta">章节</span></div>
+            <div class="case-section-copy prose"><h2 data-split>旁观之外，也能参与其中</h2><div class="detail-section-label">04 / PLAYER AGENCY</div>
+
+            <p class="detail-text">只看 AI 自己推进，很容易不知道它刚才为什么停下，或到底在忙什么。所以我把行动气泡、可定位的世界纪事和公开目标放进了观战界面。想法和结果分开展示，也可以关注某个文明或区域，遇到宣战、首都受击等关键事件时自动暂停。</p>
+            <p class="detail-text">我把参与方式分成了轻重两层。轻一点，可以给文明一个持续五次 AI 决策的战略方向，例如优先科研或守住领土，具体动作仍由它决定；想亲自操作时，就在目标文明下一个可接管的行动阶段接手。退出接管会结束它本轮的行动，下一轮再交回 AI。</p><figure class="rise"><img src="../../assets/projects/civilization-z/goals.webp" alt="文明Z战略抽屉，显示三个文明分别声明的科研、建城和训练部队目标" width="1920" height="1080" loading="lazy" decoding="async"><figcaption>三方雄心：把各文明公开的目标放在一起，方便对照后续行动。</figcaption></figure></div></section><section class="case-section"><div class="case-section-label"><span class="num">05</span><span class="meta">章节</span></div>
+            <div class="case-section-copy prose"><h2 data-split>让地图承担叙事</h2><div class="detail-section-label">05 / ON THE MAP</div>
+
+            <p class="detail-text">我更希望观众记住的是某个山口发生了交战、哪座城市易手了，而不是日志里又多了几行文字。单位按移动力、地形和占位规则前进，攻击与反击由引擎计算，界面再把已经发生的行动画成轨迹、伤害数字和气泡。一次远距离行军，也能从地图上看出它走到了哪里。</p>
+            <p class="detail-text">视觉上，我选了微缩城邦、手绘地形和古地图色调，城市外观会随人口阶段变化。面板按需展开，把大部分空间留给地图；资源与军事图层、名称开关和字号调整，则留给观众按自己的习惯选择。相比把所有信息同时堆出来，我更在意看一眼能不能读懂当前局面。</p><figure class="rise"><img src="../../assets/projects/civilization-z/combat.webp" alt="文明Z山口附近的部队交锋，地图上显示攻击气泡及双方伤害数字" width="1920" height="1080" loading="lazy" decoding="async"><figcaption>山口交锋：攻击位置、双方损失和行动反馈，都直接呈现在地图上。</figcaption></figure></div></section><section class="case-section"><div class="case-section-label"><span class="num">06</span><span class="meta">章节</span></div>
+            <div class="case-section-copy prose"><h2 data-split>把模型决策接到规则引擎里</h2><div class="detail-section-label">06 / THE DECISION PIPELINE</div>
+
+            <p class="detail-text">这个项目里，我最在意的工程划分，是把模型的意图和游戏状态的变化分开。规则引擎、AI 适配、共享契约、Fastify 服务端与 React 前端分别放在 TypeScript 工作区中。接入模型时，决策经过下面四步；离线策略直接产生候选命令，但仍使用同一套规则校验。</p>
+            <ol class="civ-pipeline">
+                <li class="civ-pipeline-step">
+                    <div class="civ-pipeline-index">01 / OBSERVE</div>
+                    <h3 class="civ-pipeline-title">限定观察</h3>
+                    <p class="civ-pipeline-desc">给每个文明提供自身状态、可见地图和私有记忆。观众可以看全局，模型则按所属文明的视野做决定。</p>
+                </li>
+                <li class="civ-pipeline-step">
+                    <div class="civ-pipeline-index">02 / TRANSLATE</div>
+                    <h3 class="civ-pipeline-title">策略与转译</h3>
+                    <p class="civ-pipeline-desc">由 DeepSeek 提出行动意图，再交给 Jev 转成结构化命令。转译对应原文片段，计划、引述和无法明确解析的内容不直接执行。</p>
+                </li>
+                <li class="civ-pipeline-step">
+                    <div class="civ-pipeline-index">03 / VALIDATE</div>
+                    <h3 class="civ-pipeline-title">服务端裁决</h3>
+                    <p class="civ-pipeline-desc">服务端检查运行实例、状态版本与控制权，再由规则引擎判断命令是否成立，结算移动、建设和战斗。</p>
+                </li>
+                <li class="civ-pipeline-step">
+                    <div class="civ-pipeline-index">04 / RECORD</div>
+                    <h3 class="civ-pipeline-title">事实与反馈</h3>
+                    <p class="civ-pipeline-desc">把执行结果记录为事件，驱动地图、纪事和下一次观察。行动受阻时也保留原因，方便理解和排查。</p>
+                </li>
+            </ol>
+            <p class="detail-text">人工自然语言指令也走预览、确认、执行这条路径。读档时会创建新的运行实例，避免旧请求落到恢复后的世界里；模型调用预算单独记账，读取旧档不会把已消耗的额度清零。这些处理不太显眼，但关系到暂停、接管和存档能不能可靠地一起工作。</p>
+            <p class="detail-text">我把暂停、单步和倍速留在了观看过程中：有时只想看文明往前发展，有时又想停下来弄清楚一步决策。存档负责继续游玩，纪事负责回看关键事件。目前还没有做完整的模型回答回放，这和恢复一局游戏是两件不同的事。</p></div></section><section class="case-section"><div class="case-section-label"><span class="num">07</span><span class="meta">章节</span></div>
+            <div class="case-section-copy prose"><h2 data-split>接下来，我更想把一局游戏打磨好</h2><div class="detail-section-label">07 / CURRENT STATE</div>
+
+            <p class="detail-text">除了核心对局，我也补上了主菜单、开场短片、背景音乐和五步离线教学，准备了“守住首都”和“落后文明反超”两个固定局面挑战。希望第一次打开时就能知道从哪里开始，而不必先理解模型配置和一长串规则。</p>
+            <p class="detail-text">接下来我更想打磨一局游戏本身的节奏：发展期会不会太平淡，战争与科研能否各有机会，到了中后期还有没有值得介入的选择。能把一局跑完只是基础，我希望它既能让我观察 AI 的决策，也能让人愿意继续看下一轮。</p>
+            <p class="detail-text">目前我先把它作为本地单人项目持续迭代，暂未开放在线试玩和源码。离线模式不需要模型调用费用；接入真实模型或使用自然语言转译时，需要自行配置相应服务，也会涉及 API 成本。</p></div></section></div>
+    <a class="next-case" href="project-02.html" data-cursor="下一个"><span class="meta">下一个项目 — 02</span><strong>Trading Simulator</strong></a></div>
+</main>
+<footer class="colophon">
+    <div class="colophon-name" data-fit aria-hidden="true">Eric</div>
+    <div class="colophon-grid">
+        <div><p class="meta">目录</p><a href="../work/index.html">项目</a><a href="../journal/index.html">文章</a><a href="../index.html#about">关于</a><a href="../index.html#contact">联系</a></div>
+        <div><p class="meta">更多</p><a href="https://github.com/powerpan" target="_blank" rel="noopener">GitHub</a><a href="index.html">项目</a><a href="../journal/index.html">文章</a><a href="../index.html#contact">联系</a></div>
+        <div><p class="meta">设置</p><button type="button" data-theme-toggle aria-pressed="false"><span class="theme-switch-label">夜间</span> 纸色</button><br><button type="button" data-motion-toggle aria-pressed="true">动效：开启</button><br><button type="button" class="sound-text" data-sound-toggle aria-pressed="false">音乐：关闭</button>
+<label class="volume"><span class="meta">音量</span><input class="ink-range" type="range" min="0" max="1" step="0.05" value="0.6" data-sound-volume aria-label="音乐音量"></label></div>
+        <div><p class="meta">关于本站</p><p>© 2026 Eric. 中文标题采用 Noto Serif SC，正文采用 Noto Sans SC。水墨以 WebGL2 实时模拟。</p><a href="#" data-top>返回顶部 ↑</a></div>
+    </div>
+</footer>
+<p class="sr-only" role="status" aria-live="polite" data-sound-status></p>
+<script src="../../js/ink-fluid.js"></script>
+<script src="../../js/ink.js"></script>
+</body>
+</html>

@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>企业 AI 本地部署，第一步不是买 GPU，而是先洗数据 — Eric</title>
+<meta name="description" content="企业 AI 真正的起点不是模型和算力，而是内部数据是否具备可检索、可引用、可追溯和可回答的知识质量。">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#ede8df">
+<script>(()=>{const r=document.documentElement;let t,m;try{t=localStorage.getItem('ink-theme');m=localStorage.getItem('ink-motion')}catch(e){}t=t||(matchMedia('(prefers-color-scheme: dark)').matches?'night':'day');if(matchMedia('(prefers-reduced-motion: reduce)').matches)m='off';r.dataset.theme=t;r.dataset.motion=m||'on'})()</script>
+<link rel="preload" href="../../assets/fonts/instrument-serif-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../css/ink.css">
+<link rel="stylesheet" href="../../css/languages.css">
+<link rel="stylesheet" href="../../css/sound.css">
+<script src="../../js/ink-sound.js" defer></script>
+<noscript><style>[data-sound-toggle],.volume{display:none!important}</style></noscript>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='26' fill='%23f6401a'/%3E%3Ccircle cx='40' cy='26' r='14' fill='%232337f2' fill-opacity='.85'/%3E%3C/svg%3E">
+<link rel="alternate" hreflang="en" href="../../journal/article-16.html">
+</head>
+<body data-ink="quiet">
+<canvas id="ink" aria-hidden="true"></canvas>
+<div class="grain" aria-hidden="true"></div>
+
+<div class="cursor" aria-hidden="true"><span class="cursor-label"></span></div>
+<a class="sr-only" href="#main">跳至正文</a>
+<header class="masthead">
+    <a class="brand" href="../index.html" aria-label="Eric — 首页">Eric<sup>®</sup></a>
+    <div class="masthead-meta"><span>作品与手记</span><a href="../../journal/article-16.html" data-language-switch hreflang="en" lang="en" aria-label="Read this page in English">EN</a></div>
+    <div class="masthead-right">
+        <nav class="masthead-nav" aria-label="主导航">
+            <a href="../work/index.html">项目</a><a href="../journal/index.html" aria-current="page">文章</a><a href="../index.html#about">关于</a><a href="../index.html#contact">联系</a>
+        </nav>
+        <button class="sound-switch" type="button" data-sound-toggle aria-pressed="false" aria-label="播放背景音乐"><canvas class="sound-wave" aria-hidden="true"></canvas><span class="sound-label">音乐</span></button>
+        <button class="theme-switch" type="button" data-theme-toggle aria-pressed="false"><span class="theme-switch-dot" aria-hidden="true"></span><span class="theme-switch-label">夜间</span></button>
+        <button class="menu-button" type="button" aria-expanded="false" aria-controls="menu">菜单</button>
+    </div>
+</header>
+<nav class="menu" id="menu" aria-label="菜单">
+    <a href="../index.html">目录</a><a href="../work/index.html"><em>项目</em></a><a href="../journal/index.html">文章</a><a href="../index.html#contact"><em>联系</em></a>
+    <div class="menu-foot meta"><span>本地 <span data-clock>--:--:--</span></span><button class="sound-switch" type="button" data-sound-toggle aria-pressed="false" aria-label="播放背景音乐"><canvas class="sound-wave" aria-hidden="true"></canvas><span class="sound-label">音乐</span></button><a href="../../journal/article-16.html" data-language-switch hreflang="en" lang="en" aria-label="Read this page in English">EN</a></div>
+</nav>
+<main id="main">
+<div class="progress" aria-hidden="true"><i></i></div>
+<div class="page">
+    <header class="article-head">
+        <p class="meta"><a href="index.html">← 文章</a> &nbsp;/&nbsp; <span class="topic" data-topic="1">AI 工程</span></p>
+        <h1 data-split>企业 AI 本地部署，第一步不是买 GPU，而是<em>先洗数据</em></h1>
+        <p class="lede rise">企业 AI 真正的起点不是模型和算力，而是内部数据是否具备可检索、可引用、可追溯和可回答的知识质量。</p>
+        <div class="article-meta meta rise" style="--d:120ms"><span>2026.05.10</span><span>7 分钟</span><span>No. 16</span></div>
+    </header>
+    <div class="article-layout">
+        <nav class="toc" aria-label="目录"><a href="#gpu">别把起点放在 GPU 上</a><a href="#asset">信息堆积不等于知识资产</a><a href="#rag">RAG 的上限取决于可回答性</a><a href="#context">企业问答需要上下文</a><a href="#boundary">本地部署不等于可信</a><a href="#readiness">先问数据有没有准备好</a></nav>
+        <div class="page-surface"><div class="prose"><section class="detail-section" id="gpu">
+            <h2 class="">别把起点放在 GPU 上</h2>
+            <p class="">很多企业一提到 AI 本地部署，第一反应就是买服务器、上 GPU、选大模型、搭一个内部 ChatGPT。这个顺序看起来合理，但它把问题从第一步就带偏了。</p>
+            <p class="">企业 AI 真正的起点不是模型，也不是算力，而是企业内部那些数据到底有没有资格被 AI 使用。模型再强，也只能基于输入的信息工作；如果输入本身混乱、过期、冲突，AI 只会把这些问题包装成更流畅的答案。</p>
+            <blockquote class="">AI 不是企业知识管理的魔法补丁，它更像放大器。干净的数据会被放大成效率，混乱的数据也会被放大成风险。</blockquote>
+        </section>
+
+        <section class="detail-section" id="asset">
+            <h2 class="">信息堆积不等于知识资产</h2>
+            <p class="">很多企业不是没有数据，而是数据太多、太散、太乱。同一个制度可能有三个版本，但没人知道哪个是现行版本；同一个指标在财务、运营、销售那里可能有三种口径；项目资料散落在聊天工具、邮件、共享盘、Word 和 Excel 里。</p>
+            <p class="">这时候企业拥有的不是知识资产，而只是信息堆积。信息要经过清洗、去重、归档、结构化、标注、版本管理和权限控制，才可能变成 AI 能够检索、理解、引用和复用的知识。</p>
+            <p class="">否则，所谓知识库只是把混乱换了一个入口。用户看起来是在问 AI，实际上是在向一堆没有治理过的文档抽签。</p>
+        </section>
+
+        <section class="detail-section" id="rag">
+            <h2 class="">RAG 的上限取决于可回答性</h2>
+            <p class="">很多企业做 RAG 时，最容易犯的错误是以为只要文档切片、向量化、接上大模型，就能得到可靠的企业问答系统。上线之后回答不稳定、引用不准确、旧制度和新制度混在一起，才开始怀疑模型、Embedding、Rerank 或 Prompt。</p>
+            <p class="">这些技术环节当然重要，但很多问题并不在链路后半段，而在数据入口。Chunk 切分不能拯救逻辑混乱的文档，Embedding 不能判断资料是否仍然有效，Rerank 也不能把错误资料排成正确答案。</p>
+            <p class="">RAG 的上限不只取决于模型和检索算法，也取决于知识库本身是否具备“可回答性”。所谓可回答性，不是有没有文件，而是这些文件能不能支撑稳定、明确、可追溯的答案。</p>
+        </section>
+
+        <section class="detail-section" id="context">
+            <h2 class="">企业问答需要上下文</h2>
+            <p class="">员工问“这个报销标准现在还适用吗”，AI 不仅要找到报销制度，还要知道版本、部门范围、生效时间、是否被后续通知覆盖，以及最终解释权归谁。</p>
+            <p class="">客户问“这个产品是否支持某个功能”，AI 不仅要找到产品说明，还要区分那是销售话术、技术文档、历史版本，还是当前正式承诺。</p>
+            <p class="">管理层问“这个项目为什么延期”，AI 不能只拼接几段会议纪要，而要理解任务变更、资源调整、风险记录和责任边界。</p>
+            <p class="">这些问题背后都不是单纯的模型能力问题，而是企业知识结构问题。企业 AI 本地部署的第一阶段，与其叫模型部署，不如叫知识资产整理。</p>
+        </section>
+
+        <section class="detail-section" id="boundary">
+            <h2 class="">本地部署不等于可信</h2>
+            <p class="">很多企业选择本地部署，是因为担心数据安全。这个担心合理，但本地部署只能解决数据不出内网的问题，不能自动解决数据质量问题。</p>
+            <ul class="">
+                <li class=""><strong class="">模型在内网</strong>，不代表答案准确。</li>
+                <li class=""><strong class="">服务器在机房</strong>，不代表权限清楚。</li>
+                <li class=""><strong class="">数据没有外泄</strong>，也不代表知识系统可信。</li>
+            </ul>
+            <p class="">本地部署解决的是物理边界，数据治理解决的是认知边界。</p>
+            <p class="">企业真正需要的不是把 ChatGPT 搬进内网，而是把自己的知识系统重建一遍：让文档有版本，让制度有状态，让数据有口径，让流程有责任人，让答案有来源，让错误有反馈，让知识可以持续更新。</p>
+        </section>
+
+        <section class="detail-section" id="readiness">
+            <h2 class="">先问数据有没有准备好</h2>
+            <p class="">AI 落地会反向暴露一家企业的管理水平。过去数据混乱可以靠老员工经验弥补，制度冲突可以靠会议协调，信息散落可以靠人到处问。AI 接入之后，这些混乱会被集中暴露。</p>
+            <p class="">企业给 AI 的是一套干净、稳定、结构化的知识系统，它才可能成为效率工具。企业给它的是一堆过期、冲突、无序的信息，它就会成为风险放大器。</p>
+            <blockquote class="">企业 AI 本地部署的第一步，不是急着买 GPU，也不是急着选哪个大模型，而是先问一个更基础的问题：我们的数据，真的准备好被 AI 使用了吗？</blockquote>
+            <p class="">模型能力决定的是 AI 能跑多快，数据质量决定的是它会不会跑偏。</p>
+        </section></div></div>
+    </div>
+    <section class="related" aria-labelledby="related-title"><p class="kicker">继续阅读</p><h2 id="related-title">相关<em>文章</em></h2><ol class="journal-list" style="list-style:none"><li><a class="journal-row" href="article-01.html" data-topic="1" data-cursor="阅读">
+        <span class="journal-date">2026.11 · 01</span>
+        <span class="journal-title"><span class="static">模型装得下，为什么还是跑不快？</span><span class="marquee" aria-hidden="true"><span>模型装得下，为什么还是跑不快？ —&nbsp;</span><span>模型装得下，为什么还是跑不快？ —&nbsp;</span><span>模型装得下，为什么还是跑不快？ —&nbsp;</span></span></span>
+        <span class="topic" data-topic="1">AI 工程</span><span class="journal-time">15 分钟</span></a></li><li><a class="journal-row" href="article-02.html" data-topic="1" data-cursor="阅读">
+        <span class="journal-date">2026.10 · 02</span>
+        <span class="journal-title"><span class="static">当考卷本身有错：我们在测量 AI 的什么？</span><span class="marquee" aria-hidden="true"><span>当考卷本身有错：我们在测量 AI 的什么？ —&nbsp;</span><span>当考卷本身有错：我们在测量 AI 的什么？ —&nbsp;</span><span>当考卷本身有错：我们在测量 AI 的什么？ —&nbsp;</span></span></span>
+        <span class="topic" data-topic="1">AI 工程</span><span class="journal-time">16 分钟</span></a></li><li><a class="journal-row" href="article-15.html" data-topic="1" data-cursor="阅读">
+        <span class="journal-date">2026.05 · 15</span>
+        <span class="journal-title"><span class="static">AI 工程的核心不是让模型万能，而是定义边界</span><span class="marquee" aria-hidden="true"><span>AI 工程的核心不是让模型万能，而是定义边界 —&nbsp;</span><span>AI 工程的核心不是让模型万能，而是定义边界 —&nbsp;</span><span>AI 工程的核心不是让模型万能，而是定义边界 —&nbsp;</span></span></span>
+        <span class="topic" data-topic="1">AI 工程</span><span class="journal-time">8 分钟</span></a></li></ol></section>
+    <nav class="pager" aria-label="更多文章">
+        <a href="article-15.html" data-cursor="上一篇"><span class="meta">← 上一篇</span><strong>AI 工程的核心不是让模型万能，而是定义边界</strong></a>
+        <a href="article-17.html" data-cursor="下一个"><span class="meta">下一篇 →</span><strong>U-Net 没有输给新模型：工业视觉里，先定义任务再选择模型</strong></a>
+    </nav>
+</div>
+</main>
+<footer class="colophon">
+    <div class="colophon-name" data-fit aria-hidden="true">Eric</div>
+    <div class="colophon-grid">
+        <div><p class="meta">目录</p><a href="../work/index.html">项目</a><a href="../journal/index.html">文章</a><a href="../index.html#about">关于</a><a href="../index.html#contact">联系</a></div>
+        <div><p class="meta">更多</p><a href="https://github.com/powerpan" target="_blank" rel="noopener">GitHub</a><a href="../work/index.html">项目</a><a href="index.html">文章</a><a href="../index.html#contact">联系</a></div>
+        <div><p class="meta">设置</p><button type="button" data-theme-toggle aria-pressed="false"><span class="theme-switch-label">夜间</span> 纸色</button><br><button type="button" data-motion-toggle aria-pressed="true">动效：开启</button><br><button type="button" class="sound-text" data-sound-toggle aria-pressed="false">音乐：关闭</button>
+<label class="volume"><span class="meta">音量</span><input class="ink-range" type="range" min="0" max="1" step="0.05" value="0.6" data-sound-volume aria-label="音乐音量"></label></div>
+        <div><p class="meta">关于本站</p><p>© 2026 Eric. 中文标题采用 Noto Serif SC，正文采用 Noto Sans SC。水墨以 WebGL2 实时模拟。</p><a href="#" data-top>返回顶部 ↑</a></div>
+    </div>
+</footer>
+<p class="sr-only" role="status" aria-live="polite" data-sound-status></p>
+<script src="../../js/ink-fluid.js"></script>
+<script src="../../js/ink.js"></script>
+</body>
+</html>

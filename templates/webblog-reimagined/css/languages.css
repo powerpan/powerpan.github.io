@@ -1,0 +1,75 @@
+/* Content/locale adaptations. The original ink.css design is unchanged. */
+@font-face {
+    font-family: 'Noto Serif SC';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url(../assets/fonts/noto-serif-sc-content.woff) format('woff');
+    unicode-range: U+2E80-9FFF, U+F900-FAFF, U+FE30-FFEF;
+}
+@font-face {
+    font-family: 'Noto Sans SC';
+    font-style: normal;
+    font-weight: 300 700;
+    font-display: swap;
+    src: url(../assets/fonts/noto-sans-sc-content.woff) format('woff');
+    unicode-range: U+2E80-9FFF, U+F900-FAFF, U+FE30-FFEF;
+}
+:root:lang(zh) {
+    --serif: 'Instrument Serif', 'Noto Serif SC', 'Songti SC', serif;
+    --sans: 'Inter Tight', 'Noto Sans SC', 'PingFang SC', sans-serif;
+    --mono: 'JetBrains Mono', 'Noto Sans SC', ui-monospace, monospace;
+}
+
+/* Serif glyphs and synthesized italics extend beyond the narrow reveal masks.
+   Negative margins cancel the padding exactly: type size, tracking, baselines,
+   line wrapping and the page layout keep their original positions. */
+:root [data-split] .split-unit {
+    padding: .20em .25em .30em;
+    margin: -.20em -.25em -.30em;
+}
+:root[data-motion="on"] [data-split]:not(.is-in) .split-inner {
+    transform: translateY(calc(108% + .5em)) rotate(5deg);
+}
+
+/* The rolling title must travel by the full title block, including wrapped
+   lines. Matching both layers' heights keeps the original 105% slide and
+   prevents the idle marquee from showing through the second line. */
+.journal-title .marquee {
+    height: 100%;
+}
+
+/* Keep the existing language link reachable between desktop and mobile nav. */
+@media (min-width: 821px) and (max-width: 1100px) {
+    .masthead { grid-template-columns: auto 1fr auto; }
+    .masthead-meta { display: flex; justify-self: center; }
+    .masthead-meta > span { display: none; }
+}
+
+/* Preserve bottom alignment, but let short/landscape menus scroll from the top. */
+.menu { justify-content: flex-start; overflow-y: auto; overscroll-behavior: contain; }
+.menu > a, .menu-foot { flex-shrink: 0; }
+.menu > a:first-child { margin-top: auto; }
+.menu .menu-foot a { font: inherit; }
+
+/* A card taller than the usable viewport must scroll far enough to read its end. */
+.stack-card[data-stack-static] {
+    position: relative;
+    top: auto;
+    transform: none;
+    filter: none;
+}
+
+/* Long API names should wrap inside the existing prose column. */
+.prose p, .prose li, .prose h2, .prose h3, .case-facts dd { overflow-wrap: anywhere; }
+.prose section[id] { scroll-margin-top: 100px; }
+
+/* Motion off keeps complete, static titles available on hover and focus. */
+:root[data-motion="off"] .journal-row .static { transform: none; }
+:root[data-motion="off"] .journal-title .marquee { visibility: hidden; }
+:root[data-motion="off"] { scroll-behavior: auto; }
+:root[data-motion="off"] *,
+:root[data-motion="off"] *::before,
+:root[data-motion="off"] *::after { animation: none !important; transition: none !important; }
+
+:root:lang(zh) .work-card-media::after { content: '查看'; }

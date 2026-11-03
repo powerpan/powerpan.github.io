@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NeuralVision Pro — Eric</title>
+<meta name="description" content="基于 YOLO 与 SAM 的实时目标检测与分割系统，面向工业质检场景，支持多类缺陷的自动识别与像素级分割，为产线自动化质检提供高效视觉解决方案。">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#ede8df">
+<script>(()=>{const r=document.documentElement;let t,m;try{t=localStorage.getItem('ink-theme');m=localStorage.getItem('ink-motion')}catch(e){}t=t||(matchMedia('(prefers-color-scheme: dark)').matches?'night':'day');if(matchMedia('(prefers-reduced-motion: reduce)').matches)m='off';r.dataset.theme=t;r.dataset.motion=m||'on'})()</script>
+<link rel="preload" href="../../assets/fonts/instrument-serif-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../css/ink.css">
+<link rel="stylesheet" href="../../css/languages.css">
+<link rel="stylesheet" href="../../css/sound.css">
+<script src="../../js/ink-sound.js" defer></script>
+<noscript><style>[data-sound-toggle],.volume{display:none!important}</style></noscript>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='26' fill='%23f6401a'/%3E%3Ccircle cx='40' cy='26' r='14' fill='%232337f2' fill-opacity='.85'/%3E%3C/svg%3E">
+<link rel="alternate" hreflang="en" href="../../work/project-12.html">
+</head>
+<body data-ink="quiet">
+<canvas id="ink" aria-hidden="true"></canvas>
+<div class="grain" aria-hidden="true"></div>
+
+<div class="cursor" aria-hidden="true"><span class="cursor-label"></span></div>
+<a class="sr-only" href="#main">跳至正文</a>
+<header class="masthead">
+    <a class="brand" href="../index.html" aria-label="Eric — 首页">Eric<sup>®</sup></a>
+    <div class="masthead-meta"><span>作品与手记</span><a href="../../work/project-12.html" data-language-switch hreflang="en" lang="en" aria-label="Read this page in English">EN</a></div>
+    <div class="masthead-right">
+        <nav class="masthead-nav" aria-label="主导航">
+            <a href="../work/index.html" aria-current="page">项目</a><a href="../journal/index.html">文章</a><a href="../index.html#about">关于</a><a href="../index.html#contact">联系</a>
+        </nav>
+        <button class="sound-switch" type="button" data-sound-toggle aria-pressed="false" aria-label="播放背景音乐"><canvas class="sound-wave" aria-hidden="true"></canvas><span class="sound-label">音乐</span></button>
+        <button class="theme-switch" type="button" data-theme-toggle aria-pressed="false"><span class="theme-switch-dot" aria-hidden="true"></span><span class="theme-switch-label">夜间</span></button>
+        <button class="menu-button" type="button" aria-expanded="false" aria-controls="menu">菜单</button>
+    </div>
+</header>
+<nav class="menu" id="menu" aria-label="菜单">
+    <a href="../index.html">目录</a><a href="../work/index.html"><em>项目</em></a><a href="../journal/index.html">文章</a><a href="../index.html#contact"><em>联系</em></a>
+    <div class="menu-foot meta"><span>本地 <span data-clock>--:--:--</span></span><button class="sound-switch" type="button" data-sound-toggle aria-pressed="false" aria-label="播放背景音乐"><canvas class="sound-wave" aria-hidden="true"></canvas><span class="sound-label">音乐</span></button><a href="../../work/project-12.html" data-language-switch hreflang="en" lang="en" aria-label="Read this page in English">EN</a></div>
+</nav>
+<main id="main">
+<div class="page"><p class="kicker"><a href="index.html">项目</a> / AI Vision · YOLO · SAM</p>
+    <header class="case-hero"><h1 data-split>NeuralVision Pro</h1><p class="lede rise">基于 YOLO 与 SAM 的实时目标检测与分割系统，面向工业质检场景，支持多类缺陷的自动识别与像素级分割，为产线自动化质检提供高效视觉解决方案。</p></header><dl class="case-facts rise"><div><dt class="meta">Role</dt><dd>独立开发者</dd></div><div><dt class="meta">Duration</dt><dd>4 months</dd></div><div><dt class="meta">Team</dt><dd>3 人</dd></div><div><dt class="meta">编号</dt><dd>No. 12</dd></div></dl>
+    <div class="case-media"><img src="../../assets/vfx/project-atlas.jpg" alt="原站概念可视化" width="1536" height="1024" loading="eager" decoding="async"></div><div class="case-body"><section class="case-section"><div class="case-section-label"><span class="num">01</span><span class="meta">章节</span></div>
+            <div class="case-section-copy prose"><h2 data-split>YOLO + SAM 驱动的工业质检系统</h2><div class="detail-section-label">Overview</div>
+
+            <p class="detail-text">NeuralVision Pro 是一个面向<strong class="">工业质检场景</strong>的视觉检测系统，基于 YOLOv8 实现高速目标检测，结合 SAM（Segment Anything Model）实现像素级缺陷分割。系统支持多种工业场景的缺陷识别，包括表面划痕、异物混入、尺寸偏差等常见质检问题。</p>
+            <p class="detail-text">通过 YOLO 的快速检测与 SAM 的精准分割级联推理，系统在保证检测精度的同时实现了<strong class="">亚 20ms</strong> 的端到端推理延迟。项目采用 Python + PyTorch 技术栈，后端服务基于 Flask 构建，数据存储使用 MySQL，支持 Docker 容器化部署，已成功应用于多个实际质检场景的验证测试。</p><div class="badges"><span class="tag">Python</span><span class="tag">PyTorch</span><span class="tag">YOLOv8</span><span class="tag">SAM</span><span class="tag">OpenCV</span><span class="tag">Docker</span><span class="tag">Flask</span><span class="tag">MySQL</span></div></div></section><section class="case-section"><div class="case-section-label"><span class="num">02</span><span class="meta">章节</span></div>
+            <div class="case-section-copy prose"><h2 data-split>技术架构</h2><div class="detail-section-label">Tech Stack</div>
+
+            <p class="detail-text">从模型训练到服务部署，端到端技术选型</p></div></section><section class="case-section"><div class="case-section-label"><span class="num">03</span><span class="meta">章节</span></div>
+            <div class="case-section-copy prose"><h2 data-split>核心能力</h2><div class="detail-section-label">Key Features</div>
+
+            <div class="detail-features">
+                <div class="detail-feature">
+                    <div class="detail-feature-icon">⚡</div>
+                    <div class="detail-feature-title">YOLO 高速检测</div>
+                    <div class="detail-feature-desc">基于 YOLOv8 的实时目标检测，单帧推理延迟低至 15ms，满足产线实时检测需求</div>
+                </div>
+                <div class="detail-feature">
+                    <div class="detail-feature-icon">🎯</div>
+                    <div class="detail-feature-title">SAM 精准分割</div>
+                    <div class="detail-feature-desc">利用 SAM 对检测区域进行像素级分割，精确标注缺陷边界，支持自动与 Prompt 两种分割模式</div>
+                </div>
+                <div class="detail-feature">
+                    <div class="detail-feature-icon">🏭</div>
+                    <div class="detail-feature-title">多场景适配</div>
+                    <div class="detail-feature-desc">支持表面划痕、异物混入、尺寸偏差等多种工业质检场景，可通过配置文件快速切换检测策略</div>
+                </div>
+                <div class="detail-feature">
+                    <div class="detail-feature-icon">📦</div>
+                    <div class="detail-feature-title">容器化部署</div>
+                    <div class="detail-feature-desc">完整 Docker 部署方案，支持单机与集群部署，一键启动推理服务，方便在不同产线环境快速落地</div>
+                </div>
+            </div></div></section><section class="case-section"><div class="case-section-label"><span class="num">04</span><span class="meta">章节</span></div>
+            <div class="case-section-copy prose"><h2 data-split>性能指标</h2><div class="detail-section-label">Performance</div>
+
+            <dl class="case-facts"><div><dt class="meta">Inference</dt><dd>15ms</dd></div><div><dt class="meta">mAP</dt><dd>95%</dd></div><div><dt class="meta">Models</dt><dd>3+</dd></div><div><dt class="meta">Images</dt><dd>50K+</dd></div></dl></div></section><section class="case-section"><div class="case-section-label"><span class="num">05</span><span class="meta">章节</span></div>
+            <div class="case-section-copy prose"><h2 data-split>核心推理流程</h2><div class="detail-section-label">Code Example</div>
+
+            <p class="detail-text">YOLO 检测 + SAM 分割的级联推理管道</p>
+            <div class="detail-code-block">
+                <div class="detail-code-header">
+                    <div class="detail-code-dot"></div>
+                    <div class="detail-code-dot"></div>
+                    <div class="detail-code-dot"></div>
+                    <div class="detail-code-title">pipeline.py</div>
+                </div>
+                <pre class="detail-code-body">from ultralytics import YOLO
+from segment_anything import sam_model_registry, SamPredictor
+import cv2
+
+# Initialize YOLO detector and SAM predictor
+yolo = YOLO("yolov8m.pt")
+sam = sam_model_registry["vit_h"](checkpoint="sam_vit_h.pth")
+predictor = SamPredictor(sam)
+
+# Step 1: YOLO detection
+image = cv2.imread("defect_sample.jpg")
+results = yolo.predict(image, conf=0.7)
+boxes = results[0].boxes.xyxy.cpu().numpy()
+
+# Step 2: SAM segmentation on detected regions
+predictor.set_image(image)
+masks, _, _ = predictor.predict(
+    box=boxes[0],  # use first detection as prompt
+    multimask_output=True
+)
+
+print(f"Detected {len(boxes)} defects, mask shape: {masks.shape}")</pre>
+            </div></div></section></div>
+    <a class="next-case" href="project-13.html" data-cursor="下一个"><span class="meta">下一个项目 — 13</span><strong>DataFlow Pipeline</strong></a></div>
+</main>
+<footer class="colophon">
+    <div class="colophon-name" data-fit aria-hidden="true">Eric</div>
+    <div class="colophon-grid">
+        <div><p class="meta">目录</p><a href="../work/index.html">项目</a><a href="../journal/index.html">文章</a><a href="../index.html#about">关于</a><a href="../index.html#contact">联系</a></div>
+        <div><p class="meta">更多</p><a href="https://github.com/powerpan" target="_blank" rel="noopener">GitHub</a><a href="index.html">项目</a><a href="../journal/index.html">文章</a><a href="../index.html#contact">联系</a></div>
+        <div><p class="meta">设置</p><button type="button" data-theme-toggle aria-pressed="false"><span class="theme-switch-label">夜间</span> 纸色</button><br><button type="button" data-motion-toggle aria-pressed="true">动效：开启</button><br><button type="button" class="sound-text" data-sound-toggle aria-pressed="false">音乐：关闭</button>
+<label class="volume"><span class="meta">音量</span><input class="ink-range" type="range" min="0" max="1" step="0.05" value="0.6" data-sound-volume aria-label="音乐音量"></label></div>
+        <div><p class="meta">关于本站</p><p>© 2026 Eric. 中文标题采用 Noto Serif SC，正文采用 Noto Sans SC。水墨以 WebGL2 实时模拟。</p><a href="#" data-top>返回顶部 ↑</a></div>
+    </div>
+</footer>
+<p class="sr-only" role="status" aria-live="polite" data-sound-status></p>
+<script src="../../js/ink-fluid.js"></script>
+<script src="../../js/ink.js"></script>
+</body>
+</html>

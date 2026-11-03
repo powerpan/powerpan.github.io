@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Moyu Night Library — Eric</title>
+<meta name="description" content="A full-stack web fiction platform shaped around a night-library experience, connecting reader discovery, author publishing, and content governance in one workflow.">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#ede8df">
+<script>(()=>{const r=document.documentElement;let t,m;try{t=localStorage.getItem('ink-theme');m=localStorage.getItem('ink-motion')}catch(e){}t=t||(matchMedia('(prefers-color-scheme: dark)').matches?'night':'day');if(matchMedia('(prefers-reduced-motion: reduce)').matches)m='off';r.dataset.theme=t;r.dataset.motion=m||'on'})()</script>
+<link rel="preload" href="../assets/fonts/instrument-serif-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../css/ink.css">
+<link rel="stylesheet" href="../css/languages.css">
+<link rel="stylesheet" href="../css/sound.css">
+<script src="../js/ink-sound.js" defer></script>
+<noscript><style>[data-sound-toggle],.volume{display:none!important}</style></noscript>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='26' fill='%23f6401a'/%3E%3Ccircle cx='40' cy='26' r='14' fill='%232337f2' fill-opacity='.85'/%3E%3C/svg%3E">
+<link rel="alternate" hreflang="zh-CN" href="../zh/work/project-04.html">
+</head>
+<body data-ink="quiet">
+<canvas id="ink" aria-hidden="true"></canvas>
+<div class="grain" aria-hidden="true"></div>
+
+<div class="cursor" aria-hidden="true"><span class="cursor-label"></span></div>
+<a class="sr-only" href="#main">Skip to content</a>
+<header class="masthead">
+    <a class="brand" href="../index.html" aria-label="Eric — home">Eric<sup>®</sup></a>
+    <div class="masthead-meta"><span>Portfolio &amp; Journal</span><a href="../zh/work/project-04.html" data-language-switch hreflang="zh-CN" lang="zh-CN" aria-label="Read this page in Chinese">中文</a></div>
+    <div class="masthead-right">
+        <nav class="masthead-nav" aria-label="Primary">
+            <a href="../work/index.html" aria-current="page">Work</a><a href="../journal/index.html">Journal</a><a href="../index.html#about">About</a><a href="../index.html#contact">Contact</a>
+        </nav>
+        <button class="sound-switch" type="button" data-sound-toggle aria-pressed="false" aria-label="Play background music"><canvas class="sound-wave" aria-hidden="true"></canvas><span class="sound-label">Sound</span></button>
+        <button class="theme-switch" type="button" data-theme-toggle aria-pressed="false"><span class="theme-switch-dot" aria-hidden="true"></span><span class="theme-switch-label">Night</span></button>
+        <button class="menu-button" type="button" aria-expanded="false" aria-controls="menu">Menu</button>
+    </div>
+</header>
+<nav class="menu" id="menu" aria-label="Menu">
+    <a href="../index.html">Index</a><a href="../work/index.html"><em>Work</em></a><a href="../journal/index.html">Journal</a><a href="../index.html#contact"><em>Contact</em></a>
+    <div class="menu-foot meta"><span>Local <span data-clock>--:--:--</span></span><button class="sound-switch" type="button" data-sound-toggle aria-pressed="false" aria-label="Play background music"><canvas class="sound-wave" aria-hidden="true"></canvas><span class="sound-label">Sound</span></button><a href="../zh/work/project-04.html" data-language-switch hreflang="zh-CN" lang="zh-CN" aria-label="Read this page in Chinese">中文</a></div>
+</nav>
+<main id="main">
+<div class="page"><p class="kicker"><a href="index.html">Work</a> / Content Platform · RuoYi · Full-stack</p>
+    <header class="case-hero"><h1 data-split>Moyu Night Library</h1><p class="lede rise">A full-stack web fiction platform shaped around a night-library experience, connecting reader discovery, author publishing, and content governance in one workflow.</p></header><dl class="case-facts rise"><div><dt class="meta">Role</dt><dd>Full-stack Developer</dd></div><div><dt class="meta">Status</dt><dd>Active Development</dd></div><div><dt class="meta">Stack</dt><dd>Spring Boot / Vue 2 / MySQL</dd></div><div><dt class="meta">Index</dt><dd>No. 04</dd></div></dl>
+    <div class="case-media"><img src="../assets/projects/moyu-night-library/home.jpg" alt="Moyu Night Library home and book discovery page" width="2454" height="1452" loading="eager" decoding="async"></div><div class="case-body"><section class="case-section"><div class="case-section-label"><span class="num">01</span><span class="meta">Section</span></div>
+            <div class="case-section-copy prose"><h2 data-split>One Content Loop for Creation, Review, and Reading</h2><div class="detail-section-label">Overview</div>
+
+            <p class="detail-text">Moyu is not a single reading page. It is a <strong class="">web fiction business platform</strong> spanning content production, platform governance, and reader consumption. <code class="">novel-app</code> serves readers and authors, while <code class="">ruoyi-ui</code> provides the operations console. Both share the Spring Boot API and authorization model.</p>
+            <p class="detail-text">The platform organizes its workflow around books, chapters, drafts, bookshelves, subscriptions, comments, ratings, reports, reviews, and notifications, allowing each content change to continue into moderation, distribution, and feedback.</p><div class="badges"><span class="tag">Spring Boot 2.5</span><span class="tag">RuoYi 3.8.7</span><span class="tag">Vue 2</span><span class="tag">Element UI</span><span class="tag">MyBatis</span><span class="tag">MySQL</span><span class="tag">Redis</span><span class="tag">Docker</span></div><figure class="rise"><img src="../assets/projects/moyu-night-library/login.jpg" alt="Moyu login and registration page" width="2458" height="1300" loading="lazy" decoding="async"><figcaption>Unified identity entry: login and registration continue the night-library visual language and unlock personalized bookshelf, subscription, creation, and notification features.</figcaption></figure></div></section><section class="case-section"><div class="case-section-label"><span class="num">02</span><span class="meta">Section</span></div>
+            <div class="case-section-copy prose"><h2 data-split>From Discovering a Book to Following Every Update</h2><div class="detail-section-label">Reader Journey</div>
+
+            <p class="detail-text">Readers discover content through recommendations, genres, rankings, search, and history before moving into book details and the reader. Bookshelves, subscriptions, reading progress, history, and notifications preserve continuity across sessions. Ratings, likes, comments, and reports feed reader signals back into governance.</p><figure class="rise"><img src="../assets/projects/moyu-night-library/ranking.jpg" alt="Moyu constellation-style night reading rankings" width="2454" height="1456" loading="lazy" decoding="async"><figcaption>Night rankings: popularity, new releases, word count, and chapter views use book covers with gold, silver, and bronze nodes to establish hierarchy.</figcaption></figure></div></section><section class="case-section"><div class="case-section-label"><span class="num">03</span><span class="meta">Section</span></div>
+            <div class="case-section-copy prose"><h2 data-split>A Recoverable and Traceable Writing Workflow</h2><div class="detail-section-label">Author Workflow</div>
+
+            <p class="detail-text">The author workspace covers profiles, works, covers, chapters, and drafts, including TXT and DOCX chapter import. The editor provides <strong class="">autosave, version history, and sensitive-content previews</strong> to reduce losses caused by interruptions, accidental edits, or unclear platform rules during long-form writing.</p>
+            <p class="detail-text">Submitted books and chapters enter explicit review states. Authors can track outcomes and notifications, while rejected content retains its reason and editing path to keep platform rules actionable.</p></div></section><section class="case-section"><div class="case-section-label"><span class="num">04</span><span class="meta">Section</span></div>
+            <div class="case-section-copy prose"><h2 data-split>Risk Warnings First, Human Review for Final Decisions</h2><div class="detail-section-label">Content Governance</div>
+
+            <p class="detail-text">The governance console supports book and chapter review, batch actions, rejection templates, sensitive-term context, risk ordering, and operational dashboards. Sensitive content follows a <strong class="">warning plus human review</strong> policy instead of automatic rejection. Dictionaries, allowlists, hit records, and review snapshots support each decision.</p>
+            <p class="detail-text">Report handling includes aggregation, content hiding and restoration, outcome notifications, and operation logs, turning reader feedback into an auditable governance loop.</p></div></section><section class="case-section"><div class="case-section-label"><span class="num">05</span><span class="meta">Section</span></div>
+            <div class="case-section-copy prose"><h2 data-split>A Night-Reading Theme Across Discovery and Rankings</h2><div class="detail-section-label">Product Experience</div>
+
+            <p class="detail-text">The interface uses dark night scenes, warm page tones, and physical book covers as primary visual signals, while keeping search, genre navigation, bookshelves, and creation entry points stable. The constellation ranking reinforces positions and titles visually without replacing familiar filters and list controls.</p></div></section><section class="case-section"><div class="case-section-label"><span class="num">06</span><span class="meta">Section</span></div>
+            <div class="case-section-copy prose"><h2 data-split>Two Frontends, One API, Reproducible Delivery</h2><div class="detail-section-label">Architecture &amp; Delivery</div>
+
+            <p class="detail-text">The system follows RuoYi module boundaries, separating reader and author experiences, operations, domain services, authorization, and infrastructure. MySQL stores business data, Redis handles sessions and hot state, JWT connects frontend identity, and Docker Compose assembles the backend, database, and frontend runtime.</p>
+            <div class="moyu-flow">
+                <div class="moyu-flow-step">
+                    <div class="moyu-flow-index">01 / EXPERIENCE</div>
+                    <div class="moyu-flow-title">Reader and Author App</div>
+                    <div class="moyu-flow-desc">Discovery, reading, bookshelves, subscriptions, writing, drafts, and submissions live in novel-app.</div>
+                </div>
+                <div class="moyu-flow-step">
+                    <div class="moyu-flow-index">02 / OPERATIONS</div>
+                    <div class="moyu-flow-title">Operations Console</div>
+                    <div class="moyu-flow-desc">Reviews, sensitive terms, reports, notifications, and dashboards are managed through ruoyi-ui.</div>
+                </div>
+                <div class="moyu-flow-step">
+                    <div class="moyu-flow-index">03 / DOMAIN API</div>
+                    <div class="moyu-flow-title">Novel Domain Services</div>
+                    <div class="moyu-flow-desc">novel-system manages books, chapters, drafts, interactions, and governance rules.</div>
+                </div>
+                <div class="moyu-flow-step">
+                    <div class="moyu-flow-index">04 / PLATFORM</div>
+                    <div class="moyu-flow-title">Platform Foundation</div>
+                    <div class="moyu-flow-desc">Spring Boot, MySQL, Redis, JWT, and Docker provide the runtime foundation.</div>
+                </div>
+            </div>
+            <div class="detail-features">
+                <div class="detail-feature">
+                    <div class="detail-feature-icon">01</div>
+                    <div class="detail-feature-title">Content Discovery</div>
+                    <div class="detail-feature-desc">Recommendations, genres, rankings, search, trending terms, and history support book discovery.</div>
+                </div>
+                <div class="detail-feature">
+                    <div class="detail-feature-icon">02</div>
+                    <div class="detail-feature-title">Reading Continuity</div>
+                    <div class="detail-feature-desc">Bookshelves, subscriptions, progress, history, and notifications preserve reading state.</div>
+                </div>
+                <div class="detail-feature">
+                    <div class="detail-feature-icon">03</div>
+                    <div class="detail-feature-title">Author Workspace</div>
+                    <div class="detail-feature-desc">Manage works and chapters with batch import, drafts, autosave, and version history.</div>
+                </div>
+                <div class="detail-feature">
+                    <div class="detail-feature-icon">04</div>
+                    <div class="detail-feature-title">Content Review</div>
+                    <div class="detail-feature-desc">Layered book and chapter review with batch actions, reason templates, and outcome notices.</div>
+                </div>
+                <div class="detail-feature">
+                    <div class="detail-feature-icon">05</div>
+                    <div class="detail-feature-title">Risk Governance</div>
+                    <div class="detail-feature-desc">Sensitive-term context, allowlists, report aggregation, and audit logs support human decisions.</div>
+                </div>
+                <div class="detail-feature">
+                    <div class="detail-feature-icon">06</div>
+                    <div class="detail-feature-title">Deployment</div>
+                    <div class="detail-feature-desc">Includes database scripts, phased upgrades, and Docker runtime configuration.</div>
+                </div>
+            </div></div></section></div>
+    <a class="next-case" href="project-05.html" data-cursor="Next"><span class="meta">Next project — 05</span><strong>Algorithm Museum</strong></a></div>
+</main>
+<footer class="colophon">
+    <div class="colophon-name" data-fit aria-hidden="true">Eric</div>
+    <div class="colophon-grid">
+        <div><p class="meta">Index</p><a href="../work/index.html">Work</a><a href="../journal/index.html">Journal</a><a href="../index.html#about">About</a><a href="../index.html#contact">Contact</a></div>
+        <div><p class="meta">Elsewhere</p><a href="https://github.com/powerpan" target="_blank" rel="noopener">GitHub</a><a href="index.html">Work</a><a href="../journal/index.html">Journal</a><a href="../index.html#contact">Contact</a></div>
+        <div><p class="meta">Settings</p><button type="button" data-theme-toggle aria-pressed="false"><span class="theme-switch-label">Night</span> paper</button><br><button type="button" data-motion-toggle aria-pressed="true">Motion: on</button><br><button type="button" class="sound-text" data-sound-toggle aria-pressed="false">Sound: off</button>
+<label class="volume"><span class="meta">Volume</span><input class="ink-range" type="range" min="0" max="1" step="0.05" value="0.6" data-sound-volume aria-label="Music volume"></label></div>
+        <div><p class="meta">Colophon</p><p>© 2026 Eric. Set in Instrument Serif &amp; Inter Tight. Ink simulated live in WebGL2.</p><a href="#" data-top>Back to top ↑</a></div>
+    </div>
+</footer>
+<p class="sr-only" role="status" aria-live="polite" data-sound-status></p>
+<script src="../js/ink-fluid.js"></script>
+<script src="../js/ink.js"></script>
+</body>
+</html>

@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>When a Technology Roadmap Becomes a Law — Eric</title>
+<meta name="description" content="Huawei&#x27;s Tau Law points to real post-Moore engineering problems, but media narratives can turn system-level optimization into a myth of invention from scratch.">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#ede8df">
+<script>(()=>{const r=document.documentElement;let t,m;try{t=localStorage.getItem('ink-theme');m=localStorage.getItem('ink-motion')}catch(e){}t=t||(matchMedia('(prefers-color-scheme: dark)').matches?'night':'day');if(matchMedia('(prefers-reduced-motion: reduce)').matches)m='off';r.dataset.theme=t;r.dataset.motion=m||'on'})()</script>
+<link rel="preload" href="../assets/fonts/instrument-serif-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../css/ink.css">
+<link rel="stylesheet" href="../css/languages.css">
+<link rel="stylesheet" href="../css/sound.css">
+<script src="../js/ink-sound.js" defer></script>
+<noscript><style>[data-sound-toggle],.volume{display:none!important}</style></noscript>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='26' fill='%23f6401a'/%3E%3Ccircle cx='40' cy='26' r='14' fill='%232337f2' fill-opacity='.85'/%3E%3C/svg%3E">
+<link rel="alternate" hreflang="zh-CN" href="../zh/journal/article-09.html">
+</head>
+<body data-ink="quiet">
+<canvas id="ink" aria-hidden="true"></canvas>
+<div class="grain" aria-hidden="true"></div>
+
+<div class="cursor" aria-hidden="true"><span class="cursor-label"></span></div>
+<a class="sr-only" href="#main">Skip to content</a>
+<header class="masthead">
+    <a class="brand" href="../index.html" aria-label="Eric — home">Eric<sup>®</sup></a>
+    <div class="masthead-meta"><span>Portfolio &amp; Journal</span><a href="../zh/journal/article-09.html" data-language-switch hreflang="zh-CN" lang="zh-CN" aria-label="Read this page in Chinese">中文</a></div>
+    <div class="masthead-right">
+        <nav class="masthead-nav" aria-label="Primary">
+            <a href="../work/index.html">Work</a><a href="../journal/index.html" aria-current="page">Journal</a><a href="../index.html#about">About</a><a href="../index.html#contact">Contact</a>
+        </nav>
+        <button class="sound-switch" type="button" data-sound-toggle aria-pressed="false" aria-label="Play background music"><canvas class="sound-wave" aria-hidden="true"></canvas><span class="sound-label">Sound</span></button>
+        <button class="theme-switch" type="button" data-theme-toggle aria-pressed="false"><span class="theme-switch-dot" aria-hidden="true"></span><span class="theme-switch-label">Night</span></button>
+        <button class="menu-button" type="button" aria-expanded="false" aria-controls="menu">Menu</button>
+    </div>
+</header>
+<nav class="menu" id="menu" aria-label="Menu">
+    <a href="../index.html">Index</a><a href="../work/index.html"><em>Work</em></a><a href="../journal/index.html">Journal</a><a href="../index.html#contact"><em>Contact</em></a>
+    <div class="menu-foot meta"><span>Local <span data-clock>--:--:--</span></span><button class="sound-switch" type="button" data-sound-toggle aria-pressed="false" aria-label="Play background music"><canvas class="sound-wave" aria-hidden="true"></canvas><span class="sound-label">Sound</span></button><a href="../zh/journal/article-09.html" data-language-switch hreflang="zh-CN" lang="zh-CN" aria-label="Read this page in Chinese">中文</a></div>
+</nav>
+<main id="main">
+<div class="progress" aria-hidden="true"><i></i></div>
+<div class="page">
+    <header class="article-head">
+        <p class="meta"><a href="index.html">← Journal</a> &nbsp;/&nbsp; <span class="topic" data-topic="5">Tech Observation</span></p>
+        <h1 data-split>When a Technology Roadmap Becomes a <em>Law</em></h1>
+        <p class="lede rise">Huawei&#x27;s Tau Law points to real post-Moore engineering problems, but media narratives can turn system-level optimization into a myth of invention from scratch.</p>
+        <div class="article-meta meta rise" style="--d:120ms"><span>2026.05.28</span><span>6 min</span><span>No. 09</span></div>
+    </header>
+    <div class="article-layout">
+        <nav class="toc" aria-label="Contents"><a href="#intro">Introduction</a><a href="#system-efficiency">Post-Moore Computing Needs System-Level Efficiency</a><a href="#not-new">A Valid Direction Is Not the Same as a New Invention</a><a href="#media">Media Turns Engineering Problems Into Historic Moments</a><a href="#metrics">Technology Roadmaps Must Return to Hard Metrics</a><a href="#support">Supporting Domestic Technology Does Not Mean Accepting Every Package</a><a href="#takeaway">Closing Thought</a></nav>
+        <div class="page-surface"><div class="prose"><section class="detail-section" id="intro">
+            <p class="">After Huawei introduced “Tau Law,” coverage quickly fell into a familiar narrative rhythm: breaking Moore's Law, bypassing advanced process limits, overtaking through a new route, and redefining the future of semiconductors.</p>
+            <p class="">Those headlines spread well, but they also compress complex engineering into emotional judgment. A better discussion separates three things: real engineering innovation, corporate strategic narrative, and technical myths amplified for media reach.</p>
+            <p class="">Treating every corporate technology story as empty propaganda misses real progress. Accepting everything labeled as a domestic breakthrough turns industrial complexity into a slogan.</p>
+        </section>
+
+        <section class="detail-section" id="system-efficiency">
+            <h2 class="">Post-Moore Computing Needs System-Level Efficiency</h2>
+            <p class="">Tau Law is not an entirely empty concept. It points to a real trend: as traditional Moore's Law slows, chip performance can no longer rely only on making transistors smaller.</p>
+            <p class="">Advanced process nodes are becoming more expensive, process iteration is harder, and power, heat, interconnect latency, memory access, and system communication are all becoming bottlenecks.</p>
+            <p class="">In AI computing especially, the real limit is often not that one compute unit is too slow, but that data movement is too expensive, chip-to-chip communication is too slow, and memory is too far from compute.</p>
+            <p class="">So moving from transistor density alone to system-level efficiency is a valid direction. Modern chip competition is no longer just about smaller transistors; it combines process, packaging, interconnect, architecture, compilers, software ecosystems, and system engineering.</p>
+        </section>
+
+        <section class="detail-section" id="not-new">
+            <h2 class="">A Valid Direction Is Not the Same as a New Invention</h2>
+            <p class="">The problem is that a valid technical direction is not the same as a new invention, and engineering value is not the same as an established industrial law.</p>
+            <p class="">3D stacking, advanced packaging, heterogeneous integration, chiplets, high-speed interconnects, and HBM coordination are all long-running post-Moore directions. TSMC, Intel, AMD, and NVIDIA all pursue related paths in their own systems.</p>
+            <p class="">A more accurate framing is not that Huawei invented stacked chips. It is that Huawei is reorganizing several post-Moore engineering routes into its own technical narrative under process constraints, and trying to turn LogicFolding, interconnect optimization, and system coordination into a product path.</p>
+        </section>
+
+        <section class="detail-section" id="media">
+            <h2 class="">Media Turns Engineering Problems Into Historic Moments</h2>
+            <p class="">A technology does not lose value just because it was not first. Many engineering advances matter less because of who named them first, and more because of who can turn them into products, scale, reliability, and cost advantages.</p>
+            <p class="">But the reverse is also true: something that did not appear for the first time should not be packaged as invention from zero. Renaming an existing industry trend as a law is itself a narrative move.</p>
+            <p class="">The common media amplification pattern is to turn dry engineering language into a shareable historic moment. Reducing interconnect latency, optimizing critical paths, improving package density, shortening data movement, and increasing system throughput are not traffic-friendly phrases.</p>
+            <p class="">“New law,” “breaking Moore's Law,” and “overtaking through a new route” are better headlines and trigger stronger emotion. Domestic chip topics naturally amplify emotion, so the harder the long-term task is, the more calmly it should be discussed.</p>
+        </section>
+
+        <section class="detail-section" id="metrics">
+            <h2 class="">Technology Roadmaps Must Return to Hard Metrics</h2>
+            <p class="">To judge whether Tau Law has industrial value, we cannot stop at the name, the launch event, or phrases like “equivalent 1.4nm.” Chip technology eventually has to return to hard metrics:</p>
+            <ul class="">
+                <li class="">Whether performance truly improves in real workloads, with higher throughput and lower latency.</li>
+                <li class="">Whether power and thermals are controlled, and whether dense integration is offset by a power wall.</li>
+                <li class="">Whether cost and yield can scale from samples to commercial production.</li>
+                <li class="">Whether software ecosystems and application scenarios can absorb it, including compilers, operator libraries, framework adaptation, cluster interconnects, and developer migration costs.</li>
+            </ul>
+            <p class="">Those metrics matter far more than the word “law.” A technology route is validated by product capability, manufacturing capability, and ecosystem capability, not by naming.</p>
+        </section>
+
+        <section class="detail-section" id="support">
+            <h2 class="">Supporting Domestic Technology Does Not Mean Accepting Every Package</h2>
+            <p class="">A rational view of Tau Law is not an attempt to dismiss Huawei. Huawei's continued search for performance paths beyond process nodes under constraint is worth watching.</p>
+            <p class="">The post-Moore era will not have only one path called advanced process nodes. Advanced packaging, 3D integration, system interconnects, and hardware-software coordination will all matter more.</p>
+            <p class="">But supporting domestic technology does not mean accepting every media package. Mature industrial confidence should rest on clear understanding of engineering difficulty, industry cycles, and validation standards, not excitement over another newly named law.</p>
+        </section>
+
+        <section class="detail-section" id="takeaway">
+            <h2 class="">Closing Thought</h2>
+            <p class="">The real value of discussing Tau Law is not whether Huawei invented a new technology from nowhere. It is that the idea exposes a shared post-Moore reality: as geometric scaling becomes harder, chip competition is shifting from single-process races to system engineering races.</p>
+            <p class="">Future chip performance will depend more on coordination across process, packaging, interconnect, architecture, software, and application ecosystems. Huawei's Tau Law is a self-defined route expression in that context.</p>
+            <blockquote class=""><strong class="">The most rational attitude is not blind celebration or reflexive mockery, but waiting for products, volume production, and real workloads, then letting data speak.</strong></blockquote>
+            <p class="">Technical publicity can create heat, but verifiable product capability is what decides industrial position.</p>
+        </section></div></div>
+    </div>
+    <section class="related" aria-labelledby="related-title"><p class="kicker">Continue reading</p><h2 id="related-title">Related <em>writing</em></h2><ol class="journal-list" style="list-style:none"><li><a class="journal-row" href="article-06.html" data-topic="5" data-cursor="Read">
+        <span class="journal-date">2026.09 · 06</span>
+        <span class="journal-title"><span class="static">Who Gets to Train on Whom?</span><span class="marquee" aria-hidden="true"><span>Who Gets to Train on Whom? —&nbsp;</span><span>Who Gets to Train on Whom? —&nbsp;</span><span>Who Gets to Train on Whom? —&nbsp;</span></span></span>
+        <span class="topic" data-topic="5">Tech Observation</span><span class="journal-time">8 min</span></a></li><li><a class="journal-row" href="article-07.html" data-topic="5" data-cursor="Read">
+        <span class="journal-date">2026.08 · 07</span>
+        <span class="journal-title"><span class="static">The Three Clocks of Robotics</span><span class="marquee" aria-hidden="true"><span>The Three Clocks of Robotics —&nbsp;</span><span>The Three Clocks of Robotics —&nbsp;</span><span>The Three Clocks of Robotics —&nbsp;</span></span></span>
+        <span class="topic" data-topic="5">Tech Observation</span><span class="journal-time">8 min</span></a></li><li><a class="journal-row" href="article-10.html" data-topic="5" data-cursor="Read">
+        <span class="journal-date">2026.05 · 10</span>
+        <span class="journal-title"><span class="static">The Real Test for Embodied AI in China Is Not Acrobatics, but a Commercial Loop</span><span class="marquee" aria-hidden="true"><span>The Real Test for Embodied AI in China Is Not Acrobatics, but a Commercial Loop —&nbsp;</span><span>The Real Test for Embodied AI in China Is Not Acrobatics, but a Commercial Loop —&nbsp;</span><span>The Real Test for Embodied AI in China Is Not Acrobatics, but a Commercial Loop —&nbsp;</span></span></span>
+        <span class="topic" data-topic="5">Tech Observation</span><span class="journal-time">8 min</span></a></li></ol></section>
+    <nav class="pager" aria-label="More articles">
+        <a href="article-08.html" data-cursor="Prev"><span class="meta">← Previous</span><strong>Mac Is Becoming the Ideal Runtime for Personal AI Apps</strong></a>
+        <a href="article-10.html" data-cursor="Next"><span class="meta">Next →</span><strong>The Real Test for Embodied AI in China Is Not Acrobatics, but a Commercial Loop</strong></a>
+    </nav>
+</div>
+</main>
+<footer class="colophon">
+    <div class="colophon-name" data-fit aria-hidden="true">Eric</div>
+    <div class="colophon-grid">
+        <div><p class="meta">Index</p><a href="../work/index.html">Work</a><a href="../journal/index.html">Journal</a><a href="../index.html#about">About</a><a href="../index.html#contact">Contact</a></div>
+        <div><p class="meta">Elsewhere</p><a href="https://github.com/powerpan" target="_blank" rel="noopener">GitHub</a><a href="../work/index.html">Work</a><a href="index.html">Journal</a><a href="../index.html#contact">Contact</a></div>
+        <div><p class="meta">Settings</p><button type="button" data-theme-toggle aria-pressed="false"><span class="theme-switch-label">Night</span> paper</button><br><button type="button" data-motion-toggle aria-pressed="true">Motion: on</button><br><button type="button" class="sound-text" data-sound-toggle aria-pressed="false">Sound: off</button>
+<label class="volume"><span class="meta">Volume</span><input class="ink-range" type="range" min="0" max="1" step="0.05" value="0.6" data-sound-volume aria-label="Music volume"></label></div>
+        <div><p class="meta">Colophon</p><p>© 2026 Eric. Set in Instrument Serif &amp; Inter Tight. Ink simulated live in WebGL2.</p><a href="#" data-top>Back to top ↑</a></div>
+    </div>
+</footer>
+<p class="sr-only" role="status" aria-live="polite" data-sound-status></p>
+<script src="../js/ink-fluid.js"></script>
+<script src="../js/ink.js"></script>
+</body>
+</html>

@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>机器人的三个时钟 — Eric</title>
+<meta name="description" content="宇树上市后的价格重估提醒我们：硬件、智能与资本沿着不同速度前进，生产力只能由长期可靠运行来证明。">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#ede8df">
+<script>(()=>{const r=document.documentElement;let t,m;try{t=localStorage.getItem('ink-theme');m=localStorage.getItem('ink-motion')}catch(e){}t=t||(matchMedia('(prefers-color-scheme: dark)').matches?'night':'day');if(matchMedia('(prefers-reduced-motion: reduce)').matches)m='off';r.dataset.theme=t;r.dataset.motion=m||'on'})()</script>
+<link rel="preload" href="../../assets/fonts/instrument-serif-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../css/ink.css">
+<link rel="stylesheet" href="../../css/languages.css">
+<link rel="stylesheet" href="../../css/sound.css">
+<script src="../../js/ink-sound.js" defer></script>
+<noscript><style>[data-sound-toggle],.volume{display:none!important}</style></noscript>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='26' fill='%23f6401a'/%3E%3Ccircle cx='40' cy='26' r='14' fill='%232337f2' fill-opacity='.85'/%3E%3C/svg%3E">
+<link rel="alternate" hreflang="en" href="../../journal/article-07.html">
+</head>
+<body data-ink="quiet">
+<canvas id="ink" aria-hidden="true"></canvas>
+<div class="grain" aria-hidden="true"></div>
+
+<div class="cursor" aria-hidden="true"><span class="cursor-label"></span></div>
+<a class="sr-only" href="#main">跳至正文</a>
+<header class="masthead">
+    <a class="brand" href="../index.html" aria-label="Eric — 首页">Eric<sup>®</sup></a>
+    <div class="masthead-meta"><span>作品与手记</span><a href="../../journal/article-07.html" data-language-switch hreflang="en" lang="en" aria-label="Read this page in English">EN</a></div>
+    <div class="masthead-right">
+        <nav class="masthead-nav" aria-label="主导航">
+            <a href="../work/index.html">项目</a><a href="../journal/index.html" aria-current="page">文章</a><a href="../index.html#about">关于</a><a href="../index.html#contact">联系</a>
+        </nav>
+        <button class="sound-switch" type="button" data-sound-toggle aria-pressed="false" aria-label="播放背景音乐"><canvas class="sound-wave" aria-hidden="true"></canvas><span class="sound-label">音乐</span></button>
+        <button class="theme-switch" type="button" data-theme-toggle aria-pressed="false"><span class="theme-switch-dot" aria-hidden="true"></span><span class="theme-switch-label">夜间</span></button>
+        <button class="menu-button" type="button" aria-expanded="false" aria-controls="menu">菜单</button>
+    </div>
+</header>
+<nav class="menu" id="menu" aria-label="菜单">
+    <a href="../index.html">目录</a><a href="../work/index.html"><em>项目</em></a><a href="../journal/index.html">文章</a><a href="../index.html#contact"><em>联系</em></a>
+    <div class="menu-foot meta"><span>本地 <span data-clock>--:--:--</span></span><button class="sound-switch" type="button" data-sound-toggle aria-pressed="false" aria-label="播放背景音乐"><canvas class="sound-wave" aria-hidden="true"></canvas><span class="sound-label">音乐</span></button><a href="../../journal/article-07.html" data-language-switch hreflang="en" lang="en" aria-label="Read this page in English">EN</a></div>
+</nav>
+<main id="main">
+<div class="progress" aria-hidden="true"><i></i></div>
+<div class="page">
+    <header class="article-head">
+        <p class="meta"><a href="index.html">← 文章</a> &nbsp;/&nbsp; <span class="topic" data-topic="5">技术观察</span></p>
+        <h1 data-split>机器人的<em>三个时钟</em></h1>
+        <p class="lede rise">宇树上市后的价格重估提醒我们：硬件、智能与资本沿着不同速度前进，生产力只能由长期可靠运行来证明。</p>
+        <div class="article-meta meta rise" style="--d:120ms"><span>2026.08.23</span><span>8 分钟</span><span>No. 07</span></div>
+    </header>
+    <div class="article-layout">
+        <nav class="toc" aria-label="目录"><a href="#intro">引言</a><a href="#scorecard">上市之后，评分表变了</a><a href="#reliability">Demo 与生产系统之间是可靠性鸿沟</a><a href="#clocks">三个时钟为什么不同步</a><a href="#bottleneck">具身智能的工程瓶颈正在改变</a><a href="#metrics">从出货量转向生产 KPI</a><a href="#takeaway">写在最后</a></nav>
+        <div class="page-surface"><div class="prose"><section class="detail-section" id="intro">
+            <p class="">2026 年 8 月，宇树科技上市后的暴涨与回撤，把人形机器人从演示视频拉进了财报和估值体系。发行价、首日高点与随后回落都很醒目，但价格不是对机器人未来的一次公投。</p>
+            <p class="">更值得讨论的是评分表发生了变化。过去行业回答“机器人能不能做到”，上市公司必须继续回答“能不能稳定做到、规模部署并持续赚钱”。硬件、智能与资本也由此显露出不同速度。</p>
+            <p class=""><em class="">数据与公开信息核验截至 2026 年 8 月 21 日收盘。本文讨论产业与工程问题，不构成投资建议。</em></p>
+        </section>
+
+        <section class="detail-section" id="scorecard">
+            <h2 class="">上市之后，评分表变了</h2>
+            <p class="">宇树已经证明自己不是只有概念的公司。2025 年营收约 16.99 亿元，纯人形机器人出货超过 5500 台，说明高动态机器人已经可以被重复制造并规模销售。</p>
+            <p class="">但卖出机器人和让机器人真正上班并不是同一件事。披露数据显示，2025 年前三季度人形机器人收入仍以科研教育为主，行业应用占比较低，其中相当一部分还是企业导览。科研平台有生态价值，却不能替代生产资料的验证。</p>
+            <p class="">上市的意义正在于，它迫使技术叙事接受另一套约束。订单来自哪里、客户是否复购、研发投入如何转化、现场部署是否改善毛利和现金流，这些问题会按季度出现。技术没有被否定，只是必须解释自己怎样变成生产力。</p>
+        </section>
+
+        <section class="detail-section" id="reliability">
+            <h2 class="">Demo 与生产系统之间是可靠性鸿沟</h2>
+            <p class="">一个 Demo 回答能力是否存在；生产系统回答能力能否持续。假设一个任务需要连续 20 个关键步骤，每一步成功率都是 99%，在极度简化的独立模型下，完整任务一次成功的概率也只有约 81.8%；50 步时只剩约 60.5%。</p>
+            <p class="">真实系统可以重试、检测状态和重新规划，但这个计算揭示了关键事实：长链路可靠性不能被一个漂亮动作的成功率代替。工业现场关心的是一百次任务失败几次、失败后是否要人来扶、零件偏移后能否继续，以及一天里真正产生了多少有效产出。</p>
+            <p class="">语言模型答错可以重新生成，软件 Agent 调用失败可以回滚。机器人一次错误动作却可能损坏零件、中断节拍，甚至带来安全风险。它把 Agent 尚未解决的长链路可靠性问题带进了一个不能随意撤销的物理世界。</p>
+        </section>
+
+        <section class="detail-section" id="clocks">
+            <h2 class="">三个时钟为什么不同步</h2>
+            <p class="">今天的具身智能可以理解为三个并行时钟：</p>
+            <ul class="">
+                <li class=""><strong class="">硬件时钟走得很快。</strong>执行器、减速器、传感器、控制算法和中国供应链持续改善，机器人的运动性能、成本和量产能力已经跨过重要门槛。</li>
+                <li class=""><strong class="">智能时钟明显更慢。</strong>感知、规划、操作、故障恢复和跨场景泛化仍受真实数据与长尾环境约束。一副成熟的身体不等于一个能独立工作的“大脑”。</li>
+                <li class=""><strong class="">资本时钟通常最快。</strong>市场必须提前为未来定价，因此交易的是通用具身智能的远期市场、份额和利润，而不只是今天卖出的机器人。</li>
+            </ul>
+            <p class="">三个时钟不同步并不等于产业方向错误。正确而巨大的技术趋势同样可能出现过早定价；价格回撤也不能反向证明技术没有未来。真正要判断的是技术和商业兑现速度能否逐步追上预期。</p>
+        </section>
+
+        <section class="detail-section" id="bottleneck">
+            <h2 class="">具身智能的工程瓶颈正在改变</h2>
+            <p class="">机器人基础模型正在从单步动作走向长任务、自我纠正和跨本体迁移，但复杂操作的稳定性仍然差异巨大。更根本的约束是，机器人没有一个现成的“物理世界 Common Crawl”。</p>
+            <p class="">高质量机器人数据需要真实本体、传感器、场景布置、遥操作人员和时间成本，而且数据天然绑定硬件与环境。光照、包装、摩擦、遮挡和人的突然介入都会制造长尾。模型不仅要判断该做什么，还要在每个动作后确认世界是否仍符合预期。</p>
+            <p class="">即使机器人的“ChatGPT 时刻”出现，扩散曲线也不会完全复制软件。每服务一个新现场，都要多一套硬件、运输、安装、维护和售后。软件能力可以在服务器上快速复制，物理智能必须连同身体和现场工程一起复制。</p>
+            <p class="">人形机器人还在与成熟自动化竞争。固定任务如果能低成本结构化，传统产线通常更快、更便宜、更可靠。人形机器人的价值必须体现在任务切换更便宜、现场改造更少、适应变化更快，而且总体经济账优于人工或传统自动化。</p>
+        </section>
+
+        <section class="detail-section" id="metrics">
+            <h2 class="">从出货量转向生产 KPI</h2>
+            <p class="">行业要从 Demo 时代进入生产力时代，评价体系也必须从速度、自由度、参数和出货量转向一组更硬的指标：</p>
+            <ul class="">
+                <li class=""><strong class="">端到端任务成功率：</strong>完整生产任务一次完成的概率，而不是单个动作的最佳成绩。</li>
+                <li class=""><strong class="">人工接管率：</strong>每 100 小时或每 1000 次任务需要多少次人工介入。</li>
+                <li class=""><strong class="">自主恢复率：</strong>抓取失败、掉落或路径受阻后，有多少异常可以自行恢复。</li>
+                <li class=""><strong class="">MTBF 与可用率：</strong>两次故障之间能稳定运行多久，停机和维护占用多少时间。</li>
+                <li class=""><strong class="">有效作业小时：</strong>开机时间里真正产生可计量工作产出的小时数。</li>
+                <li class=""><strong class="">任务切换成本与 TCO：</strong>换任务需要多少数据、调试与工程人员，采购、部署、维护和接管成本多久能够回收。</li>
+                <li class=""><strong class="">复购与规模部署：</strong>客户试用一台之后，是否愿意在同一现场或更多现场继续购买。</li>
+            </ul>
+            <p class="">其中最值得长期公开的是“累计无人干预有效作业小时”。卖出一台机器人证明一次交易发生了；机器人在客户现场连续创造了多少小时的有效产出，才接近真实活跃度和产能。</p>
+        </section>
+
+        <section class="detail-section" id="takeaway">
+            <h2 class="">写在最后</h2>
+            <p class="">公开视频追求技术上限，工厂要求工程下限。后空翻持续几秒，环境可以清空，失败可以重录；工业岗位却要面对零件批次、地面、光照、网络、电池和上游工序持续制造的异常。</p>
+            <p class="">宇树今天较清晰的优势来自本体、运动控制、供应链和规模制造。下一阶段要证明的是，能否把已经卖出的身体转化为真实场景数据、持续智能改进和客户生产力。</p>
+            <p class="">资本市场可以提前交易后天，创业者必须建设明天，工程师则要把今天的失败率、接管率和有效作业小时一项项做实。</p>
+            <blockquote class=""><strong class="">真正的拐点，不是机器人又完成一个惊艳动作，而是硬件、智能与资本三个时钟开始重新走在一起。</strong></blockquote>
+        </section></div></div>
+    </div>
+    <section class="related" aria-labelledby="related-title"><p class="kicker">继续阅读</p><h2 id="related-title">相关<em>文章</em></h2><ol class="journal-list" style="list-style:none"><li><a class="journal-row" href="article-06.html" data-topic="5" data-cursor="阅读">
+        <span class="journal-date">2026.09 · 06</span>
+        <span class="journal-title"><span class="static">谁有权训练谁？</span><span class="marquee" aria-hidden="true"><span>谁有权训练谁？ —&nbsp;</span><span>谁有权训练谁？ —&nbsp;</span><span>谁有权训练谁？ —&nbsp;</span></span></span>
+        <span class="topic" data-topic="5">技术观察</span><span class="journal-time">8 分钟</span></a></li><li><a class="journal-row" href="article-09.html" data-topic="5" data-cursor="阅读">
+        <span class="journal-date">2026.05 · 09</span>
+        <span class="journal-title"><span class="static">当技术路线被包装成定律</span><span class="marquee" aria-hidden="true"><span>当技术路线被包装成定律 —&nbsp;</span><span>当技术路线被包装成定律 —&nbsp;</span><span>当技术路线被包装成定律 —&nbsp;</span></span></span>
+        <span class="topic" data-topic="5">技术观察</span><span class="journal-time">6 分钟</span></a></li><li><a class="journal-row" href="article-10.html" data-topic="5" data-cursor="阅读">
+        <span class="journal-date">2026.05 · 10</span>
+        <span class="journal-title"><span class="static">中国具身智能的真正考验：不是翻跟头，而是商业闭环</span><span class="marquee" aria-hidden="true"><span>中国具身智能的真正考验：不是翻跟头，而是商业闭环 —&nbsp;</span><span>中国具身智能的真正考验：不是翻跟头，而是商业闭环 —&nbsp;</span><span>中国具身智能的真正考验：不是翻跟头，而是商业闭环 —&nbsp;</span></span></span>
+        <span class="topic" data-topic="5">技术观察</span><span class="journal-time">8 分钟</span></a></li></ol></section>
+    <nav class="pager" aria-label="更多文章">
+        <a href="article-06.html" data-cursor="上一篇"><span class="meta">← 上一篇</span><strong>谁有权训练谁？</strong></a>
+        <a href="article-08.html" data-cursor="下一个"><span class="meta">下一篇 →</span><strong>Mac 正在成为个人 AI 应用的理想运行时</strong></a>
+    </nav>
+</div>
+</main>
+<footer class="colophon">
+    <div class="colophon-name" data-fit aria-hidden="true">Eric</div>
+    <div class="colophon-grid">
+        <div><p class="meta">目录</p><a href="../work/index.html">项目</a><a href="../journal/index.html">文章</a><a href="../index.html#about">关于</a><a href="../index.html#contact">联系</a></div>
+        <div><p class="meta">更多</p><a href="https://github.com/powerpan" target="_blank" rel="noopener">GitHub</a><a href="../work/index.html">项目</a><a href="index.html">文章</a><a href="../index.html#contact">联系</a></div>
+        <div><p class="meta">设置</p><button type="button" data-theme-toggle aria-pressed="false"><span class="theme-switch-label">夜间</span> 纸色</button><br><button type="button" data-motion-toggle aria-pressed="true">动效：开启</button><br><button type="button" class="sound-text" data-sound-toggle aria-pressed="false">音乐：关闭</button>
+<label class="volume"><span class="meta">音量</span><input class="ink-range" type="range" min="0" max="1" step="0.05" value="0.6" data-sound-volume aria-label="音乐音量"></label></div>
+        <div><p class="meta">关于本站</p><p>© 2026 Eric. 中文标题采用 Noto Serif SC，正文采用 Noto Sans SC。水墨以 WebGL2 实时模拟。</p><a href="#" data-top>返回顶部 ↑</a></div>
+    </div>
+</footer>
+<p class="sr-only" role="status" aria-live="polite" data-sound-status></p>
+<script src="../../js/ink-fluid.js"></script>
+<script src="../../js/ink.js"></script>
+</body>
+</html>

@@ -6,7 +6,7 @@ const { load } = require('cheerio');
 const { createLocalizedPages } = require('./localize_site');
 
 const root = path.resolve(__dirname, '..');
-const slugs = ['data-center-grid-protection', 'physics-benchmark-grading', 'encrypted-substring-search'];
+const slugs = ['data-center-grid-protection', 'physics-benchmark-grading', 'encrypted-substring-search', 'gaac-kv-cache-bandwidth'];
 const read = file => fs.readFileSync(path.join(root, file), 'utf8');
 const entries = slugs.map(slug => ({ rel: `blog/${slug}.html`, html: read(`blog/${slug}.html`) }));
 
@@ -35,7 +35,8 @@ test('contextual source links and limitations survive static bilingual generatio
     assert(links(zh).length >= 7, slug);
     assert.equal(zh('article h2').length, en('article h2').length);
     assert(!/\p{Script=Han}/u.test(en('article').text()), slug);
-    const limitKey = slug === 'data-center-grid-protection' ? 'bdgp_p45' : slug === 'physics-benchmark-grading' ? 'bpbg_p44' : 'bess_p113';
+    const limitKeys = {'data-center-grid-protection':'bdgp_p45', 'physics-benchmark-grading':'bpbg_p44', 'encrypted-substring-search':'bess_p113', 'gaac-kv-cache-bandwidth':'bgkv_p48'};
+    const limitKey = limitKeys[slug];
     assert(zh(`article [data-i18n="${limitKey}"]`).text().length > 60, slug);
     assert(en(`article [data-i18n="${limitKey}"]`).text().length > 60, slug);
   }

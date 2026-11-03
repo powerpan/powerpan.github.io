@@ -1,0 +1,323 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Can You Search Inside Encrypted Data? — Eric</title>
+<meta name="description" content="From a phone number&#x27;s last four digits to arbitrary substrings: how to build search tags, why candidates can be false positives, and what the index reveals.">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#ede8df">
+<script>(()=>{const r=document.documentElement;let t,m;try{t=localStorage.getItem('ink-theme');m=localStorage.getItem('ink-motion')}catch(e){}t=t||(matchMedia('(prefers-color-scheme: dark)').matches?'night':'day');if(matchMedia('(prefers-reduced-motion: reduce)').matches)m='off';r.dataset.theme=t;r.dataset.motion=m||'on'})()</script>
+<link rel="preload" href="../assets/fonts/instrument-serif-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../css/ink.css">
+<link rel="stylesheet" href="../css/languages.css">
+<link rel="stylesheet" href="../css/sound.css">
+<script src="../js/ink-sound.js" defer></script>
+<noscript><style>[data-sound-toggle],.volume{display:none!important}</style></noscript>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='26' fill='%23f6401a'/%3E%3Ccircle cx='40' cy='26' r='14' fill='%232337f2' fill-opacity='.85'/%3E%3C/svg%3E">
+<link rel="alternate" hreflang="zh-CN" href="../zh/journal/article-04.html">
+</head>
+<body data-ink="quiet">
+<canvas id="ink" aria-hidden="true"></canvas>
+<div class="grain" aria-hidden="true"></div>
+
+<div class="cursor" aria-hidden="true"><span class="cursor-label"></span></div>
+<a class="sr-only" href="#main">Skip to content</a>
+<header class="masthead">
+    <a class="brand" href="../index.html" aria-label="Eric — home">Eric<sup>®</sup></a>
+    <div class="masthead-meta"><span>Portfolio &amp; Journal</span><a href="../zh/journal/article-04.html" data-language-switch hreflang="zh-CN" lang="zh-CN" aria-label="Read this page in Chinese">中文</a></div>
+    <div class="masthead-right">
+        <nav class="masthead-nav" aria-label="Primary">
+            <a href="../work/index.html">Work</a><a href="../journal/index.html" aria-current="page">Journal</a><a href="../index.html#about">About</a><a href="../index.html#contact">Contact</a>
+        </nav>
+        <button class="sound-switch" type="button" data-sound-toggle aria-pressed="false" aria-label="Play background music"><canvas class="sound-wave" aria-hidden="true"></canvas><span class="sound-label">Sound</span></button>
+        <button class="theme-switch" type="button" data-theme-toggle aria-pressed="false"><span class="theme-switch-dot" aria-hidden="true"></span><span class="theme-switch-label">Night</span></button>
+        <button class="menu-button" type="button" aria-expanded="false" aria-controls="menu">Menu</button>
+    </div>
+</header>
+<nav class="menu" id="menu" aria-label="Menu">
+    <a href="../index.html">Index</a><a href="../work/index.html"><em>Work</em></a><a href="../journal/index.html">Journal</a><a href="../index.html#contact"><em>Contact</em></a>
+    <div class="menu-foot meta"><span>Local <span data-clock>--:--:--</span></span><button class="sound-switch" type="button" data-sound-toggle aria-pressed="false" aria-label="Play background music"><canvas class="sound-wave" aria-hidden="true"></canvas><span class="sound-label">Sound</span></button><a href="../zh/journal/article-04.html" data-language-switch hreflang="zh-CN" lang="zh-CN" aria-label="Read this page in Chinese">中文</a></div>
+</nav>
+<main id="main">
+<div class="progress" aria-hidden="true"><i></i></div>
+<div class="page">
+    <header class="article-head">
+        <p class="meta"><a href="index.html">← Journal</a> &nbsp;/&nbsp; <span class="topic" data-topic="4">System Architecture</span></p>
+        <h1 data-split>Can You Search Inside <em>Encrypted Data</em>?</h1>
+        <p class="lede rise">From a phone number&#x27;s last four digits to arbitrary substrings: how to build search tags, why candidates can be false positives, and what the index reveals.</p>
+        <div class="article-meta meta rise" style="--d:120ms"><span>2026.10.06</span><span>34 min</span><span>No. 04</span></div>
+    </header>
+    <div class="article-layout">
+        <nav class="toc" aria-label="Contents"><a href="#intro">Introduction</a><a href="#query-types">Last-four-digit lookup, substring search, and typo correction</a><a href="#options">Scanning, database-side decryption, and plaintext copies</a><a href="#blind-index">A blind index alongside the ciphertext</a><a href="#suffix">A suffix search needs only a suffix tag</a><a href="#ngram">Building a substring candidate index with 4-grams</a><a href="#verification">All fragments can be present in the wrong order</a><a href="#cost">How many candidates remain out of ten million records?</a><a href="#leakage">The database still sees frequencies and correlations</a><a href="#operations">Write consistency, key rotation, and search permissions</a><a href="#extensions">What the substring index has not solved</a><a href="#choice">Choosing a search for the support dashboard</a></nav>
+        <div class="page-surface"><div class="prose"><section class="detail-section" id="intro">
+            <p class="">Imagine a customer-support dashboard. Phone numbers must not be stored in plaintext, so the <code class="">phone</code> column is encrypted and the database holds unreadable bytes. Then a customer who cannot remember the full number wants to find an order using its last four digits. A few days later, the request expands to searching for digits in the middle as well.</p>
+            <p class="">The old SQL query no longer works on that column:</p>
+            <pre class=""><code class="language-sql">SELECT id FROM users WHERE phone LIKE '%0138%';</code></pre>
+            <p class="">Randomized field encryption is supposed to hide relationships between plaintext values. A database that cannot read the values cannot simply recognize which ciphertexts contain the same fragment. That loss of visible structure is part of the protection.</p>
+            <p class="">Search is still possible. I would keep the original value in ciphertext and build a separate index for a limited set of queries. <a href="https://ciphersweet.paragonie.com/internals/blind-index" target="_blank" rel="noopener" class="">Blind indexes</a> and some <a href="https://docs.aws.amazon.com/database-encryption-sdk/latest/devguide/searchable-encryption.html" target="_blank" rel="noopener" class="">commercial encryption SDKs</a> take this approach. The limit matters: the index provides a capability by exposing relationships that encryption would otherwise hide.</p>
+            <p class="">Before implementation, specify which queries are needed and what the database will learn from them.</p>
+        </section>
+
+        <section class="detail-section" id="query-types">
+            <h2 class="">Last-four-digit lookup, substring search, and typo correction</h2>
+            <p class="">'Support fuzzy search' is too vague to implement. Several operations may share one search box while requiring quite different designs.</p>
+            <div class="article-table-scroll" tabindex="0" aria-label="Search semantics">
+                <table class="">
+                    <thead class=""><tr class=""><th scope="col" class="">User request</th><th scope="col" class="">Query semantics</th><th scope="col" class="">Example</th></tr></thead>
+                    <tbody class="">
+                        <tr class=""><td class="">Find someone using the full number</td><td class="">Exact match</td><td class="">The complete phone number is equal</td></tr>
+                        <tr class=""><td class="">Find an order using the last four digits</td><td class="">Fixed-length suffix match</td><td class="">Ends with <code class="">8000</code></td></tr>
+                        <tr class=""><td class="">Search using the first few digits</td><td class="">Prefix match</td><td class="">Starts with <code class="">1380</code></td></tr>
+                        <tr class=""><td class="">Search using digits in the middle</td><td class="">Substring match</td><td class="">Contains <code class="">0138</code></td></tr>
+                        <tr class=""><td class="">Find a value despite a typo</td><td class="">Approximate match</td><td class="">Match <code class="">Erci</code> to <code class="">Eric</code></td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <p class="">SQL <code class="">LIKE '%xxx%'</code> here means substring matching, not <a href="https://www.postgresql.org/docs/18/fuzzystrmatch.html" target="_blank" rel="noopener" class="">typo correction</a>. Approximate matching also needs a definition of allowed errors, a distance function, and ranking rules. This article handles literal substrings; it does not implement arbitrary SQL wildcard expressions.</p>
+            <p class="">Query semantics determine which indexes are needed and which relationships become visible. Searching the last four digits does not require indexing every four-digit fragment. Exact email lookup does not require indexing every substring of an address. Preparing all searchable features for an unconfirmed future requirement can enlarge the information exposed by the system.</p>
+            <p class="">The other question is who the protection is meant to resist. A stolen disk, a leaked database backup, an attacker with query access, and a fully compromised application server are different threats. Disk encryption cannot stop someone who can already query the running database. Conversely, a database's ability to decrypt does not mean an offline backup without the keys can necessarily be decrypted. Choose the encryption layer against the <a href="https://cheatsheetseries.owasp.org/cheatsheets/Cryptographic_Storage_Cheat_Sheet.html" target="_blank" rel="noopener" class="">threat model</a>.</p>
+            <p class="">The main boundary here is an application that may handle plaintext, with a database that stores only ciphertext and search indexes. An attacker may read the database but does not hold the application's keys. Later sections consider continuous query observation, chosen inputs, and compromise of the application itself.</p>
+        </section>
+
+        <section class="detail-section" id="options">
+            <h2 class="">Scanning, database-side decryption, and plaintext copies</h2>
+            <h3 class="">Decrypting a scan can work when its scope is small</h3>
+            <p class="">The simplest implementation reads records from the database, decrypts them in the application, and runs <code class="">contains</code> on each value.</p>
+            <p class="">An authorized tenant with a few hundred records, or a rare offline investigation, may be a reasonable fit. A cursor or batches also avoid holding every plaintext value in memory at once.</p>
+            <p class="">Streaming reduces memory pressure; it does not eliminate the scan. Without a selective preliminary filter, checking ten million records still means reading and processing ten million records. Storage, network transfer, object handling, decryption, and string comparison can all contribute to the cost.</p>
+            <p class="">I would assess the scope of the scan, query frequency, and acceptable latency before ruling this option out.</p>
+            <h3 class="">Moving decryption into SQL changes whom you trust</h3>
+            <p class="">Another option performs decryption inside SQL. This is pseudocode illustrating the idea, not a portable database function:</p>
+            <pre class=""><code class="language-text">WHERE decrypt(phone_ciphertext) LIKE '%0138%'</code></pre>
+            <p class="">It avoids transferring every ciphertext to the application, but it does not automatically reduce filtering work. An index on the existing ciphertext generally cannot tell the database whether the decrypted value contains a substring.</p>
+            <p class="">It would be wrong to claim that expressions can never be indexed, or that every query with a leading wildcard is impossible to optimize. PostgreSQL supports <a href="https://www.postgresql.org/docs/18/indexes-expressional.html" target="_blank" rel="noopener" class="">expression indexes</a>, and <a href="https://www.postgresql.org/docs/18/pgtrgm.html" target="_blank" rel="noopener" class=""><code class="">pg_trgm</code></a> GIN/GiST indexes support certain <code class="">LIKE</code> searches with leading wildcards. <a href="https://www.postgresql.org/docs/18/indexes-types.html" target="_blank" rel="noopener" class="">An ordinary B-tree</a> is not a general solution for arbitrary substring searches.</p>
+            <p class="">Materializing decrypted text or directly recoverable plaintext features in an index puts sensitive information back inside the database. That changes the security boundary as well as the query plan.</p>
+            <p class="">Giving the database decryption capability also means trusting the execution environment and the parties with the relevant permissions. Plaintext appears there. SQL parameters, diagnostic output, and logging need review. It is inaccurate to say that all plaintext necessarily enters backups or slow-query logs, but each exposure path needs assessment.</p>
+            <h3 class="">The search column belongs in the threat model</h3>
+            <p class="">One straightforward design encrypts the main field and adds a <code class="">phone_search</code> column containing the full plaintext number.</p>
+            <p class="">If the goal is to protect phone numbers when the database leaks, the attacker can simply read that search column. Decrypting the main field becomes unnecessary.</p>
+            <p class="">Even storing just the last four digits deliberately reveals those digits to the database. Encryption of the full number does not protect a separate plaintext suffix.</p>
+            <p class="">Security assessment must cover copies, indexes, and execution paths. A column called <code class="">ciphertext</code> does not establish that the data remains protected after a database leak.</p>
+        </section>
+
+        <section class="detail-section" id="blind-index">
+            <h2 class="">A blind index alongside the ciphertext</h2>
+            <p class="">I would preserve normal randomized encryption of the original value rather than alter its encryption to make search easier.</p>
+            <p class="">A <a href="https://cheatsheetseries.owasp.org/cheatsheets/Cryptographic_Storage_Cheat_Sheet.html" target="_blank" rel="noopener" class="">maintained cryptographic library</a> offering <a href="https://csrc.nist.gov/pubs/sp/800/38/d/final" target="_blank" rel="noopener" class="">AES-GCM</a> is one option for this example; <a href="https://www.rfc-editor.org/rfc/rfc8439" target="_blank" rel="noopener" class="">ChaCha20-Poly1305</a> is another standardized authenticated-encryption construction. Decryption should verify integrity as well as recover the value. A new system has no reason to inherit DES from an old tutorial or invent an algorithm that preserves character patterns for search.</p>
+            <p class="">An AES-GCM envelope typically includes an algorithm or format version, a key version, the <a href="https://cryptography.io/en/latest/hazmat/primitives/aead/" target="_blank" rel="noopener" class="">nonce</a>, and the authentication tag. The nonce need not be secret, but must not repeat under the same key. Random nonces still require appropriate randomness, usage limits, and rotation. 'Generate a random number each time' is not an unlimited guarantee.</p>
+            <p class="">Search has its own path. Start with exact matching: the application calculates a deterministic keyed tag over the normalized phone number.</p>
+            <pre class=""><code class="language-text">Original phone number --authenticated encryption--&gt; phone_envelope
+
+Normalized phone number --HMAC-SHA-256(K_search, value)--&gt; phone_index</code></pre>
+            <p class="">For a full-number lookup, the application generates a query tag using the same rules. The database matches tags for equality; the application then decrypts and checks the candidates.</p>
+            <p class="">This auxiliary structure is usually called a <a href="https://ciphersweet.paragonie.com/internals/blind-index" target="_blank" rel="noopener" class="">blind index</a>. Implementations differ in keyed hashing, key derivation, and truncation. <a href="https://www.rfc-editor.org/rfc/rfc2104" target="_blank" rel="noopener" class="">HMAC-SHA-256</a> here illustrates a deterministic search-tag construction; it is not a complete implementation of any particular library.</p>
+            <p class="">The tag is not another decryptable ciphertext or proof of anonymization. Although the database does not know which number a tag represents, it can recognize identical tags within the same index domain.</p>
+            <h3 class="">Unkeyed hashes of four digits are easy to enumerate</h3>
+            <p class="">There are only ten thousand four-digit inputs, from <code class="">0000</code> to <code class="">9999</code>. If the index is <code class="">SHA256("1380")</code>, someone who obtains the database can hash every input and build a lookup table. A longer hash output does not create more possible inputs.</p>
+            <p class=""><a href="https://www.rfc-editor.org/rfc/rfc2104" target="_blank" rel="noopener" class="">HMAC</a> introduces a secret key that is not given to the database. If that key remains secret and the attacker has no usable tag-generation oracle, the attacker cannot independently build the same lookup table. A public fixed salt does not provide that property.</p>
+            <p class="">Statistics, correlations, and interface feedback may still reveal what tags mean. Preventing direct computation of a lookup table addresses only one route to inference.</p>
+        </section>
+
+        <section class="detail-section" id="suffix">
+            <h2 class="">A suffix search needs only a suffix tag</h2>
+            <p class="">Before considering n-grams, narrow the index to the actual requirement. If only the last four digits are needed, generate one tag for that suffix in a separate index domain. For <code class="">13800138000</code>, that means one tag corresponding to <code class="">8000</code>.</p>
+            <p class="">Apply the same rule to the four digits supplied by the user, match tags for equality, and decrypt and verify the candidates.</p>
+            <p class="">The database then needs no tags for this number's <code class="">1380</code>, <code class="">3800</code>, or <code class="">0013</code> fragments. There are fewer index entries to maintain and fewer features exposed than if a full fragment index were added to the same field.</p>
+            <p class="">A four-digit suffix is still a low-cardinality feature. Many numbers share it, and it must not serve as an authentication credential. Query scope, returned fields, and protection against bulk enumeration remain necessary.</p>
+            <p class="">I would use a full-value index for exact lookup, a suffix index for a fixed suffix, and only the prefix lengths the business needs. Arbitrary-position fragment indexing comes after a confirmed requirement for it.</p>
+        </section>
+
+        <section class="detail-section" id="ngram">
+            <h2 class="">Building a substring candidate index with 4-grams</h2>
+            <p class="">Suppose the requirement really is to search for any run of four or more consecutive digits in a phone number. Split the normalized value using a sliding window of length four. For <code class="">13800138000</code>, the 4-grams are:</p>
+            <pre class=""><code class="language-text">Original: 13800138000
+
+4-grams by position:
+1380  3800  8001  0013  0138  1380  3800  8000
+
+Distinct fragments:
+1380  3800  8001  0013  0138  8000</code></pre>
+            <p class="">Eight window positions produce six distinct fragments. Repeated fragments within one record can be deduplicated for a presence-based candidate filter. Generate an HMAC tag for each fragment and store which records contain each tag. Concatenating every tag into one string and applying <code class="">LIKE '%tag%'</code> would miss the advantage of equality lookup.</p>
+            <p class="">A separate tag table forms a simple <a href="https://www.postgresql.org/docs/18/indexes-types.html" target="_blank" rel="noopener" class="">inverted index</a> from a tag to record IDs. Searching a concatenated tag string can reintroduce scanning work.</p>
+            <p class="">The following minimal PostgreSQL schema illustrates that structure. Business fields and authorization policies are omitted:</p>
+            <pre class=""><code class="language-sql">CREATE TABLE users (
+    tenant_id      BIGINT NOT NULL,
+    id             BIGINT NOT NULL,
+    phone_envelope BYTEA NOT NULL,
+    PRIMARY KEY (tenant_id, id)
+);
+
+CREATE TABLE phone_search_tokens (
+    tenant_id     BIGINT NOT NULL,
+    user_id       BIGINT NOT NULL,
+    index_version INTEGER NOT NULL,
+    token         BYTEA NOT NULL CHECK (octet_length(token) = 32),
+    PRIMARY KEY (tenant_id, index_version, token, user_id),
+    FOREIGN KEY (tenant_id, user_id)
+        REFERENCES users (tenant_id, id) ON DELETE CASCADE
+);
+
+CREATE INDEX phone_search_tokens_by_user
+    ON phone_search_tokens (tenant_id, user_id, index_version);</code></pre>
+            <p class="">The example stores the full 32-byte HMAC-SHA-256 output. <code class="">index_version</code> identifies the key version, normalization rules, and fragment rules. The primary key supports tenant/version/tag lookup and prevents duplicate tags for a record. The second index supports maintaining and deleting a record's tags.</p>
+            <h3 class="">For <code class="">01380</code>, intersect two tag matches</h3>
+            <p class="">The query splits into <code class="">0138</code> and <code class="">1380</code>. The application generates both query tags and asks for records containing both.</p>
+            <p class="">More generally, use this parameterized query. The third parameter must be a deduplicated, nonempty tag array with no NULL elements. It is not the user's plaintext input:</p>
+            <pre class=""><code class="language-sql">PREPARE search_phone (BIGINT, INTEGER, BYTEA[]) AS
+SELECT user_id
+FROM phone_search_tokens
+WHERE tenant_id = $1
+  AND index_version = $2
+  AND token = ANY ($3)
+GROUP BY user_id
+HAVING COUNT(*) = cardinality($3)
+ORDER BY user_id;</code></pre>
+            <p class="">This uses PostgreSQL <a href="https://www.postgresql.org/docs/18/sql-prepare.html" target="_blank" rel="noopener" class="">prepared statements</a> and <a href="https://www.postgresql.org/docs/18/functions-array.html" target="_blank" rel="noopener" class="">array parameters</a>. <code class="">COUNT(*)</code> works because the primary key prevents duplicate tags per record and the query array is also deduplicated.</p>
+            <p class="">The example assumes the caller may search every record in that tenant. Record-level permissions require additional authorization conditions in candidate selection. The tenant ID must come from a verified identity context rather than an arbitrary request parameter.</p>
+            <p class="">The output at this point is a set of candidate IDs, not verified search results.</p>
+        </section>
+
+        <section class="detail-section" id="verification">
+            <h2 class="">All fragments can be present in the wrong order</h2>
+            <p class="">Consider these two illustrative digit strings:</p>
+            <pre class=""><code class="language-text">A: 13800138000
+B: 13801110138
+
+Query: 01380
+Query fragments: 0138, 1380</code></pre>
+            <p class="">A contains <code class="">01380</code>. B does not, but it has <code class="">1380</code> at the beginning and <code class="">0138</code> at the end. An index that stores only fragment presence includes B in the candidate set too.</p>
+            <p class="">This is neither an HMAC collision nor failed encryption. Even collision-free tags would produce the same candidates: the index does not retain order or adjacency between fragments.</p>
+            <p class="">Multiplicity causes a similar issue. Deduplicating the query <code class="">11111</code> leaves one fragment, <code class="">1111</code>. A record containing four consecutive ones does not necessarily contain five.</p>
+            <p class="">The full query path therefore needs these steps:</p>
+            <pre class=""><code class="language-text">Check query permissions and input
+    -&gt; Normalize with the selected rule version
+    -&gt; Split, generate tags, and deduplicate
+    -&gt; Find candidate IDs within the authorized scope
+    -&gt; Fetch, authenticate, and decrypt candidate ciphertext
+    -&gt; Check the actual substring against normalized plaintext
+    -&gt; Return results permitted by the caller's access</code></pre>
+            <p class="">The filter is useful because every n-gram of a real substring must also occur in the field containing that substring.</p>
+            <p class="">With a complete and consistent index, identical normalization rules, query length at least n, and no arbitrary candidate truncation, requiring all query fragments does not itself discard true substring matches. The converse does not hold, so candidates still need verification.</p>
+            <p class="">A 4-gram index has no query fragments for inputs shorter than four digits. Reject those inputs, ask for more constraints, or route them through another deliberately designed flow. Do not let empty-input handling accidentally become a full scan.</p>
+            <p class="">Pagination must account for verification. A hundred candidates may yield fewer than a hundred matches, and candidate counts are not result counts. Capping retrieval at the first hundred candidates cannot justify reporting that no more results exist. Continue verifying batches or explicitly ask the user to narrow the query; the API must describe what it actually did.</p>
+        </section>
+
+        <section class="detail-section" id="cost">
+            <h2 class="">How many candidates remain out of ten million records?</h2>
+            <p class="">Replacing a scan's <code class="">O(N)</code> with an indexed lookup's <code class="">O(log N)</code> is an incomplete cost model. The system must also read posting lists, intersect them, fetch candidate ciphertexts, and decrypt and verify them. A B-tree does not remove the work of processing hundreds of thousands of matches for a common tag.</p>
+            <p class="">For a deliberately simplified estimate, assume ten million eleven-digit strings, eight four-digit windows per string, and approximately independent uniform digits. A rare-event approximation for the number of records containing one fixed four-digit fragment is:</p>
+            <pre class=""><code class="language-text">10,000,000 × 8 ÷ 10,000 ≈ 8,000</code></pre>
+            <p class="">This estimates an order of magnitude, not a benchmark on real phone numbers. Actual prefixes, repeated fragments, and business distributions can substantially change it. A diagram claiming that ten million records become twenty-three candidates would need evidence.</p>
+            <p class="">Storage also matters. A length-L string has <code class="">max(L - n + 1, 0)</code> windows for a fixed n. An eleven-digit value yields at most eight 4-gram tags. At 32 bytes each, the tag values alone occupy at most 256 bytes; the repeated number above yields six distinct tags, or 192 bytes. Tenant IDs, record IDs, versions, row overhead, and database indexes add further storage.</p>
+            <p class="">Window count and selectivity respond differently to n. Decreasing n does not necessarily make a record's index size explode: changing an eleven-digit string from 4-grams to 2-grams increases its undeduplicated window count from eight to ten. The distinct count depends on the value. Fragment selectivity and candidate volume often change much more.</p>
+            <p class="">Indexing several fragment lengths, or every possible substring, can instead generate a number of candidate fragments quadratic in string length. That is a different design from indexing one fixed n.</p>
+            <p class="">Before release, I would use appropriately masked or synthetic data that represents the real distribution and measure candidate counts, tail latency, index size, write amplification, and maintenance costs. Those measurements should guide longer fragments, minimum query length, and preliminary tenant or business filters. A generic recommendation to start at four digits is insufficient.</p>
+        </section>
+
+        <section class="detail-section" id="leakage">
+            <h2 class="">The database still sees frequencies and correlations</h2>
+            <p class="">An attacker holding a database snapshot may not know whether a tag means <code class="">1380</code> or <code class="">8000</code>, but can see which records share it, how many records each tag matches, which tags co-occur, and how many distinct tags each record has.</p>
+            <p class="">Continuous query observation can reveal repeated query tags, accessed records, and candidate counts. That exposes a different set of information from a static snapshot.</p>
+            <p class="">An attacker who can insert chosen values through normal business operations and observe the resulting database changes may gradually map known inputs to tags. Merely omitting an API named <code class="">generateHmac</code> does not rule out that capability.</p>
+            <p class="">Searchable-encryption research calls attacks that use side information and leakage to recover queries or plaintext leakage-abuse attacks. <a href="https://eprint.iacr.org/2016/718" target="_blank" rel="noopener" class="">Cash and colleagues</a> demonstrated such attacks under specified leakage models and attacker-knowledge conditions. Relationships between data can be exploited without breaking the underlying cryptographic algorithm.</p>
+            <p class="">I would be cautious about recommending a full HMAC n-gram index for structured values such as phone numbers or short identifiers. Each four-digit fragment has only ten thousand possibilities, fragments overlap, and correlated fields in other tables may help narrow the guesses.</p>
+            <p class="">The <a href="https://docs.aws.amazon.com/database-encryption-sdk/latest/devguide/searchable-encryption.html" target="_blank" rel="noopener" class="">AWS Database Encryption SDK documentation</a> also describes distribution leakage and risks from skewed or correlated fields. An algorithm name alone cannot establish whether an index fits a dataset.</p>
+            <h3 class="">Fragment length and tag length affect different things</h3>
+            <p class="">The n in n-gram is the plaintext fragment length. The retained bit count of an HMAC tag is the cryptographic output length. They are separate parameters.</p>
+            <p class="">Truncating a tag from 256 bits to 128 bits reduces storage without giving ten thousand four-digit inputs 128 bits of entropy. Random collisions remain negligible for that small domain, so the tags still preserve almost the same equality relationships.</p>
+            <p class=""><a href="https://ciphersweet.paragonie.com/internals/blind-index" target="_blank" rel="noopener" class="">Some implementations</a> truncate more aggressively so that distinct inputs share tags. The resulting false positives reduce distinguishability and are filtered after decryption. This needs dataset-specific analysis of distribution, correlation, and <a href="https://docs.aws.amazon.com/database-encryption-sdk/latest/devguide/choosing-beacon-length.html" target="_blank" rel="noopener" class="">verification costs</a>. Shorter is not automatically safe, and a product's configuration guidance cannot simply be transferred to a custom n-gram index.</p>
+            <p class="">Longer n-grams do not deserve a blanket 'more secure' rating. They may improve selectivity while making rare values easier to distinguish. Risk depends on the dataset and the attacker's information, rather than one parameter changing in a single direction.</p>
+            <p class="">Calling leakage controlled requires specifying what is exposed, checking what can be inferred by combining those exposures, and deciding whether the remaining risk is acceptable.</p>
+        </section>
+
+        <section class="detail-section" id="operations">
+            <h2 class="">Write consistency, key rotation, and search permissions</h2>
+            <h3 class="">Version the normalization rules</h3>
+            <p class="">Removing spaces on writes but retaining them on queries, preserving country codes in one version but dropping them in another, or using different Unicode representations can make equivalent inputs produce different tags.</p>
+            <p class="">A full-number normalization function that completes or parses a phone number is not automatically suitable for a partial query. For <code class="">0138</code>, validate an allowed search fragment rather than try to interpret a complete number.</p>
+            <p class="">Names, addresses, and email addresses need explicit semantics for case, punctuation, and character normalization. Blanket removal or conversion for convenience can change meaning. Index generation and final verification must use the same semantics for the selected version.</p>
+            <p class="">Changing these rules requires rebuilding the index, not merely replacing a utility function.</p>
+            <h3 class="">Separate keys by tenant, field, and purpose</h3>
+            <p class="">Field encryption and all search tags should not share one key. Use independently generated keys or a mature key-derivation scheme to create distinct subkeys for each purpose.</p>
+            <p class="">An index domain can include tenant, table, field, query type, fragment length, and normalization version. <a href="https://www.rfc-editor.org/rfc/rfc5869" target="_blank" rel="noopener" class="">HKDF</a>'s <code class="">info</code> parameter provides a standard way to bind application context. Encode that context unambiguously rather than concatenate strings without clear boundaries.</p>
+            <p class="">The same <code class="">1380</code> then need not have an identical tag across tenants or fields. This reduces direct cross-domain linking; it does not remove correlations inherent in the business data.</p>
+            <p class="">A separate random salt per record would also make identical inputs yield different tags across records. That removes the direct single-tag equality lookup described here. Randomization must be designed together with the query procedure.</p>
+            <p class="">Key separation limits purposes and some compromise effects, but does not protect everything if the application is fully controlled. A process that can obtain both encryption and search keys can expose both. A leaked search key alone also enables enumeration of low-entropy fragments and inference about original values.</p>
+            <p class="">KMS can protect and manage keys, including wrapping data keys through <a href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html" target="_blank" rel="noopener" class="">envelope encryption</a>. It does not require a remote KMS call for every fragment tag. Plaintext-key lifetime, caching, permissions, and auditing inside the application still need design.</p>
+            <h3 class="">AAD authenticates ciphertext, not an entire result set</h3>
+            <p class="">Bind context such as tenant ID, record ID, and field identifier as additional authenticated data, or <a href="https://cryptography.io/en/latest/hazmat/primitives/aead/" target="_blank" rel="noopener" class="">AAD</a>. It participates in authentication without being encrypted. <a href="https://ciphersweet.paragonie.com/security" target="_blank" rel="noopener" class="">Moving ciphertext into a different record or field</a> will then normally fail verification under that different context.</p>
+            <p class="">The database can still omit index entries so the application misses results, or return a previously valid old ciphertext in the same context. Authenticating one ciphertext does not establish that a query result is complete and current.</p>
+            <p class="">Resisting those malicious-server behaviors requires additional integrity, freshness, or verifiable-query mechanisms. The tag table and decryption checks here do not provide those guarantees.</p>
+            <h3 class="">Maintain ciphertext and indexes together</h3>
+            <p class="">Changing a phone number requires removing old tags, generating new ones, and updating the ciphertext. A transaction in one relational database can commit those changes together. Concurrent searches also need a defined read-consistency model so candidate selection and ciphertext retrieval do not observe incompatible versions.</p>
+            <p class="">An external search index introduces asynchronous synchronization, retries, idempotency, and version alignment. Accepting eventual consistency means immediate searchability after an update cannot be guaranteed without further coordination.</p>
+            <p class="">Rotating a search key changes the tags. Plan dual writes or another migration strategy, backfill existing records, query the required versions, and safely retire the old index. Normalization changes need a similar migration.</p>
+            <p class="">Distinguish replacing actual data or search keys from changing the upper-level key that wraps them. <a href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html" target="_blank" rel="noopener" class="">Rewrapping</a> may leave search tags unchanged; replacing a data or search key generally requires migrating ciphertext or indexes.</p>
+            <p class="">Deletion must cover indexes, caches, search-engine copies, and backup-retention rules as well as the main table.</p>
+            <h3 class="">The search interface can become an enumeration oracle</h3>
+            <p class="">Hiding search terms from the database does not hide them from callers. An API allowing unlimited fragment guesses, returning complete customer records, and imposing no business scope can enable bulk enumeration even when every tag uses HMAC.</p>
+            <p class="">Design authorization, query scope, rate limits, enumeration detection, and minimal returned fields together. HMAC tags in logs are still stable identifiers linking requests and records, so those logs are not automatically harmless.</p>
+            <p class="">These controls do not eliminate index leakage. They reduce the additional exposure created when the system hands out sensitive information through its normal functionality.</p>
+        </section>
+
+        <section class="detail-section" id="extensions">
+            <h2 class="">What the substring index has not solved</h2>
+            <h3 class="">Edit distance cannot recover records that were never retrieved</h3>
+            <p class="">To match <code class="">Erci</code> to <code class="">Eric</code>, the application could calculate edit distance after decryption. That handles candidate verification, but leaves candidate retrieval unresolved.</p>
+            <p class="">Requiring all query n-grams is generally too strict for approximate matching. One character change can disrupt several fragments.</p>
+            <p class="">Requiring at least one shared fragment is not a complete fix either. <code class="">abc</code> and <code class="">axc</code> differ by one substitution, but their unpadded 2-grams are <code class="">{ab, bc}</code> and <code class="">{ax, xc}</code>. They share none.</p>
+            <p class="">Approximate-search retrieval must be designed against the chosen distance function, length range, and allowed error count. Short strings may need another retrieval path or a scan over a restricted authorized set. State whether full recall is guaranteed and test it. <a href="https://www.postgresql.org/docs/18/fuzzystrmatch.html" target="_blank" rel="noopener" class="">Levenshtein distance</a> counts insertions, deletions, and substitutions; counting adjacent transposition as one error needs a suitable alternative definition.</p>
+            <p class="">Edit distance can remove false positives among retrieved candidates. Missing records require changing the retrieval conditions.</p>
+            <h3 class="">Elasticsearch can execute the tag queries</h3>
+            <p class="">A dedicated search engine may be worth evaluating when tag volume, query concurrency, or combined-search requirements exceed what the relational design handles well.</p>
+            <p class="">Store application-generated stable tags in Elasticsearch rather than decrypted phone numbers. Treat them as exact values, typically using <a href="https://www.elastic.co/docs/reference/elasticsearch/mapping-reference/keyword" target="_blank" rel="noopener" class=""><code class="">keyword</code></a>, instead of sending them through a normal text analyzer. <a href="https://www.elastic.co/docs/reference/query-languages/query-dsl/query-dsl-terms-set-query" target="_blank" rel="noopener" class="">Exact set-matching queries</a> can express the conditions on several tags.</p>
+            <p class="">The engine still exposes tag frequencies, record relationships, query patterns, and result sizes. Ten million records alone do not imply a migration is necessary. Posting-list lengths, tenant partitions, update patterns, and measured load are better inputs to that decision.</p>
+            <h3 class="">Evaluate SSE as a specific protocol</h3>
+            <p class=""><a href="https://eprint.iacr.org/2006/210" target="_blank" rel="noopener" class="">Searchable symmetric encryption</a>, or SSE, is a research area with multiple constructions. It studies search over outsourced encrypted storage and defines and proves security properties in explicit models.</p>
+            <p class="">Custom HMAC tags, SSE, and fully homomorphic encryption cannot be ranked with a simple sequence of security stars. Query support, leakage, updates, trust, and interaction requirements vary by protocol. Formal security holds relative to a particular definition and does not imply that <a href="https://eprint.iacr.org/2016/718" target="_blank" rel="noopener" class="">remaining leakage</a> cannot be exploited.</p>
+            <p class="">Hiding repeated queries or the records they access requires evaluating specialized protocols and their computation, communication, and operational costs. Increasing the hash length of the existing table does not address those requirements.</p>
+        </section>
+
+        <section class="detail-section" id="choice">
+            <h2 class="">Choosing a search for the support dashboard</h2>
+            <p class="">For the original support workflow, I would first check whether full-number lookup is enough. If staff really need the last four digits, build only that suffix index and restrict queries to the required tenant and order scope. For small datasets and infrequent queries, measure a filtered decrypt-and-scan implementation too: it avoids maintaining a persistent search index.</p>
+            <p class="">Arbitrary substring search needs a stronger case. Once the requirement is confirmed, measure candidate volumes against real distributions and assess inference from frequencies, correlations, and known inputs. Highly sensitive fields with small domains or strong correlations may call for a revised support workflow.</p>
+            <p class="">Randomized authenticated encryption, a minimal search index, authorized candidate retrieval, and decryption-based verification form a design to evaluate. Key isolation, versioned normalization, consistent writes, and API restrictions must hold alongside it. Listing 'AEAD + HMAC + n-gram' does not deliver the whole system.</p>
+            <p class="">Encrypted data can support some searches, but indexes leave relationships visible. Alongside verifying decryption and query correctness, I would ask what someone who obtains the database could infer about customers from the search structures.</p>
+
+            <p class="">This article began as a reconsideration of the Chinese post 'How Do You Perform Fuzzy Queries on Encrypted Data?' It uses independently derived tag structures, SQL, and counterexamples rather than adopting that post's algorithm choices or performance estimates. Writing context: <a href="https://mp.weixin.qq.com/s/YHrq4fxoRkjtQyMXtmvuKw" target="_blank" rel="noopener" class="">original post</a>.</p>
+            <p class="">The digit strings are teaching examples, and the candidate-count estimate is not a production benchmark. This is architectural analysis with minimal examples, not a claim that any deployment has passed a cryptographic audit.</p>
+        </section></div></div>
+    </div>
+    <section class="related" aria-labelledby="related-title"><p class="kicker">Continue reading</p><h2 id="related-title">Related <em>writing</em></h2><ol class="journal-list" style="list-style:none"><li><a class="journal-row" href="article-03.html" data-topic="4" data-cursor="Read">
+        <span class="journal-date">2026.10 · 03</span>
+        <span class="journal-title"><span class="static">When Data Centers Protect Themselves: A 3.8 GW Load Transfer</span><span class="marquee" aria-hidden="true"><span>When Data Centers Protect Themselves: A 3.8 GW Load Transfer —&nbsp;</span><span>When Data Centers Protect Themselves: A 3.8 GW Load Transfer —&nbsp;</span><span>When Data Centers Protect Themselves: A 3.8 GW Load Transfer —&nbsp;</span></span></span>
+        <span class="topic" data-topic="4">System Architecture</span><span class="journal-time">18 min</span></a></li><li><a class="journal-row" href="article-08.html" data-topic="4" data-cursor="Read">
+        <span class="journal-date">2026.07 · 08</span>
+        <span class="journal-title"><span class="static">Mac Is Becoming the Ideal Runtime for Personal AI Apps</span><span class="marquee" aria-hidden="true"><span>Mac Is Becoming the Ideal Runtime for Personal AI Apps —&nbsp;</span><span>Mac Is Becoming the Ideal Runtime for Personal AI Apps —&nbsp;</span><span>Mac Is Becoming the Ideal Runtime for Personal AI Apps —&nbsp;</span></span></span>
+        <span class="topic" data-topic="4">System Architecture</span><span class="journal-time">9 min</span></a></li><li><a class="journal-row" href="article-22.html" data-topic="4" data-cursor="Read">
+        <span class="journal-date">2026.04 · 22</span>
+        <span class="journal-title"><span class="static">How Would We Design Systems Without Starting From a Database?</span><span class="marquee" aria-hidden="true"><span>How Would We Design Systems Without Starting From a Database? —&nbsp;</span><span>How Would We Design Systems Without Starting From a Database? —&nbsp;</span><span>How Would We Design Systems Without Starting From a Database? —&nbsp;</span></span></span>
+        <span class="topic" data-topic="4">System Architecture</span><span class="journal-time">9 min</span></a></li></ol></section>
+    <nav class="pager" aria-label="More articles">
+        <a href="article-03.html" data-cursor="Prev"><span class="meta">← Previous</span><strong>When Data Centers Protect Themselves: A 3.8 GW Load Transfer</strong></a>
+        <a href="article-05.html" data-cursor="Next"><span class="meta">Next →</span><strong>AI Can Cross Permission Boundaries Without Malice</strong></a>
+    </nav>
+</div>
+</main>
+<footer class="colophon">
+    <div class="colophon-name" data-fit aria-hidden="true">Eric</div>
+    <div class="colophon-grid">
+        <div><p class="meta">Index</p><a href="../work/index.html">Work</a><a href="../journal/index.html">Journal</a><a href="../index.html#about">About</a><a href="../index.html#contact">Contact</a></div>
+        <div><p class="meta">Elsewhere</p><a href="https://github.com/powerpan" target="_blank" rel="noopener">GitHub</a><a href="../work/index.html">Work</a><a href="index.html">Journal</a><a href="../index.html#contact">Contact</a></div>
+        <div><p class="meta">Settings</p><button type="button" data-theme-toggle aria-pressed="false"><span class="theme-switch-label">Night</span> paper</button><br><button type="button" data-motion-toggle aria-pressed="true">Motion: on</button><br><button type="button" class="sound-text" data-sound-toggle aria-pressed="false">Sound: off</button>
+<label class="volume"><span class="meta">Volume</span><input class="ink-range" type="range" min="0" max="1" step="0.05" value="0.6" data-sound-volume aria-label="Music volume"></label></div>
+        <div><p class="meta">Colophon</p><p>© 2026 Eric. Set in Instrument Serif &amp; Inter Tight. Ink simulated live in WebGL2.</p><a href="#" data-top>Back to top ↑</a></div>
+    </div>
+</footer>
+<p class="sr-only" role="status" aria-live="polite" data-sound-status></p>
+<script src="../js/ink-fluid.js"></script>
+<script src="../js/ink.js"></script>
+</body>
+</html>

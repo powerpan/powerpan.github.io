@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Word Note — Eric</title>
+<meta name="description" content="I wanted to keep the words I encounter in English-language courses and reading in a notebook of my own, with their meanings, original context and next review connected.">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#ede8df">
+<script>(()=>{const r=document.documentElement;let t,m;try{t=localStorage.getItem('ink-theme');m=localStorage.getItem('ink-motion')}catch(e){}t=t||(matchMedia('(prefers-color-scheme: dark)').matches?'night':'day');if(matchMedia('(prefers-reduced-motion: reduce)').matches)m='off';r.dataset.theme=t;r.dataset.motion=m||'on'})()</script>
+<link rel="preload" href="../assets/fonts/instrument-serif-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../css/ink.css">
+<link rel="stylesheet" href="../css/languages.css">
+<link rel="stylesheet" href="../css/sound.css">
+<script src="../js/ink-sound.js" defer></script>
+<noscript><style>[data-sound-toggle],.volume{display:none!important}</style></noscript>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='26' fill='%23f6401a'/%3E%3Ccircle cx='40' cy='26' r='14' fill='%232337f2' fill-opacity='.85'/%3E%3C/svg%3E">
+<link rel="alternate" hreflang="zh-CN" href="../zh/work/project-06.html">
+</head>
+<body data-ink="quiet">
+<canvas id="ink" aria-hidden="true"></canvas>
+<div class="grain" aria-hidden="true"></div>
+
+<div class="cursor" aria-hidden="true"><span class="cursor-label"></span></div>
+<a class="sr-only" href="#main">Skip to content</a>
+<header class="masthead">
+    <a class="brand" href="../index.html" aria-label="Eric — home">Eric<sup>®</sup></a>
+    <div class="masthead-meta"><span>Portfolio &amp; Journal</span><a href="../zh/work/project-06.html" data-language-switch hreflang="zh-CN" lang="zh-CN" aria-label="Read this page in Chinese">中文</a></div>
+    <div class="masthead-right">
+        <nav class="masthead-nav" aria-label="Primary">
+            <a href="../work/index.html" aria-current="page">Work</a><a href="../journal/index.html">Journal</a><a href="../index.html#about">About</a><a href="../index.html#contact">Contact</a>
+        </nav>
+        <button class="sound-switch" type="button" data-sound-toggle aria-pressed="false" aria-label="Play background music"><canvas class="sound-wave" aria-hidden="true"></canvas><span class="sound-label">Sound</span></button>
+        <button class="theme-switch" type="button" data-theme-toggle aria-pressed="false"><span class="theme-switch-dot" aria-hidden="true"></span><span class="theme-switch-label">Night</span></button>
+        <button class="menu-button" type="button" aria-expanded="false" aria-controls="menu">Menu</button>
+    </div>
+</header>
+<nav class="menu" id="menu" aria-label="Menu">
+    <a href="../index.html">Index</a><a href="../work/index.html"><em>Work</em></a><a href="../journal/index.html">Journal</a><a href="../index.html#contact"><em>Contact</em></a>
+    <div class="menu-foot meta"><span>Local <span data-clock>--:--:--</span></span><button class="sound-switch" type="button" data-sound-toggle aria-pressed="false" aria-label="Play background music"><canvas class="sound-wave" aria-hidden="true"></canvas><span class="sound-label">Sound</span></button><a href="../zh/work/project-06.html" data-language-switch hreflang="zh-CN" lang="zh-CN" aria-label="Read this page in Chinese">中文</a></div>
+</nav>
+<main id="main">
+<div class="page"><p class="kicker"><a href="index.html">Work</a> / macOS · SwiftUI · AI Vocabulary</p>
+    <header class="case-hero"><h1 data-split>Word Note</h1><p class="lede rise">I wanted to keep the words I encounter in English-language courses and reading in a notebook of my own, with their meanings, original context and next review connected.</p></header><dl class="case-facts rise"><div><dt class="meta">Role</dt><dd>Product design &amp; native app development</dd></div><div><dt class="meta">Status</dt><dd>Local app · In development</dd></div><div><dt class="meta">Stack</dt><dd>SwiftUI / AppKit / SwiftData</dd></div><div><dt class="meta">Index</dt><dd>No. 06</dd></div></dl>
+    <div class="case-media"><img src="../assets/projects/word-note/01-dashboard-light.png" alt="Word Note demo dashboard showing pending records, vocabulary, today&#x27;s review queue and courses" width="2498" height="1600" loading="eager" decoding="async"></div><div class="case-body"><section class="case-section"><div class="case-section-label"><span class="num">01</span><span class="meta">Section</span></div>
+            <div class="case-section-copy prose"><h2 data-split>Capture it, then keep reading</h2><p class="wordnote-provenance">These six screenshots were captured on October 9, 2026, in WordNoteQA, an isolated demo build of the regular V1 interface. They use demo vocabulary and offline preset AI responses, not personal study records. They do not demonstrate live model quality or completed acceptance of newer features. The original windows and mixed English/Chinese UI text are preserved. Click an image to view the original.</p>
+<div class="detail-section-label">01 / CAPTURE</div>
+
+                <p class="detail-text">Word Note began with a small frustration while moving between English-language courses, papers and technical reading. I would look up a word, understand it, and meet it again days later with only a vague memory of having checked it. Rather than start from a fixed vocabulary list, I wanted to keep the expressions I actually encountered and why they appeared on that page.</p>
+                <p class="detail-text">I kept the capture step light. The main window has room for a course, source and note; the menu bar opens a small floating panel. Enter the text, save it to the analysis queue and return to reading. An exact match for an English entry already in the notebook reuses its local meaning and brings it into the review queue, without another model request for the same word.</p>
+
+                <p class="detail-text">The input need not start in English. If I remember only the Chinese term for overfitting, I can use it to find the English expression. The result still enters the workflow as an English candidate. The previous result stays available while I type the next item, instead of keeping me in a waiting conversation.</p><div class="badges"></div><figure class="rise"><img src="../assets/projects/word-note/10-floating-quick-add.png" alt="Compact Quick Add panel showing the locally stored Chinese meaning of the existing English entry quick" width="720" height="264" loading="lazy" decoding="async"><figcaption>The floating panel keeps just the input and essential result. Here, quick is already in the vocabulary, so its local meaning is reused without a new AI request.</figcaption></figure></div></section><section class="case-section"><div class="case-section-label"><span class="num">02</span><span class="meta">Section</span></div>
+            <div class="case-section-copy prose"><h2 data-split>Let the meaning wait in Inbox</h2><div class="detail-section-label">02 / CONFIRM</div>
+
+                <p class="detail-text">I do not let AI output go straight into the confirmed vocabulary. The original input, course and note stay in Inbox, beside the candidate's Chinese meaning, English definition, context and example. I check or edit it before saving. That pause matters for technical and ambiguous terms: a fluent explanation may not fit what I am reading.</p>
+                <p class="detail-text">I also keep the explanation requirements simple: explain the word itself first, and add a specialist meaning only when it is genuinely different. An ordinary word such as quick does not need an artificial AI context. If none of the candidates fits, I can create an entry manually. Failed analyses keep the original input for a later retry.</p><figure class="rise"><img src="../assets/projects/word-note/03-quick-add-result.png" alt="Quick Add retains overfitting from the previous Chinese query while gradient descent is entered as the next item" width="2498" height="1600" loading="lazy" decoding="async"><figcaption>The previous query has returned overfitting below, while gradient descent is being entered above. This demonstrates consecutive input, not response speed or concurrent throughput.</figcaption></figure></div></section><section class="case-section"><div class="case-section-label"><span class="num">03</span><span class="meta">Section</span></div>
+            <div class="case-section-copy prose"><h2 data-split>Find it from the meaning you remember</h2><div class="detail-section-label">03 / RETRIEVE</div>
+
+                <p class="detail-text">Keeping a term is useful only if I can find it again. Each entry retains its English headword, Chinese meaning, English definition and example, with the course and source alongside them. Vocabulary can be filtered by course and mastery, so returning to a class does not mean searching through every reading note.</p>
+                <p class="detail-text">Sometimes the spelling is exactly what I have forgotten. Search therefore covers Chinese meanings and handles both simplified and traditional characters. Searching for the Chinese meaning of quick brings the entry back. This is local text search, not another model guess, and it does not rewrite the saved text.</p><figure class="rise"><img src="../assets/projects/word-note/04-inbox-candidates.png" alt="Inbox places the original input, course and note beside an editable candidate entry for overfitting" width="2498" height="1600" loading="lazy" decoding="async"><figcaption>Editing before confirmation. The English definition, context and example are demonstration drafts entered for the capture; batch confirmation has not been performed. Failed in the list is also a preset test record.</figcaption></figure></div></section><section class="case-section"><div class="case-section-label"><span class="num">04</span><span class="meta">Section</span></div>
+            <div class="case-section-copy prose"><h2 data-split>Leave room to recall</h2><div class="detail-section-label">04 / RECALL</div>
+
+                <p class="detail-text">The review screen hides the answer at first. I can start with terms due today or weaker terms, narrow the queue by course, then recall Chinese from English or English from Chinese. Recognizing an explanation on sight is not quite the same as retrieving it myself.</p>
+                <p class="detail-text">After revealing the answer, I choose Again, Hard, Good or Easy to schedule the next review. AI does not decide that I have mastered it. A term I want to leave for now can move to the end of the session or to tomorrow. This is the existing review flow; independent schedules for each direction and resumable sessions are still being validated in the newer version, not demonstrated by these screenshots.</p><figure class="rise"><img src="../assets/projects/word-note/06-chinese-meaning-search.png" alt="Searching the Chinese meaning for quick narrows four demo entries down to one, with the full term details still visible" width="2498" height="1600" loading="lazy" decoding="async"><figcaption>Finding the spelling through its meaning. A Chinese search narrows the list to quick, while the definition, example and course remain visible beside it.</figcaption></figure></div></section><section class="case-section"><div class="case-section-label"><span class="num">05</span><span class="meta">Section</span></div>
+            <div class="case-section-copy prose"><h2 data-split>The engineering behind a small window</h2><div class="detail-section-label">05 / NATIVE BY DESIGN</div>
+
+                <p class="detail-text">Most of the time, this tool should sit quietly beside my reading, so I chose native macOS. SwiftUI organizes the main interface, AppKit handles the floating panel and input completion, and SwiftData stores vocabulary and learning records. Appearance can follow the system or use a separate light or charcoal-dark theme, consistently across the main window and panel.</p>
+                <ol class="wordnote-flow">
+                    <li class=""><span class="">01 / INPUT</span><h3 class="">Save the input first</h3><p class="">A new query becomes a local record before entering the analysis queue, rather than existing only inside a request.</p></li>
+                    <li class=""><span class="">02 / ANALYSIS</span><h3 class="">Generate candidates</h3><p class="">Parse the structured response, validate the English entry and meaning, then send the candidates to Inbox for checking.</p></li>
+                    <li class=""><span class="">03 / VOCABULARY</span><h3 class="">Confirm before learning</h3><p class="">Search and review use the confirmed vocabulary, stored separately from unconfirmed analysis results.</p></li>
+                </ol>
+                <p class="detail-text">I separated queued analysis from the views, with one queue shared by the main window and floating panel. New input is saved first, one failed item does not block later items, and unfinished records can be recovered when the app reopens. Search, completion, lookup direction and review rules live in WordNoteCore. A replaceable AI client lets me check the workflow with preset responses instead of paid calls.</p><figure class="rise"><img src="../assets/projects/word-note/08-review-answer.png" alt="Review screen with the Chinese meaning of overfitting revealed, four self-rating choices and Skip and Later controls" width="2498" height="1600" loading="lazy" decoding="async"><figcaption>After revealing the answer. No rating was submitted for the screenshot, and no learning progress was fabricated for the demonstration.</figcaption></figure></div></section><section class="case-section"><div class="case-section-label"><span class="num">06</span><span class="meta">Section</span></div>
+            <div class="case-section-copy prose"><h2 data-split>Where it stands</h2><div class="detail-section-label">06 / WHERE IT STANDS</div>
+
+                <p class="detail-text">Word Note is currently a local Mac application built from source, with no downloadable installer, accounts or cloud sync. Existing entries can be browsed, searched and reviewed offline. Generating new meanings requires a connection and your own DeepSeek API key; provider charges apply.</p>
+                <p class="detail-text">Local-first does not mean nothing leaves the device. When I request an analysis, that input and its relevant course name, source and note are sent to DeepSeek, but not the entire vocabulary as context. The key is kept in a permission-restricted local plaintext environment file, not an encrypted vault. I want those limits to be explicit rather than covered by a vague privacy promise.</p>
+                <p class="detail-text">Next, I care most about reliability over time: protecting manual edits during organization, making backup and restore previews clear, and continuing an interrupted review. These newer features have implementations and tests, but some integration and on-device acceptance checks remain. I want to settle those everyday details before expanding the scope.</p></div></section></div>
+    <a class="next-case" href="project-07.html" data-cursor="Next"><span class="meta">Next project — 07</span><strong>ML-SHARP</strong></a></div>
+</main>
+<footer class="colophon">
+    <div class="colophon-name" data-fit aria-hidden="true">Eric</div>
+    <div class="colophon-grid">
+        <div><p class="meta">Index</p><a href="../work/index.html">Work</a><a href="../journal/index.html">Journal</a><a href="../index.html#about">About</a><a href="../index.html#contact">Contact</a></div>
+        <div><p class="meta">Elsewhere</p><a href="https://github.com/powerpan" target="_blank" rel="noopener">GitHub</a><a href="index.html">Work</a><a href="../journal/index.html">Journal</a><a href="../index.html#contact">Contact</a></div>
+        <div><p class="meta">Settings</p><button type="button" data-theme-toggle aria-pressed="false"><span class="theme-switch-label">Night</span> paper</button><br><button type="button" data-motion-toggle aria-pressed="true">Motion: on</button><br><button type="button" class="sound-text" data-sound-toggle aria-pressed="false">Sound: off</button>
+<label class="volume"><span class="meta">Volume</span><input class="ink-range" type="range" min="0" max="1" step="0.05" value="0.6" data-sound-volume aria-label="Music volume"></label></div>
+        <div><p class="meta">Colophon</p><p>© 2026 Eric. Set in Instrument Serif &amp; Inter Tight. Ink simulated live in WebGL2.</p><a href="#" data-top>Back to top ↑</a></div>
+    </div>
+</footer>
+<p class="sr-only" role="status" aria-live="polite" data-sound-status></p>
+<script src="../js/ink-fluid.js"></script>
+<script src="../js/ink.js"></script>
+</body>
+</html>

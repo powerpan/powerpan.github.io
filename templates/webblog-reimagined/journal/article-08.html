@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mac Is Becoming the Ideal Runtime for Personal AI Apps — Eric</title>
+<meta name="description" content="Personal AI is not just about local models. It is about organizing context, model routing, tool execution, persistent state, and user control on one device.">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#ede8df">
+<script>(()=>{const r=document.documentElement;let t,m;try{t=localStorage.getItem('ink-theme');m=localStorage.getItem('ink-motion')}catch(e){}t=t||(matchMedia('(prefers-color-scheme: dark)').matches?'night':'day');if(matchMedia('(prefers-reduced-motion: reduce)').matches)m='off';r.dataset.theme=t;r.dataset.motion=m||'on'})()</script>
+<link rel="preload" href="../assets/fonts/instrument-serif-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../css/ink.css">
+<link rel="stylesheet" href="../css/languages.css">
+<link rel="stylesheet" href="../css/sound.css">
+<script src="../js/ink-sound.js" defer></script>
+<noscript><style>[data-sound-toggle],.volume{display:none!important}</style></noscript>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='26' fill='%23f6401a'/%3E%3Ccircle cx='40' cy='26' r='14' fill='%232337f2' fill-opacity='.85'/%3E%3C/svg%3E">
+<link rel="alternate" hreflang="zh-CN" href="../zh/journal/article-08.html">
+</head>
+<body data-ink="quiet">
+<canvas id="ink" aria-hidden="true"></canvas>
+<div class="grain" aria-hidden="true"></div>
+
+<div class="cursor" aria-hidden="true"><span class="cursor-label"></span></div>
+<a class="sr-only" href="#main">Skip to content</a>
+<header class="masthead">
+    <a class="brand" href="../index.html" aria-label="Eric — home">Eric<sup>®</sup></a>
+    <div class="masthead-meta"><span>Portfolio &amp; Journal</span><a href="../zh/journal/article-08.html" data-language-switch hreflang="zh-CN" lang="zh-CN" aria-label="Read this page in Chinese">中文</a></div>
+    <div class="masthead-right">
+        <nav class="masthead-nav" aria-label="Primary">
+            <a href="../work/index.html">Work</a><a href="../journal/index.html" aria-current="page">Journal</a><a href="../index.html#about">About</a><a href="../index.html#contact">Contact</a>
+        </nav>
+        <button class="sound-switch" type="button" data-sound-toggle aria-pressed="false" aria-label="Play background music"><canvas class="sound-wave" aria-hidden="true"></canvas><span class="sound-label">Sound</span></button>
+        <button class="theme-switch" type="button" data-theme-toggle aria-pressed="false"><span class="theme-switch-dot" aria-hidden="true"></span><span class="theme-switch-label">Night</span></button>
+        <button class="menu-button" type="button" aria-expanded="false" aria-controls="menu">Menu</button>
+    </div>
+</header>
+<nav class="menu" id="menu" aria-label="Menu">
+    <a href="../index.html">Index</a><a href="../work/index.html"><em>Work</em></a><a href="../journal/index.html">Journal</a><a href="../index.html#contact"><em>Contact</em></a>
+    <div class="menu-foot meta"><span>Local <span data-clock>--:--:--</span></span><button class="sound-switch" type="button" data-sound-toggle aria-pressed="false" aria-label="Play background music"><canvas class="sound-wave" aria-hidden="true"></canvas><span class="sound-label">Sound</span></button><a href="../zh/journal/article-08.html" data-language-switch hreflang="zh-CN" lang="zh-CN" aria-label="Read this page in Chinese">中文</a></div>
+</nav>
+<main id="main">
+<div class="progress" aria-hidden="true"><i></i></div>
+<div class="page">
+    <header class="article-head">
+        <p class="meta"><a href="index.html">← Journal</a> &nbsp;/&nbsp; <span class="topic" data-topic="4">System Architecture</span></p>
+        <h1 data-split>Mac Is Becoming the <em>Ideal Runtime</em> for Personal AI Apps</h1>
+        <p class="lede rise">Personal AI is not just about local models. It is about organizing context, model routing, tool execution, persistent state, and user control on one device.</p>
+        <div class="article-meta meta rise" style="--d:120ms"><span>2026.07.20</span><span>9 min</span><span>No. 08</span></div>
+    </header>
+    <div class="article-layout">
+        <nav class="toc" aria-label="Contents"><a href="#intro">Introduction</a><a href="#runtime">Personal AI Needs a Runtime, Not Another Chat Entry Point</a><a href="#why-mac">Why Mac</a><a href="#routing">Models Are Resources; Context Is the Asset</a><a href="#workflow">AI Has to Enter the Workflow</a><a href="#control-plane">Mac as a Personal Intelligence Control Plane</a><a href="#governance">Memory and Autonomy Need Boundaries</a><a href="#limits">Mac Is Not a Perfect Answer</a><a href="#takeaway">Final Thoughts</a></nav>
+        <div class="page-surface"><div class="prose"><section class="detail-section" id="intro">
+            <p class="">I recently started designing a macOS tool for learning professional English. The first idea was simple: enter a term, ask a model for an explanation, and save it locally. But the real questions quickly became harder: how does the app know the current course, preserve the source sentence, and decide what stays local or goes to the cloud?</p>
+            <p class="">I thought I was building an AI dictionary. What I actually needed was a learning context system. That changed how I see the Mac: not merely as a machine that can run local models, but as a potential runtime for personal AI applications.</p>
+        </section>
+
+        <section class="detail-section" id="runtime">
+            <h2 class="">Personal AI Needs a Runtime, Not Another Chat Entry Point</h2>
+            <p class="">Most AI products still center on a chat window. They know the current prompt, uploaded files, and a small amount of history, but not which paper the user is reading, which course a term belongs to, or how today's question relates to a decision made months ago.</p>
+            <p class="">Models are becoming more general while valuable personal context remains scattered across files, repositories, PDFs, notes, calendars, and clipboards. The next step is not only a stronger model, but an environment that can sustain models, context, tools, state, and permissions together.</p>
+            <p class="">A mature personal AI runtime needs at least model routing, context management, tool execution, persistent state, and permission control. Without any one of them, it easily collapses back into a chatbot with more features.</p>
+        </section>
+
+        <section class="detail-section" id="why-mac">
+            <h2 class="">Why Mac</h2>
+            <p class="">Browsers distribute services well but stay distant from the local system. Phones are deeply personal but poorly suited to complex knowledge work. The cloud offers immense compute but often requires more context to be uploaded.</p>
+            <p class="">Mac sits between those environments. It is both a personal device and a full production environment; it can use cloud models and local models, connect files, apps, and command-line tools, and constrain risk through system permissions and human confirmation.</p>
+            <p class="">The advantage is not that Mac wins every individual benchmark. It is that data, context, models, tools, and control can form a closed loop on one personal device.</p>
+        </section>
+
+        <section class="detail-section" id="routing">
+            <h2 class="">Models Are Resources; Context Is the Asset</h2>
+            <p class="">Personal AI should not send every task to one model. Rules or small models can classify and deduplicate input, stronger cloud models can explain specialized concepts, and private indexing and filtering can stay local.</p>
+            <p class="">Local-first does not mean local-only. The important capability is routing work according to privacy, cost, latency, and task complexity.</p>
+            <p class="">Models will change, but years of files, notes, projects, courses, and decisions remain valuable. Complete data should stay local, while the context layer selects the minimum necessary information for the right model and writes the result back into the local system.</p>
+        </section>
+
+        <section class="detail-section" id="workflow">
+            <h2 class="">AI Has to Enter the Workflow</h2>
+            <p class="">Chatbots return text, but real tasks need a loop: understand, decide, act, record, and update state.</p>
+            <p class="">For an English learning tool, the natural workflow is not opening a chat. It is selecting a term in a PDF, pressing a shortcut, retrieving course context, classifying locally, calling a cloud model only when needed, then confirming the explanation and adding it to a review plan.</p>
+            <p class="">The user sees one action, while the system performs context extraction, model routing, structured generation, and data persistence. The chat box looks more like a universal AI debugging interface than the final shape of personal AI software.</p>
+        </section>
+
+        <section class="detail-section" id="control-plane">
+            <h2 class="">Mac as a Personal Intelligence Control Plane</h2>
+            <p class="">A mature architecture can be divided into five layers: the user's work environment, a local context layer, a model routing layer, a tool and action layer, and a control and audit layer.</p>
+            <p class="">Local data stores long-term assets, the context layer decides what models can see, routing selects the right intelligence, tools move work forward, and control manages permissions, confirmation, logs, and undo. Models can change while data and workflows remain.</p>
+            <p class="">That is the deeper value of the Mac. It is not just a model runner; it can become a control plane for personal intelligence.</p>
+        </section>
+
+        <section class="detail-section" id="governance">
+            <h2 class="">Memory and Autonomy Need Boundaries</h2>
+            <p class="">Knowing the user better should not mean collecting without limits. Low-quality and outdated memory pollutes retrieval, while sensitive personal data requires clear visibility into what is indexed, what leaves the device, and how memory can be corrected, deleted, or exported.</p>
+            <p class="">When AI can change files, calendars, and real-world state, autonomy should increase with risk and trust: advice first, then drafts, then confirmed execution, and only finally bounded automation.</p>
+            <p class="">Beyond entry, context, and execution rights, personal AI needs control. A mature system should be observable, constrained, correctable, and reversible.</p>
+        </section>
+
+        <section class="detail-section" id="limits">
+            <h2 class="">Mac Is Not a Perfect Answer</h2>
+            <p class="">Mac cannot replace a data center, and local memory limits model size. Apple's ecosystem can also create device lock-in and data portability concerns.</p>
+            <p class="">The goal is therefore not to run everything locally. Keep suitable work on-device, use stronger cloud reasoning when needed, trim sensitive context locally, require confirmation for risky actions, and preserve standard exports and replaceable model interfaces.</p>
+        </section>
+
+        <section class="detail-section" id="takeaway">
+            <h2 class="">Final Thoughts</h2>
+            <p class="">The endpoint of personal AI is not a smaller ChatGPT inside a computer. It is a computer that increasingly understands context, routes intelligence, and participates in work.</p>
+            <blockquote class=""><strong class="">The cloud will still provide the strongest intelligence, but Mac can become the personal control plane that manages it.</strong></blockquote>
+        </section></div></div>
+    </div>
+    <section class="related" aria-labelledby="related-title"><p class="kicker">Continue reading</p><h2 id="related-title">Related <em>writing</em></h2><ol class="journal-list" style="list-style:none"><li><a class="journal-row" href="article-03.html" data-topic="4" data-cursor="Read">
+        <span class="journal-date">2026.10 · 03</span>
+        <span class="journal-title"><span class="static">When Data Centers Protect Themselves: A 3.8 GW Load Transfer</span><span class="marquee" aria-hidden="true"><span>When Data Centers Protect Themselves: A 3.8 GW Load Transfer —&nbsp;</span><span>When Data Centers Protect Themselves: A 3.8 GW Load Transfer —&nbsp;</span><span>When Data Centers Protect Themselves: A 3.8 GW Load Transfer —&nbsp;</span></span></span>
+        <span class="topic" data-topic="4">System Architecture</span><span class="journal-time">18 min</span></a></li><li><a class="journal-row" href="article-04.html" data-topic="4" data-cursor="Read">
+        <span class="journal-date">2026.10 · 04</span>
+        <span class="journal-title"><span class="static">Can You Search Inside Encrypted Data?</span><span class="marquee" aria-hidden="true"><span>Can You Search Inside Encrypted Data? —&nbsp;</span><span>Can You Search Inside Encrypted Data? —&nbsp;</span><span>Can You Search Inside Encrypted Data? —&nbsp;</span></span></span>
+        <span class="topic" data-topic="4">System Architecture</span><span class="journal-time">34 min</span></a></li><li><a class="journal-row" href="article-22.html" data-topic="4" data-cursor="Read">
+        <span class="journal-date">2026.04 · 22</span>
+        <span class="journal-title"><span class="static">How Would We Design Systems Without Starting From a Database?</span><span class="marquee" aria-hidden="true"><span>How Would We Design Systems Without Starting From a Database? —&nbsp;</span><span>How Would We Design Systems Without Starting From a Database? —&nbsp;</span><span>How Would We Design Systems Without Starting From a Database? —&nbsp;</span></span></span>
+        <span class="topic" data-topic="4">System Architecture</span><span class="journal-time">9 min</span></a></li></ol></section>
+    <nav class="pager" aria-label="More articles">
+        <a href="article-07.html" data-cursor="Prev"><span class="meta">← Previous</span><strong>The Three Clocks of Robotics</strong></a>
+        <a href="article-09.html" data-cursor="Next"><span class="meta">Next →</span><strong>When a Technology Roadmap Becomes a Law</strong></a>
+    </nav>
+</div>
+</main>
+<footer class="colophon">
+    <div class="colophon-name" data-fit aria-hidden="true">Eric</div>
+    <div class="colophon-grid">
+        <div><p class="meta">Index</p><a href="../work/index.html">Work</a><a href="../journal/index.html">Journal</a><a href="../index.html#about">About</a><a href="../index.html#contact">Contact</a></div>
+        <div><p class="meta">Elsewhere</p><a href="https://github.com/powerpan" target="_blank" rel="noopener">GitHub</a><a href="../work/index.html">Work</a><a href="index.html">Journal</a><a href="../index.html#contact">Contact</a></div>
+        <div><p class="meta">Settings</p><button type="button" data-theme-toggle aria-pressed="false"><span class="theme-switch-label">Night</span> paper</button><br><button type="button" data-motion-toggle aria-pressed="true">Motion: on</button><br><button type="button" class="sound-text" data-sound-toggle aria-pressed="false">Sound: off</button>
+<label class="volume"><span class="meta">Volume</span><input class="ink-range" type="range" min="0" max="1" step="0.05" value="0.6" data-sound-volume aria-label="Music volume"></label></div>
+        <div><p class="meta">Colophon</p><p>© 2026 Eric. Set in Instrument Serif &amp; Inter Tight. Ink simulated live in WebGL2.</p><a href="#" data-top>Back to top ↑</a></div>
+    </div>
+</footer>
+<p class="sr-only" role="status" aria-live="polite" data-sound-status></p>
+<script src="../js/ink-fluid.js"></script>
+<script src="../js/ink.js"></script>
+</body>
+</html>

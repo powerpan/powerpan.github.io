@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Moyu Night Library — Eric</title>
+<meta name="description" content="以“夜书阁”为视觉主题的网络文学全栈平台，把读者发现与阅读、作者创作投稿、内容审核治理连接成一条完整业务链路。">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#ede8df">
+<script>(()=>{const r=document.documentElement;let t,m;try{t=localStorage.getItem('ink-theme');m=localStorage.getItem('ink-motion')}catch(e){}t=t||(matchMedia('(prefers-color-scheme: dark)').matches?'night':'day');if(matchMedia('(prefers-reduced-motion: reduce)').matches)m='off';r.dataset.theme=t;r.dataset.motion=m||'on'})()</script>
+<link rel="preload" href="../../assets/fonts/instrument-serif-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../css/ink.css">
+<link rel="stylesheet" href="../../css/languages.css">
+<link rel="stylesheet" href="../../css/sound.css">
+<script src="../../js/ink-sound.js" defer></script>
+<noscript><style>[data-sound-toggle],.volume{display:none!important}</style></noscript>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='26' fill='%23f6401a'/%3E%3Ccircle cx='40' cy='26' r='14' fill='%232337f2' fill-opacity='.85'/%3E%3C/svg%3E">
+<link rel="alternate" hreflang="en" href="../../work/project-04.html">
+</head>
+<body data-ink="quiet">
+<canvas id="ink" aria-hidden="true"></canvas>
+<div class="grain" aria-hidden="true"></div>
+
+<div class="cursor" aria-hidden="true"><span class="cursor-label"></span></div>
+<a class="sr-only" href="#main">跳至正文</a>
+<header class="masthead">
+    <a class="brand" href="../index.html" aria-label="Eric — 首页">Eric<sup>®</sup></a>
+    <div class="masthead-meta"><span>作品与手记</span><a href="../../work/project-04.html" data-language-switch hreflang="en" lang="en" aria-label="Read this page in English">EN</a></div>
+    <div class="masthead-right">
+        <nav class="masthead-nav" aria-label="主导航">
+            <a href="../work/index.html" aria-current="page">项目</a><a href="../journal/index.html">文章</a><a href="../index.html#about">关于</a><a href="../index.html#contact">联系</a>
+        </nav>
+        <button class="sound-switch" type="button" data-sound-toggle aria-pressed="false" aria-label="播放背景音乐"><canvas class="sound-wave" aria-hidden="true"></canvas><span class="sound-label">音乐</span></button>
+        <button class="theme-switch" type="button" data-theme-toggle aria-pressed="false"><span class="theme-switch-dot" aria-hidden="true"></span><span class="theme-switch-label">夜间</span></button>
+        <button class="menu-button" type="button" aria-expanded="false" aria-controls="menu">菜单</button>
+    </div>
+</header>
+<nav class="menu" id="menu" aria-label="菜单">
+    <a href="../index.html">目录</a><a href="../work/index.html"><em>项目</em></a><a href="../journal/index.html">文章</a><a href="../index.html#contact"><em>联系</em></a>
+    <div class="menu-foot meta"><span>本地 <span data-clock>--:--:--</span></span><button class="sound-switch" type="button" data-sound-toggle aria-pressed="false" aria-label="播放背景音乐"><canvas class="sound-wave" aria-hidden="true"></canvas><span class="sound-label">音乐</span></button><a href="../../work/project-04.html" data-language-switch hreflang="en" lang="en" aria-label="Read this page in English">EN</a></div>
+</nav>
+<main id="main">
+<div class="page"><p class="kicker"><a href="index.html">项目</a> / Content Platform · RuoYi · Full-stack</p>
+    <header class="case-hero"><h1 data-split>Moyu Night Library</h1><p class="lede rise">以“夜书阁”为视觉主题的网络文学全栈平台，把读者发现与阅读、作者创作投稿、内容审核治理连接成一条完整业务链路。</p></header><dl class="case-facts rise"><div><dt class="meta">Role</dt><dd>全栈开发者</dd></div><div><dt class="meta">Status</dt><dd>功能迭代中</dd></div><div><dt class="meta">Stack</dt><dd>Spring Boot / Vue 2 / MySQL</dd></div><div><dt class="meta">编号</dt><dd>No. 04</dd></div></dl>
+    <div class="case-media"><img src="../../assets/projects/moyu-night-library/home.jpg" alt="墨语夜书阁首页与书籍展示" width="2454" height="1452" loading="eager" decoding="async"></div><div class="case-body"><section class="case-section"><div class="case-section-label"><span class="num">01</span><span class="meta">章节</span></div>
+            <div class="case-section-copy prose"><h2 data-split>让创作、审核与阅读形成同一套内容闭环</h2><div class="detail-section-label">Overview</div>
+
+            <p class="detail-text">墨语不是单一的阅读页面，而是一套覆盖内容生产、平台治理与读者消费的<strong class="">网络文学业务系统</strong>。读者端和作者工作台由 <code class="">novel-app</code> 承载，运营管理端由 <code class="">ruoyi-ui</code> 提供，二者共享 Spring Boot API 与统一权限体系。</p>
+            <p class="detail-text">平台围绕书籍、章节、草稿、书架、订阅、评论、评分、举报、审核和通知等核心对象组织功能，使每一次内容变化都能进入后续的审核、分发和反馈流程。</p><div class="badges"><span class="tag">Spring Boot 2.5</span><span class="tag">RuoYi 3.8.7</span><span class="tag">Vue 2</span><span class="tag">Element UI</span><span class="tag">MyBatis</span><span class="tag">MySQL</span><span class="tag">Redis</span><span class="tag">Docker</span></div><figure class="rise"><img src="../../assets/projects/moyu-night-library/login.jpg" alt="墨语登录与注册界面" width="2458" height="1300" loading="lazy" decoding="async"><figcaption>统一身份入口：登录与注册沿用夜书阁视觉语言，并作为书架、订阅、创作和通知等个性化能力的起点。</figcaption></figure></div></section><section class="case-section"><div class="case-section-label"><span class="num">02</span><span class="meta">章节</span></div>
+            <div class="case-section-copy prose"><h2 data-split>从发现一本书到持续追读</h2><div class="detail-section-label">Reader Journey</div>
+
+            <p class="detail-text">读者可以通过推荐、题材、榜单、搜索和历史记录发现内容，再进入书籍详情与阅读器。书架、订阅、阅读进度、阅读历史和通知共同维持跨会话的连续阅读体验；评分、点赞、评论和举报则把反馈带回平台治理流程。</p><figure class="rise"><img src="../../assets/projects/moyu-night-library/ranking.jpg" alt="墨语夜读榜单与星座式书籍排名" width="2454" height="1456" loading="lazy" decoding="async"><figcaption>夜读榜单：人气、新书、字数和章节四类视图，通过书籍封面与金银铜排名节点建立清晰层级。</figcaption></figure></div></section><section class="case-section"><div class="case-section-label"><span class="num">03</span><span class="meta">章节</span></div>
+            <div class="case-section-copy prose"><h2 data-split>把写作过程做成可恢复、可追踪的工作流</h2><div class="detail-section-label">Author Workflow</div>
+
+            <p class="detail-text">作者侧覆盖资料、作品、封面、章节和草稿管理，并支持 TXT、DOCX 章节导入。编辑器包含<strong class="">自动保存、版本历史与敏感内容预览</strong>，降低长篇创作时因页面中断、误操作或内容规则不明确带来的损失。</p>
+            <p class="detail-text">书籍与章节提交后进入审核状态，作者可以持续查看处理结果和通知；被退回的内容保留原因与修改入口，使创作和平台规则之间形成明确反馈。</p></div></section><section class="case-section"><div class="case-section-label"><span class="num">04</span><span class="meta">章节</span></div>
+            <div class="case-section-copy prose"><h2 data-split>敏感提醒优先，关键决定保留人工审核</h2><div class="detail-section-label">Content Governance</div>
+
+            <p class="detail-text">治理端提供书籍与章节审核、批量处理、驳回原因模板、敏感词命中上下文、风险排序和运营看板。敏感内容采用<strong class="">提醒加人工复核</strong>策略，而不是简单自动拒绝；词库、白名单、命中记录和审核快照为决策提供依据。</p>
+            <p class="detail-text">举报流程支持聚合查看、隐藏与恢复内容、结果通知及操作留痕，让读者反馈能够进入可审计的治理闭环。</p></div></section><section class="case-section"><div class="case-section-label"><span class="num">05</span><span class="meta">章节</span></div>
+            <div class="case-section-copy prose"><h2 data-split>用“夜读”主题统一发现、阅读与榜单</h2><div class="detail-section-label">Product Experience</div>
+
+            <p class="detail-text">界面以深色夜景、暖金色书页和实体书封为核心视觉信号，同时把搜索、题材导航、书架和创作入口放在稳定位置。榜单采用星座式陈列强化名次与书籍的视觉关联，但不改变常规筛选和列表操作。</p></div></section><section class="case-section"><div class="case-section-label"><span class="num">06</span><span class="meta">章节</span></div>
+            <div class="case-section-copy prose"><h2 data-split>双前端、统一 API 与可复现部署</h2><div class="detail-section-label">Architecture &amp; Delivery</div>
+
+            <p class="detail-text">系统沿用 RuoYi 的模块边界，把读者与作者体验、运营管理、领域业务、认证授权和基础设施分层。MySQL 保存业务数据，Redis 承担会话与热点状态，JWT 连接前后端身份；Docker Compose 用于组合后端、数据库与前端运行环境。</p>
+            <div class="moyu-flow">
+                <div class="moyu-flow-step">
+                    <div class="moyu-flow-index">01 / EXPERIENCE</div>
+                    <div class="moyu-flow-title">读者与作者应用</div>
+                    <div class="moyu-flow-desc">发现、阅读、书架、订阅、创作、草稿和投稿集中在 novel-app。</div>
+                </div>
+                <div class="moyu-flow-step">
+                    <div class="moyu-flow-index">02 / OPERATIONS</div>
+                    <div class="moyu-flow-title">运营管理端</div>
+                    <div class="moyu-flow-desc">审核、敏感词、举报、通知与看板通过 ruoyi-ui 管理。</div>
+                </div>
+                <div class="moyu-flow-step">
+                    <div class="moyu-flow-index">03 / DOMAIN API</div>
+                    <div class="moyu-flow-title">小说领域服务</div>
+                    <div class="moyu-flow-desc">novel-system 管理书籍、章节、草稿、互动和治理规则。</div>
+                </div>
+                <div class="moyu-flow-step">
+                    <div class="moyu-flow-index">04 / PLATFORM</div>
+                    <div class="moyu-flow-title">基础平台</div>
+                    <div class="moyu-flow-desc">Spring Boot、MySQL、Redis、JWT 与 Docker 提供运行基础。</div>
+                </div>
+            </div>
+            <div class="detail-features">
+                <div class="detail-feature">
+                    <div class="detail-feature-icon">01</div>
+                    <div class="detail-feature-title">内容发现</div>
+                    <div class="detail-feature-desc">推荐、题材、榜单、搜索、热词和历史记录共同支持找书。</div>
+                </div>
+                <div class="detail-feature">
+                    <div class="detail-feature-icon">02</div>
+                    <div class="detail-feature-title">持续阅读</div>
+                    <div class="detail-feature-desc">书架、订阅、进度、历史和通知保持阅读状态连续。</div>
+                </div>
+                <div class="detail-feature">
+                    <div class="detail-feature-icon">03</div>
+                    <div class="detail-feature-title">作者工作台</div>
+                    <div class="detail-feature-desc">管理作品与章节，支持批量导入、草稿、自动保存和版本历史。</div>
+                </div>
+                <div class="detail-feature">
+                    <div class="detail-feature-icon">04</div>
+                    <div class="detail-feature-title">内容审核</div>
+                    <div class="detail-feature-desc">书籍和章节分层审核，支持批量操作、原因模板和结果通知。</div>
+                </div>
+                <div class="detail-feature">
+                    <div class="detail-feature-icon">05</div>
+                    <div class="detail-feature-title">风险治理</div>
+                    <div class="detail-feature-desc">敏感词上下文、白名单、举报聚合和审计记录辅助人工决策。</div>
+                </div>
+                <div class="detail-feature">
+                    <div class="detail-feature-icon">06</div>
+                    <div class="detail-feature-title">部署交付</div>
+                    <div class="detail-feature-desc">提供数据库脚本、分阶段升级文件和 Docker 运行配置。</div>
+                </div>
+            </div></div></section></div>
+    <a class="next-case" href="project-05.html" data-cursor="下一个"><span class="meta">下一个项目 — 05</span><strong>算法博物馆</strong></a></div>
+</main>
+<footer class="colophon">
+    <div class="colophon-name" data-fit aria-hidden="true">Eric</div>
+    <div class="colophon-grid">
+        <div><p class="meta">目录</p><a href="../work/index.html">项目</a><a href="../journal/index.html">文章</a><a href="../index.html#about">关于</a><a href="../index.html#contact">联系</a></div>
+        <div><p class="meta">更多</p><a href="https://github.com/powerpan" target="_blank" rel="noopener">GitHub</a><a href="index.html">项目</a><a href="../journal/index.html">文章</a><a href="../index.html#contact">联系</a></div>
+        <div><p class="meta">设置</p><button type="button" data-theme-toggle aria-pressed="false"><span class="theme-switch-label">夜间</span> 纸色</button><br><button type="button" data-motion-toggle aria-pressed="true">动效：开启</button><br><button type="button" class="sound-text" data-sound-toggle aria-pressed="false">音乐：关闭</button>
+<label class="volume"><span class="meta">音量</span><input class="ink-range" type="range" min="0" max="1" step="0.05" value="0.6" data-sound-volume aria-label="音乐音量"></label></div>
+        <div><p class="meta">关于本站</p><p>© 2026 Eric. 中文标题采用 Noto Serif SC，正文采用 Noto Sans SC。水墨以 WebGL2 实时模拟。</p><a href="#" data-top>返回顶部 ↑</a></div>
+    </div>
+</footer>
+<p class="sr-only" role="status" aria-live="polite" data-sound-status></p>
+<script src="../../js/ink-fluid.js"></script>
+<script src="../../js/ink.js"></script>
+</body>
+</html>

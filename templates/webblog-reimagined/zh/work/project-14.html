@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PixelMind SDK — Eric</title>
+<meta name="description" content="面向边缘设备的轻量级视觉模型推理引擎，支持 PyTorch/ONNX 多后端与 Docker 容器化部署，让 AI 模型轻松落地。">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#ede8df">
+<script>(()=>{const r=document.documentElement;let t,m;try{t=localStorage.getItem('ink-theme');m=localStorage.getItem('ink-motion')}catch(e){}t=t||(matchMedia('(prefers-color-scheme: dark)').matches?'night':'day');if(matchMedia('(prefers-reduced-motion: reduce)').matches)m='off';r.dataset.theme=t;r.dataset.motion=m||'on'})()</script>
+<link rel="preload" href="../../assets/fonts/instrument-serif-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../css/ink.css">
+<link rel="stylesheet" href="../../css/languages.css">
+<link rel="stylesheet" href="../../css/sound.css">
+<script src="../../js/ink-sound.js" defer></script>
+<noscript><style>[data-sound-toggle],.volume{display:none!important}</style></noscript>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='26' fill='%23f6401a'/%3E%3Ccircle cx='40' cy='26' r='14' fill='%232337f2' fill-opacity='.85'/%3E%3C/svg%3E">
+<link rel="alternate" hreflang="en" href="../../work/project-14.html">
+</head>
+<body data-ink="quiet">
+<canvas id="ink" aria-hidden="true"></canvas>
+<div class="grain" aria-hidden="true"></div>
+
+<div class="cursor" aria-hidden="true"><span class="cursor-label"></span></div>
+<a class="sr-only" href="#main">跳至正文</a>
+<header class="masthead">
+    <a class="brand" href="../index.html" aria-label="Eric — 首页">Eric<sup>®</sup></a>
+    <div class="masthead-meta"><span>作品与手记</span><a href="../../work/project-14.html" data-language-switch hreflang="en" lang="en" aria-label="Read this page in English">EN</a></div>
+    <div class="masthead-right">
+        <nav class="masthead-nav" aria-label="主导航">
+            <a href="../work/index.html" aria-current="page">项目</a><a href="../journal/index.html">文章</a><a href="../index.html#about">关于</a><a href="../index.html#contact">联系</a>
+        </nav>
+        <button class="sound-switch" type="button" data-sound-toggle aria-pressed="false" aria-label="播放背景音乐"><canvas class="sound-wave" aria-hidden="true"></canvas><span class="sound-label">音乐</span></button>
+        <button class="theme-switch" type="button" data-theme-toggle aria-pressed="false"><span class="theme-switch-dot" aria-hidden="true"></span><span class="theme-switch-label">夜间</span></button>
+        <button class="menu-button" type="button" aria-expanded="false" aria-controls="menu">菜单</button>
+    </div>
+</header>
+<nav class="menu" id="menu" aria-label="菜单">
+    <a href="../index.html">目录</a><a href="../work/index.html"><em>项目</em></a><a href="../journal/index.html">文章</a><a href="../index.html#contact"><em>联系</em></a>
+    <div class="menu-foot meta"><span>本地 <span data-clock>--:--:--</span></span><button class="sound-switch" type="button" data-sound-toggle aria-pressed="false" aria-label="播放背景音乐"><canvas class="sound-wave" aria-hidden="true"></canvas><span class="sound-label">音乐</span></button><a href="../../work/project-14.html" data-language-switch hreflang="en" lang="en" aria-label="Read this page in English">EN</a></div>
+</nav>
+<main id="main">
+<div class="page"><p class="kicker"><a href="index.html">项目</a> / AI SDK · Model Deploy · Docker</p>
+    <header class="case-hero"><h1 data-split>PixelMind SDK</h1><p class="lede rise">面向边缘设备的轻量级视觉模型推理引擎，支持 PyTorch/ONNX 多后端与 Docker 容器化部署，让 AI 模型轻松落地。</p></header><dl class="case-facts rise"><div><dt class="meta">Type</dt><dd>Open Source SDK</dd></div><div><dt class="meta">Role</dt><dd>独立开发者</dd></div><div><dt class="meta">License</dt><dd>MIT</dd></div><div><dt class="meta">Status</dt><dd>Active</dd></div><div><dt class="meta">编号</dt><dd>No. 14</dd></div></dl>
+    <div class="case-media"><img src="../../assets/vfx/project-atlas.jpg" alt="原站概念可视化" width="1536" height="1024" loading="eager" decoding="async"></div><div class="case-body"><section class="case-section"><div class="case-section-label"><span class="num">01</span><span class="meta">章节</span></div>
+            <div class="case-section-copy prose"><h2 data-split>轻量级视觉推理引擎</h2><div class="detail-section-label">Overview</div>
+
+            <p class="detail-text">PixelMind SDK 是一个为边缘设备和资源受限环境设计的<strong class="">视觉模型推理引擎</strong>。支持 PyTorch 和 ONNX 两种推理后端，通过 Docker 容器化部署，可以快速将训练好的视觉模型部署到各类硬件平台上。</p>
+            <p class="detail-text">SDK 提供统一的 Python API，内置模型格式转换工具（PyTorch → ONNX），支持 YOLO、SAM 等主流视觉模型的推理加速。配合 Flask/FastAPI 可快速搭建推理服务，单帧推理延迟低至 <strong class="">8ms</strong>。</p><div class="badges"><span class="tag">Python</span><span class="tag">PyTorch</span><span class="tag">ONNX</span><span class="tag">Docker</span><span class="tag">Flask</span><span class="tag">OpenCV</span><span class="tag">Linux</span><span class="tag">Git</span></div></div></section><section class="case-section"><div class="case-section-label"><span class="num">02</span><span class="meta">章节</span></div>
+            <div class="case-section-copy prose"><h2 data-split>技术选型</h2><div class="detail-section-label">Tech Stack</div></div></section><section class="case-section"><div class="case-section-label"><span class="num">03</span><span class="meta">章节</span></div>
+            <div class="case-section-copy prose"><h2 data-split>核心能力</h2><div class="detail-section-label">Key Features</div>
+
+            <div class="detail-features">
+                <div class="detail-feature">
+                    <div class="detail-feature-icon">🔌</div>
+                    <div class="detail-feature-title">多后端支持</div>
+                    <div class="detail-feature-desc">统一 Python API，支持 PyTorch 和 ONNX Runtime 两种推理后端，根据硬件自动选择最优方案。</div>
+                </div>
+                <div class="detail-feature">
+                    <div class="detail-feature-icon">🐳</div>
+                    <div class="detail-feature-title">Docker 部署</div>
+                    <div class="detail-feature-desc">内置 Dockerfile 和 docker-compose 配置，一键构建推理服务镜像，支持 GPU 和 CPU 两种运行模式。</div>
+                </div>
+                <div class="detail-feature">
+                    <div class="detail-feature-icon">🚀</div>
+                    <div class="detail-feature-title">简洁 API</div>
+                    <div class="detail-feature-desc">三行代码即可完成模型加载、推理、结果解析。提供 RESTful API 接口，方便前后端集成。</div>
+                </div>
+                <div class="detail-feature">
+                    <div class="detail-feature-icon">⚙️</div>
+                    <div class="detail-feature-title">模型转换</div>
+                    <div class="detail-feature-desc">内置 PyTorch → ONNX 转换工具，支持 YOLO、SAM 等主流视觉模型的格式转换与验证。</div>
+                </div>
+            </div></div></section><section class="case-section"><div class="case-section-label"><span class="num">04</span><span class="meta">章节</span></div>
+            <div class="case-section-copy prose"><h2 data-split>性能指标</h2><div class="detail-section-label">Performance</div>
+
+            <dl class="case-facts"><div><dt class="meta">Image Size</dt><dd>10MB</dd></div><div><dt class="meta">+ FPS</dt><dd>60</dd></div><div><dt class="meta">+ Platforms</dt><dd>5</dd></div><div><dt class="meta">Latency</dt><dd>8ms</dd></div></dl></div></section><section class="case-section"><div class="case-section-label"><span class="num">05</span><span class="meta">章节</span></div>
+            <div class="case-section-copy prose"><h2 data-split>Python 推理示例</h2><div class="detail-section-label">Code Example</div>
+
+            <div class="detail-code-block">
+                <div class="detail-code-header">
+                    <div class="detail-code-dot"></div>
+                    <div class="detail-code-dot"></div>
+                    <div class="detail-code-dot"></div>
+                    <div class="detail-code-title">inference.py</div>
+                </div>
+                <pre class="detail-code-body">from pixelmind import Engine
+import cv2
+
+# Initialize engine with ONNX backend
+engine = Engine(
+    model="yolov8n.onnx",
+    backend="onnxruntime",
+    device="cpu"
+)
+
+# Load image and run inference
+image = cv2.imread("input.jpg")
+results = engine.predict(image, conf=0.5)
+
+for det in results:
+    print(f"{det.label}: {det.score:.2%}")</pre>
+            </div></div></section></div>
+    <a class="next-case" href="project-15.html" data-cursor="下一个"><span class="meta">下一个项目 — 15</span><strong>StackForge CLI</strong></a></div>
+</main>
+<footer class="colophon">
+    <div class="colophon-name" data-fit aria-hidden="true">Eric</div>
+    <div class="colophon-grid">
+        <div><p class="meta">目录</p><a href="../work/index.html">项目</a><a href="../journal/index.html">文章</a><a href="../index.html#about">关于</a><a href="../index.html#contact">联系</a></div>
+        <div><p class="meta">更多</p><a href="https://github.com/powerpan" target="_blank" rel="noopener">GitHub</a><a href="index.html">项目</a><a href="../journal/index.html">文章</a><a href="../index.html#contact">联系</a></div>
+        <div><p class="meta">设置</p><button type="button" data-theme-toggle aria-pressed="false"><span class="theme-switch-label">夜间</span> 纸色</button><br><button type="button" data-motion-toggle aria-pressed="true">动效：开启</button><br><button type="button" class="sound-text" data-sound-toggle aria-pressed="false">音乐：关闭</button>
+<label class="volume"><span class="meta">音量</span><input class="ink-range" type="range" min="0" max="1" step="0.05" value="0.6" data-sound-volume aria-label="音乐音量"></label></div>
+        <div><p class="meta">关于本站</p><p>© 2026 Eric. 中文标题采用 Noto Serif SC，正文采用 Noto Sans SC。水墨以 WebGL2 实时模拟。</p><a href="#" data-top>返回顶部 ↑</a></div>
+    </div>
+</footer>
+<p class="sr-only" role="status" aria-live="polite" data-sound-status></p>
+<script src="../../js/ink-fluid.js"></script>
+<script src="../../js/ink.js"></script>
+</body>
+</html>

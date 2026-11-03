@@ -6,6 +6,12 @@
 
 详情页不单列文末参考资料清单。必要来源直接链接在正文对应语句中；完整资料保留在 RAG 底稿。移除旧清单时，要同步博客稿、双语文本和目录项，并把指向 `#ref-*` 的编号引用改为直接链接。
 
+## 当前前端与内容入口
+
+现行前端是 `templates/webblog-reimagined/`，生产目录是其中的 `dist/`。根目录的 `blog/`、`js/i18n/`、`index.html` 和 `blog/index.html` 仍作为双语内容源及兼容层维护，`_site/` 是它的中间构建，不能把它当作新版生产包发布。
+
+下面的 HTML 模板和 i18n 步骤用于维护内容源，不代表要给新版复制旧导航、CSS 或动画。源内容校验完成后，必须再同步新版，命令见第 6.5 节。新版文章由 `content/en.json`、`content/zh.json` 经现有构建器生成，不手工复制编号页；正式网址继续使用原 slug。
+
 ---
 
 ## 1. 创建详情页 HTML
@@ -224,6 +230,9 @@ node tools/check_i18n.js
 node tools/build_site.js
 node tools/build_site.js --check
 npm run check
+node templates/webblog-reimagined/tools/import-content.cjs --articles-only
+node templates/webblog-reimagined/tools/release.cjs
+node --test templates/webblog-reimagined/tools/release.test.cjs
 ```
 
 `tools/update_seo.js` 会根据 `blog/index.html` 的文章列表同步以下内容：
@@ -235,11 +244,19 @@ npm run check
 - `blog/topics/*.html` 专题归档页
 - 文章底部的相关文章模块
 
-`tools/build_site.js` 会把公开资源复制到 `_site/`，并根据页面实际加载的 i18n 字典生成中英文静态 HTML。首次使用先以 Node 22.16+ 运行 `npm ci`。Cloudflare Pages 应发布 `_site/`，不要直接发布仓库根目录；`tools/`、`admin/`、`transfer/`、`rag-articles/`、`blog-drafts/` 和根目录 Markdown 文档都不应进入线上静态文件。
+`tools/build_site.js` 会把公开资源复制到 `_site/`，并根据页面实际加载的 i18n 字典生成中英文静态 HTML，供新版导入器读取。首次使用先以 Node 22.16+ 运行 `npm ci`。不要直接发布仓库根目录；`tools/`、`admin/`、`transfer/`、`rag-articles/`、`blog-drafts/` 和根目录 Markdown 文档都不应进入线上静态文件。
+
+`_site/` 现仅作为内容中间产物。当前生产发布必须使用 `templates/webblog-reimagined/dist/`；旧 Git 自动生产部署已暂停，不得在发文时擅自恢复或上传旧版 `_site/`。`import-content.cjs --articles-only` 保留新版简介、经历、项目和已有媒体，只同步文章、专题、文章 SEO、来源索引、RSS 及新增媒体。不要用全量导入覆盖新版独立编辑的内容。
+
+新版的固定输出为 `content/{en,zh,source,seo}.json`、`public/feed.xml`、构建器生成的首页、`journal/`、`zh/journal/` 以及 `dist/`。编号页随归档排序生成，检查正式 slug、双语链接、首页最新六篇、归档/专题计数和前后篇，不依赖 `article-01.html` 的编号标识文章。动态数量文案不能硬编码为上一次文章数。预览新版使用 `node templates/webblog-reimagined/tools/preview-production.cjs`，不是旧版 `npm run preview`；在桌面和移动端检查两种语言的标题、正文、公式/表格、目录、搜索和筛选。
+
+中文稿增加生僻字或技术用字时，检查现有 Noto 字体子集是否覆盖，避免正文混入系统补字。需要扩充时沿用 `templates/webblog-reimagined/tools/subset-fonts.py` 和同版本的完整字体，并保留子集已有字符；工具需要已有的 fontTools 环境。原始字体缓存和截图仍留在项目内，位置见 `RAG_BLOG_WORKFLOW.md` 的固定目录表，不把缓存打包上线。
+
+生产包构建不等于上线。发文任务默认仅留本地；明确要求“推送”时才提交并推送，Cloudflare 上传仍须获得上线授权。`dist/` 和发布清单/ZIP 属于忽略的构建产物，不提交。
 
 源码文件和文章卡片链接仍使用 `.html`，供编辑器、导入工具及直接打开文件预览使用。发布时构建脚本会把指向公开 HTML 页面的链接转换为无扩展名网址，目录首页则使用尾部 `/`；canonical、sitemap、RSS 链接及 JSON-LD 使用相同规范。不要手工重命名文章文件，也不要添加把无扩展名网址跳回 `.html` 的规则。RSS 的 GUID 保留既有标识，不当作访问网址修改。
 
-检查发布版请运行 `npm run preview` 并打开 `http://127.0.0.1:4173/`，该预览服务支持无扩展名访问。完成构建后运行 `npm run check`，确认所有公开页的 canonical、站内链接、sitemap、RSS 及网址兼容测试通过。
+内容中间产物可用 `npm run preview` 在 `http://127.0.0.1:4173/` 检查无扩展名访问，但新版发布验收必须使用上面的 `preview-production.cjs`。完成源内容构建后运行 `npm run check`，再运行新版发布测试，确认公开页的 canonical、站内链接、sitemap、RSS 及网址兼容测试通过。
 
 每篇文章会自动生成 `/blog/{slug}` 和 `/en/blog/{slug}` 两个独立网址，英文正文直接存在于初始 HTML。只维护原始文章和中英文字典，不手工创建英文 HTML 镜像，也不提交 `_site/`。标题、摘要、正文、引用和代码注释都要有对应翻译，且字典必须由当前页面实际加载。构建会同步两种语言的 canonical、SEO、双向 hreflang、站内链接和 sitemap；中文 RSS 的条目 ID 不变。
 

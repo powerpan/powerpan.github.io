@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The &quot;Three-Month Law&quot; of Open Source: From Hype to Abandonment — Eric</title>
+<meta name="description" content="The &quot;Three-Month Law&quot; of Open Source: From Hype to Abandonment">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#ede8df">
+<script>(()=>{const r=document.documentElement;let t,m;try{t=localStorage.getItem('ink-theme');m=localStorage.getItem('ink-motion')}catch(e){}t=t||(matchMedia('(prefers-color-scheme: dark)').matches?'night':'day');if(matchMedia('(prefers-reduced-motion: reduce)').matches)m='off';r.dataset.theme=t;r.dataset.motion=m||'on'})()</script>
+<link rel="preload" href="../assets/fonts/instrument-serif-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../css/ink.css">
+<link rel="stylesheet" href="../css/languages.css">
+<link rel="stylesheet" href="../css/sound.css">
+<script src="../js/ink-sound.js" defer></script>
+<noscript><style>[data-sound-toggle],.volume{display:none!important}</style></noscript>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='26' fill='%23f6401a'/%3E%3Ccircle cx='40' cy='26' r='14' fill='%232337f2' fill-opacity='.85'/%3E%3C/svg%3E">
+<link rel="alternate" hreflang="zh-CN" href="../zh/journal/article-34.html">
+</head>
+<body data-ink="quiet">
+<canvas id="ink" aria-hidden="true"></canvas>
+<div class="grain" aria-hidden="true"></div>
+
+<div class="cursor" aria-hidden="true"><span class="cursor-label"></span></div>
+<a class="sr-only" href="#main">Skip to content</a>
+<header class="masthead">
+    <a class="brand" href="../index.html" aria-label="Eric — home">Eric<sup>®</sup></a>
+    <div class="masthead-meta"><span>Portfolio &amp; Journal</span><a href="../zh/journal/article-34.html" data-language-switch hreflang="zh-CN" lang="zh-CN" aria-label="Read this page in Chinese">中文</a></div>
+    <div class="masthead-right">
+        <nav class="masthead-nav" aria-label="Primary">
+            <a href="../work/index.html">Work</a><a href="../journal/index.html" aria-current="page">Journal</a><a href="../index.html#about">About</a><a href="../index.html#contact">Contact</a>
+        </nav>
+        <button class="sound-switch" type="button" data-sound-toggle aria-pressed="false" aria-label="Play background music"><canvas class="sound-wave" aria-hidden="true"></canvas><span class="sound-label">Sound</span></button>
+        <button class="theme-switch" type="button" data-theme-toggle aria-pressed="false"><span class="theme-switch-dot" aria-hidden="true"></span><span class="theme-switch-label">Night</span></button>
+        <button class="menu-button" type="button" aria-expanded="false" aria-controls="menu">Menu</button>
+    </div>
+</header>
+<nav class="menu" id="menu" aria-label="Menu">
+    <a href="../index.html">Index</a><a href="../work/index.html"><em>Work</em></a><a href="../journal/index.html">Journal</a><a href="../index.html#contact"><em>Contact</em></a>
+    <div class="menu-foot meta"><span>Local <span data-clock>--:--:--</span></span><button class="sound-switch" type="button" data-sound-toggle aria-pressed="false" aria-label="Play background music"><canvas class="sound-wave" aria-hidden="true"></canvas><span class="sound-label">Sound</span></button><a href="../zh/journal/article-34.html" data-language-switch hreflang="zh-CN" lang="zh-CN" aria-label="Read this page in Chinese">中文</a></div>
+</nav>
+<main id="main">
+<div class="progress" aria-hidden="true"><i></i></div>
+<div class="page">
+    <header class="article-head">
+        <p class="meta"><a href="index.html">← Journal</a> &nbsp;/&nbsp; <span class="topic" data-topic="5">Tech Observation</span></p>
+        <h1 data-split>The "Three-Month Law" of Open Source: From Hype to Abandonment</h1>
+        <p class="lede rise"></p>
+        <div class="article-meta meta rise" style="--d:120ms"><span>2026.04.10</span><span>10 min</span><span>No. 34</span></div>
+    </header>
+    <div class="article-layout">
+        <nav class="toc" aria-label="Contents"><a href="#intro">Introduction</a><a href="#phenomenon">The Typical Trajectory</a><a href="#openclaw">OpenClaw Phenomenon Analysis</a><a href="#psychology">Community Psychology &amp; Herd Mentality</a><a href="#lesson">What Should We Learn?</a><a href="#conclusion">Conclusion</a></nav>
+        <div class="page-surface"><div class="prose"><section class="detail-section" id="intro">
+            <h2 class="">Introduction</h2>
+            <p class="">Have you noticed a pattern? Every few months, a "revolutionary" open source project appears on GitHub — Stars skyrocket to 10K+ in a week, Twitter is full of "This changes everything" tweets, and every tech group is sharing it. But check back three months later, and the Issues section is piled with unresolved bugs, the last commit was two months ago, and the once-"revolutionary" project silently gathers dust in your Star list.</p>
+            <p class="">From OpenClaw to various AI Agent frameworks, inference engines, and coding tools, this "viral → bandwagon → silence" cycle seems to have become the norm in open source communities. Today I want to seriously analyze: why does this happen? Is it normal? How should we as developers view it?</p>
+        </section>
+
+        <section class="detail-section" id="phenomenon">
+            <h2 class="">The Typical Trajectory</h2>
+            <p class="">The lifecycle of a phenomenal open source project typically follows this trajectory:</p>
+            <ul class="">
+                <li class=""><strong class="">Week 1: Ignition</strong> — Project launches with a carefully designed landing page and demo video, going viral on Hacker News / Product Hunt / Twitter. Stars increase 2000+ daily</li>
+                <li class=""><strong class="">Weeks 2-4: Bandwagon</strong> — Massive developer influx — forking, writing tutorials, building derivatives. "Alternative to XX" and "Enhanced XX" projects spring up everywhere</li>
+                <li class=""><strong class="">Months 2-3: Disillusionment</strong> — Hype fades. Core maintainers burn out, Issues pile up, PRs back up. Users discover numerous undocumented issues in real usage</li>
+                <li class=""><strong class="">Months 3-6: Consolidation</strong> — Most bandwagoners leave, project enters "quiet maintenance" mode. Truly valuable projects survive; the rest gradually fade into oblivion</li>
+            </ul>
+        </section>
+
+        <section class="detail-section" id="openclaw">
+            <h2 class="">OpenClaw Phenomenon Analysis</h2>
+            <p class="">Taking OpenClaw as an example (representing a category of phenomena, not a specific project), these projects share several common traits:</p>
+            <p class=""><strong class="">Why did it go viral?</strong></p>
+            <ul class="">
+                <li class=""><strong class="">Pain Point Hit</strong> — Solved a real, widely resonant problem (like "let AI autonomously operate computers" or "one-click personal knowledge base")</li>
+                <li class=""><strong class="">Explosive Demo</strong> — Demo videos carefully selected the best cases, creating a "future is here" impact</li>
+                <li class=""><strong class="">Low Barrier</strong> — Provided out-of-the-box experience, making people think "I can use this too"</li>
+                <li class=""><strong class="">Right Narrative</strong> — Tapped into community sentiments like "AI revolution" and "open source replacing closed source"</li>
+            </ul>
+            <p class=""><strong class="">Why did it fade?</strong></p>
+            <ul class="">
+                <li class=""><strong class="">Production Gap</strong> — Perfect demo performance can't be reproduced in real scenarios. Lighting changes, network latency, and edge cases surface in bulk</li>
+                <li class=""><strong class="">Underestimated Maintenance</strong> — Open source isn't just "throwing code out there" — ongoing documentation, Issue responses, and version compatibility work far exceed expectations</li>
+                <li class=""><strong class="">Monetization Struggle</strong> — Without sustainable revenue, core contributors lose motivation after enthusiasm fades</li>
+                <li class=""><strong class="">Attention Economy</strong> — Tech community attention is finite; the next "revolutionary project" quickly appears, competing for the same audience</li>
+            </ul>
+        </section>
+
+        <section class="detail-section" id="psychology">
+            <h2 class="">Community Psychology &amp; Herd Mentality</h2>
+            <p class="">The open source hype cycle is essentially a <strong class="">tech version of FOMO (Fear of Missing Out)</strong>. When a project gains massive social media attention, developers participate due to:</p>
+            <ul class="">
+                <li class=""><strong class="">Fear of Missing Out</strong> — "Everyone's using it; if I don't, I'll fall behind"</li>
+                <li class=""><strong class="">Social Currency</strong> — Sharing tutorials and experiences with new tools earns community recognition</li>
+                <li class=""><strong class="">Curiosity</strong> — Genuine interest in new technology — this itself isn't a problem</li>
+                <li class=""><strong class="">Resume Driver</strong> — "Contributor to XX (hot project)" sounds more impressive than "used YY framework"</li>
+            </ul>
+            <p class="">The problem is that emotion-driven participation is often superficial. Many people fork projects but never actually use them, write tutorials they never got working, and star repos without reading a single line of source code.</p>
+        </section>
+
+        <section class="detail-section" id="lesson">
+            <h2 class="">What Should We Learn?</h2>
+            <p class="">As a developer who's been through multiple "chase hype → disappointment → return to reason" cycles, I've distilled several personal principles:</p>
+            <ul class="">
+                <li class=""><strong class="">Distinguish "Interesting" from "Useful"</strong> — A project can be simultaneously interesting but useless. 30 minutes of exploration is enough; no need for three days of deep integration</li>
+                <li class=""><strong class="">Check Issues and Commit Frequency</strong> — A project's health isn't measured by Stars, but by maintainer response speed and commit frequency</li>
+                <li class=""><strong class="">Wait for Version 3.0</strong> — Many projects are experimental in 1.x, stabilize in 2.x, and become truly usable in 3.x. Patience beats blind chasing</li>
+                <li class=""><strong class="">Invest in Fundamentals</strong> — Frameworks become outdated, but data structures, algorithms, system design, and network protocols won't. Spend 80% of learning time on things that don't change</li>
+                <li class=""><strong class="">Subtract, Don't Add</strong> — Instead of following 50 new projects, deeply understand 3 core tools. Depth always beats breadth</li>
+            </ul>
+            <blockquote class="">The best technical judgment isn't "knowing the latest tools," but "knowing what's worth investing time in and what to watch from the sidelines."</blockquote>
+        </section>
+
+        <section class="detail-section" id="conclusion">
+            <h2 class="">Conclusion</h2>
+            <p class="">The "Three-Month Rule" of open source isn't a bad thing — it's essentially market mechanisms naturally expressing themselves in the tech domain. Many projects are created, a few survive, and what ultimately crystallizes is truly valuable. As developers, we don't need to be responsible for every new project's hype, nor anxious about missing out.</p>
+            <p class="">Stay curious, but don't lose your judgment. Chasing trends is fine, but remember to come home.</p>
+        </section></div></div>
+    </div>
+    <section class="related" aria-labelledby="related-title"><p class="kicker">Continue reading</p><h2 id="related-title">Related <em>writing</em></h2><ol class="journal-list" style="list-style:none"><li><a class="journal-row" href="article-06.html" data-topic="5" data-cursor="Read">
+        <span class="journal-date">2026.09 · 06</span>
+        <span class="journal-title"><span class="static">Who Gets to Train on Whom?</span><span class="marquee" aria-hidden="true"><span>Who Gets to Train on Whom? —&nbsp;</span><span>Who Gets to Train on Whom? —&nbsp;</span><span>Who Gets to Train on Whom? —&nbsp;</span></span></span>
+        <span class="topic" data-topic="5">Tech Observation</span><span class="journal-time">8 min</span></a></li><li><a class="journal-row" href="article-07.html" data-topic="5" data-cursor="Read">
+        <span class="journal-date">2026.08 · 07</span>
+        <span class="journal-title"><span class="static">The Three Clocks of Robotics</span><span class="marquee" aria-hidden="true"><span>The Three Clocks of Robotics —&nbsp;</span><span>The Three Clocks of Robotics —&nbsp;</span><span>The Three Clocks of Robotics —&nbsp;</span></span></span>
+        <span class="topic" data-topic="5">Tech Observation</span><span class="journal-time">8 min</span></a></li><li><a class="journal-row" href="article-09.html" data-topic="5" data-cursor="Read">
+        <span class="journal-date">2026.05 · 09</span>
+        <span class="journal-title"><span class="static">When a Technology Roadmap Becomes a Law</span><span class="marquee" aria-hidden="true"><span>When a Technology Roadmap Becomes a Law —&nbsp;</span><span>When a Technology Roadmap Becomes a Law —&nbsp;</span><span>When a Technology Roadmap Becomes a Law —&nbsp;</span></span></span>
+        <span class="topic" data-topic="5">Tech Observation</span><span class="journal-time">6 min</span></a></li></ol></section>
+    <nav class="pager" aria-label="More articles">
+        <a href="article-33.html" data-cursor="Prev"><span class="meta">← Previous</span><strong>AI Agents: Reshaping Workflows or the Next Bubble?</strong></a>
+        <a href="article-35.html" data-cursor="Next"><span class="meta">Next →</span><strong>From DETR to YOLOv8: Transformer Evolution in Object Detection</strong></a>
+    </nav>
+</div>
+</main>
+<footer class="colophon">
+    <div class="colophon-name" data-fit aria-hidden="true">Eric</div>
+    <div class="colophon-grid">
+        <div><p class="meta">Index</p><a href="../work/index.html">Work</a><a href="../journal/index.html">Journal</a><a href="../index.html#about">About</a><a href="../index.html#contact">Contact</a></div>
+        <div><p class="meta">Elsewhere</p><a href="https://github.com/powerpan" target="_blank" rel="noopener">GitHub</a><a href="../work/index.html">Work</a><a href="index.html">Journal</a><a href="../index.html#contact">Contact</a></div>
+        <div><p class="meta">Settings</p><button type="button" data-theme-toggle aria-pressed="false"><span class="theme-switch-label">Night</span> paper</button><br><button type="button" data-motion-toggle aria-pressed="true">Motion: on</button><br><button type="button" class="sound-text" data-sound-toggle aria-pressed="false">Sound: off</button>
+<label class="volume"><span class="meta">Volume</span><input class="ink-range" type="range" min="0" max="1" step="0.05" value="0.6" data-sound-volume aria-label="Music volume"></label></div>
+        <div><p class="meta">Colophon</p><p>© 2026 Eric. Set in Instrument Serif &amp; Inter Tight. Ink simulated live in WebGL2.</p><a href="#" data-top>Back to top ↑</a></div>
+    </div>
+</footer>
+<p class="sr-only" role="status" aria-live="polite" data-sound-status></p>
+<script src="../js/ink-fluid.js"></script>
+<script src="../js/ink.js"></script>
+</body>
+</html>

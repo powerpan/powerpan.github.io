@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Local Knowledge Assistant — Eric</title>
+<meta name="description" content="面向个人长期知识资产的本地优先 RAG 系统，把 Markdown、检索、答案生成、Notion 同步与知识图谱治理整合为一个可持续维护的工作台。">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#ede8df">
+<script>(()=>{const r=document.documentElement;let t,m;try{t=localStorage.getItem('ink-theme');m=localStorage.getItem('ink-motion')}catch(e){}t=t||(matchMedia('(prefers-color-scheme: dark)').matches?'night':'day');if(matchMedia('(prefers-reduced-motion: reduce)').matches)m='off';r.dataset.theme=t;r.dataset.motion=m||'on'})()</script>
+<link rel="preload" href="../../assets/fonts/instrument-serif-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../css/ink.css">
+<link rel="stylesheet" href="../../css/languages.css">
+<link rel="stylesheet" href="../../css/sound.css">
+<script src="../../js/ink-sound.js" defer></script>
+<noscript><style>[data-sound-toggle],.volume{display:none!important}</style></noscript>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='26' fill='%23f6401a'/%3E%3Ccircle cx='40' cy='26' r='14' fill='%232337f2' fill-opacity='.85'/%3E%3C/svg%3E">
+<link rel="alternate" hreflang="en" href="../../work/project-08.html">
+</head>
+<body data-ink="quiet">
+<canvas id="ink" aria-hidden="true"></canvas>
+<div class="grain" aria-hidden="true"></div>
+
+<div class="cursor" aria-hidden="true"><span class="cursor-label"></span></div>
+<a class="sr-only" href="#main">跳至正文</a>
+<header class="masthead">
+    <a class="brand" href="../index.html" aria-label="Eric — 首页">Eric<sup>®</sup></a>
+    <div class="masthead-meta"><span>作品与手记</span><a href="../../work/project-08.html" data-language-switch hreflang="en" lang="en" aria-label="Read this page in English">EN</a></div>
+    <div class="masthead-right">
+        <nav class="masthead-nav" aria-label="主导航">
+            <a href="../work/index.html" aria-current="page">项目</a><a href="../journal/index.html">文章</a><a href="../index.html#about">关于</a><a href="../index.html#contact">联系</a>
+        </nav>
+        <button class="sound-switch" type="button" data-sound-toggle aria-pressed="false" aria-label="播放背景音乐"><canvas class="sound-wave" aria-hidden="true"></canvas><span class="sound-label">音乐</span></button>
+        <button class="theme-switch" type="button" data-theme-toggle aria-pressed="false"><span class="theme-switch-dot" aria-hidden="true"></span><span class="theme-switch-label">夜间</span></button>
+        <button class="menu-button" type="button" aria-expanded="false" aria-controls="menu">菜单</button>
+    </div>
+</header>
+<nav class="menu" id="menu" aria-label="菜单">
+    <a href="../index.html">目录</a><a href="../work/index.html"><em>项目</em></a><a href="../journal/index.html">文章</a><a href="../index.html#contact"><em>联系</em></a>
+    <div class="menu-foot meta"><span>本地 <span data-clock>--:--:--</span></span><button class="sound-switch" type="button" data-sound-toggle aria-pressed="false" aria-label="播放背景音乐"><canvas class="sound-wave" aria-hidden="true"></canvas><span class="sound-label">音乐</span></button><a href="../../work/project-08.html" data-language-switch hreflang="en" lang="en" aria-label="Read this page in English">EN</a></div>
+</nav>
+<main id="main">
+<div class="page"><p class="kicker"><a href="index.html">项目</a> / Local AI · RAG · Knowledge Graph</p>
+    <header class="case-hero"><h1 data-split>Local Knowledge Assistant</h1><p class="lede rise">面向个人长期知识资产的本地优先 RAG 系统，把 Markdown、检索、答案生成、Notion 同步与知识图谱治理整合为一个可持续维护的工作台。</p></header><dl class="case-facts rise"><div><dt class="meta">Role</dt><dd>独立开发者</dd></div><div><dt class="meta">Status</dt><dd>持续迭代</dd></div><div><dt class="meta">Stack</dt><dd>Python / FastAPI / Vue 3</dd></div><div><dt class="meta">编号</dt><dd>No. 08</dd></div></dl>
+    <div class="case-media"><img src="../../assets/projects/local-rag/query-workbench.png" alt="本地知识库助手的问答与检索工作台" width="2456" height="1192" loading="eager" decoding="async"></div><div class="case-body"><section class="case-section"><div class="case-section-label"><span class="num">01</span><span class="meta">章节</span></div>
+            <div class="case-section-copy prose"><h2 data-split>把个人知识库做成可查询、可治理的系统</h2><div class="detail-section-label">Overview</div>
+
+            <p class="detail-text">这个项目以<strong class="">本地 Markdown</strong> 为知识源，围绕个人长期知识资产建立完整闭环：内容入库、元数据标准化、向量索引、检索精排、答案生成、关系维护与图谱浏览都在同一工作区内完成。</p>
+            <p class="detail-text">系统默认优先在本机完成索引和检索；生成答案时可调用 DeepSeek，并在不可用时回退到本地 Ollama。敏感问题也可以关闭云端模型，保持<strong class="">本地生成</strong>。</p><div class="badges"><span class="tag">Python</span><span class="tag">Streamlit</span><span class="tag">FastAPI</span><span class="tag">Vue 3</span><span class="tag">Element Plus</span><span class="tag">Sentence Transformers</span><span class="tag">Ollama</span></div><figure class="rise"><img src="../../assets/projects/local-rag/knowledge-graph.png" alt="本地知识库助手的知识图谱浏览界面" width="2410" height="1484" loading="lazy" decoding="async"><figcaption>图谱浏览：在同一视图中查看文档节点、强弱关系、筛选统计与节点详情。</figcaption></figure></div></section><section class="case-section"><div class="case-section-label"><span class="num">02</span><span class="meta">章节</span></div>
+            <div class="case-section-copy prose"><h2 data-split>从本地文档到可引用答案</h2><div class="detail-section-label">Retrieval Pipeline</div>
+
+            <p class="detail-text">检索链路按职责拆分，既保证 Apple Silicon 上的安装稳定性，也保留后续替换索引或模型的空间。</p>
+            <div class="rag-pipeline">
+                <div class="rag-pipeline-step">
+                    <div class="rag-pipeline-index">01 / INGEST</div>
+                    <div class="rag-pipeline-title">内容切分</div>
+                    <div class="rag-pipeline-desc">读取 Markdown 与结构化元数据，按可配置窗口生成文本片段。</div>
+                </div>
+                <div class="rag-pipeline-step">
+                    <div class="rag-pipeline-index">02 / EMBED</div>
+                    <div class="rag-pipeline-title">本地向量化</div>
+                    <div class="rag-pipeline-desc">使用多语言 Sentence Transformer，在本机生成并复用向量。</div>
+                </div>
+                <div class="rag-pipeline-step">
+                    <div class="rag-pipeline-index">03 / RERANK</div>
+                    <div class="rag-pipeline-title">召回与精排</div>
+                    <div class="rag-pipeline-desc">NumPy 余弦召回后使用 CrossEncoder 重排，控制来源分布。</div>
+                </div>
+                <div class="rag-pipeline-step">
+                    <div class="rag-pipeline-index">04 / ANSWER</div>
+                    <div class="rag-pipeline-title">生成与引用</div>
+                    <div class="rag-pipeline-desc">组合相关片段生成答案，并保留来源供核对与继续探索。</div>
+                </div>
+            </div></div></section><section class="case-section"><div class="case-section-label"><span class="num">03</span><span class="meta">章节</span></div>
+            <div class="case-section-copy prose"><h2 data-split>检索之外，更重要的是知识治理</h2><div class="detail-section-label">Knowledge Governance</div>
+
+            <p class="detail-text">系统把文档类型、状态、scope、summary、普通标签、Wiki 标签和强关系统一进 front matter。内容入库和关系维护都先生成<strong class="">预览</strong>，确认后才写回文件，避免自动化直接污染知识源。</p>
+            <p class="detail-text">多 Workspace 机制让不同知识域共享同一套能力但保持数据隔离；索引重建会复用未变化片段的向量，只处理新增或正文发生变化的内容。</p></div></section><section class="case-section"><div class="case-section-label"><span class="num">04</span><span class="meta">章节</span></div>
+            <div class="case-section-copy prose"><h2 data-split>让本地知识与 Notion 保持可控同步</h2><div class="detail-section-label">Notion Integration</div>
+
+            <p class="detail-text">项目支持 Notion 导入与同步，后台任务展示实时进度、重试日志和失败原因。同步状态会记录断点，内容哈希用于跳过没有变化的条目；项目与长期问题之间的双向关系也会同步为数据库属性。</p>
+            <p class="detail-text">所有写入动作都遵循“预览、确认、执行”的边界，密钥只保存在本地环境文件中，不进入仓库。</p></div></section><section class="case-section"><div class="case-section-label"><span class="num">05</span><span class="meta">章节</span></div>
+            <div class="case-section-copy prose"><h2 data-split>把分散文档变成可探索的关系网络</h2><div class="detail-section-label">Knowledge Graph</div>
+
+            <p class="detail-text">知识图谱区分人工确认的强关系、由 scope 和 Wiki 标签形成的弱关系，以及待确认的候选关系。用户可以按文档类型、目录、scope、标签和关键词筛选，也可以聚焦某一节点的一跳关系。</p></div></section><section class="case-section"><div class="case-section-label"><span class="num">06</span><span class="meta">章节</span></div>
+            <div class="case-section-copy prose"><h2 data-split>覆盖知识资产的完整维护流程</h2><div class="detail-section-label">Capabilities</div>
+
+            <div class="detail-features">
+                <div class="detail-feature">
+                    <div class="detail-feature-icon">01</div>
+                    <div class="detail-feature-title">问答与检索</div>
+                    <div class="detail-feature-desc">可选检索范围、scope、返回数量、来源上限与精排策略，并决定是否生成答案。</div>
+                </div>
+                <div class="detail-feature">
+                    <div class="detail-feature-icon">02</div>
+                    <div class="detail-feature-title">内容与索引</div>
+                    <div class="detail-feature-desc">从粘贴文本或本地文件生成规范文档，按需重建索引和知识图谱。</div>
+                </div>
+                <div class="detail-feature">
+                    <div class="detail-feature-icon">03</div>
+                    <div class="detail-feature-title">标签与关系</div>
+                    <div class="detail-feature-desc">辅助分析标签和候选关系，但把最终写入决定保留给用户。</div>
+                </div>
+                <div class="detail-feature">
+                    <div class="detail-feature-icon">04</div>
+                    <div class="detail-feature-title">Notion 工作流</div>
+                    <div class="detail-feature-desc">支持导入、后台同步、失败重试、断点恢复和手动上传回退。</div>
+                </div>
+                <div class="detail-feature">
+                    <div class="detail-feature-icon">05</div>
+                    <div class="detail-feature-title">多工作区</div>
+                    <div class="detail-feature-desc">在一个应用中切换不同知识域，保持索引、配置与状态互相隔离。</div>
+                </div>
+                <div class="detail-feature">
+                    <div class="detail-feature-icon">06</div>
+                    <div class="detail-feature-title">本地优先</div>
+                    <div class="detail-feature-desc">检索与治理默认留在设备上，云端生成可选，并提供 Ollama 本地回退。</div>
+                </div>
+            </div></div></section></div>
+    <a class="next-case" href="project-09.html" data-cursor="下一个"><span class="meta">下一个项目 — 09</span><strong>ClassBridge Product Suite</strong></a></div>
+</main>
+<footer class="colophon">
+    <div class="colophon-name" data-fit aria-hidden="true">Eric</div>
+    <div class="colophon-grid">
+        <div><p class="meta">目录</p><a href="../work/index.html">项目</a><a href="../journal/index.html">文章</a><a href="../index.html#about">关于</a><a href="../index.html#contact">联系</a></div>
+        <div><p class="meta">更多</p><a href="https://github.com/powerpan" target="_blank" rel="noopener">GitHub</a><a href="index.html">项目</a><a href="../journal/index.html">文章</a><a href="../index.html#contact">联系</a></div>
+        <div><p class="meta">设置</p><button type="button" data-theme-toggle aria-pressed="false"><span class="theme-switch-label">夜间</span> 纸色</button><br><button type="button" data-motion-toggle aria-pressed="true">动效：开启</button><br><button type="button" class="sound-text" data-sound-toggle aria-pressed="false">音乐：关闭</button>
+<label class="volume"><span class="meta">音量</span><input class="ink-range" type="range" min="0" max="1" step="0.05" value="0.6" data-sound-volume aria-label="音乐音量"></label></div>
+        <div><p class="meta">关于本站</p><p>© 2026 Eric. 中文标题采用 Noto Serif SC，正文采用 Noto Sans SC。水墨以 WebGL2 实时模拟。</p><a href="#" data-top>返回顶部 ↑</a></div>
+    </div>
+</footer>
+<p class="sr-only" role="status" aria-live="polite" data-sound-status></p>
+<script src="../../js/ink-fluid.js"></script>
+<script src="../../js/ink.js"></script>
+</body>
+</html>

@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>文章 — Eric</title>
+<meta name="description" content="Every article in the journal.">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#ede8df">
+<script>(()=>{const r=document.documentElement;let t,m;try{t=localStorage.getItem('ink-theme');m=localStorage.getItem('ink-motion')}catch(e){}t=t||(matchMedia('(prefers-color-scheme: dark)').matches?'night':'day');if(matchMedia('(prefers-reduced-motion: reduce)').matches)m='off';r.dataset.theme=t;r.dataset.motion=m||'on'})()</script>
+<link rel="preload" href="../../assets/fonts/instrument-serif-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../css/ink.css">
+<link rel="stylesheet" href="../../css/languages.css">
+<link rel="stylesheet" href="../../css/sound.css">
+<script src="../../js/ink-sound.js" defer></script>
+<noscript><style>[data-sound-toggle],.volume{display:none!important}</style></noscript>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='26' fill='%23f6401a'/%3E%3Ccircle cx='40' cy='26' r='14' fill='%232337f2' fill-opacity='.85'/%3E%3C/svg%3E">
+<link rel="alternate" hreflang="en" href="../../journal/index.html">
+</head>
+<body data-ink="quiet">
+<canvas id="ink" aria-hidden="true"></canvas>
+<div class="grain" aria-hidden="true"></div>
+
+<div class="cursor" aria-hidden="true"><span class="cursor-label"></span></div>
+<a class="sr-only" href="#main">跳至正文</a>
+<header class="masthead">
+    <a class="brand" href="../index.html" aria-label="Eric — 首页">Eric<sup>®</sup></a>
+    <div class="masthead-meta"><span>作品与手记</span><a href="../../journal/index.html" data-language-switch hreflang="en" lang="en" aria-label="Read this page in English">EN</a></div>
+    <div class="masthead-right">
+        <nav class="masthead-nav" aria-label="主导航">
+            <a href="../work/index.html">项目</a><a href="../journal/index.html" aria-current="page">文章</a><a href="../index.html#about">关于</a><a href="../index.html#contact">联系</a>
+        </nav>
+        <button class="sound-switch" type="button" data-sound-toggle aria-pressed="false" aria-label="播放背景音乐"><canvas class="sound-wave" aria-hidden="true"></canvas><span class="sound-label">音乐</span></button>
+        <button class="theme-switch" type="button" data-theme-toggle aria-pressed="false"><span class="theme-switch-dot" aria-hidden="true"></span><span class="theme-switch-label">夜间</span></button>
+        <button class="menu-button" type="button" aria-expanded="false" aria-controls="menu">菜单</button>
+    </div>
+</header>
+<nav class="menu" id="menu" aria-label="菜单">
+    <a href="../index.html">目录</a><a href="../work/index.html"><em>项目</em></a><a href="../journal/index.html">文章</a><a href="../index.html#contact"><em>联系</em></a>
+    <div class="menu-foot meta"><span>本地 <span data-clock>--:--:--</span></span><button class="sound-switch" type="button" data-sound-toggle aria-pressed="false" aria-label="播放背景音乐"><canvas class="sound-wave" aria-hidden="true"></canvas><span class="sound-label">音乐</span></button><a href="../../journal/index.html" data-language-switch hreflang="en" lang="en" aria-label="Read this page in English">EN</a></div>
+</nav>
+<main id="main">
+<div class="page">
+    <header class="page-head"><p class="kicker">文章</p><h1 data-split>全部 <em>文章</em></h1><p class="rise">41 篇文章，6 个专题。可按专题筛选，或搜索标题。</p></header>
+    <div class="page-surface">
+        <div class="filters" role="group" aria-label="专题"><button class="filter" type="button" data-filter="all" aria-pressed="true">全部 <sup>41</sup></button><button class="filter" type="button" data-filter="1" data-topic="1" aria-pressed="false">AI 工程 <sup>8</sup></button><button class="filter" type="button" data-filter="2" data-topic="2" aria-pressed="false">Agent 自动化 <sup>8</sup></button><button class="filter" type="button" data-filter="3" data-topic="3" aria-pressed="false">视觉多模态 <sup>6</sup></button><button class="filter" type="button" data-filter="4" data-topic="4" aria-pressed="false">系统架构 <sup>7</sup></button><button class="filter" type="button" data-filter="5" data-topic="5" aria-pressed="false">技术观察 <sup>9</sup></button><button class="filter" type="button" data-filter="6" data-topic="6" aria-pressed="false">社会随笔 <sup>3</sup></button></div>
+        <input class="search" type="search" placeholder="搜索文章…" aria-label="搜索文章">
+        <p class="archive-count" role="status"></p>
+        <ol class="journal-list" data-archive style="list-style:none"><li><a class="journal-row" href="article-01.html" data-topic="1" data-cursor="阅读">
+        <span class="journal-date">2026.11 · 01</span>
+        <span class="journal-title"><span class="static">模型装得下，为什么还是跑不快？</span><span class="marquee" aria-hidden="true"><span>模型装得下，为什么还是跑不快？ —&nbsp;</span><span>模型装得下，为什么还是跑不快？ —&nbsp;</span><span>模型装得下，为什么还是跑不快？ —&nbsp;</span></span></span>
+        <span class="topic" data-topic="1">AI 工程</span><span class="journal-time">15 分钟</span></a></li><li><a class="journal-row" href="article-02.html" data-topic="1" data-cursor="阅读">
+        <span class="journal-date">2026.10 · 02</span>
+        <span class="journal-title"><span class="static">当考卷本身有错：我们在测量 AI 的什么？</span><span class="marquee" aria-hidden="true"><span>当考卷本身有错：我们在测量 AI 的什么？ —&nbsp;</span><span>当考卷本身有错：我们在测量 AI 的什么？ —&nbsp;</span><span>当考卷本身有错：我们在测量 AI 的什么？ —&nbsp;</span></span></span>
+        <span class="topic" data-topic="1">AI 工程</span><span class="journal-time">16 分钟</span></a></li><li><a class="journal-row" href="article-03.html" data-topic="4" data-cursor="阅读">
+        <span class="journal-date">2026.10 · 03</span>
+        <span class="journal-title"><span class="static">当每个系统都在自保：3.8 GW 负载退出之后</span><span class="marquee" aria-hidden="true"><span>当每个系统都在自保：3.8 GW 负载退出之后 —&nbsp;</span><span>当每个系统都在自保：3.8 GW 负载退出之后 —&nbsp;</span><span>当每个系统都在自保：3.8 GW 负载退出之后 —&nbsp;</span></span></span>
+        <span class="topic" data-topic="4">系统架构</span><span class="journal-time">18 分钟</span></a></li><li><a class="journal-row" href="article-04.html" data-topic="4" data-cursor="阅读">
+        <span class="journal-date">2026.10 · 04</span>
+        <span class="journal-title"><span class="static">加密后的数据，真的还能做模糊查询吗？</span><span class="marquee" aria-hidden="true"><span>加密后的数据，真的还能做模糊查询吗？ —&nbsp;</span><span>加密后的数据，真的还能做模糊查询吗？ —&nbsp;</span><span>加密后的数据，真的还能做模糊查询吗？ —&nbsp;</span></span></span>
+        <span class="topic" data-topic="4">系统架构</span><span class="journal-time">34 分钟</span></a></li><li><a class="journal-row" href="article-05.html" data-topic="2" data-cursor="阅读">
+        <span class="journal-date">2026.09 · 05</span>
+        <span class="journal-title"><span class="static">AI 不需要恶意，也能越过权限边界</span><span class="marquee" aria-hidden="true"><span>AI 不需要恶意，也能越过权限边界 —&nbsp;</span><span>AI 不需要恶意，也能越过权限边界 —&nbsp;</span><span>AI 不需要恶意，也能越过权限边界 —&nbsp;</span></span></span>
+        <span class="topic" data-topic="2">Agent 自动化</span><span class="journal-time">12 分钟</span></a></li><li><a class="journal-row" href="article-06.html" data-topic="5" data-cursor="阅读">
+        <span class="journal-date">2026.09 · 06</span>
+        <span class="journal-title"><span class="static">谁有权训练谁？</span><span class="marquee" aria-hidden="true"><span>谁有权训练谁？ —&nbsp;</span><span>谁有权训练谁？ —&nbsp;</span><span>谁有权训练谁？ —&nbsp;</span></span></span>
+        <span class="topic" data-topic="5">技术观察</span><span class="journal-time">8 分钟</span></a></li><li><a class="journal-row" href="article-07.html" data-topic="5" data-cursor="阅读">
+        <span class="journal-date">2026.08 · 07</span>
+        <span class="journal-title"><span class="static">机器人的三个时钟</span><span class="marquee" aria-hidden="true"><span>机器人的三个时钟 —&nbsp;</span><span>机器人的三个时钟 —&nbsp;</span><span>机器人的三个时钟 —&nbsp;</span></span></span>
+        <span class="topic" data-topic="5">技术观察</span><span class="journal-time">8 分钟</span></a></li><li><a class="journal-row" href="article-08.html" data-topic="4" data-cursor="阅读">
+        <span class="journal-date">2026.07 · 08</span>
+        <span class="journal-title"><span class="static">Mac 正在成为个人 AI 应用的理想运行时</span><span class="marquee" aria-hidden="true"><span>Mac 正在成为个人 AI 应用的理想运行时 —&nbsp;</span><span>Mac 正在成为个人 AI 应用的理想运行时 —&nbsp;</span><span>Mac 正在成为个人 AI 应用的理想运行时 —&nbsp;</span></span></span>
+        <span class="topic" data-topic="4">系统架构</span><span class="journal-time">9 分钟</span></a></li><li><a class="journal-row" href="article-09.html" data-topic="5" data-cursor="阅读">
+        <span class="journal-date">2026.05 · 09</span>
+        <span class="journal-title"><span class="static">当技术路线被包装成定律</span><span class="marquee" aria-hidden="true"><span>当技术路线被包装成定律 —&nbsp;</span><span>当技术路线被包装成定律 —&nbsp;</span><span>当技术路线被包装成定律 —&nbsp;</span></span></span>
+        <span class="topic" data-topic="5">技术观察</span><span class="journal-time">6 分钟</span></a></li><li><a class="journal-row" href="article-10.html" data-topic="5" data-cursor="阅读">
+        <span class="journal-date">2026.05 · 10</span>
+        <span class="journal-title"><span class="static">中国具身智能的真正考验：不是翻跟头，而是商业闭环</span><span class="marquee" aria-hidden="true"><span>中国具身智能的真正考验：不是翻跟头，而是商业闭环 —&nbsp;</span><span>中国具身智能的真正考验：不是翻跟头，而是商业闭环 —&nbsp;</span><span>中国具身智能的真正考验：不是翻跟头，而是商业闭环 —&nbsp;</span></span></span>
+        <span class="topic" data-topic="5">技术观察</span><span class="journal-time">8 分钟</span></a></li><li><a class="journal-row" href="article-11.html" data-topic="6" data-cursor="阅读">
+        <span class="journal-date">2026.05 · 11</span>
+        <span class="journal-title"><span class="static">把家庭当成一个系统：中产返贫背后的风险架构问题</span><span class="marquee" aria-hidden="true"><span>把家庭当成一个系统：中产返贫背后的风险架构问题 —&nbsp;</span><span>把家庭当成一个系统：中产返贫背后的风险架构问题 —&nbsp;</span><span>把家庭当成一个系统：中产返贫背后的风险架构问题 —&nbsp;</span></span></span>
+        <span class="topic" data-topic="6">社会随笔</span><span class="journal-time">7 分钟</span></a></li><li><a class="journal-row" href="article-12.html" data-topic="5" data-cursor="阅读">
+        <span class="journal-date">2026.05 · 12</span>
+        <span class="journal-title"><span class="static">AI 不会消灭白领，但会消灭虚假安全感</span><span class="marquee" aria-hidden="true"><span>AI 不会消灭白领，但会消灭虚假安全感 —&nbsp;</span><span>AI 不会消灭白领，但会消灭虚假安全感 —&nbsp;</span><span>AI 不会消灭白领，但会消灭虚假安全感 —&nbsp;</span></span></span>
+        <span class="topic" data-topic="5">技术观察</span><span class="journal-time">6 分钟</span></a></li><li><a class="journal-row" href="article-13.html" data-topic="5" data-cursor="阅读">
+        <span class="journal-date">2026.05 · 13</span>
+        <span class="journal-title"><span class="static">Google I/O 之后：AI 竞争正在转向工作流控制权</span><span class="marquee" aria-hidden="true"><span>Google I/O 之后：AI 竞争正在转向工作流控制权 —&nbsp;</span><span>Google I/O 之后：AI 竞争正在转向工作流控制权 —&nbsp;</span><span>Google I/O 之后：AI 竞争正在转向工作流控制权 —&nbsp;</span></span></span>
+        <span class="topic" data-topic="5">技术观察</span><span class="journal-time">8 分钟</span></a></li><li><a class="journal-row" href="article-14.html" data-topic="2" data-cursor="阅读">
+        <span class="journal-date">2026.05 · 14</span>
+        <span class="journal-title"><span class="static">我做了一次多 Agent 架构实验：复杂架构并不天然更聪明</span><span class="marquee" aria-hidden="true"><span>我做了一次多 Agent 架构实验：复杂架构并不天然更聪明 —&nbsp;</span><span>我做了一次多 Agent 架构实验：复杂架构并不天然更聪明 —&nbsp;</span><span>我做了一次多 Agent 架构实验：复杂架构并不天然更聪明 —&nbsp;</span></span></span>
+        <span class="topic" data-topic="2">Agent 自动化</span><span class="journal-time">8 分钟</span></a></li><li><a class="journal-row" href="article-15.html" data-topic="1" data-cursor="阅读">
+        <span class="journal-date">2026.05 · 15</span>
+        <span class="journal-title"><span class="static">AI 工程的核心不是让模型万能，而是定义边界</span><span class="marquee" aria-hidden="true"><span>AI 工程的核心不是让模型万能，而是定义边界 —&nbsp;</span><span>AI 工程的核心不是让模型万能，而是定义边界 —&nbsp;</span><span>AI 工程的核心不是让模型万能，而是定义边界 —&nbsp;</span></span></span>
+        <span class="topic" data-topic="1">AI 工程</span><span class="journal-time">8 分钟</span></a></li><li><a class="journal-row" href="article-16.html" data-topic="1" data-cursor="阅读">
+        <span class="journal-date">2026.05 · 16</span>
+        <span class="journal-title"><span class="static">企业 AI 本地部署，第一步不是买 GPU，而是先洗数据</span><span class="marquee" aria-hidden="true"><span>企业 AI 本地部署，第一步不是买 GPU，而是先洗数据 —&nbsp;</span><span>企业 AI 本地部署，第一步不是买 GPU，而是先洗数据 —&nbsp;</span><span>企业 AI 本地部署，第一步不是买 GPU，而是先洗数据 —&nbsp;</span></span></span>
+        <span class="topic" data-topic="1">AI 工程</span><span class="journal-time">7 分钟</span></a></li><li><a class="journal-row" href="article-17.html" data-topic="3" data-cursor="阅读">
+        <span class="journal-date">2026.05 · 17</span>
+        <span class="journal-title"><span class="static">U-Net 没有输给新模型：工业视觉里，先定义任务再选择模型</span><span class="marquee" aria-hidden="true"><span>U-Net 没有输给新模型：工业视觉里，先定义任务再选择模型 —&nbsp;</span><span>U-Net 没有输给新模型：工业视觉里，先定义任务再选择模型 —&nbsp;</span><span>U-Net 没有输给新模型：工业视觉里，先定义任务再选择模型 —&nbsp;</span></span></span>
+        <span class="topic" data-topic="3">视觉多模态</span><span class="journal-time">8 分钟</span></a></li><li><a class="journal-row" href="article-18.html" data-topic="2" data-cursor="阅读">
+        <span class="journal-date">2026.05 · 18</span>
+        <span class="journal-title"><span class="static">多 Agent 架构的真正问题：不是角色分工，而是上下文边界</span><span class="marquee" aria-hidden="true"><span>多 Agent 架构的真正问题：不是角色分工，而是上下文边界 —&nbsp;</span><span>多 Agent 架构的真正问题：不是角色分工，而是上下文边界 —&nbsp;</span><span>多 Agent 架构的真正问题：不是角色分工，而是上下文边界 —&nbsp;</span></span></span>
+        <span class="topic" data-topic="2">Agent 自动化</span><span class="journal-time">10 分钟</span></a></li><li><a class="journal-row" href="article-19.html" data-topic="2" data-cursor="阅读">
+        <span class="journal-date">2026.05 · 19</span>
+        <span class="journal-title"><span class="static">当真的需要多 Agent：如何拆分、协作与合并结果</span><span class="marquee" aria-hidden="true"><span>当真的需要多 Agent：如何拆分、协作与合并结果 —&nbsp;</span><span>当真的需要多 Agent：如何拆分、协作与合并结果 —&nbsp;</span><span>当真的需要多 Agent：如何拆分、协作与合并结果 —&nbsp;</span></span></span>
+        <span class="topic" data-topic="2">Agent 自动化</span><span class="journal-time">10 分钟</span></a></li><li><a class="journal-row" href="article-20.html" data-topic="5" data-cursor="阅读">
+        <span class="journal-date">2026.05 · 20</span>
+        <span class="journal-title"><span class="static">工程师的成长本质是抽象层上移</span><span class="marquee" aria-hidden="true"><span>工程师的成长本质是抽象层上移 —&nbsp;</span><span>工程师的成长本质是抽象层上移 —&nbsp;</span><span>工程师的成长本质是抽象层上移 —&nbsp;</span></span></span>
+        <span class="topic" data-topic="5">技术观察</span><span class="journal-time">9 分钟</span></a></li><li><a class="journal-row" href="article-21.html" data-topic="2" data-cursor="阅读">
+        <span class="journal-date">2026.04 · 21</span>
+        <span class="journal-title"><span class="static">AI Agent 正在重塑系统架构：从功能系统到任务系统</span><span class="marquee" aria-hidden="true"><span>AI Agent 正在重塑系统架构：从功能系统到任务系统 —&nbsp;</span><span>AI Agent 正在重塑系统架构：从功能系统到任务系统 —&nbsp;</span><span>AI Agent 正在重塑系统架构：从功能系统到任务系统 —&nbsp;</span></span></span>
+        <span class="topic" data-topic="2">Agent 自动化</span><span class="journal-time">10 分钟</span></a></li><li><a class="journal-row" href="article-22.html" data-topic="4" data-cursor="阅读">
+        <span class="journal-date">2026.04 · 22</span>
+        <span class="journal-title"><span class="static">如果没有数据库，系统如何设计？</span><span class="marquee" aria-hidden="true"><span>如果没有数据库，系统如何设计？ —&nbsp;</span><span>如果没有数据库，系统如何设计？ —&nbsp;</span><span>如果没有数据库，系统如何设计？ —&nbsp;</span></span></span>
+        <span class="topic" data-topic="4">系统架构</span><span class="journal-time">9 分钟</span></a></li><li><a class="journal-row" href="article-23.html" data-topic="4" data-cursor="阅读">
+        <span class="journal-date">2026.04 · 23</span>
+        <span class="journal-title"><span class="static">技术债不是代码坏味道，而是 组织对未来的定价</span><span class="marquee" aria-hidden="true"><span>技术债不是代码坏味道，而是 组织对未来的定价 —&nbsp;</span><span>技术债不是代码坏味道，而是 组织对未来的定价 —&nbsp;</span><span>技术债不是代码坏味道，而是 组织对未来的定价 —&nbsp;</span></span></span>
+        <span class="topic" data-topic="4">系统架构</span><span class="journal-time">10 分钟</span></a></li><li><a class="journal-row" href="article-24.html" data-topic="3" data-cursor="阅读">
+        <span class="journal-date">2026.04 · 24</span>
+        <span class="journal-title"><span class="static">视觉算法工程师，别把自己做成 流程操作员</span><span class="marquee" aria-hidden="true"><span>视觉算法工程师，别把自己做成 流程操作员 —&nbsp;</span><span>视觉算法工程师，别把自己做成 流程操作员 —&nbsp;</span><span>视觉算法工程师，别把自己做成 流程操作员 —&nbsp;</span></span></span>
+        <span class="topic" data-topic="3">视觉多模态</span><span class="journal-time">8 分钟</span></a></li><li><a class="journal-row" href="article-25.html" data-topic="4" data-cursor="阅读">
+        <span class="journal-date">2026.04 · 25</span>
+        <span class="journal-title"><span class="static">别再把业务系统做成 CRUD 套壳</span><span class="marquee" aria-hidden="true"><span>别再把业务系统做成 CRUD 套壳 —&nbsp;</span><span>别再把业务系统做成 CRUD 套壳 —&nbsp;</span><span>别再把业务系统做成 CRUD 套壳 —&nbsp;</span></span></span>
+        <span class="topic" data-topic="4">系统架构</span><span class="journal-time">9 分钟</span></a></li><li><a class="journal-row" href="article-26.html" data-topic="2" data-cursor="阅读">
+        <span class="journal-date">2026.04 · 26</span>
+        <span class="journal-title"><span class="static">AI Agent 架构：从会聊天到会执行</span><span class="marquee" aria-hidden="true"><span>AI Agent 架构：从会聊天到会执行 —&nbsp;</span><span>AI Agent 架构：从会聊天到会执行 —&nbsp;</span><span>AI Agent 架构：从会聊天到会执行 —&nbsp;</span></span></span>
+        <span class="topic" data-topic="2">Agent 自动化</span><span class="journal-time">9 分钟</span></a></li><li><a class="journal-row" href="article-27.html" data-topic="2" data-cursor="阅读">
+        <span class="journal-date">2026.04 · 27</span>
+        <span class="journal-title"><span class="static">AI 工作流争夺战：为什么真正的终局不是工具，而是工作代理层</span><span class="marquee" aria-hidden="true"><span>AI 工作流争夺战：为什么真正的终局不是工具，而是工作代理层 —&nbsp;</span><span>AI 工作流争夺战：为什么真正的终局不是工具，而是工作代理层 —&nbsp;</span><span>AI 工作流争夺战：为什么真正的终局不是工具，而是工作代理层 —&nbsp;</span></span></span>
+        <span class="topic" data-topic="2">Agent 自动化</span><span class="journal-time">10 分钟</span></a></li><li><a class="journal-row" href="article-28.html" data-topic="5" data-cursor="阅读">
+        <span class="journal-date">2026.04 · 28</span>
+        <span class="journal-title"><span class="static">AI 周报｜Agent 平台化、模型继续升级，AI 硬件开始下沉到终端</span><span class="marquee" aria-hidden="true"><span>AI 周报｜Agent 平台化、模型继续升级，AI 硬件开始下沉到终端 —&nbsp;</span><span>AI 周报｜Agent 平台化、模型继续升级，AI 硬件开始下沉到终端 —&nbsp;</span><span>AI 周报｜Agent 平台化、模型继续升级，AI 硬件开始下沉到终端 —&nbsp;</span></span></span>
+        <span class="topic" data-topic="5">技术观察</span><span class="journal-time">11 分钟</span></a></li><li><a class="journal-row" href="article-29.html" data-topic="3" data-cursor="阅读">
+        <span class="journal-date">2026.04 · 29</span>
+        <span class="journal-title"><span class="static">视觉模型上线后：别让 mAP 变成唯一答案</span><span class="marquee" aria-hidden="true"><span>视觉模型上线后：别让 mAP 变成唯一答案 —&nbsp;</span><span>视觉模型上线后：别让 mAP 变成唯一答案 —&nbsp;</span><span>视觉模型上线后：别让 mAP 变成唯一答案 —&nbsp;</span></span></span>
+        <span class="topic" data-topic="3">视觉多模态</span><span class="journal-time">9 分钟</span></a></li><li><a class="journal-row" href="article-30.html" data-topic="1" data-cursor="阅读">
+        <span class="journal-date">2026.04 · 30</span>
+        <span class="journal-title"><span class="static">AI 编程时代的代码审查债务</span><span class="marquee" aria-hidden="true"><span>AI 编程时代的代码审查债务 —&nbsp;</span><span>AI 编程时代的代码审查债务 —&nbsp;</span><span>AI 编程时代的代码审查债务 —&nbsp;</span></span></span>
+        <span class="topic" data-topic="1">AI 工程</span><span class="journal-time">9 分钟</span></a></li><li><a class="journal-row" href="article-31.html" data-topic="1" data-cursor="阅读">
+        <span class="journal-date">2026.04 · 31</span>
+        <span class="journal-title"><span class="static">上下文腐烂：大模型为什么会「越聊越笨」</span><span class="marquee" aria-hidden="true"><span>上下文腐烂：大模型为什么会「越聊越笨」 —&nbsp;</span><span>上下文腐烂：大模型为什么会「越聊越笨」 —&nbsp;</span><span>上下文腐烂：大模型为什么会「越聊越笨」 —&nbsp;</span></span></span>
+        <span class="topic" data-topic="1">AI 工程</span><span class="journal-time">10 分钟</span></a></li><li><a class="journal-row" href="article-32.html" data-topic="1" data-cursor="阅读">
+        <span class="journal-date">2026.04 · 32</span>
+        <span class="journal-title"><span class="static">Token 经济学：当 AI 时代的「原材料」越来越贵</span><span class="marquee" aria-hidden="true"><span>Token 经济学：当 AI 时代的「原材料」越来越贵 —&nbsp;</span><span>Token 经济学：当 AI 时代的「原材料」越来越贵 —&nbsp;</span><span>Token 经济学：当 AI 时代的「原材料」越来越贵 —&nbsp;</span></span></span>
+        <span class="topic" data-topic="1">AI 工程</span><span class="journal-time">8 分钟</span></a></li><li><a class="journal-row" href="article-33.html" data-topic="2" data-cursor="阅读">
+        <span class="journal-date">2026.04 · 33</span>
+        <span class="journal-title"><span class="static">AI Agent：重塑工作流的变革者，还是新一轮泡沫？</span><span class="marquee" aria-hidden="true"><span>AI Agent：重塑工作流的变革者，还是新一轮泡沫？ —&nbsp;</span><span>AI Agent：重塑工作流的变革者，还是新一轮泡沫？ —&nbsp;</span><span>AI Agent：重塑工作流的变革者，还是新一轮泡沫？ —&nbsp;</span></span></span>
+        <span class="topic" data-topic="2">Agent 自动化</span><span class="journal-time">12 分钟</span></a></li><li><a class="journal-row" href="article-34.html" data-topic="5" data-cursor="阅读">
+        <span class="journal-date">2026.04 · 34</span>
+        <span class="journal-title"><span class="static">开源项目的「三个月定律」：从爆火到无人问津</span><span class="marquee" aria-hidden="true"><span>开源项目的「三个月定律」：从爆火到无人问津 —&nbsp;</span><span>开源项目的「三个月定律」：从爆火到无人问津 —&nbsp;</span><span>开源项目的「三个月定律」：从爆火到无人问津 —&nbsp;</span></span></span>
+        <span class="topic" data-topic="5">技术观察</span><span class="journal-time">10 分钟</span></a></li><li><a class="journal-row" href="article-35.html" data-topic="3" data-cursor="阅读">
+        <span class="journal-date">2026.03 · 35</span>
+        <span class="journal-title"><span class="static">从 DETR 到 YOLOv8：Transformer 在目标检测中的演进与工程实践</span><span class="marquee" aria-hidden="true"><span>从 DETR 到 YOLOv8：Transformer 在目标检测中的演进与工程实践 —&nbsp;</span><span>从 DETR 到 YOLOv8：Transformer 在目标检测中的演进与工程实践 —&nbsp;</span><span>从 DETR 到 YOLOv8：Transformer 在目标检测中的演进与工程实践 —&nbsp;</span></span></span>
+        <span class="topic" data-topic="3">视觉多模态</span><span class="journal-time">12 分钟</span></a></li><li><a class="journal-row" href="article-36.html" data-topic="4" data-cursor="阅读">
+        <span class="journal-date">2026.01 · 36</span>
+        <span class="journal-title"><span class="static">实时数据处理架构设计：Flink + Kafka 的流式计算最佳实践</span><span class="marquee" aria-hidden="true"><span>实时数据处理架构设计：Flink + Kafka 的流式计算最佳实践 —&nbsp;</span><span>实时数据处理架构设计：Flink + Kafka 的流式计算最佳实践 —&nbsp;</span><span>实时数据处理架构设计：Flink + Kafka 的流式计算最佳实践 —&nbsp;</span></span></span>
+        <span class="topic" data-topic="4">系统架构</span><span class="journal-time">10 分钟</span></a></li><li><a class="journal-row" href="article-37.html" data-topic="1" data-cursor="阅读">
+        <span class="journal-date">2025.11 · 37</span>
+        <span class="journal-title"><span class="static">WebGPU 入门：在浏览器中运行深度学习推理的性能优化指南</span><span class="marquee" aria-hidden="true"><span>WebGPU 入门：在浏览器中运行深度学习推理的性能优化指南 —&nbsp;</span><span>WebGPU 入门：在浏览器中运行深度学习推理的性能优化指南 —&nbsp;</span><span>WebGPU 入门：在浏览器中运行深度学习推理的性能优化指南 —&nbsp;</span></span></span>
+        <span class="topic" data-topic="1">AI 工程</span><span class="journal-time">15 分钟</span></a></li><li><a class="journal-row" href="article-38.html" data-topic="6" data-cursor="阅读">
+        <span class="journal-date">2025.10 · 38</span>
+        <span class="journal-title"><span class="static">如何客观看待现今女权主义</span><span class="marquee" aria-hidden="true"><span>如何客观看待现今女权主义 —&nbsp;</span><span>如何客观看待现今女权主义 —&nbsp;</span><span>如何客观看待现今女权主义 —&nbsp;</span></span></span>
+        <span class="topic" data-topic="6">社会随笔</span><span class="journal-time">10 分钟</span></a></li><li><a class="journal-row" href="article-39.html" data-topic="3" data-cursor="阅读">
+        <span class="journal-date">2025.09 · 39</span>
+        <span class="journal-title"><span class="static">设计可扩展的图像处理流水线：从 Python 脚本到 Kubernetes 集群</span><span class="marquee" aria-hidden="true"><span>设计可扩展的图像处理流水线：从 Python 脚本到 Kubernetes 集群 —&nbsp;</span><span>设计可扩展的图像处理流水线：从 Python 脚本到 Kubernetes 集群 —&nbsp;</span><span>设计可扩展的图像处理流水线：从 Python 脚本到 Kubernetes 集群 —&nbsp;</span></span></span>
+        <span class="topic" data-topic="3">视觉多模态</span><span class="journal-time">11 分钟</span></a></li><li><a class="journal-row" href="article-40.html" data-topic="6" data-cursor="阅读">
+        <span class="journal-date">2025.08 · 40</span>
+        <span class="journal-title"><span class="static">「内卷」与「躺平」：一代人的焦虑与突围</span><span class="marquee" aria-hidden="true"><span>「内卷」与「躺平」：一代人的焦虑与突围 —&nbsp;</span><span>「内卷」与「躺平」：一代人的焦虑与突围 —&nbsp;</span><span>「内卷」与「躺平」：一代人的焦虑与突围 —&nbsp;</span></span></span>
+        <span class="topic" data-topic="6">社会随笔</span><span class="journal-time">10 分钟</span></a></li><li><a class="journal-row" href="article-41.html" data-topic="3" data-cursor="阅读">
+        <span class="journal-date">2025.07 · 41</span>
+        <span class="journal-title"><span class="static">SAM 2 在工业质检中的落地实践：从 Prompt Engineering 到产线部署</span><span class="marquee" aria-hidden="true"><span>SAM 2 在工业质检中的落地实践：从 Prompt Engineering 到产线部署 —&nbsp;</span><span>SAM 2 在工业质检中的落地实践：从 Prompt Engineering 到产线部署 —&nbsp;</span><span>SAM 2 在工业质检中的落地实践：从 Prompt Engineering 到产线部署 —&nbsp;</span></span></span>
+        <span class="topic" data-topic="3">视觉多模态</span><span class="journal-time">14 分钟</span></a></li></ol>
+    </div>
+</div>
+</main>
+<footer class="colophon">
+    <div class="colophon-name" data-fit aria-hidden="true">Eric</div>
+    <div class="colophon-grid">
+        <div><p class="meta">目录</p><a href="../work/index.html">项目</a><a href="../journal/index.html">文章</a><a href="../index.html#about">关于</a><a href="../index.html#contact">联系</a></div>
+        <div><p class="meta">更多</p><a href="https://github.com/powerpan" target="_blank" rel="noopener">GitHub</a><a href="../work/index.html">项目</a><a href="index.html">文章</a><a href="../index.html#contact">联系</a></div>
+        <div><p class="meta">设置</p><button type="button" data-theme-toggle aria-pressed="false"><span class="theme-switch-label">夜间</span> 纸色</button><br><button type="button" data-motion-toggle aria-pressed="true">动效：开启</button><br><button type="button" class="sound-text" data-sound-toggle aria-pressed="false">音乐：关闭</button>
+<label class="volume"><span class="meta">音量</span><input class="ink-range" type="range" min="0" max="1" step="0.05" value="0.6" data-sound-volume aria-label="音乐音量"></label></div>
+        <div><p class="meta">关于本站</p><p>© 2026 Eric. 中文标题采用 Noto Serif SC，正文采用 Noto Sans SC。水墨以 WebGL2 实时模拟。</p><a href="#" data-top>返回顶部 ↑</a></div>
+    </div>
+</footer>
+<p class="sr-only" role="status" aria-live="polite" data-sound-status></p>
+<script src="../../js/ink-fluid.js"></script>
+<script src="../../js/ink.js"></script>
+</body>
+</html>

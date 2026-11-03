@@ -1,0 +1,20 @@
+/* ---------- Sound: an ink line that sways with the music ---------- */
+.sound-switch {
+    display: inline-flex; align-items: center; gap: 10px; min-height: 40px; padding: 0 2px;
+    font: 500 12px var(--mono); letter-spacing: .1em; text-transform: uppercase;
+}
+.sound-wave { width: 46px; height: 22px; display: block; }
+.sound-switch[data-state="armed"] .sound-label::after { content: ' · tap'; opacity: .6; }
+.menu .sound-switch { color: var(--paper); }
+.sound-text { font-size: 14px; }
+.volume { display: grid; gap: 6px; margin-top: 14px; max-width: 220px; }
+.ink-range { -webkit-appearance: none; appearance: none; width: 100%; height: 22px; background: transparent; cursor: pointer; }
+.ink-range::-webkit-slider-runnable-track { height: 1px; background: linear-gradient(90deg, var(--ink) var(--fill, 60%), var(--rule) var(--fill, 60%)); }
+.ink-range::-moz-range-track { height: 1px; background: var(--rule); }
+.ink-range::-moz-range-progress { height: 1px; background: var(--ink); }
+.ink-range::-webkit-slider-thumb { -webkit-appearance: none; width: 14px; height: 14px; margin-top: -6.5px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 4px rgba(var(--paper-rgb), .9); transition: transform .3s var(--ease); }
+.ink-range::-moz-range-thumb { width: 14px; height: 14px; border: 0; border-radius: 50%; background: var(--accent); }
+.ink-range:hover::-webkit-slider-thumb, .ink-range:focus-visible::-webkit-slider-thumb { transform: scale(1.35); }
+@media (max-width: 820px) { .masthead .sound-label { display: none; } }
+
+:root:lang(zh) .sound-switch[data-state="armed"] .sound-label::after { content: " · 点击"; }

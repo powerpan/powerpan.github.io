@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Who Gets to Train on Whom? — Eric</title>
+<meta name="description" content="The Kimi–Claude dispute is not only about whether one model crossed a line. It is also about where users&#x27; prompts went.">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#ede8df">
+<script>(()=>{const r=document.documentElement;let t,m;try{t=localStorage.getItem('ink-theme');m=localStorage.getItem('ink-motion')}catch(e){}t=t||(matchMedia('(prefers-color-scheme: dark)').matches?'night':'day');if(matchMedia('(prefers-reduced-motion: reduce)').matches)m='off';r.dataset.theme=t;r.dataset.motion=m||'on'})()</script>
+<link rel="preload" href="../assets/fonts/instrument-serif-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../css/ink.css">
+<link rel="stylesheet" href="../css/languages.css">
+<link rel="stylesheet" href="../css/sound.css">
+<script src="../js/ink-sound.js" defer></script>
+<noscript><style>[data-sound-toggle],.volume{display:none!important}</style></noscript>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='26' fill='%23f6401a'/%3E%3Ccircle cx='40' cy='26' r='14' fill='%232337f2' fill-opacity='.85'/%3E%3C/svg%3E">
+<link rel="alternate" hreflang="zh-CN" href="../zh/journal/article-06.html">
+</head>
+<body data-ink="quiet">
+<canvas id="ink" aria-hidden="true"></canvas>
+<div class="grain" aria-hidden="true"></div>
+
+<div class="cursor" aria-hidden="true"><span class="cursor-label"></span></div>
+<a class="sr-only" href="#main">Skip to content</a>
+<header class="masthead">
+    <a class="brand" href="../index.html" aria-label="Eric — home">Eric<sup>®</sup></a>
+    <div class="masthead-meta"><span>Portfolio &amp; Journal</span><a href="../zh/journal/article-06.html" data-language-switch hreflang="zh-CN" lang="zh-CN" aria-label="Read this page in Chinese">中文</a></div>
+    <div class="masthead-right">
+        <nav class="masthead-nav" aria-label="Primary">
+            <a href="../work/index.html">Work</a><a href="../journal/index.html" aria-current="page">Journal</a><a href="../index.html#about">About</a><a href="../index.html#contact">Contact</a>
+        </nav>
+        <button class="sound-switch" type="button" data-sound-toggle aria-pressed="false" aria-label="Play background music"><canvas class="sound-wave" aria-hidden="true"></canvas><span class="sound-label">Sound</span></button>
+        <button class="theme-switch" type="button" data-theme-toggle aria-pressed="false"><span class="theme-switch-dot" aria-hidden="true"></span><span class="theme-switch-label">Night</span></button>
+        <button class="menu-button" type="button" aria-expanded="false" aria-controls="menu">Menu</button>
+    </div>
+</header>
+<nav class="menu" id="menu" aria-label="Menu">
+    <a href="../index.html">Index</a><a href="../work/index.html"><em>Work</em></a><a href="../journal/index.html">Journal</a><a href="../index.html#contact"><em>Contact</em></a>
+    <div class="menu-foot meta"><span>Local <span data-clock>--:--:--</span></span><button class="sound-switch" type="button" data-sound-toggle aria-pressed="false" aria-label="Play background music"><canvas class="sound-wave" aria-hidden="true"></canvas><span class="sound-label">Sound</span></button><a href="../zh/journal/article-06.html" data-language-switch hreflang="zh-CN" lang="zh-CN" aria-label="Read this page in Chinese">中文</a></div>
+</nav>
+<main id="main">
+<div class="progress" aria-hidden="true"><i></i></div>
+<div class="page">
+    <header class="article-head">
+        <p class="meta"><a href="index.html">← Journal</a> &nbsp;/&nbsp; <span class="topic" data-topic="5">Tech Observation</span></p>
+        <h1 data-split>Who Gets to <em>Train on Whom</em>?</h1>
+        <p class="lede rise">The Kimi–Claude dispute is not only about whether one model crossed a line. It is also about where users&#x27; prompts went.</p>
+        <div class="article-meta meta rise" style="--d:120ms"><span>2026.09.17</span><span>8 min</span><span>No. 06</span></div>
+    </header>
+    <div class="article-layout">
+        <nav class="toc" aria-label="Contents"><a href="#intro">Introduction</a><a href="#claims">Start With What the Report Actually Says</a><a href="#distillation">Distillation Is Ordinary. Data Provenance Is the Hard Part</a><a href="#contracts">Owning an Output Is Not the Same as Owning Every Use</a><a href="#users">Model Companies May Agree Without Their Users Agreeing</a><a href="#framework">To Judge Whether a Line Was Crossed, Ask Four Things</a><a href="#takeaway">Do Not Write Users Out of the Story</a></nav>
+        <div class="page-surface"><div class="prose"><section class="detail-section" id="intro">
+            <p class="">In a September 2026 threat-intelligence report, Anthropic alleged that Moonshot routed some Kimi customer requests to Claude and retained some exchanges to extract reasoning traces and train models. The report also states that Anthropic does not know whether Moonshot informed the affected customers.</p>
+            <p class="">It is tempting to reduce this to whether Kimi stole from Claude, or to wave it away by saying that large models learn from one another anyway. Both reactions skip the details that matter: how the model service was accessed, what the outputs were used for, and where the users' content went.</p>
+            <p class=""><em class="">Sources were checked through September 17, 2026. This article discusses technology, contracts, and data governance and is not legal advice about any specific party.</em></p>
+        </section>
+
+        <section class="detail-section" id="claims">
+            <h2 class="">Start With What the Report Actually Says</h2>
+            <p class="">The report contains two numbers that are easy to blur together. Roughly 300,000 customer requests were routed during one ten-day window. Separately, more than 23 million distillation interactions from May through July 2026 were attributed to Moonshot. The second number is not a user count, and it does not prove that 23 million users had their data transferred.</p>
+            <p class="">This is still a technical attribution report published by Anthropic, not a court judgment. It offers evidence worth checking, but the access method, account relationships, user notice, and construction of the training data still need their own proof. Treating the report as a final ruling, or dismissing it solely because a competitor wrote it, would both be shortcuts.</p>
+        </section>
+
+        <section class="detail-section" id="distillation">
+            <h2 class="">Distillation Is Ordinary. Data Provenance Is the Hard Part</h2>
+            <p class="">Knowledge distillation is not mysterious: one model learns from answers, explanations, or other signals produced by another. Companies use it internally, and partners use it with permission. The method is ordinary. The harder questions are where the examples came from and what the recipient was allowed to do with them.</p>
+            <p class="">Reasoning traces are more valuable than final answers because they preserve examples of decomposition, verification, and correction. But a reasoning trace is not a set of model weights, and it is not a copy of the whole model. There is still a large gap between observable output and protected internal information.</p>
+            <p class="">So, “Claude can learn from the internet, so why can Kimi not learn from Claude?” is worth asking, but it does not excuse either side. Claude's training data needs a provenance story, and so does Kimi's distillation data. Calling the first learning and the second theft, or simply reversing those labels, is choosing a side before examining the facts.</p>
+        </section>
+
+        <section class="detail-section" id="contracts">
+            <h2 class="">Owning an Output Is Not the Same as Owning Every Use</h2>
+            <p class="">Anthropic's commercial terms say that customers own outputs to the extent permitted by law. The same terms restrict using the service to develop or train competing models. That sounds awkward, but the clauses address different things: who owns an output and what a customer agreed to do with it are not the same question.</p>
+            <p class="">AI outputs are not automatically protected in full by copyright. Human-authored elements, pre-existing expression reproduced in an output, and purely machine-determined expression can occupy different legal positions. A lack of copyright does not automatically erase an enforceable contract, while one company's terms do not become universal law without further analysis.</p>
+            <p class="">Instead of debating in the abstract who owns an answer, ask which version of the contract was accepted, which account and channel produced the output, whether the restriction actually became binding, and whether the conduct can be attributed to a specific party.</p>
+        </section>
+
+        <section class="detail-section" id="users">
+            <h2 class="">Model Companies May Agree Without Their Users Agreeing</h2>
+            <p class="">Even if a source-model provider expressly permits distillation, real user tasks may still move through another chain:</p>
+            <pre class=""><code class="">User content → AI product → third-party model → retention and curation → student model</code></pre>
+            <p class="">Prompts in that chain may contain personal information, internal company code, or third-party works. Being able to paste something into a text box does not mean the user can grant unlimited permission on everyone else's behalf. Agreeing to complete the immediate task is not the same as agreeing to long-term retention and training.</p>
+            <p class="">A product should therefore say who actually receives the content, why it is sent, how long it is kept, whether it can enter training, and whether the user can inspect, restrict, or delete it. Even an agreement between the source-model provider and the distiller cannot replace a user's knowledge of and choice over where their data goes.</p>
+        </section>
+
+        <section class="detail-section" id="framework">
+            <h2 class="">To Judge Whether a Line Was Crossed, Ask Four Things</h2>
+            <p class="">This kind of dispute cannot be settled by calling the conduct ordinary learning or technical theft. I would follow the actual process and ask four things:</p>
+            <ul class="">
+                <li class=""><strong class="">How were the outputs obtained?</strong> Public observation, authorized calls, borrowed identities, and bypassed controls are materially different.</li>
+                <li class=""><strong class="">What happened after they were obtained?</strong> Display, retention, evaluation, and training a competing model should not share one vague permission.</li>
+                <li class=""><strong class="">What did the reuse change?</strong> Research, compression, interoperability, and direct commercial substitution do not have the same effect on the market or the original provider.</li>
+                <li class=""><strong class="">Was user content carried along for the ride?</strong> Even if the model companies agreed, user notice, lawful basis, purpose, and retention still need their own explanation.</li>
+            </ul>
+            <p class="">For product teams, the practical changes are straightforward: disclose third-party model routing; let enterprise administrators restrict providers; ask separately about task completion and later training; and record data provenance and permitted uses. A routing audit needs the recipient, purpose, and authorization state, not another full copy of the conversation.</p>
+        </section>
+
+        <section class="detail-section" id="takeaway">
+            <h2 class="">Do Not Write Users Out of the Story</h2>
+            <p class="">Models need room to learn, and markets need room to compete. Otherwise a few providers can lock capability away indefinitely. But permission to learn cannot become a universal pass over access controls, contracts, and user data.</p>
+            <p class="">If you want to learn from another model, explain which boundaries you respected. If you want to stop others from learning, explain whether your claim rests on contract, copyright, or technical access controls. Either way, the user who submitted the original request should not disappear.</p>
+            <blockquote class=""><strong class="">Model companies can keep arguing over who may learn from whom. At minimum, users should know where their content went and what it will be used for.</strong></blockquote>
+            <p class="">Key sources: <a href="https://www.anthropic.com/threat-intelligence-report-september-2026" target="_blank" rel="noopener" class="">Anthropic's September 2026 threat-intelligence report</a>, <a href="https://www.anthropic.com/legal/commercial-terms" target="_blank" rel="noopener" class="">Anthropic Commercial Terms</a>, the <a href="https://www.copyright.gov/newsnet/2025/1060.html" target="_blank" rel="noopener" class="">U.S. Copyright Office note on AI outputs</a>, China's <a href="https://en.spp.gov.cn/2021-12/29/c_948419.htm" target="_blank" rel="noopener" class="">Personal Information Protection Law</a>, and the <a href="https://www.ftc.gov/policy/advocacy-research/tech-at-ftc/2024/01/ai-companies-uphold-your-privacy-confidentiality-commitments" target="_blank" rel="noopener" class="">FTC guidance on AI privacy and confidentiality commitments</a>.</p>
+        </section></div></div>
+    </div>
+    <section class="related" aria-labelledby="related-title"><p class="kicker">Continue reading</p><h2 id="related-title">Related <em>writing</em></h2><ol class="journal-list" style="list-style:none"><li><a class="journal-row" href="article-07.html" data-topic="5" data-cursor="Read">
+        <span class="journal-date">2026.08 · 07</span>
+        <span class="journal-title"><span class="static">The Three Clocks of Robotics</span><span class="marquee" aria-hidden="true"><span>The Three Clocks of Robotics —&nbsp;</span><span>The Three Clocks of Robotics —&nbsp;</span><span>The Three Clocks of Robotics —&nbsp;</span></span></span>
+        <span class="topic" data-topic="5">Tech Observation</span><span class="journal-time">8 min</span></a></li><li><a class="journal-row" href="article-09.html" data-topic="5" data-cursor="Read">
+        <span class="journal-date">2026.05 · 09</span>
+        <span class="journal-title"><span class="static">When a Technology Roadmap Becomes a Law</span><span class="marquee" aria-hidden="true"><span>When a Technology Roadmap Becomes a Law —&nbsp;</span><span>When a Technology Roadmap Becomes a Law —&nbsp;</span><span>When a Technology Roadmap Becomes a Law —&nbsp;</span></span></span>
+        <span class="topic" data-topic="5">Tech Observation</span><span class="journal-time">6 min</span></a></li><li><a class="journal-row" href="article-10.html" data-topic="5" data-cursor="Read">
+        <span class="journal-date">2026.05 · 10</span>
+        <span class="journal-title"><span class="static">The Real Test for Embodied AI in China Is Not Acrobatics, but a Commercial Loop</span><span class="marquee" aria-hidden="true"><span>The Real Test for Embodied AI in China Is Not Acrobatics, but a Commercial Loop —&nbsp;</span><span>The Real Test for Embodied AI in China Is Not Acrobatics, but a Commercial Loop —&nbsp;</span><span>The Real Test for Embodied AI in China Is Not Acrobatics, but a Commercial Loop —&nbsp;</span></span></span>
+        <span class="topic" data-topic="5">Tech Observation</span><span class="journal-time">8 min</span></a></li></ol></section>
+    <nav class="pager" aria-label="More articles">
+        <a href="article-05.html" data-cursor="Prev"><span class="meta">← Previous</span><strong>AI Can Cross Permission Boundaries Without Malice</strong></a>
+        <a href="article-07.html" data-cursor="Next"><span class="meta">Next →</span><strong>The Three Clocks of Robotics</strong></a>
+    </nav>
+</div>
+</main>
+<footer class="colophon">
+    <div class="colophon-name" data-fit aria-hidden="true">Eric</div>
+    <div class="colophon-grid">
+        <div><p class="meta">Index</p><a href="../work/index.html">Work</a><a href="../journal/index.html">Journal</a><a href="../index.html#about">About</a><a href="../index.html#contact">Contact</a></div>
+        <div><p class="meta">Elsewhere</p><a href="https://github.com/powerpan" target="_blank" rel="noopener">GitHub</a><a href="../work/index.html">Work</a><a href="index.html">Journal</a><a href="../index.html#contact">Contact</a></div>
+        <div><p class="meta">Settings</p><button type="button" data-theme-toggle aria-pressed="false"><span class="theme-switch-label">Night</span> paper</button><br><button type="button" data-motion-toggle aria-pressed="true">Motion: on</button><br><button type="button" class="sound-text" data-sound-toggle aria-pressed="false">Sound: off</button>
+<label class="volume"><span class="meta">Volume</span><input class="ink-range" type="range" min="0" max="1" step="0.05" value="0.6" data-sound-volume aria-label="Music volume"></label></div>
+        <div><p class="meta">Colophon</p><p>© 2026 Eric. Set in Instrument Serif &amp; Inter Tight. Ink simulated live in WebGL2.</p><a href="#" data-top>Back to top ↑</a></div>
+    </div>
+</footer>
+<p class="sr-only" role="status" aria-live="polite" data-sound-status></p>
+<script src="../js/ink-fluid.js"></script>
+<script src="../js/ink.js"></script>
+</body>
+</html>

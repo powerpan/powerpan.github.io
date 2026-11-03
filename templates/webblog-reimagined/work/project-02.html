@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Trading Simulator — Eric</title>
+<meta name="description" content="Stock Market Rookie Village is a native macOS trading simulation game that combines deterministic market generation, A-share-style rules, event-driven prices, and challenge scoring into a replayable local experience.">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#ede8df">
+<script>(()=>{const r=document.documentElement;let t,m;try{t=localStorage.getItem('ink-theme');m=localStorage.getItem('ink-motion')}catch(e){}t=t||(matchMedia('(prefers-color-scheme: dark)').matches?'night':'day');if(matchMedia('(prefers-reduced-motion: reduce)').matches)m='off';r.dataset.theme=t;r.dataset.motion=m||'on'})()</script>
+<link rel="preload" href="../assets/fonts/instrument-serif-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../css/ink.css">
+<link rel="stylesheet" href="../css/languages.css">
+<link rel="stylesheet" href="../css/sound.css">
+<script src="../js/ink-sound.js" defer></script>
+<noscript><style>[data-sound-toggle],.volume{display:none!important}</style></noscript>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='26' fill='%23f6401a'/%3E%3Ccircle cx='40' cy='26' r='14' fill='%232337f2' fill-opacity='.85'/%3E%3C/svg%3E">
+<link rel="alternate" hreflang="zh-CN" href="../zh/work/project-02.html">
+</head>
+<body data-ink="quiet">
+<canvas id="ink" aria-hidden="true"></canvas>
+<div class="grain" aria-hidden="true"></div>
+
+<div class="cursor" aria-hidden="true"><span class="cursor-label"></span></div>
+<a class="sr-only" href="#main">Skip to content</a>
+<header class="masthead">
+    <a class="brand" href="../index.html" aria-label="Eric — home">Eric<sup>®</sup></a>
+    <div class="masthead-meta"><span>Portfolio &amp; Journal</span><a href="../zh/work/project-02.html" data-language-switch hreflang="zh-CN" lang="zh-CN" aria-label="Read this page in Chinese">中文</a></div>
+    <div class="masthead-right">
+        <nav class="masthead-nav" aria-label="Primary">
+            <a href="../work/index.html" aria-current="page">Work</a><a href="../journal/index.html">Journal</a><a href="../index.html#about">About</a><a href="../index.html#contact">Contact</a>
+        </nav>
+        <button class="sound-switch" type="button" data-sound-toggle aria-pressed="false" aria-label="Play background music"><canvas class="sound-wave" aria-hidden="true"></canvas><span class="sound-label">Sound</span></button>
+        <button class="theme-switch" type="button" data-theme-toggle aria-pressed="false"><span class="theme-switch-dot" aria-hidden="true"></span><span class="theme-switch-label">Night</span></button>
+        <button class="menu-button" type="button" aria-expanded="false" aria-controls="menu">Menu</button>
+    </div>
+</header>
+<nav class="menu" id="menu" aria-label="Menu">
+    <a href="../index.html">Index</a><a href="../work/index.html"><em>Work</em></a><a href="../journal/index.html">Journal</a><a href="../index.html#contact"><em>Contact</em></a>
+    <div class="menu-foot meta"><span>Local <span data-clock>--:--:--</span></span><button class="sound-switch" type="button" data-sound-toggle aria-pressed="false" aria-label="Play background music"><canvas class="sound-wave" aria-hidden="true"></canvas><span class="sound-label">Sound</span></button><a href="../zh/work/project-02.html" data-language-switch hreflang="zh-CN" lang="zh-CN" aria-label="Read this page in Chinese">中文</a></div>
+</nav>
+<main id="main">
+<div class="page"><p class="kicker"><a href="index.html">Work</a> / Native macOS · Market Engine · Simulation Game</p>
+    <header class="case-hero"><h1 data-split>Trading Simulator</h1><p class="lede rise">Stock Market Rookie Village is a native macOS trading simulation game that combines deterministic market generation, A-share-style rules, event-driven prices, and challenge scoring into a replayable local experience.</p></header><dl class="case-facts rise"><div><dt class="meta">Role</dt><dd>Independent Developer</dd></div><div><dt class="meta">Platform</dt><dd>macOS 13+</dd></div><div><dt class="meta">Stack</dt><dd>SwiftUI / Fastify / SQLite</dd></div><div><dt class="meta">Index</dt><dd>No. 02</dd></div></dl>
+    <div class="case-media"><img src="../assets/projects/trading-simulator/trading-terminal.jpg" alt="Stock Market Rookie Village native macOS trading simulator" width="2762" height="1636" loading="eager" decoding="async"></div><div class="case-body"><section class="case-section"><div class="case-section-label"><span class="num">01</span><span class="meta">Section</span></div>
+            <div class="case-section-copy prose"><h2 data-split>A Credible Decision Environment Without Live Market Data</h2><div class="detail-section-label">Overview</div>
+
+            <p class="detail-text">The project separates presentation, market generation, and trade settlement. The native SwiftUI app provides the multi-window terminal, while the Fastify backend owns authoritative <strong class="">quotes, positions, fees, events, challenges, and saves</strong>. SQLite persists the complete state of each game.</p>
+            <p class="detail-text">Players can advance the market freely in sandbox mode or enter fixed-day challenges that balance asset targets, maximum drawdown, and trade count. Every stock, price, news item, and event is fictional.</p><div class="badges"><span class="tag">SwiftUI</span><span class="tag">Swift Canvas</span><span class="tag">Node.js</span><span class="tag">Fastify</span><span class="tag">TypeScript</span><span class="tag">SQLite</span><span class="tag">React</span><span class="tag">Vitest</span></div></div></section><section class="case-section"><div class="case-section-label"><span class="num">02</span><span class="meta">Section</span></div>
+            <div class="case-section-copy prose"><h2 data-split>Market Prices Emerge from Multiple Interacting Factors</h2><div class="detail-section-label">Market Simulation</div>
+
+            <p class="detail-text">Each save stores its own market seed, regime, and difficulty snapshot. Price generation combines market sentiment, capital style, volume heat, sector rotation, stock volatility, event impact, and event-chain persistence, while applying 10% or 20% price-limit boundaries by board.</p>
+            <div class="trading-engine">
+                <div class="trading-engine-step">
+                    <div class="trading-engine-index">01 / REGIME</div>
+                    <div class="trading-engine-title">Market Regime</div>
+                    <div class="trading-engine-desc">Drift, volatility, correlation, liquidity, and positive or negative event bias define each market run.</div>
+                </div>
+                <div class="trading-engine-step">
+                    <div class="trading-engine-index">02 / SECTOR</div>
+                    <div class="trading-engine-title">Industry Structure</div>
+                    <div class="trading-engine-desc">Industry indices track returns, sentiment, volume heat, and event impact to expose rotation signals.</div>
+                </div>
+                <div class="trading-engine-step">
+                    <div class="trading-engine-index">03 / EVENT</div>
+                    <div class="trading-engine-title">Event Driver</div>
+                    <div class="trading-engine-desc">Market, industry, and stock events carry direction, strength, and duration, including chains and expectation reversals.</div>
+                </div>
+                <div class="trading-engine-step">
+                    <div class="trading-engine-index">04 / PRICE</div>
+                    <div class="trading-engine-title">Price and Volume</div>
+                    <div class="trading-engine-desc">Minute prices remain constrained by daily bars, while volume reflects open, close, midday, and event pulses.</div>
+                </div>
+            </div>
+            <div class="trading-stat-grid">
+                <div class="trading-stat">
+                    <div class="trading-stat-value">120</div>
+                    <div class="trading-stat-label">Fictional Stocks</div>
+                </div>
+                <div class="trading-stat">
+                    <div class="trading-stat-value">40</div>
+                    <div class="trading-stat-label">Industries</div>
+                </div>
+                <div class="trading-stat">
+                    <div class="trading-stat-value">180+</div>
+                    <div class="trading-stat-label">Event Templates</div>
+                </div>
+                <div class="trading-stat">
+                    <div class="trading-stat-value">240</div>
+                    <div class="trading-stat-label">Minute Bars per Day</div>
+                </div>
+            </div></div></section><section class="case-section"><div class="case-section-label"><span class="num">03</span><span class="meta">Section</span></div>
+            <div class="case-section-copy prose"><h2 data-split>Custom Multi-Period K-Lines for a Desktop Terminal</h2><div class="detail-section-label">Native Charting</div>
+
+            <p class="detail-text">The K-line chart is drawn with SwiftUI Canvas and supports 1, 5, 15, 30, and 60-minute periods plus daily, weekly, and monthly views. Candles, MA5 / MA10 / MA20, volume, volume averages, price and time axes, the latest-price line, and crosshair readings are rendered together.</p>
+            <p class="detail-text">One-minute data only exposes bars reached by the simulation clock. Other intraday periods aggregate visible minute bars, while weekly and monthly views aggregate daily bars. Players can switch among 30, 45, and 60-bar ranges with pan, zoom, and playback controls.</p></div></section><section class="case-section"><div class="case-section-label"><span class="num">04</span><span class="meta">Section</span></div>
+            <div class="case-section-copy prose"><h2 data-split>Server-Authoritative Rules and Multi-Window Consistency</h2><div class="detail-section-label">Trading Integrity</div>
+
+            <p class="detail-text">The trading engine enforces 100-share lots, T+1, cash and sellable-position checks, commissions, stamp duty, and price-limit direction rules. SQLite transactions update accounts, positions, and trades together before recalculating market value, total assets, returns, and maximum drawdown.</p>
+            <p class="detail-text">Every order carries an <strong class="">idempotency key</strong>, so retries return the existing trade. Writes also verify <code class="">expectedStateVersion</code>, preventing stale windows from overwriting newer game state. The main terminal and separate position, order, and chart windows therefore share one authoritative state.</p></div></section><section class="case-section"><div class="case-section-label"><span class="num">05</span><span class="meta">Section</span></div>
+            <div class="case-section-copy prose"><h2 data-split>Comparable Strategy Challenges Across Market Regimes</h2><div class="detail-section-label">Challenge &amp; Saves</div>
+
+            <p class="detail-text">The game includes 20-day warm-up, 60-day beginner, and 120-day steady-growth challenges. Settlement combines asset targets, maximum drawdown, and minimum trade count into a score and S, A, B, or C rating. Difficulty adjusts challenge targets, while sandbox mode has no forced ending.</p>
+            <p class="detail-text">Multiple saves can be created, loaded, renamed, and deleted. The same content pack generates different market paths under different seeds, regimes, and difficulties while keeping each save reproducible for continued play and verification.</p></div></section><section class="case-section"><div class="case-section-label"><span class="num">06</span><span class="meta">Section</span></div>
+            <div class="case-section-copy prose"><h2 data-split>Native Terminal, Domain Engine, and Maintainable Content Packs</h2><div class="detail-section-label">Architecture &amp; Content</div>
+
+            <p class="detail-text">The native app's ObservableObject Store connects to the Fastify API. The backend domain layer owns market, order, portfolio, event, challenge, and save logic before persisting to local SQLite. The older React frontend remains a debugging surface rather than the default product.</p>
+            <p class="detail-text">Industries, stocks, market regimes, difficulties, and event templates live in CSV content packs. Startup validation checks headers, unique IDs, industry references, enum values, and minimum counts so content can expand without changing core trading code.</p>
+            <div class="detail-features">
+                <div class="detail-feature">
+                    <div class="detail-feature-icon">01</div>
+                    <div class="detail-feature-title">Native Multi-Window UI</div>
+                    <div class="detail-feature-desc">Terminal, chart, positions, orders, news, events, and saves share state across windows.</div>
+                </div>
+                <div class="detail-feature">
+                    <div class="detail-feature-icon">02</div>
+                    <div class="detail-feature-title">Multi-Period Market Data</div>
+                    <div class="detail-feature-desc">Intraday, daily, weekly, and monthly K-lines follow consistent price and volume constraints.</div>
+                </div>
+                <div class="detail-feature">
+                    <div class="detail-feature-icon">03</div>
+                    <div class="detail-feature-title">Event Chains</div>
+                    <div class="detail-feature-desc">Fictional news affects markets, industries, and stocks, then decays or reverses over trading days.</div>
+                </div>
+                <div class="detail-feature">
+                    <div class="detail-feature-icon">04</div>
+                    <div class="detail-feature-title">Trade Consistency</div>
+                    <div class="detail-feature-desc">Transactions, idempotency keys, and state versions protect accounts and multi-window actions.</div>
+                </div>
+                <div class="detail-feature">
+                    <div class="detail-feature-icon">05</div>
+                    <div class="detail-feature-title">Challenge Scoring</div>
+                    <div class="detail-feature-desc">Scores combine returns, drawdown, and trading completion rather than final assets alone.</div>
+                </div>
+                <div class="detail-feature">
+                    <div class="detail-feature-icon">06</div>
+                    <div class="detail-feature-title">Local Saves</div>
+                    <div class="detail-feature-desc">Game data stays in local SQLite without collecting real identity information.</div>
+                </div>
+            </div>
+            <div class="trading-note">This project is for gaming and learning only. It does not connect to live market data, real trading, or brokerage accounts, and it provides no investment advice or return promises.</div></div></section></div>
+    <a class="next-case" href="project-03.html" data-cursor="Next"><span class="meta">Next project — 03</span><strong>BF Badminton</strong></a></div>
+</main>
+<footer class="colophon">
+    <div class="colophon-name" data-fit aria-hidden="true">Eric</div>
+    <div class="colophon-grid">
+        <div><p class="meta">Index</p><a href="../work/index.html">Work</a><a href="../journal/index.html">Journal</a><a href="../index.html#about">About</a><a href="../index.html#contact">Contact</a></div>
+        <div><p class="meta">Elsewhere</p><a href="https://github.com/powerpan" target="_blank" rel="noopener">GitHub</a><a href="index.html">Work</a><a href="../journal/index.html">Journal</a><a href="../index.html#contact">Contact</a></div>
+        <div><p class="meta">Settings</p><button type="button" data-theme-toggle aria-pressed="false"><span class="theme-switch-label">Night</span> paper</button><br><button type="button" data-motion-toggle aria-pressed="true">Motion: on</button><br><button type="button" class="sound-text" data-sound-toggle aria-pressed="false">Sound: off</button>
+<label class="volume"><span class="meta">Volume</span><input class="ink-range" type="range" min="0" max="1" step="0.05" value="0.6" data-sound-volume aria-label="Music volume"></label></div>
+        <div><p class="meta">Colophon</p><p>© 2026 Eric. Set in Instrument Serif &amp; Inter Tight. Ink simulated live in WebGL2.</p><a href="#" data-top>Back to top ↑</a></div>
+    </div>
+</footer>
+<p class="sr-only" role="status" aria-live="polite" data-sound-status></p>
+<script src="../js/ink-fluid.js"></script>
+<script src="../js/ink.js"></script>
+</body>
+</html>

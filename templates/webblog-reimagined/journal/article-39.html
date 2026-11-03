@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Scalable Image Processing Pipeline: From Python to Kubernetes — Eric</title>
+<meta name="description" content="Scalable Image Processing Pipeline: From Python to Kubernetes">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#ede8df">
+<script>(()=>{const r=document.documentElement;let t,m;try{t=localStorage.getItem('ink-theme');m=localStorage.getItem('ink-motion')}catch(e){}t=t||(matchMedia('(prefers-color-scheme: dark)').matches?'night':'day');if(matchMedia('(prefers-reduced-motion: reduce)').matches)m='off';r.dataset.theme=t;r.dataset.motion=m||'on'})()</script>
+<link rel="preload" href="../assets/fonts/instrument-serif-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../css/ink.css">
+<link rel="stylesheet" href="../css/languages.css">
+<link rel="stylesheet" href="../css/sound.css">
+<script src="../js/ink-sound.js" defer></script>
+<noscript><style>[data-sound-toggle],.volume{display:none!important}</style></noscript>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='26' fill='%23f6401a'/%3E%3Ccircle cx='40' cy='26' r='14' fill='%232337f2' fill-opacity='.85'/%3E%3C/svg%3E">
+<link rel="alternate" hreflang="zh-CN" href="../zh/journal/article-39.html">
+</head>
+<body data-ink="quiet">
+<canvas id="ink" aria-hidden="true"></canvas>
+<div class="grain" aria-hidden="true"></div>
+
+<div class="cursor" aria-hidden="true"><span class="cursor-label"></span></div>
+<a class="sr-only" href="#main">Skip to content</a>
+<header class="masthead">
+    <a class="brand" href="../index.html" aria-label="Eric — home">Eric<sup>®</sup></a>
+    <div class="masthead-meta"><span>Portfolio &amp; Journal</span><a href="../zh/journal/article-39.html" data-language-switch hreflang="zh-CN" lang="zh-CN" aria-label="Read this page in Chinese">中文</a></div>
+    <div class="masthead-right">
+        <nav class="masthead-nav" aria-label="Primary">
+            <a href="../work/index.html">Work</a><a href="../journal/index.html" aria-current="page">Journal</a><a href="../index.html#about">About</a><a href="../index.html#contact">Contact</a>
+        </nav>
+        <button class="sound-switch" type="button" data-sound-toggle aria-pressed="false" aria-label="Play background music"><canvas class="sound-wave" aria-hidden="true"></canvas><span class="sound-label">Sound</span></button>
+        <button class="theme-switch" type="button" data-theme-toggle aria-pressed="false"><span class="theme-switch-dot" aria-hidden="true"></span><span class="theme-switch-label">Night</span></button>
+        <button class="menu-button" type="button" aria-expanded="false" aria-controls="menu">Menu</button>
+    </div>
+</header>
+<nav class="menu" id="menu" aria-label="Menu">
+    <a href="../index.html">Index</a><a href="../work/index.html"><em>Work</em></a><a href="../journal/index.html">Journal</a><a href="../index.html#contact"><em>Contact</em></a>
+    <div class="menu-foot meta"><span>Local <span data-clock>--:--:--</span></span><button class="sound-switch" type="button" data-sound-toggle aria-pressed="false" aria-label="Play background music"><canvas class="sound-wave" aria-hidden="true"></canvas><span class="sound-label">Sound</span></button><a href="../zh/journal/article-39.html" data-language-switch hreflang="zh-CN" lang="zh-CN" aria-label="Read this page in Chinese">中文</a></div>
+</nav>
+<main id="main">
+<div class="progress" aria-hidden="true"><i></i></div>
+<div class="page">
+    <header class="article-head">
+        <p class="meta"><a href="index.html">← Journal</a> &nbsp;/&nbsp; <span class="topic" data-topic="3">Vision & Multimodal</span></p>
+        <h1 data-split>Scalable Image Processing Pipeline: From Python to Kubernetes</h1>
+        <p class="lede rise"></p>
+        <div class="article-meta meta rise" style="--d:120ms"><span>2025.09.05</span><span>11 min</span><span>No. 39</span></div>
+    </header>
+    <div class="article-layout">
+        <nav class="toc" aria-label="Contents"><a href="#architecture">Architecture Overview</a><a href="#stages">Pipeline Stage Design</a><a href="#kafka">Kafka Streaming Architecture</a><a href="#worker">Worker Concurrency Model</a><a href="#k8s">Kubernetes Deployment</a><a href="#monitoring">Monitoring &amp; Observability</a><a href="#scaling">Scaling Strategies</a><a href="#conclusion">Summary &amp; Lessons</a></nav>
+        <div class="page-surface"><div class="prose"><!-- Section 1: 架构概述 -->
+        <section class="detail-section" id="architecture">
+            <h2 class="">Architecture Overview</h2>
+            <p class="">When building real-time image processing systems, traditional request-response patterns often can't meet the dual demands of high throughput and low latency. We need an event-driven pipeline architecture that splits image processing into multiple independent stages, each independently scalable and optimizable.</p>
+            <p class="">Core design principles: <strong class="">decouple, scale, fault-tolerant</strong>. Each processing stage is an independent service communicating through message queues, supporting horizontal scaling and fault isolation.</p>
+            <blockquote class="">A pipeline's value lies not in the speed of any single stage, but in the coordination and balance of the whole. One bottleneck can slow down the entire chain.</blockquote>
+        </section>
+
+        <!-- Section 2: 流水线阶段 -->
+        <section class="detail-section" id="stages">
+            <h2 class="">Pipeline Stage Design</h2>
+            <p class="">We split image processing into 5 core stages, each corresponding to an independent microservice:</p>
+            <ul class="">
+                <li class=""><strong class="">Ingest</strong> — Receives raw images, performs format validation and metadata extraction, supporting HTTP / gRPC / WebSocket access methods</li>
+                <li class=""><strong class="">Preprocess</strong> — Image scaling, color space conversion, normalization, data augmentation, outputting uniformly formatted tensors</li>
+                <li class=""><strong class="">Inference</strong> — Model inference with batch processing and dynamic batching support, loading multiple models (classification, detection, segmentation)</li>
+                <li class=""><strong class="">Postprocess</strong> — Result parsing, NMS, confidence filtering, coordinate mapping back to original image</li>
+                <li class=""><strong class="">Export</strong> — Result persistence to databases, callback notifications, Webhook pushes, message queue broadcasts</li>
+            </ul>
+            <p class="">Each stage connects through Apache Kafka, supporting backpressure mechanisms to prevent downstream overload. Kafka's partitioning allows us to partition by image ID, ensuring processing order for the same image.</p>
+        </section>
+
+        <!-- Section 3: Kafka 流处理 -->
+        <section class="detail-section" id="kafka">
+            <h2 class="">Kafka Streaming Architecture</h2>
+            <p class="">Kafka serves as the pipeline's core message middleware, handling data flow, backpressure control, and fault recovery. We designed the following Topic structure:</p>
+            <ul class="">
+                <li class=""><strong class="">image.ingest</strong> — Raw image metadata, 3 partitions, 7-day retention</li>
+                <li class=""><strong class="">image.preprocessed</strong> — Preprocessed tensor data, 6 partitions</li>
+                <li class=""><strong class="">image.inference.result</strong> — Inference results, 12 partitions</li>
+                <li class=""><strong class="">image.export</strong> — Final processing results, 6 partitions</li>
+            </ul>
+            <p class="">Key design decisions:</p>
+            <ul class="">
+                <li class=""><strong class="">Message Size</strong> — Image data isn't placed directly in Kafka; it's stored in S3/MinIO, with Kafka messages containing only reference pointers</li>
+                <li class=""><strong class="">Consumer Groups</strong> — Each stage uses an independent consumer group, supporting independent scaling</li>
+                <li class=""><strong class="">Dead Letter Queue</strong> — Failed messages automatically route to DLQ, preventing pipeline blockage</li>
+            </ul>
+            <blockquote class="">Lesson learned: smaller Kafka messages enable higher throughput. A proven approach is to keep large payloads, such as images, in object storage and pass only metadata and references through Kafka.</blockquote>
+        </section>
+
+        <!-- Section 4: Worker 实现 -->
+        <section class="detail-section" id="worker">
+            <h2 class="">Worker Concurrency Model</h2>
+            <p class="">Each pipeline stage's Worker is implemented in Go, leveraging goroutines for high-concurrency processing. The core uses the Worker Pool pattern with channels for task distribution and result collection.</p>
+            <p class="">Worker Pool design essentials:</p>
+            <ul class="">
+                <li class=""><strong class="">Fixed-Size Pool</strong> — Prevents unbounded goroutine growth causing OOM; pool size dynamically adjusts based on CPU cores and GPU memory</li>
+                <li class=""><strong class="">Graceful Shutdown</strong> — Propagates cancellation signals via context, ensuring no tasks are lost during rolling updates</li>
+                <li class=""><strong class="">Health Checks</strong> — Each Worker exposes a /health endpoint; Kubernetes probes detect liveness status</li>
+                <li class=""><strong class="">Metrics Collection</strong> — Uses Prometheus client to record processing latency, throughput, and error rates</li>
+            </ul>
+        </section>
+
+        <!-- Section 5: Kubernetes 部署 -->
+        <section class="detail-section" id="k8s">
+            <h2 class="">Kubernetes Deployment</h2>
+            <p class="">Each pipeline stage runs as an independent Kubernetes Deployment. An HPA (Horizontal Pod Autoscaler) scales it according to queue depth. Here is the deployment configuration for the Inference Worker:</p>
+            <div class="detail-code-block">
+                <div class="detail-code-header">
+                    <div class="detail-code-dot"></div>
+                    <div class="detail-code-dot"></div>
+                    <div class="detail-code-dot"></div>
+                    <div class="detail-code-title">k8s/inference-worker.yaml</div>
+                </div>
+                <pre class="detail-code-body">apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: inference-worker
+  namespace: image-pipeline
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: inference-worker
+  template:
+    spec:
+      containers:
+      - name: worker
+        image: registry/inference-worker:v2.4.0
+        resources:
+          requests:
+            memory: "4Gi"
+            nvidia.com/gpu: "1"
+          limits:
+            memory: "8Gi"
+            nvidia.com/gpu: "1"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 10</pre>
+            </div>
+            <p class="">Key configuration: <code class="">minReplicas: 2</code>, <code class="">maxReplicas: 20</code>, <code class="">targetQueueLength: 100</code>. When queue depth exceeds the threshold, HPA completes scaling within 30 seconds. GPU nodes use NVIDIA Device Plugin and node affinity for scheduling to dedicated GPU node pools.</p>
+        </section>
+
+        <!-- Section 6: 监控 -->
+        <section class="detail-section" id="monitoring">
+            <h2 class="">Monitoring &amp; Observability</h2>
+            <p class="">We adopted the three pillars of observability, ensuring every pipeline stage is transparent and controllable:</p>
+            <ul class="">
+                <li class=""><strong class="">Metrics</strong> — Prometheus collects throughput, P99 latency, error rates per stage; Grafana Dashboard displays in real-time</li>
+                <li class=""><strong class="">Logging</strong> — Structured logs collected via Fluentd to Elasticsearch, supporting real-time queries and alerting rules</li>
+                <li class=""><strong class="">Tracing</strong> — OpenTelemetry implements end-to-end distributed tracing, visualizing the full chain from image ingestion to result export</li>
+            </ul>
+            <p class="">Key alerting rules:</p>
+            <ul class="">
+                <li class="">Trigger P1 alert when Kafka Consumer Lag exceeds 1000</li>
+                <li class="">Trigger auto-scaling when inference latency P99 exceeds 500ms</li>
+                <li class="">Notify development team when Dead Letter Queue message count grows continuously</li>
+                <li class="">Trigger scale-down when GPU utilization drops below 30%, saving resource costs</li>
+            </ul>
+        </section>
+
+        <!-- Section 7: 扩展策略 -->
+        <section class="detail-section" id="scaling">
+            <h2 class="">Scaling Strategies</h2>
+            <p class="">In production, we adopted a layered scaling strategy, ensuring efficient operation under different loads:</p>
+            <ul class="">
+                <li class=""><strong class="">Horizontal Scaling</strong> — Each stage has independent HPA, scaling based on its own load without mutual impact</li>
+                <li class=""><strong class="">Vertical Scaling</strong> — GPU-intensive stages use node affinity to schedule on dedicated nodes, reserving GPU resources</li>
+                <li class=""><strong class="">Geographic Scaling</strong> — Multi-region deployment for proximity access, reducing network latency; Kafka MirrorMaker enables cross-region data sync</li>
+                <li class=""><strong class="">Elastic Scaling</strong> — Warm-up + rapid scaling strategy for traffic spikes; KEDA enables precise scaling based on Kafka lag</li>
+            </ul>
+            <p class="">The final system runs stably in production, processing <strong class="">10M+</strong> images daily, with P99 latency under <strong class="">200ms</strong> and <strong class="">99.99%</strong> availability. During peak events, it successfully handled 5x traffic spikes with auto-scaling completing within 2 minutes.</p>
+        </section>
+
+        <!-- Section 8: 总结 -->
+        <section class="detail-section" id="conclusion">
+            <h2 class="">Summary &amp; Lessons</h2>
+            <p class="">Building a real-time image processing pipeline is a systems engineering effort spanning architecture design, message middleware selection, container orchestration, and monitoring. Our core lessons:</p>
+            <ul class="">
+                <li class=""><strong class="">Decouple First, Optimize Later</strong> — Prioritize architectural scalability early; optimize bottleneck stages later</li>
+                <li class=""><strong class="">Separate Data from Control</strong> — Large data goes to object storage, control flow to message queues, preventing Kafka from becoming a bottleneck</li>
+                <li class=""><strong class="">Observability First</strong> — Deploy complete monitoring before going live; otherwise you can't diagnose issues</li>
+                <li class=""><strong class="">Fault-Tolerant Design</strong> — Every stage should assume downstream failure, using DLQ, retries, and circuit breakers for system resilience</li>
+            </ul>
+            <p class="">This architecture has been running stably for over a year, withstanding multiple business peaks and infrastructure changes. If you're building a similar system, I hope these experiences provide useful reference.</p>
+        </section></div></div>
+    </div>
+    <section class="related" aria-labelledby="related-title"><p class="kicker">Continue reading</p><h2 id="related-title">Related <em>writing</em></h2><ol class="journal-list" style="list-style:none"><li><a class="journal-row" href="article-17.html" data-topic="3" data-cursor="Read">
+        <span class="journal-date">2026.05 · 17</span>
+        <span class="journal-title"><span class="static">U-Net Did Not Lose to a Newer Model: In Industrial Vision, Define the Task Before Choosing the Model</span><span class="marquee" aria-hidden="true"><span>U-Net Did Not Lose to a Newer Model: In Industrial Vision, Define the Task Before Choosing the Model —&nbsp;</span><span>U-Net Did Not Lose to a Newer Model: In Industrial Vision, Define the Task Before Choosing the Model —&nbsp;</span><span>U-Net Did Not Lose to a Newer Model: In Industrial Vision, Define the Task Before Choosing the Model —&nbsp;</span></span></span>
+        <span class="topic" data-topic="3">Vision &amp; Multimodal</span><span class="journal-time">8 min</span></a></li><li><a class="journal-row" href="article-24.html" data-topic="3" data-cursor="Read">
+        <span class="journal-date">2026.04 · 24</span>
+        <span class="journal-title"><span class="static">Vision Algorithm Engineers: Do Not Become Process Operators</span><span class="marquee" aria-hidden="true"><span>Vision Algorithm Engineers: Do Not Become Process Operators —&nbsp;</span><span>Vision Algorithm Engineers: Do Not Become Process Operators —&nbsp;</span><span>Vision Algorithm Engineers: Do Not Become Process Operators —&nbsp;</span></span></span>
+        <span class="topic" data-topic="3">Vision &amp; Multimodal</span><span class="journal-time">8 min</span></a></li><li><a class="journal-row" href="article-29.html" data-topic="3" data-cursor="Read">
+        <span class="journal-date">2026.04 · 29</span>
+        <span class="journal-title"><span class="static">After a Vision Model Ships: Do Not Let mAP Become the Only Answer</span><span class="marquee" aria-hidden="true"><span>After a Vision Model Ships: Do Not Let mAP Become the Only Answer —&nbsp;</span><span>After a Vision Model Ships: Do Not Let mAP Become the Only Answer —&nbsp;</span><span>After a Vision Model Ships: Do Not Let mAP Become the Only Answer —&nbsp;</span></span></span>
+        <span class="topic" data-topic="3">Vision &amp; Multimodal</span><span class="journal-time">9 min</span></a></li></ol></section>
+    <nav class="pager" aria-label="More articles">
+        <a href="article-38.html" data-cursor="Prev"><span class="meta">← Previous</span><strong>How to Objectively View Modern Feminism</strong></a>
+        <a href="article-40.html" data-cursor="Next"><span class="meta">Next →</span><strong>&quot;Involution&quot; vs &quot;Lying Flat&quot;: Anxiety and Breakthrough of a Generation</strong></a>
+    </nav>
+</div>
+</main>
+<footer class="colophon">
+    <div class="colophon-name" data-fit aria-hidden="true">Eric</div>
+    <div class="colophon-grid">
+        <div><p class="meta">Index</p><a href="../work/index.html">Work</a><a href="../journal/index.html">Journal</a><a href="../index.html#about">About</a><a href="../index.html#contact">Contact</a></div>
+        <div><p class="meta">Elsewhere</p><a href="https://github.com/powerpan" target="_blank" rel="noopener">GitHub</a><a href="../work/index.html">Work</a><a href="index.html">Journal</a><a href="../index.html#contact">Contact</a></div>
+        <div><p class="meta">Settings</p><button type="button" data-theme-toggle aria-pressed="false"><span class="theme-switch-label">Night</span> paper</button><br><button type="button" data-motion-toggle aria-pressed="true">Motion: on</button><br><button type="button" class="sound-text" data-sound-toggle aria-pressed="false">Sound: off</button>
+<label class="volume"><span class="meta">Volume</span><input class="ink-range" type="range" min="0" max="1" step="0.05" value="0.6" data-sound-volume aria-label="Music volume"></label></div>
+        <div><p class="meta">Colophon</p><p>© 2026 Eric. Set in Instrument Serif &amp; Inter Tight. Ink simulated live in WebGL2.</p><a href="#" data-top>Back to top ↑</a></div>
+    </div>
+</footer>
+<p class="sr-only" role="status" aria-live="polite" data-sound-status></p>
+<script src="../js/ink-fluid.js"></script>
+<script src="../js/ink.js"></script>
+</body>
+</html>

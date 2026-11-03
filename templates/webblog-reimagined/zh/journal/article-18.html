@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>多 Agent 架构的真正问题：不是角色分工，而是上下文边界 — Eric</title>
+<meta name="description" content="多 Agent 架构的真正问题：不是角色分工，而是上下文边界">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#ede8df">
+<script>(()=>{const r=document.documentElement;let t,m;try{t=localStorage.getItem('ink-theme');m=localStorage.getItem('ink-motion')}catch(e){}t=t||(matchMedia('(prefers-color-scheme: dark)').matches?'night':'day');if(matchMedia('(prefers-reduced-motion: reduce)').matches)m='off';r.dataset.theme=t;r.dataset.motion=m||'on'})()</script>
+<link rel="preload" href="../../assets/fonts/instrument-serif-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../css/ink.css">
+<link rel="stylesheet" href="../../css/languages.css">
+<link rel="stylesheet" href="../../css/sound.css">
+<script src="../../js/ink-sound.js" defer></script>
+<noscript><style>[data-sound-toggle],.volume{display:none!important}</style></noscript>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='26' fill='%23f6401a'/%3E%3Ccircle cx='40' cy='26' r='14' fill='%232337f2' fill-opacity='.85'/%3E%3C/svg%3E">
+<link rel="alternate" hreflang="en" href="../../journal/article-18.html">
+</head>
+<body data-ink="quiet">
+<canvas id="ink" aria-hidden="true"></canvas>
+<div class="grain" aria-hidden="true"></div>
+
+<div class="cursor" aria-hidden="true"><span class="cursor-label"></span></div>
+<a class="sr-only" href="#main">跳至正文</a>
+<header class="masthead">
+    <a class="brand" href="../index.html" aria-label="Eric — 首页">Eric<sup>®</sup></a>
+    <div class="masthead-meta"><span>作品与手记</span><a href="../../journal/article-18.html" data-language-switch hreflang="en" lang="en" aria-label="Read this page in English">EN</a></div>
+    <div class="masthead-right">
+        <nav class="masthead-nav" aria-label="主导航">
+            <a href="../work/index.html">项目</a><a href="../journal/index.html" aria-current="page">文章</a><a href="../index.html#about">关于</a><a href="../index.html#contact">联系</a>
+        </nav>
+        <button class="sound-switch" type="button" data-sound-toggle aria-pressed="false" aria-label="播放背景音乐"><canvas class="sound-wave" aria-hidden="true"></canvas><span class="sound-label">音乐</span></button>
+        <button class="theme-switch" type="button" data-theme-toggle aria-pressed="false"><span class="theme-switch-dot" aria-hidden="true"></span><span class="theme-switch-label">夜间</span></button>
+        <button class="menu-button" type="button" aria-expanded="false" aria-controls="menu">菜单</button>
+    </div>
+</header>
+<nav class="menu" id="menu" aria-label="菜单">
+    <a href="../index.html">目录</a><a href="../work/index.html"><em>项目</em></a><a href="../journal/index.html">文章</a><a href="../index.html#contact"><em>联系</em></a>
+    <div class="menu-foot meta"><span>本地 <span data-clock>--:--:--</span></span><button class="sound-switch" type="button" data-sound-toggle aria-pressed="false" aria-label="播放背景音乐"><canvas class="sound-wave" aria-hidden="true"></canvas><span class="sound-label">音乐</span></button><a href="../../journal/article-18.html" data-language-switch hreflang="en" lang="en" aria-label="Read this page in English">EN</a></div>
+</nav>
+<main id="main">
+<div class="progress" aria-hidden="true"><i></i></div>
+<div class="page">
+    <header class="article-head">
+        <p class="meta"><a href="index.html">← 文章</a> &nbsp;/&nbsp; <span class="topic" data-topic="2">Agent 自动化</span></p>
+        <h1 data-split>多 Agent 架构的真正问题：不是角色分工，而是<em>上下文边界</em></h1>
+        <p class="lede rise"></p>
+        <div class="article-meta meta rise" style="--d:120ms"><span>2026.05.01</span><span>10 分钟</span><span>No. 18</span></div>
+    </header>
+    <div class="article-layout">
+        <nav class="toc" aria-label="目录"><a href="#roles">先别急着分角色</a><a href="#failure">为什么一拆就废</a><a href="#dependency">判断标准是上下文依赖</a><a href="#patterns">单 Agent、Sub-Agent 与 Agent Team</a><a href="#costs">多 Agent 的真实成本</a><a href="#takeaway">写在最后</a></nav>
+        <div class="page-surface"><div class="prose"><section class="detail-section" id="roles">
+            <h2 class="">先别急着分角色</h2>
+            <p class="">很多人设计多 Agent 系统时，第一反应是分角色：规划 Agent、检索 Agent、写作 Agent、审核 Agent、执行 Agent。看起来像一个完整团队，但很多时候，角色越多，系统越乱。</p>
+            <p class="">真正的问题不在于模型能力不够，而在于架构把本来需要连续理解的上下文切碎了。每个 Agent 只拿到局部信息，各自做出看似合理的判断，最后合并起来却失去主线。</p>
+            <p class="">多 Agent 的设计单位不应该是角色，而应该是上下文。角色只是表象，真正重要的是信息如何流动、状态如何共享、结论如何合并。</p>
+        </section>
+
+        <section class="detail-section" id="failure">
+            <h2 class="">为什么一拆就废</h2>
+            <p class="">复杂任务并不天然适合拆分。有些任务看起来步骤很多，但它们依赖同一条连续主线，比如观点写作、系统架构、复杂 Bug 分析和产品方案设计。</p>
+            <p class="">过早拆分会带来三个问题：主线被切断，信息在传递中损耗，协作产生噪音。子 Agent 可能完成了局部任务，但不一定理解整体意图；上下文被摘要两次之后，关键约束可能已经丢失。</p>
+            <p class="">Agent 拆分不是免费增强。它会减轻单个 Agent 的上下文压力，但会增加通信、同步、合并和一致性成本。</p>
+        </section>
+
+        <section class="detail-section" id="dependency">
+            <h2 class="">判断标准是上下文依赖</h2>
+            <p class="">判断任务是否适合多 Agent，关键不是任务复杂不复杂，而是子任务之间是否需要共享上下文。</p>
+            <p class="">低上下文依赖任务适合拆。比如分别总结多篇文章、检查多个文件、从不同资料源检索证据、对同一问题做独立判断。这些任务可以隔离执行，最后返回压缩结论。</p>
+            <p class="">高上下文依赖任务不能简单拆。复杂系统设计、长文写作、代码重构决策、多步骤诊断都需要持续维护目标、约束和判断标准。如果确实要拆，就必须共享状态，而不是简单分发和回收。</p>
+        </section>
+
+        <section class="detail-section" id="patterns">
+            <h2 class="">单 Agent、Sub-Agent 与 Agent Team</h2>
+            <p class="">单 Agent 适合主线强、上下文必须连续的任务。只要它能稳定完成，就不要为了架构看起来更先进而拆分。</p>
+            <p class="">Sub-Agent 适合可隔离、可并行、只需要返回结论的任务。主 Agent 负责目标和主线，子 Agent 处理边界清晰的局部任务。</p>
+            <p class="">Agent Team 适合必须共享状态、持续协作的任务。它不是多叫几个 Agent 来讨论，而是一种更复杂的共享上下文系统，需要状态同步、冲突解决和最终裁决。</p>
+        </section>
+
+        <section class="detail-section" id="costs">
+            <h2 class="">多 Agent 的真实成本</h2>
+            <p class="">多 Agent 架构真正困难的地方，不是让多个 Agent 同时工作，而是控制它们之间的副作用。</p>
+            <p class="">信息传递不是无损的。主 Agent 不可能把全部上下文交给每个子 Agent，子 Agent 也不可能把完整推理过程返回。系统必须知道哪些信息可以压缩，哪些信息必须保留。</p>
+            <p class="">协作也会制造噪音。如果边界不清，多个 Agent 会重复讨论、互相否定、输出大量相似观点。状态不一致更危险：一个 Agent 使用旧约束，另一个 Agent 使用新约束，最终系统就会分裂。</p>
+        </section>
+
+        <section class="detail-section" id="takeaway">
+            <h2 class="">写在最后</h2>
+            <p class="">多 Agent 架构真正要解决的，不是角色分工问题，而是上下文边界问题。</p>
+            <p class="">低水平的多 Agent 设计先想角色：谁规划、谁写作、谁审核。高水平的多 Agent 设计先看上下文：哪些信息必须连续，哪些任务可以隔离，哪些状态必须共享，哪些结果只需要汇总。</p>
+            <p class="">最终，关键判断不是“这个任务需要几个 Agent”，而是“这个任务的上下文应该如何被共享、隔离、压缩、传递和合并”。这才是多 Agent 从玩具走向工程系统的分界线。</p>
+        </section></div></div>
+    </div>
+    <section class="related" aria-labelledby="related-title"><p class="kicker">继续阅读</p><h2 id="related-title">相关<em>文章</em></h2><ol class="journal-list" style="list-style:none"><li><a class="journal-row" href="article-05.html" data-topic="2" data-cursor="阅读">
+        <span class="journal-date">2026.09 · 05</span>
+        <span class="journal-title"><span class="static">AI 不需要恶意，也能越过权限边界</span><span class="marquee" aria-hidden="true"><span>AI 不需要恶意，也能越过权限边界 —&nbsp;</span><span>AI 不需要恶意，也能越过权限边界 —&nbsp;</span><span>AI 不需要恶意，也能越过权限边界 —&nbsp;</span></span></span>
+        <span class="topic" data-topic="2">Agent 自动化</span><span class="journal-time">12 分钟</span></a></li><li><a class="journal-row" href="article-14.html" data-topic="2" data-cursor="阅读">
+        <span class="journal-date">2026.05 · 14</span>
+        <span class="journal-title"><span class="static">我做了一次多 Agent 架构实验：复杂架构并不天然更聪明</span><span class="marquee" aria-hidden="true"><span>我做了一次多 Agent 架构实验：复杂架构并不天然更聪明 —&nbsp;</span><span>我做了一次多 Agent 架构实验：复杂架构并不天然更聪明 —&nbsp;</span><span>我做了一次多 Agent 架构实验：复杂架构并不天然更聪明 —&nbsp;</span></span></span>
+        <span class="topic" data-topic="2">Agent 自动化</span><span class="journal-time">8 分钟</span></a></li><li><a class="journal-row" href="article-19.html" data-topic="2" data-cursor="阅读">
+        <span class="journal-date">2026.05 · 19</span>
+        <span class="journal-title"><span class="static">当真的需要多 Agent：如何拆分、协作与合并结果</span><span class="marquee" aria-hidden="true"><span>当真的需要多 Agent：如何拆分、协作与合并结果 —&nbsp;</span><span>当真的需要多 Agent：如何拆分、协作与合并结果 —&nbsp;</span><span>当真的需要多 Agent：如何拆分、协作与合并结果 —&nbsp;</span></span></span>
+        <span class="topic" data-topic="2">Agent 自动化</span><span class="journal-time">10 分钟</span></a></li></ol></section>
+    <nav class="pager" aria-label="更多文章">
+        <a href="article-17.html" data-cursor="上一篇"><span class="meta">← 上一篇</span><strong>U-Net 没有输给新模型：工业视觉里，先定义任务再选择模型</strong></a>
+        <a href="article-19.html" data-cursor="下一个"><span class="meta">下一篇 →</span><strong>当真的需要多 Agent：如何拆分、协作与合并结果</strong></a>
+    </nav>
+</div>
+</main>
+<footer class="colophon">
+    <div class="colophon-name" data-fit aria-hidden="true">Eric</div>
+    <div class="colophon-grid">
+        <div><p class="meta">目录</p><a href="../work/index.html">项目</a><a href="../journal/index.html">文章</a><a href="../index.html#about">关于</a><a href="../index.html#contact">联系</a></div>
+        <div><p class="meta">更多</p><a href="https://github.com/powerpan" target="_blank" rel="noopener">GitHub</a><a href="../work/index.html">项目</a><a href="index.html">文章</a><a href="../index.html#contact">联系</a></div>
+        <div><p class="meta">设置</p><button type="button" data-theme-toggle aria-pressed="false"><span class="theme-switch-label">夜间</span> 纸色</button><br><button type="button" data-motion-toggle aria-pressed="true">动效：开启</button><br><button type="button" class="sound-text" data-sound-toggle aria-pressed="false">音乐：关闭</button>
+<label class="volume"><span class="meta">音量</span><input class="ink-range" type="range" min="0" max="1" step="0.05" value="0.6" data-sound-volume aria-label="音乐音量"></label></div>
+        <div><p class="meta">关于本站</p><p>© 2026 Eric. 中文标题采用 Noto Serif SC，正文采用 Noto Sans SC。水墨以 WebGL2 实时模拟。</p><a href="#" data-top>返回顶部 ↑</a></div>
+    </div>
+</footer>
+<p class="sr-only" role="status" aria-live="polite" data-sound-status></p>
+<script src="../../js/ink-fluid.js"></script>
+<script src="../../js/ink.js"></script>
+</body>
+</html>

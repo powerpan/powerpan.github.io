@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Local Knowledge Assistant — Eric</title>
+<meta name="description" content="A local-first RAG system for long-term personal knowledge assets, combining Markdown, retrieval, answer generation, Notion synchronization, and knowledge graph governance in one maintainable workspace.">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#ede8df">
+<script>(()=>{const r=document.documentElement;let t,m;try{t=localStorage.getItem('ink-theme');m=localStorage.getItem('ink-motion')}catch(e){}t=t||(matchMedia('(prefers-color-scheme: dark)').matches?'night':'day');if(matchMedia('(prefers-reduced-motion: reduce)').matches)m='off';r.dataset.theme=t;r.dataset.motion=m||'on'})()</script>
+<link rel="preload" href="../assets/fonts/instrument-serif-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../css/ink.css">
+<link rel="stylesheet" href="../css/languages.css">
+<link rel="stylesheet" href="../css/sound.css">
+<script src="../js/ink-sound.js" defer></script>
+<noscript><style>[data-sound-toggle],.volume{display:none!important}</style></noscript>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='26' fill='%23f6401a'/%3E%3Ccircle cx='40' cy='26' r='14' fill='%232337f2' fill-opacity='.85'/%3E%3C/svg%3E">
+<link rel="alternate" hreflang="zh-CN" href="../zh/work/project-08.html">
+</head>
+<body data-ink="quiet">
+<canvas id="ink" aria-hidden="true"></canvas>
+<div class="grain" aria-hidden="true"></div>
+
+<div class="cursor" aria-hidden="true"><span class="cursor-label"></span></div>
+<a class="sr-only" href="#main">Skip to content</a>
+<header class="masthead">
+    <a class="brand" href="../index.html" aria-label="Eric — home">Eric<sup>®</sup></a>
+    <div class="masthead-meta"><span>Portfolio &amp; Journal</span><a href="../zh/work/project-08.html" data-language-switch hreflang="zh-CN" lang="zh-CN" aria-label="Read this page in Chinese">中文</a></div>
+    <div class="masthead-right">
+        <nav class="masthead-nav" aria-label="Primary">
+            <a href="../work/index.html" aria-current="page">Work</a><a href="../journal/index.html">Journal</a><a href="../index.html#about">About</a><a href="../index.html#contact">Contact</a>
+        </nav>
+        <button class="sound-switch" type="button" data-sound-toggle aria-pressed="false" aria-label="Play background music"><canvas class="sound-wave" aria-hidden="true"></canvas><span class="sound-label">Sound</span></button>
+        <button class="theme-switch" type="button" data-theme-toggle aria-pressed="false"><span class="theme-switch-dot" aria-hidden="true"></span><span class="theme-switch-label">Night</span></button>
+        <button class="menu-button" type="button" aria-expanded="false" aria-controls="menu">Menu</button>
+    </div>
+</header>
+<nav class="menu" id="menu" aria-label="Menu">
+    <a href="../index.html">Index</a><a href="../work/index.html"><em>Work</em></a><a href="../journal/index.html">Journal</a><a href="../index.html#contact"><em>Contact</em></a>
+    <div class="menu-foot meta"><span>Local <span data-clock>--:--:--</span></span><button class="sound-switch" type="button" data-sound-toggle aria-pressed="false" aria-label="Play background music"><canvas class="sound-wave" aria-hidden="true"></canvas><span class="sound-label">Sound</span></button><a href="../zh/work/project-08.html" data-language-switch hreflang="zh-CN" lang="zh-CN" aria-label="Read this page in Chinese">中文</a></div>
+</nav>
+<main id="main">
+<div class="page"><p class="kicker"><a href="index.html">Work</a> / Local AI · RAG · Knowledge Graph</p>
+    <header class="case-hero"><h1 data-split>Local Knowledge Assistant</h1><p class="lede rise">A local-first RAG system for long-term personal knowledge assets, combining Markdown, retrieval, answer generation, Notion synchronization, and knowledge graph governance in one maintainable workspace.</p></header><dl class="case-facts rise"><div><dt class="meta">Role</dt><dd>Independent Developer</dd></div><div><dt class="meta">Status</dt><dd>Active Development</dd></div><div><dt class="meta">Stack</dt><dd>Python / FastAPI / Vue 3</dd></div><div><dt class="meta">Index</dt><dd>No. 08</dd></div></dl>
+    <div class="case-media"><img src="../assets/projects/local-rag/query-workbench.png" alt="Local Knowledge Assistant question-answering and retrieval workspace" width="2456" height="1192" loading="eager" decoding="async"></div><div class="case-body"><section class="case-section"><div class="case-section-label"><span class="num">01</span><span class="meta">Section</span></div>
+            <div class="case-section-copy prose"><h2 data-split>Turn a Personal Knowledge Base into a Governed System</h2><div class="detail-section-label">Overview</div>
+
+            <p class="detail-text">The project uses <strong class="">local Markdown</strong> as its source of truth and builds a complete workflow for long-term personal knowledge assets. Content ingestion, metadata standardization, vector indexing, retrieval reranking, answer generation, relationship maintenance, and graph exploration all live in the same workspace.</p>
+            <p class="detail-text">Indexing and retrieval run locally by default. Answer generation can use DeepSeek with a local Ollama fallback when the API is unavailable. For sensitive questions, remote generation can be disabled to keep the entire flow <strong class="">on device</strong>.</p><div class="badges"><span class="tag">Python</span><span class="tag">Streamlit</span><span class="tag">FastAPI</span><span class="tag">Vue 3</span><span class="tag">Element Plus</span><span class="tag">Sentence Transformers</span><span class="tag">Ollama</span></div><figure class="rise"><img src="../assets/projects/local-rag/knowledge-graph.png" alt="Local Knowledge Assistant knowledge graph explorer" width="2410" height="1484" loading="lazy" decoding="async"><figcaption>Graph explorer: inspect document nodes, strong and weak relationships, filter statistics, and node details in one view.</figcaption></figure></div></section><section class="case-section"><div class="case-section-label"><span class="num">02</span><span class="meta">Section</span></div>
+            <div class="case-section-copy prose"><h2 data-split>From Local Documents to Traceable Answers</h2><div class="detail-section-label">Retrieval Pipeline</div>
+
+            <p class="detail-text">The retrieval pipeline separates responsibilities to keep installation stable on Apple Silicon while preserving clear extension points for future index and model changes.</p>
+            <div class="rag-pipeline">
+                <div class="rag-pipeline-step">
+                    <div class="rag-pipeline-index">01 / INGEST</div>
+                    <div class="rag-pipeline-title">Content Splitting</div>
+                    <div class="rag-pipeline-desc">Read Markdown and structured metadata, then create chunks with configurable windows.</div>
+                </div>
+                <div class="rag-pipeline-step">
+                    <div class="rag-pipeline-index">02 / EMBED</div>
+                    <div class="rag-pipeline-title">Local Embeddings</div>
+                    <div class="rag-pipeline-desc">Generate and reuse multilingual Sentence Transformer vectors on device.</div>
+                </div>
+                <div class="rag-pipeline-step">
+                    <div class="rag-pipeline-index">03 / RERANK</div>
+                    <div class="rag-pipeline-title">Retrieve and Rerank</div>
+                    <div class="rag-pipeline-desc">Use NumPy cosine retrieval followed by CrossEncoder reranking and source controls.</div>
+                </div>
+                <div class="rag-pipeline-step">
+                    <div class="rag-pipeline-index">04 / ANSWER</div>
+                    <div class="rag-pipeline-title">Answer and Cite</div>
+                    <div class="rag-pipeline-desc">Compose an answer from relevant chunks while retaining sources for verification.</div>
+                </div>
+            </div></div></section><section class="case-section"><div class="case-section-label"><span class="num">03</span><span class="meta">Section</span></div>
+            <div class="case-section-copy prose"><h2 data-split>Knowledge Governance Beyond Retrieval</h2><div class="detail-section-label">Knowledge Governance</div>
+
+            <p class="detail-text">Document type, status, scope, summary, tags, Wiki tags, and strong relationships are normalized into front matter. Content ingestion and relationship edits always produce a <strong class="">preview</strong> before writing, preventing automation from silently changing the source knowledge base.</p>
+            <p class="detail-text">Multiple Workspaces share the same capabilities while keeping data isolated. Incremental index rebuilds reuse vectors for unchanged chunks and only encode new or modified content.</p></div></section><section class="case-section"><div class="case-section-label"><span class="num">04</span><span class="meta">Section</span></div>
+            <div class="case-section-copy prose"><h2 data-split>Controlled Synchronization Between Local Files and Notion</h2><div class="detail-section-label">Notion Integration</div>
+
+            <p class="detail-text">The project supports Notion import and synchronization with live progress, retry logs, and explicit failure reasons. Checkpoints make interrupted jobs resumable, content hashes skip unchanged entries, and bidirectional project-to-problem relationships are synchronized as database properties.</p>
+            <p class="detail-text">Every write operation follows a preview, confirm, execute boundary. API credentials remain in local environment files and are never committed to the repository.</p></div></section><section class="case-section"><div class="case-section-label"><span class="num">05</span><span class="meta">Section</span></div>
+            <div class="case-section-copy prose"><h2 data-split>Explore Disconnected Documents as a Relationship Network</h2><div class="detail-section-label">Knowledge Graph</div>
+
+            <p class="detail-text">The graph distinguishes manually confirmed strong relationships, weak relationships derived from scope and Wiki tags, and candidate links awaiting review. Users can filter by document type, directory, scope, tag, or keyword and focus on the one-hop neighborhood of any node.</p></div></section><section class="case-section"><div class="case-section-label"><span class="num">06</span><span class="meta">Section</span></div>
+            <div class="case-section-copy prose"><h2 data-split>An End-to-End Knowledge Asset Workflow</h2><div class="detail-section-label">Capabilities</div>
+
+            <div class="detail-features">
+                <div class="detail-feature">
+                    <div class="detail-feature-icon">01</div>
+                    <div class="detail-feature-title">Question Answering</div>
+                    <div class="detail-feature-desc">Control search areas, scope, result count, source limits, reranking, and optional answer generation.</div>
+                </div>
+                <div class="detail-feature">
+                    <div class="detail-feature-icon">02</div>
+                    <div class="detail-feature-title">Content and Indexing</div>
+                    <div class="detail-feature-desc">Create normalized documents from pasted text or local files and rebuild indexes or graphs on demand.</div>
+                </div>
+                <div class="detail-feature">
+                    <div class="detail-feature-icon">03</div>
+                    <div class="detail-feature-title">Tags and Relations</div>
+                    <div class="detail-feature-desc">Use assisted tag and relation analysis while preserving human approval for every write.</div>
+                </div>
+                <div class="detail-feature">
+                    <div class="detail-feature-icon">04</div>
+                    <div class="detail-feature-title">Notion Workflow</div>
+                    <div class="detail-feature-desc">Import, synchronize in the background, retry failures, resume from checkpoints, or fall back to manual upload.</div>
+                </div>
+                <div class="detail-feature">
+                    <div class="detail-feature-icon">05</div>
+                    <div class="detail-feature-title">Multiple Workspaces</div>
+                    <div class="detail-feature-desc">Switch between knowledge domains while keeping indexes, configuration, and runtime state isolated.</div>
+                </div>
+                <div class="detail-feature">
+                    <div class="detail-feature-icon">06</div>
+                    <div class="detail-feature-title">Local First</div>
+                    <div class="detail-feature-desc">Keep retrieval and governance on device, make remote generation optional, and provide an Ollama fallback.</div>
+                </div>
+            </div></div></section></div>
+    <a class="next-case" href="project-09.html" data-cursor="Next"><span class="meta">Next project — 09</span><strong>ClassBridge Product Suite</strong></a></div>
+</main>
+<footer class="colophon">
+    <div class="colophon-name" data-fit aria-hidden="true">Eric</div>
+    <div class="colophon-grid">
+        <div><p class="meta">Index</p><a href="../work/index.html">Work</a><a href="../journal/index.html">Journal</a><a href="../index.html#about">About</a><a href="../index.html#contact">Contact</a></div>
+        <div><p class="meta">Elsewhere</p><a href="https://github.com/powerpan" target="_blank" rel="noopener">GitHub</a><a href="index.html">Work</a><a href="../journal/index.html">Journal</a><a href="../index.html#contact">Contact</a></div>
+        <div><p class="meta">Settings</p><button type="button" data-theme-toggle aria-pressed="false"><span class="theme-switch-label">Night</span> paper</button><br><button type="button" data-motion-toggle aria-pressed="true">Motion: on</button><br><button type="button" class="sound-text" data-sound-toggle aria-pressed="false">Sound: off</button>
+<label class="volume"><span class="meta">Volume</span><input class="ink-range" type="range" min="0" max="1" step="0.05" value="0.6" data-sound-volume aria-label="Music volume"></label></div>
+        <div><p class="meta">Colophon</p><p>© 2026 Eric. Set in Instrument Serif &amp; Inter Tight. Ink simulated live in WebGL2.</p><a href="#" data-top>Back to top ↑</a></div>
+    </div>
+</footer>
+<p class="sr-only" role="status" aria-live="polite" data-sound-status></p>
+<script src="../js/ink-fluid.js"></script>
+<script src="../js/ink.js"></script>
+</body>
+</html>

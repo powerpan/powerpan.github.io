@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>WebGPU: Running Deep Learning Inference in the Browser — Eric</title>
+<meta name="description" content="WebGPU: Running Deep Learning Inference in the Browser">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#ede8df">
+<script>(()=>{const r=document.documentElement;let t,m;try{t=localStorage.getItem('ink-theme');m=localStorage.getItem('ink-motion')}catch(e){}t=t||(matchMedia('(prefers-color-scheme: dark)').matches?'night':'day');if(matchMedia('(prefers-reduced-motion: reduce)').matches)m='off';r.dataset.theme=t;r.dataset.motion=m||'on'})()</script>
+<link rel="preload" href="../assets/fonts/instrument-serif-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../css/ink.css">
+<link rel="stylesheet" href="../css/languages.css">
+<link rel="stylesheet" href="../css/sound.css">
+<script src="../js/ink-sound.js" defer></script>
+<noscript><style>[data-sound-toggle],.volume{display:none!important}</style></noscript>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='26' fill='%23f6401a'/%3E%3Ccircle cx='40' cy='26' r='14' fill='%232337f2' fill-opacity='.85'/%3E%3C/svg%3E">
+<link rel="alternate" hreflang="zh-CN" href="../zh/journal/article-37.html">
+</head>
+<body data-ink="quiet">
+<canvas id="ink" aria-hidden="true"></canvas>
+<div class="grain" aria-hidden="true"></div>
+
+<div class="cursor" aria-hidden="true"><span class="cursor-label"></span></div>
+<a class="sr-only" href="#main">Skip to content</a>
+<header class="masthead">
+    <a class="brand" href="../index.html" aria-label="Eric — home">Eric<sup>®</sup></a>
+    <div class="masthead-meta"><span>Portfolio &amp; Journal</span><a href="../zh/journal/article-37.html" data-language-switch hreflang="zh-CN" lang="zh-CN" aria-label="Read this page in Chinese">中文</a></div>
+    <div class="masthead-right">
+        <nav class="masthead-nav" aria-label="Primary">
+            <a href="../work/index.html">Work</a><a href="../journal/index.html" aria-current="page">Journal</a><a href="../index.html#about">About</a><a href="../index.html#contact">Contact</a>
+        </nav>
+        <button class="sound-switch" type="button" data-sound-toggle aria-pressed="false" aria-label="Play background music"><canvas class="sound-wave" aria-hidden="true"></canvas><span class="sound-label">Sound</span></button>
+        <button class="theme-switch" type="button" data-theme-toggle aria-pressed="false"><span class="theme-switch-dot" aria-hidden="true"></span><span class="theme-switch-label">Night</span></button>
+        <button class="menu-button" type="button" aria-expanded="false" aria-controls="menu">Menu</button>
+    </div>
+</header>
+<nav class="menu" id="menu" aria-label="Menu">
+    <a href="../index.html">Index</a><a href="../work/index.html"><em>Work</em></a><a href="../journal/index.html">Journal</a><a href="../index.html#contact"><em>Contact</em></a>
+    <div class="menu-foot meta"><span>Local <span data-clock>--:--:--</span></span><button class="sound-switch" type="button" data-sound-toggle aria-pressed="false" aria-label="Play background music"><canvas class="sound-wave" aria-hidden="true"></canvas><span class="sound-label">Sound</span></button><a href="../zh/journal/article-37.html" data-language-switch hreflang="zh-CN" lang="zh-CN" aria-label="Read this page in Chinese">中文</a></div>
+</nav>
+<main id="main">
+<div class="progress" aria-hidden="true"><i></i></div>
+<div class="page">
+    <header class="article-head">
+        <p class="meta"><a href="index.html">← Journal</a> &nbsp;/&nbsp; <span class="topic" data-topic="1">AI Engineering</span></p>
+        <h1 data-split>WebGPU: Running Deep Learning Inference in the Browser</h1>
+        <p class="lede rise"></p>
+        <div class="article-meta meta rise" style="--d:120ms"><span>2025.11.10</span><span>15 min</span><span>No. 37</span></div>
+    </header>
+    <div class="article-layout">
+        <nav class="toc" aria-label="Contents"><a href="#intro">Overview</a><a href="#fundamentals">WebGPU Core Concepts</a><a href="#compute">Compute Pipeline Setup</a><a href="#shader">WGSL Shader Programming</a><a href="#onnx">Running ONNX Models in Browser</a><a href="#memory">GPU Memory Management</a><a href="#benchmark">Performance Benchmarks</a><a href="#tips">Best Practices</a></nav>
+        <div class="page-surface"><div class="prose"><!-- Section 1: 概述 -->
+        <section class="detail-section" id="intro">
+            <h2 class="">Overview</h2>
+            <p class="">WebGPU is fundamentally transforming high-performance computing in browsers. As WebGL's successor, it not only provides a more modern graphics API but, more importantly, exposes powerful Compute Shader capabilities — meaning we can finally run deep learning inference efficiently in browsers without relying on WebAssembly workarounds.</p>
+            <p class="">As a student learning vision model development, I'm particularly interested in "can we run models in the browser?" This article starts from zero, introducing WebGPU's core concepts and demonstrating how to achieve near-native GPU performance in browsers through practical ML inference cases.</p>
+            <blockquote class="">WebGPU expands the browser from a graphics-rendering tool into a general-purpose GPU computing platform, a significant leap in what the web can do.</blockquote>
+        </section>
+
+        <!-- Section 2: WebGPU 基础 -->
+        <section class="detail-section" id="fundamentals">
+            <h2 class="">WebGPU Core Concepts</h2>
+            <p class="">WebGPU is a new Web API developed by the W3C GPU Working Group, inspired by Vulkan, Metal, and Direct3D 12. Compared to WebGL, it provides lower-level GPU access while maintaining Web platform security and portability.</p>
+            <p class="">WebGPU's core abstractions include:</p>
+            <ul class="">
+                <li class=""><strong class="">GPUDevice</strong> — Logical device, creator of all GPU resources and submitter of compute commands</li>
+                <li class=""><strong class="">GPUBuffer</strong> — GPU-visible memory block for storing input/output data</li>
+                <li class=""><strong class="">GPUShaderModule</strong> — Compiled WGSL shader program</li>
+                <li class=""><strong class="">GPUComputePipeline</strong> — Compute pipeline defining shader and binding layouts</li>
+                <li class=""><strong class="">GPUCommandEncoder</strong> — Command recorder that batches multiple GPU operations into a command buffer</li>
+            </ul>
+            <p class="">The most critical difference is: WebGPU natively supports <strong class="">Compute Shader</strong>, a general-purpose GPU parallel computing interface. In the WebGL era, we could only hack GPU parallelism by "disguising computation as rendering," but WebGPU makes this natural and efficient.</p>
+        </section>
+
+        <!-- Section 3: Compute Shader -->
+        <section class="detail-section" id="compute">
+            <h2 class="">Compute Pipeline Setup</h2>
+            <p class="">WebGPU's usage follows a clear pattern: request adapter → request device → create Buffer → write Shader → build Pipeline → submit execution. Every step is explicit, giving you maximum control.</p>
+            <p class="">Unlike WebGL's state machine model, WebGPU uses a Command Buffer pattern: record all GPU commands first, then submit them in one batch. This design is naturally suited for ML inference batch processing scenarios.</p>
+            <p class="">In ML inference scenarios, the typical workflow is:</p>
+            <ul class="">
+                <li class=""><strong class="">Model Loading</strong> — Parse ONNX model into computation graph, creating corresponding compute pipelines for each operator</li>
+                <li class=""><strong class="">Weight Upload</strong> — Write model weights to GPU storage buffer in one batch</li>
+                <li class=""><strong class="">Inference Execution</strong> — Dispatch compute shaders layer by layer, passing intermediate results through buffers</li>
+                <li class=""><strong class="">Result Readback</strong> — Use mapAsync to asynchronously read final output tensors</li>
+            </ul>
+        </section>
+
+        <!-- Section 4: WGSL Shader 代码 -->
+        <section class="detail-section" id="shader">
+            <h2 class="">WGSL Shader Programming</h2>
+            <p class="">WGSL (WebGPU Shading Language) is WebGPU's shader language with Rust-like syntax, supporting vectorized operations and shared memory. For ML inference, we need to translate matrix multiplication, activation functions, and other operations into WGSL compute shaders.</p>
+            <p class="">Below is a matrix multiplication shader optimized with Shared Memory Tiling — the most fundamental computation in Transformer models:</p>
+            <div class="detail-code-block">
+                <div class="detail-code-header">
+                    <div class="detail-code-dot"></div>
+                    <div class="detail-code-dot"></div>
+                    <div class="detail-code-dot"></div>
+                    <div class="detail-code-title">matmul_tiled.wgsl</div>
+                </div>
+                <pre class="detail-code-body">// Tiled matrix multiplication with shared memory
+const TILE: u32 = 16u;
+
+@group(0) @binding(0) var&lt;storage&gt; A: array&lt;f32&gt;;
+@group(0) @binding(1) var&lt;storage&gt; B: array&lt;f32&gt;;
+@group(0) @binding(2) var&lt;storage, read_write&gt; C: array&lt;f32&gt;;
+@group(0) @binding(3) var&lt;uniform&gt; params: vec4&lt;u32&gt;; // M, N, K, _
+
+var&lt;workgroup&gt; tileA: array&lt;array&lt;f32, TILE&gt;, TILE&gt;;
+var&lt;workgroup&gt; tileB: array&lt;array&lt;f32, TILE&gt;, TILE&gt;;
+
+@compute @workgroup_size(TILE, TILE)
+fn main(
+    @builtin(global_invocation_id) gid: vec3&lt;u32&gt;,
+    @builtin(local_invocation_id) lid: vec3&lt;u32&gt;,
+) {
+  let M = params.x; let N = params.y; let K = params.z;
+  let row = gid.x; let col = gid.y;
+  var sum = 0.0;
+  for (var t = 0u; t &lt; K; t += TILE) {
+    tileA[lid.x][lid.y] = A[row * K + t + lid.y];
+    tileB[lid.x][lid.y] = B[(t + lid.x) * N + col];
+    workgroupBarrier();
+    for (var k = 0u; k &lt; TILE; k++) {
+      sum += tileA[lid.x][k] * tileB[k][lid.y];
+    }
+    workgroupBarrier();
+  }
+  C[row * N + col] = sum;
+}</pre>
+            </div>
+            <p class="">This tiled version leverages workgroup shared memory, reducing global memory access by a factor of TILE. In actual tests, the tiled version is <strong class="">8-12x faster</strong> than the naive implementation.</p>
+        </section>
+
+        <!-- Section 5: ONNX 模型 -->
+        <section class="detail-section" id="onnx">
+            <h2 class="">Running ONNX Models in Browser</h2>
+            <p class="">ONNX Runtime Web bridges WebGPU and deep learning models. It maps each ONNX operator to a WebGPU compute shader, enabling end-to-end in-browser inference.</p>
+            <p class="">Core workflow includes:</p>
+            <ul class="">
+                <li class=""><strong class="">Model Loading</strong> — Load .onnx model file via fetch, parse computation graph structure</li>
+                <li class=""><strong class="">Backend Selection</strong> — Use <code class="">ort.env.webgpu</code> to enable WebGPU backend, auto-detecting device capabilities</li>
+                <li class=""><strong class="">Operator Mapping</strong> — ONNX operators (Conv, MatMul, Softmax, etc.) auto-compile to WGSL shaders</li>
+                <li class=""><strong class="">Memory Management</strong> — ORT Web auto-manages GPU buffer allocation and reclamation, supporting zero-copy tensor data transfer</li>
+            </ul>
+            <p class="">For Transformer models, ORT Web also supports KV Cache optimization, reducing self-attention computation complexity from O(n²) to O(n), significantly improving long-sequence inference efficiency.</p>
+        </section>
+
+        <!-- Section 6: 内存管理 -->
+        <section class="detail-section" id="memory">
+            <h2 class="">GPU Memory Management</h2>
+            <p class="">WebGPU's memory model closely resembles native GPU APIs. Buffers are GPU-visible memory blocks, with the key optimization being minimizing CPU-GPU data transfer.</p>
+            <p class="">For ML inference scenarios, the following best practices are recommended:</p>
+            <ul class="">
+                <li class=""><strong class="">Staging Buffer Pattern</strong> — Use staging buffers as CPU/GPU bridges, avoiding performance loss from directly mapping storage buffers</li>
+                <li class=""><strong class="">Buffer Reuse</strong> — For same-shaped tensors, reuse allocated buffers to reduce GC pressure</li>
+                <li class=""><strong class="">Async Map</strong> — Use mapAsync to avoid blocking the main thread, maintaining UI responsiveness</li>
+                <li class=""><strong class="">Precision Selection</strong> — Use f16 when precision allows, halving VRAM usage and improving inference speed by 40-60%</li>
+            </ul>
+            <p class="">Model weights should be uploaded to GPU once during initialization; only input tensors are transferred during inference. For MobileNetV3-level models (~15MB weights), initialization upload takes ~50ms, with each subsequent inference only needing to transfer input image data (~0.6MB).</p>
+            <blockquote class="">The core principle of memory optimization is to keep data on the GPU as much as possible and minimize transfers between devices. Every CPU-GPU copy is a potential bottleneck.</blockquote>
+        </section>
+
+        <!-- Section 7: 性能基准 -->
+        <section class="detail-section" id="benchmark">
+            <h2 class="">Performance Benchmarks</h2>
+            <p class="">We ran a series of benchmarks using the same MobileNetV3 model processing 224x224 input images. Test environment: MacBook Pro M3 Max + Chrome 125.</p>
+            <ul class="">
+                <li class=""><strong class="">WebGPU Compute Shader</strong> — 8ms / inference, 92% GPU utilization</li>
+                <li class=""><strong class="">WebGL (ONNX Runtime)</strong> — 45ms / inference, 35% GPU utilization</li>
+                <li class=""><strong class="">WebAssembly (WASM)</strong> — 120ms / inference, single-threaded CPU</li>
+            </ul>
+            <p class="">WebGPU inference is <strong class="">5.6x faster</strong> than WebGL and <strong class="">15x faster</strong> than pure WebAssembly. More importantly, WebGPU's advantage grows with larger models — for BERT-base level models, the gap can exceed 20x.</p>
+            <p class="">WebGPU also has limitations: browser support isn't fully universal (~78% of desktop browsers currently support it), and some older devices have driver compatibility issues. But for modern browser-targeted Web applications, WebGPU is already the best choice for ML inference.</p>
+        </section>
+
+        <!-- Section 8: 实战建议 -->
+        <section class="detail-section" id="tips">
+            <h2 class="">Best Practices</h2>
+            <p class="">Based on our production experience, here are WebGPU ML inference best practices:</p>
+            <ul class="">
+                <li class=""><strong class="">Progressive Enhancement</strong> — Prefer WebGPU, fallback to WebGL, then WASM for maximum compatibility</li>
+                <li class=""><strong class="">Model Quantization</strong> — INT8 quantization reduces model size 4x and improves inference speed 2-3x, with typical accuracy loss under 1%</li>
+                <li class=""><strong class="">Warm-up Inference</strong> — Execute a dummy inference immediately after page load to trigger shader compilation and GPU buffer allocation</li>
+                <li class=""><strong class="">Worker Threads</strong> — Run inference in Web Workers to avoid blocking the main thread and causing UI jank</li>
+            </ul>
+            <p class="">The WebGPU ecosystem is rapidly evolving, with the W3C spec still iterating. Follow the Chrome DevRel blog and WebGPU Explainer to stay updated on API changes and new features.</p>
+        </section></div></div>
+    </div>
+    <section class="related" aria-labelledby="related-title"><p class="kicker">Continue reading</p><h2 id="related-title">Related <em>writing</em></h2><ol class="journal-list" style="list-style:none"><li><a class="journal-row" href="article-01.html" data-topic="1" data-cursor="Read">
+        <span class="journal-date">2026.11 · 01</span>
+        <span class="journal-title"><span class="static">The Model Fits. Why Is It Still Slow?</span><span class="marquee" aria-hidden="true"><span>The Model Fits. Why Is It Still Slow? —&nbsp;</span><span>The Model Fits. Why Is It Still Slow? —&nbsp;</span><span>The Model Fits. Why Is It Still Slow? —&nbsp;</span></span></span>
+        <span class="topic" data-topic="1">AI Engineering</span><span class="journal-time">15 min</span></a></li><li><a class="journal-row" href="article-02.html" data-topic="1" data-cursor="Read">
+        <span class="journal-date">2026.10 · 02</span>
+        <span class="journal-title"><span class="static">When the Exam Is Wrong: What Do AI Scores Measure?</span><span class="marquee" aria-hidden="true"><span>When the Exam Is Wrong: What Do AI Scores Measure? —&nbsp;</span><span>When the Exam Is Wrong: What Do AI Scores Measure? —&nbsp;</span><span>When the Exam Is Wrong: What Do AI Scores Measure? —&nbsp;</span></span></span>
+        <span class="topic" data-topic="1">AI Engineering</span><span class="journal-time">16 min</span></a></li><li><a class="journal-row" href="article-15.html" data-topic="1" data-cursor="Read">
+        <span class="journal-date">2026.05 · 15</span>
+        <span class="journal-title"><span class="static">The Core of AI Engineering Is Not Making Models Omnipotent. It Is Defining Boundaries</span><span class="marquee" aria-hidden="true"><span>The Core of AI Engineering Is Not Making Models Omnipotent. It Is Defining Boundaries —&nbsp;</span><span>The Core of AI Engineering Is Not Making Models Omnipotent. It Is Defining Boundaries —&nbsp;</span><span>The Core of AI Engineering Is Not Making Models Omnipotent. It Is Defining Boundaries —&nbsp;</span></span></span>
+        <span class="topic" data-topic="1">AI Engineering</span><span class="journal-time">8 min</span></a></li></ol></section>
+    <nav class="pager" aria-label="More articles">
+        <a href="article-36.html" data-cursor="Prev"><span class="meta">← Previous</span><strong>Real-Time Data Processing: Flink + Kafka Best Practices</strong></a>
+        <a href="article-38.html" data-cursor="Next"><span class="meta">Next →</span><strong>How to Objectively View Modern Feminism</strong></a>
+    </nav>
+</div>
+</main>
+<footer class="colophon">
+    <div class="colophon-name" data-fit aria-hidden="true">Eric</div>
+    <div class="colophon-grid">
+        <div><p class="meta">Index</p><a href="../work/index.html">Work</a><a href="../journal/index.html">Journal</a><a href="../index.html#about">About</a><a href="../index.html#contact">Contact</a></div>
+        <div><p class="meta">Elsewhere</p><a href="https://github.com/powerpan" target="_blank" rel="noopener">GitHub</a><a href="../work/index.html">Work</a><a href="index.html">Journal</a><a href="../index.html#contact">Contact</a></div>
+        <div><p class="meta">Settings</p><button type="button" data-theme-toggle aria-pressed="false"><span class="theme-switch-label">Night</span> paper</button><br><button type="button" data-motion-toggle aria-pressed="true">Motion: on</button><br><button type="button" class="sound-text" data-sound-toggle aria-pressed="false">Sound: off</button>
+<label class="volume"><span class="meta">Volume</span><input class="ink-range" type="range" min="0" max="1" step="0.05" value="0.6" data-sound-volume aria-label="Music volume"></label></div>
+        <div><p class="meta">Colophon</p><p>© 2026 Eric. Set in Instrument Serif &amp; Inter Tight. Ink simulated live in WebGL2.</p><a href="#" data-top>Back to top ↑</a></div>
+    </div>
+</footer>
+<p class="sr-only" role="status" aria-live="polite" data-sound-status></p>
+<script src="../js/ink-fluid.js"></script>
+<script src="../js/ink.js"></script>
+</body>
+</html>

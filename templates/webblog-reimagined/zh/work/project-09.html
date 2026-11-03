@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ClassBridge Product Suite — Eric</title>
+<meta name="description" content="一个项目体系，三个独立产品：ClassBridge Kids、IELTS Speaking Coach 与 Cantonese Speaking Coach。它们共享工程平台，但拥有不同用户、学习流程和数据边界。">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#ede8df">
+<script>(()=>{const r=document.documentElement;let t,m;try{t=localStorage.getItem('ink-theme');m=localStorage.getItem('ink-motion')}catch(e){}t=t||(matchMedia('(prefers-color-scheme: dark)').matches?'night':'day');if(matchMedia('(prefers-reduced-motion: reduce)').matches)m='off';r.dataset.theme=t;r.dataset.motion=m||'on'})()</script>
+<link rel="preload" href="../../assets/fonts/instrument-serif-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../css/ink.css">
+<link rel="stylesheet" href="../../css/languages.css">
+<link rel="stylesheet" href="../../css/sound.css">
+<script src="../../js/ink-sound.js" defer></script>
+<noscript><style>[data-sound-toggle],.volume{display:none!important}</style></noscript>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='26' fill='%23f6401a'/%3E%3Ccircle cx='40' cy='26' r='14' fill='%232337f2' fill-opacity='.85'/%3E%3C/svg%3E">
+<link rel="alternate" hreflang="en" href="../../work/project-09.html">
+</head>
+<body data-ink="quiet">
+<canvas id="ink" aria-hidden="true"></canvas>
+<div class="grain" aria-hidden="true"></div>
+
+<div class="cursor" aria-hidden="true"><span class="cursor-label"></span></div>
+<a class="sr-only" href="#main">跳至正文</a>
+<header class="masthead">
+    <a class="brand" href="../index.html" aria-label="Eric — 首页">Eric<sup>®</sup></a>
+    <div class="masthead-meta"><span>作品与手记</span><a href="../../work/project-09.html" data-language-switch hreflang="en" lang="en" aria-label="Read this page in English">EN</a></div>
+    <div class="masthead-right">
+        <nav class="masthead-nav" aria-label="主导航">
+            <a href="../work/index.html" aria-current="page">项目</a><a href="../journal/index.html">文章</a><a href="../index.html#about">关于</a><a href="../index.html#contact">联系</a>
+        </nav>
+        <button class="sound-switch" type="button" data-sound-toggle aria-pressed="false" aria-label="播放背景音乐"><canvas class="sound-wave" aria-hidden="true"></canvas><span class="sound-label">音乐</span></button>
+        <button class="theme-switch" type="button" data-theme-toggle aria-pressed="false"><span class="theme-switch-dot" aria-hidden="true"></span><span class="theme-switch-label">夜间</span></button>
+        <button class="menu-button" type="button" aria-expanded="false" aria-controls="menu">菜单</button>
+    </div>
+</header>
+<nav class="menu" id="menu" aria-label="菜单">
+    <a href="../index.html">目录</a><a href="../work/index.html"><em>项目</em></a><a href="../journal/index.html">文章</a><a href="../index.html#contact"><em>联系</em></a>
+    <div class="menu-foot meta"><span>本地 <span data-clock>--:--:--</span></span><button class="sound-switch" type="button" data-sound-toggle aria-pressed="false" aria-label="播放背景音乐"><canvas class="sound-wave" aria-hidden="true"></canvas><span class="sound-label">音乐</span></button><a href="../../work/project-09.html" data-language-switch hreflang="en" lang="en" aria-label="Read this page in English">EN</a></div>
+</nav>
+<main id="main">
+<div class="page"><p class="kicker"><a href="index.html">项目</a> / Native macOS · Multi-Product Platform · AI Speech</p>
+    <header class="case-hero"><h1 data-split>ClassBridge Product Suite</h1><p class="lede rise">一个项目体系，三个独立产品：ClassBridge Kids、IELTS Speaking Coach 与 Cantonese Speaking Coach。它们共享工程平台，但拥有不同用户、学习流程和数据边界。</p></header><dl class="case-facts rise"><div><dt class="meta">Role</dt><dd>独立开发者</dd></div><div><dt class="meta">Products</dt><dd>Kids / IELTS / Cantonese</dd></div><div><dt class="meta">Stack</dt><dd>SwiftUI / FastAPI / React</dd></div><div><dt class="meta">编号</dt><dd>No. 09</dd></div></dl>
+    <div class="case-media"><img src="../../assets/projects/classbridge-suite/kids-dashboard.jpg" alt="ClassBridge Kids 儿童英语学习首页" width="2170" height="1440" loading="eager" decoding="async"></div><div class="case-body"><section class="case-section"><div class="case-section-label"><span class="num">01</span><span class="meta">章节</span></div>
+            <div class="case-section-copy prose"><h2 data-split>共享代码不等于共享产品</h2><div class="detail-section-label">Product Boundaries</div>
+
+            <p class="detail-text">ClassBridge 采用“<strong class="">共享平台 + 独立产品上下文</strong>”的结构。三个产品可以在同一个 macOS App 中切换，也复用同一套 Cloud Gateway 和 Admin Web，但每次请求都携带明确的产品身份。</p>
+            <p class="detail-text">产品选择会同时决定导航、可见内容、账号授权、调用额度、模型配置、用量日志和业务数据。Kids 的学习进度不会进入 IELTS 报告，IELTS 题库不会出现在粤语课程中。</p>
+            <div class="suite-identity-grid">
+                <div class="suite-identity">
+                    <div class="suite-identity-index">01 / classbridge_kids</div>
+                    <div class="suite-identity-name">ClassBridge Kids</div>
+                    <div class="suite-identity-target">准备进入美国学校的儿童</div>
+                    <div class="suite-identity-desc">围绕年级、校园场景、学科词汇、复习和口语建立分级学习闭环。</div>
+                </div>
+                <div class="suite-identity">
+                    <div class="suite-identity-index">02 / ielts_speaking</div>
+                    <div class="suite-identity-name">IELTS Speaking Coach</div>
+                    <div class="suite-identity-target">成人 IELTS 口语备考者</div>
+                    <div class="suite-identity-desc">按 Part 1 / 2 / 3 组织录音、转写、AI 反馈、历史洞察和模拟练习。</div>
+                </div>
+                <div class="suite-identity">
+                    <div class="suite-identity-index">03 / cantonese_speaking</div>
+                    <div class="suite-identity-name">Cantonese Speaking Coach</div>
+                    <div class="suite-identity-target">普通话或英语背景的粤语学习者</div>
+                    <div class="suite-identity-desc">以标准音、粤拼、跟读录音、ASR 对照和实用表达反馈训练粤语听说。</div>
+                </div>
+            </div><div class="badges"><span class="tag">SwiftUI</span><span class="tag">SwiftPM</span><span class="tag">FastAPI</span><span class="tag">SQLite</span><span class="tag">React</span><span class="tag">Vite</span><span class="tag">TTS</span><span class="tag">ASR</span></div><figure class="rise"><img src="../../assets/projects/classbridge-suite/ielts-part-training.jpg" alt="IELTS Speaking Coach Part 训练工作台" width="2176" height="1442" loading="lazy" decoding="async"><figcaption>02 / IELTS SPEAKING</figcaption></figure></div></section><section class="case-section"><div class="case-section-label"><span class="num">02</span><span class="meta">章节</span></div>
+            <div class="case-section-copy prose"><h2 data-split>面向儿童适应新学校环境的分级英语产品</h2><div class="detail-section-label">Product 01 · Kids</div>
+            <div class="suite-product-heading">
+                <div class="suite-product-number">01</div>
+                <div class="">
+                    <div class="suite-product-name">ClassBridge Kids</div>
+                    <div class="suite-product-id">app_id = classbridge_kids</div>
+                </div>
+            </div>
+
+            <p class="detail-text">Kids 不是通用背词工具，而是把日常对话、课堂用语、学科内容和语音练习放进年级化学习池。首页根据当前等级、待复习内容和已掌握状态决定下一步入口。</p>
+            <p class="detail-text">学习引擎通过多轮练习、错题追加和复习日程维护掌握度；标准发音、录音测评、查词和 AI 问答由云端能力支持，正式试用模式不会用本地规则答案伪装成功。</p>
+            <div class="suite-capabilities">
+                <div class="suite-capability">按年级组织日常场景与学科内容</div>
+                <div class="suite-capability">多轮学习、错题重试与到期复习</div>
+                <div class="suite-capability">标准发音、录音测评与词级诊断</div>
+                <div class="suite-capability">学习进度、掌握状态与 AI 问答</div>
+            </div><figure class="rise"><img src="../../assets/projects/classbridge-suite/cantonese-shadowing.jpg" alt="Cantonese Speaking Coach 粤语跟读练习" width="2572" height="1634" loading="lazy" decoding="async"><figcaption>03 / CANTONESE SPEAKING</figcaption></figure></div></section><section class="case-section"><div class="case-section-label"><span class="num">03</span><span class="meta">章节</span></div>
+            <div class="case-section-copy prose"><h2 data-split>把完整口语流程做成可重复训练的工作台</h2><div class="detail-section-label">Product 02 · IELTS</div>
+            <div class="suite-product-heading">
+                <div class="suite-product-number">02</div>
+                <div class="">
+                    <div class="suite-product-name">IELTS Speaking Coach</div>
+                    <div class="suite-product-id">app_id = ielts_speaking</div>
+                </div>
+            </div>
+
+            <p class="detail-text">IELTS 产品围绕 Part 1、Part 2 和 Part 3 建立独立题库与练习状态。原生录音、实时波形、Part 2 准备与作答计时、题目语音、ASR 转写和报告生成形成连续闭环。</p>
+            <p class="detail-text">结构化题库按 120 套主题组织 1,200 道题，支持单 Part 训练、整组练习和模考规划。反馈围绕流利与连贯、词汇、语法和发音四个维度，并明确标记为 AI estimated band，而非官方成绩。</p>
+            <div class="suite-capabilities">
+                <div class="suite-capability">Part 1 / 2 / 3 题库与主题套题</div>
+                <div class="suite-capability">原生录音、波形、计时与自动提交</div>
+                <div class="suite-capability">ASR、四维反馈与中英文报告</div>
+                <div class="suite-capability">历史筛选、趋势洞察与模考规划</div>
+            </div></div></section><section class="case-section"><div class="case-section-label"><span class="num">04</span><span class="meta">章节</span></div>
+            <div class="case-section-copy prose"><h2 data-split>从听标准音到录音反馈的实用粤语训练</h2><div class="detail-section-label">Product 03 · Cantonese</div>
+            <div class="suite-product-heading">
+                <div class="suite-product-number">03</div>
+                <div class="">
+                    <div class="suite-product-name">Cantonese Speaking Coach</div>
+                    <div class="suite-product-id">app_id = cantonese_speaking</div>
+                </div>
+            </div>
+
+            <p class="detail-text">粤语产品按模块、课程和字词句组织内容，同时展示繁体文本、粤拼和释义。学习者先听粤语标准音，再录音提交，系统依次完成 ASR 转写、目标文本对照和 AI 参考反馈。</p>
+            <p class="detail-text">反馈报告保留 transcript、疑似问题、自然度建议和下一步练习任务，历史记录可回看。产品聚焦实用跟读与表达，不把当前模型能力包装成精确的六声、声母、韵母或懒音客观评分。</p>
+            <div class="suite-capabilities">
+                <div class="suite-capability">模块、课程、字词句与粤拼内容</div>
+                <div class="suite-capability">粤语标准音播放与跟读录音</div>
+                <div class="suite-capability">ASR transcript 对照与 AI 参考反馈</div>
+                <div class="suite-capability">历史报告、疑似问题与练习建议</div>
+            </div>
+            <div class="suite-guardrail">能力边界：当前反馈用于辅助学习，不宣称提供粤语六声或声韵母的客观精确评分。</div></div></section><section class="case-section"><div class="case-section-label"><span class="num">05</span><span class="meta">章节</span></div>
+            <div class="case-section-copy prose"><h2 data-split>复用基础设施，把差异留在产品层</h2><div class="detail-section-label">Shared Platform</div>
+
+            <p class="detail-text">SwiftUI App 提供原生桌面交互和产品切换，FastAPI Gateway 统一处理账号、内容发布、TTS、ASR、AI、额度和用量，React Admin Web 管理用户、内容、模型 Profile 与运营配置。</p>
+            <p class="detail-text">共享服务只负责通用能力。Kids 学习会话、IELTS 题库与报告、粤语课程与反馈分别进入独立领域接口和数据表，避免以大量条件分支把三个业务流程硬塞进同一模型。</p>
+            <div class="suite-platform-flow">
+                <div class="suite-platform-step">
+                    <div class="suite-platform-index">01 / CLIENT</div>
+                    <div class="suite-platform-title">原生产品上下文</div>
+                    <div class="suite-platform-desc">产品选择器决定当前导航、工作台、账号和 API 路由。</div>
+                </div>
+                <div class="suite-platform-step">
+                    <div class="suite-platform-index">02 / IDENTITY</div>
+                    <div class="suite-platform-title">显式 App ID</div>
+                    <div class="suite-platform-desc">请求携带产品 ID 与版本，令牌和会员关系绑定具体产品。</div>
+                </div>
+                <div class="suite-platform-step">
+                    <div class="suite-platform-index">03 / GATEWAY</div>
+                    <div class="suite-platform-title">共享能力路由</div>
+                    <div class="suite-platform-desc">Gateway 按产品选择模型 Profile、Prompt、额度和功能开关。</div>
+                </div>
+                <div class="suite-platform-step">
+                    <div class="suite-platform-index">04 / DOMAIN</div>
+                    <div class="suite-platform-title">独立业务数据</div>
+                    <div class="suite-platform-desc">学习进度、题库、课程、报告和状态机保持产品级隔离。</div>
+                </div>
+            </div></div></section><section class="case-section"><div class="case-section-label"><span class="num">06</span><span class="meta">章节</span></div>
+            <div class="case-section-copy prose"><h2 data-split>一个后台可以运营三种产品，但不能混淆三种用户体验</h2><div class="detail-section-label">Isolation &amp; Operations</div>
+
+            <p class="detail-text">多产品设计覆盖客户端、接口、数据和运营四层。管理端可以统一查看系统健康与成本，但内容审核、模型策略、用户授权和报告质量仍按产品筛选和配置。</p>
+            <div class="detail-features">
+                <div class="detail-feature">
+                    <div class="detail-feature-icon">01</div>
+                    <div class="detail-feature-title">导航隔离</div>
+                    <div class="detail-feature-desc">切换产品后只显示对应学习入口和工作台。</div>
+                </div>
+                <div class="detail-feature">
+                    <div class="detail-feature-icon">02</div>
+                    <div class="detail-feature-title">账号与令牌</div>
+                    <div class="detail-feature-desc">会员关系和访问令牌绑定 app_id，不能跨产品复用权限。</div>
+                </div>
+                <div class="detail-feature">
+                    <div class="detail-feature-icon">03</div>
+                    <div class="detail-feature-title">内容与进度</div>
+                    <div class="detail-feature-desc">学习内容、题库、课程和进度采用各自的数据语义。</div>
+                </div>
+                <div class="detail-feature">
+                    <div class="detail-feature-icon">04</div>
+                    <div class="detail-feature-title">模型与 Prompt</div>
+                    <div class="detail-feature-desc">每个产品配置独立模型 Profile、反馈政策和功能开关。</div>
+                </div>
+                <div class="detail-feature">
+                    <div class="detail-feature-icon">05</div>
+                    <div class="detail-feature-title">额度与成本</div>
+                    <div class="detail-feature-desc">TTS、ASR、AI 和报告调用按产品记录额度与用量。</div>
+                </div>
+                <div class="detail-feature">
+                    <div class="detail-feature-icon">06</div>
+                    <div class="detail-feature-title">内容运营</div>
+                    <div class="detail-feature-desc">Admin Web 按产品管理发布、审核、用户和报告质量。</div>
+                </div>
+            </div></div></section></div>
+    <a class="next-case" href="project-10.html" data-cursor="下一个"><span class="meta">下一个项目 — 10</span><strong>YOLO26 Multimodal</strong></a></div>
+</main>
+<footer class="colophon">
+    <div class="colophon-name" data-fit aria-hidden="true">Eric</div>
+    <div class="colophon-grid">
+        <div><p class="meta">目录</p><a href="../work/index.html">项目</a><a href="../journal/index.html">文章</a><a href="../index.html#about">关于</a><a href="../index.html#contact">联系</a></div>
+        <div><p class="meta">更多</p><a href="https://github.com/powerpan" target="_blank" rel="noopener">GitHub</a><a href="index.html">项目</a><a href="../journal/index.html">文章</a><a href="../index.html#contact">联系</a></div>
+        <div><p class="meta">设置</p><button type="button" data-theme-toggle aria-pressed="false"><span class="theme-switch-label">夜间</span> 纸色</button><br><button type="button" data-motion-toggle aria-pressed="true">动效：开启</button><br><button type="button" class="sound-text" data-sound-toggle aria-pressed="false">音乐：关闭</button>
+<label class="volume"><span class="meta">音量</span><input class="ink-range" type="range" min="0" max="1" step="0.05" value="0.6" data-sound-volume aria-label="音乐音量"></label></div>
+        <div><p class="meta">关于本站</p><p>© 2026 Eric. 中文标题采用 Noto Serif SC，正文采用 Noto Sans SC。水墨以 WebGL2 实时模拟。</p><a href="#" data-top>返回顶部 ↑</a></div>
+    </div>
+</footer>
+<p class="sr-only" role="status" aria-live="polite" data-sound-status></p>
+<script src="../../js/ink-fluid.js"></script>
+<script src="../../js/ink.js"></script>
+</body>
+</html>

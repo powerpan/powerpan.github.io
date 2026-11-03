@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>After a Vision Model Ships: Do Not Let mAP Become the Only Answer — Eric</title>
+<meta name="description" content="After a Vision Model Ships: Do Not Let mAP Become the Only Answer">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#ede8df">
+<script>(()=>{const r=document.documentElement;let t,m;try{t=localStorage.getItem('ink-theme');m=localStorage.getItem('ink-motion')}catch(e){}t=t||(matchMedia('(prefers-color-scheme: dark)').matches?'night':'day');if(matchMedia('(prefers-reduced-motion: reduce)').matches)m='off';r.dataset.theme=t;r.dataset.motion=m||'on'})()</script>
+<link rel="preload" href="../assets/fonts/instrument-serif-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../css/ink.css">
+<link rel="stylesheet" href="../css/languages.css">
+<link rel="stylesheet" href="../css/sound.css">
+<script src="../js/ink-sound.js" defer></script>
+<noscript><style>[data-sound-toggle],.volume{display:none!important}</style></noscript>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='26' fill='%23f6401a'/%3E%3Ccircle cx='40' cy='26' r='14' fill='%232337f2' fill-opacity='.85'/%3E%3C/svg%3E">
+<link rel="alternate" hreflang="zh-CN" href="../zh/journal/article-29.html">
+</head>
+<body data-ink="quiet">
+<canvas id="ink" aria-hidden="true"></canvas>
+<div class="grain" aria-hidden="true"></div>
+
+<div class="cursor" aria-hidden="true"><span class="cursor-label"></span></div>
+<a class="sr-only" href="#main">Skip to content</a>
+<header class="masthead">
+    <a class="brand" href="../index.html" aria-label="Eric — home">Eric<sup>®</sup></a>
+    <div class="masthead-meta"><span>Portfolio &amp; Journal</span><a href="../zh/journal/article-29.html" data-language-switch hreflang="zh-CN" lang="zh-CN" aria-label="Read this page in Chinese">中文</a></div>
+    <div class="masthead-right">
+        <nav class="masthead-nav" aria-label="Primary">
+            <a href="../work/index.html">Work</a><a href="../journal/index.html" aria-current="page">Journal</a><a href="../index.html#about">About</a><a href="../index.html#contact">Contact</a>
+        </nav>
+        <button class="sound-switch" type="button" data-sound-toggle aria-pressed="false" aria-label="Play background music"><canvas class="sound-wave" aria-hidden="true"></canvas><span class="sound-label">Sound</span></button>
+        <button class="theme-switch" type="button" data-theme-toggle aria-pressed="false"><span class="theme-switch-dot" aria-hidden="true"></span><span class="theme-switch-label">Night</span></button>
+        <button class="menu-button" type="button" aria-expanded="false" aria-controls="menu">Menu</button>
+    </div>
+</header>
+<nav class="menu" id="menu" aria-label="Menu">
+    <a href="../index.html">Index</a><a href="../work/index.html"><em>Work</em></a><a href="../journal/index.html">Journal</a><a href="../index.html#contact"><em>Contact</em></a>
+    <div class="menu-foot meta"><span>Local <span data-clock>--:--:--</span></span><button class="sound-switch" type="button" data-sound-toggle aria-pressed="false" aria-label="Play background music"><canvas class="sound-wave" aria-hidden="true"></canvas><span class="sound-label">Sound</span></button><a href="../zh/journal/article-29.html" data-language-switch hreflang="zh-CN" lang="zh-CN" aria-label="Read this page in Chinese">中文</a></div>
+</nav>
+<main id="main">
+<div class="progress" aria-hidden="true"><i></i></div>
+<div class="page">
+    <header class="article-head">
+        <p class="meta"><a href="index.html">← Journal</a> &nbsp;/&nbsp; <span class="topic" data-topic="3">Vision & Multimodal</span></p>
+        <h1 data-split>After a Vision Model Ships: Do Not Let <em>mAP</em> Become the Only Answer</h1>
+        <p class="lede rise"></p>
+        <div class="article-meta meta rise" style="--d:120ms"><span>2026.04.27</span><span>9 min</span><span>No. 29</span></div>
+    </header>
+    <div class="article-layout">
+        <nav class="toc" aria-label="Contents"><a href="#intro">Once offline metrics pass, the real work begins</a><a href="#metric-gap">mAP cannot answer every engineering question</a><a href="#online-signals">What signals to watch after launch</a><a href="#rollout">Gradual rollout matters more than replacement</a><a href="#ownership">The data loop is the long-term moat</a><a href="#takeaway">Final Thoughts</a></nav>
+        <div class="page-surface"><div class="prose"><section class="detail-section" id="intro">
+            <h2 class="">Once offline metrics pass, the real work begins</h2>
+            <p class="">Many vision projects converge around one acceptance number: mAP. The dataset is split, validation runs, the curve looks good, and the model feels like it has already cleared the hardest part.</p>
+            <p class="">But once that model is connected to a production line, monitoring system, or business workflow, mAP is usually only the beginning. Online images bring lighting changes, angles, compression, occlusion, camera vibration, and aging devices that never politely follow the validation distribution.</p>
+            <p class="">I increasingly think the most underestimated part of vision engineering is not training technique, but <strong class="">post-launch observability and rollback design</strong>. A model that can prove accuracy in a notebook but cannot explain when it is failing online is not yet a reliable system.</p>
+        </section>
+
+        <section class="detail-section" id="metric-gap">
+            <h2 class="">mAP cannot answer every engineering question</h2>
+            <p class="">mAP matters. It measures overall detection quality on labeled data. But it is naturally offline, averaged, and dataset-bound. Real engineering environments ask different questions: which false positives are expensive? Which shifts have more misses? Did one camera suddenly get worse? If the threshold rises, will the human review queue collapse?</p>
+            <p class="">That is not mAP’s fault; those questions are not its job. Treating mAP as the only answer is like judging a backend service by average CPU usage alone. The average can look fine while tail latency, error rate, and dependency jitter are already flashing red.</p>
+            <ul class="">
+                <li class=""><strong class="">Average metrics hide local risk</strong> — a small class, one production line, or one lighting condition may already be degrading</li>
+                <li class=""><strong class="">Offline sets cannot cover online change</strong> — devices, environments, and operating procedures gradually shift the input distribution</li>
+                <li class=""><strong class="">Business cost is not the same as detection score</strong> — the same false detection has very different cost in alerts, inspection, and automated sorting</li>
+            </ul>
+        </section>
+
+        <section class="detail-section" id="online-signals">
+            <h2 class="">What signals to watch after launch</h2>
+            <p class="">I prefer treating a vision model like an online service, not a static file. In addition to normal service metrics, the system needs signals related to images, boxes, and confidence distributions.</p>
+            <ul class="">
+                <li class=""><strong class="">Input distribution</strong> — whether brightness, blur, resolution, compression quality, camera source, and capture time have drifted from training</li>
+                <li class=""><strong class="">Output distribution</strong> — whether per-class counts, box sizes, confidence histograms, and empty-result ratios suddenly change</li>
+                <li class=""><strong class="">Human review feedback</strong> — which false positives are repeatedly rejected, and which misses come from the same device or scene</li>
+                <li class=""><strong class="">System-level consequences</strong> — whether alert volume, review queue length, latency, and downstream action failures are amplified by model output</li>
+            </ul>
+            <p class="">These signals do not require a complex platform from day one. Even daily statistics grouped by camera and class are far more reliable than storing only a model weight file.</p>
+        </section>
+
+        <section class="detail-section" id="rollout">
+            <h2 class="">Gradual rollout matters more than replacement</h2>
+            <p class="">Upgrading a vision model should not feel like swapping a static image. A new model can score higher offline and still create new false-positive patterns online. In industrial inspection, security alerts, or medical assistance, changed model behavior is itself a risk.</p>
+            <p class="">A steadier path is treating launch as a <strong class="">canary experiment</strong>: run old and new models on the same inputs, compare differences first, then gradually increase traffic. Do not only ask whether the new model is more accurate; ask where it disagrees with the old one.</p>
+            <ul class="">
+                <li class=""><strong class="">Shadow mode</strong> — the new model does not affect the business path yet; it only records predictions and differences</li>
+                <li class=""><strong class="">Scenario-based rollout</strong> — start with low-risk cameras, low-value alerts, or workflows with human fallback</li>
+                <li class=""><strong class="">Explicit rollback thresholds</strong> — if false positives, misses, latency, or review pressure exceed limits, automatically switch back</li>
+            </ul>
+        </section>
+
+        <section class="detail-section" id="ownership">
+            <h2 class="">The data loop is the long-term moat</h2>
+            <p class="">Whether a vision system improves over time depends on whether online failures can flow back into training. Without a loop, every iteration feels like another draw from the lottery. With a loop, error samples become fuel for the next improvement.</p>
+            <p class="">The loop is not simply dumping every online image back into training. The useful part is context: source device, time, environment, model version, threshold, human decision, and downstream impact. That context lets the team distinguish drift, labeling policy, model architecture, and business threshold mistakes.</p>
+            <p class=""><strong class="">Model launch is not the end of development; it is where the data system starts breathing.</strong> The team that can detect failure faster, locate causes more precisely, and convert errors into training assets more consistently is closer to sustainable AI vision engineering.</p>
+        </section>
+
+        <section class="detail-section" id="takeaway">
+            <h2 class="">Final Thoughts</h2>
+            <p class="">If mAP is the only way we judge success, we reduce the problem to whether the model was trained well enough. In practice, the harder engineering question is whether the model can still be observed, explained, and controlled in a changing world.</p>
+            <p class="">A mature vision launch should answer at least three questions: is the model still seeing familiar data, what business consequences do its errors create, and can the system quickly detect and roll back when failure begins?</p>
+            <p class="">mAP is an entry ticket, not a finish line. Monitoring, canary rollout, rollback, and the data loop decide whether a vision model is a demo or a production system.</p>
+        </section></div></div>
+    </div>
+    <section class="related" aria-labelledby="related-title"><p class="kicker">Continue reading</p><h2 id="related-title">Related <em>writing</em></h2><ol class="journal-list" style="list-style:none"><li><a class="journal-row" href="article-17.html" data-topic="3" data-cursor="Read">
+        <span class="journal-date">2026.05 · 17</span>
+        <span class="journal-title"><span class="static">U-Net Did Not Lose to a Newer Model: In Industrial Vision, Define the Task Before Choosing the Model</span><span class="marquee" aria-hidden="true"><span>U-Net Did Not Lose to a Newer Model: In Industrial Vision, Define the Task Before Choosing the Model —&nbsp;</span><span>U-Net Did Not Lose to a Newer Model: In Industrial Vision, Define the Task Before Choosing the Model —&nbsp;</span><span>U-Net Did Not Lose to a Newer Model: In Industrial Vision, Define the Task Before Choosing the Model —&nbsp;</span></span></span>
+        <span class="topic" data-topic="3">Vision &amp; Multimodal</span><span class="journal-time">8 min</span></a></li><li><a class="journal-row" href="article-24.html" data-topic="3" data-cursor="Read">
+        <span class="journal-date">2026.04 · 24</span>
+        <span class="journal-title"><span class="static">Vision Algorithm Engineers: Do Not Become Process Operators</span><span class="marquee" aria-hidden="true"><span>Vision Algorithm Engineers: Do Not Become Process Operators —&nbsp;</span><span>Vision Algorithm Engineers: Do Not Become Process Operators —&nbsp;</span><span>Vision Algorithm Engineers: Do Not Become Process Operators —&nbsp;</span></span></span>
+        <span class="topic" data-topic="3">Vision &amp; Multimodal</span><span class="journal-time">8 min</span></a></li><li><a class="journal-row" href="article-35.html" data-topic="3" data-cursor="Read">
+        <span class="journal-date">2026.03 · 35</span>
+        <span class="journal-title"><span class="static">From DETR to YOLOv8: Transformer Evolution in Object Detection</span><span class="marquee" aria-hidden="true"><span>From DETR to YOLOv8: Transformer Evolution in Object Detection —&nbsp;</span><span>From DETR to YOLOv8: Transformer Evolution in Object Detection —&nbsp;</span><span>From DETR to YOLOv8: Transformer Evolution in Object Detection —&nbsp;</span></span></span>
+        <span class="topic" data-topic="3">Vision &amp; Multimodal</span><span class="journal-time">12 min</span></a></li></ol></section>
+    <nav class="pager" aria-label="More articles">
+        <a href="article-28.html" data-cursor="Prev"><span class="meta">← Previous</span><strong>AI Weekly: Agent Platforms Scale Up, Models Keep Advancing, and AI Hardware Moves Toward the Edge</strong></a>
+        <a href="article-30.html" data-cursor="Next"><span class="meta">Next →</span><strong>Code Review Debt in the Age of AI Coding</strong></a>
+    </nav>
+</div>
+</main>
+<footer class="colophon">
+    <div class="colophon-name" data-fit aria-hidden="true">Eric</div>
+    <div class="colophon-grid">
+        <div><p class="meta">Index</p><a href="../work/index.html">Work</a><a href="../journal/index.html">Journal</a><a href="../index.html#about">About</a><a href="../index.html#contact">Contact</a></div>
+        <div><p class="meta">Elsewhere</p><a href="https://github.com/powerpan" target="_blank" rel="noopener">GitHub</a><a href="../work/index.html">Work</a><a href="index.html">Journal</a><a href="../index.html#contact">Contact</a></div>
+        <div><p class="meta">Settings</p><button type="button" data-theme-toggle aria-pressed="false"><span class="theme-switch-label">Night</span> paper</button><br><button type="button" data-motion-toggle aria-pressed="true">Motion: on</button><br><button type="button" class="sound-text" data-sound-toggle aria-pressed="false">Sound: off</button>
+<label class="volume"><span class="meta">Volume</span><input class="ink-range" type="range" min="0" max="1" step="0.05" value="0.6" data-sound-volume aria-label="Music volume"></label></div>
+        <div><p class="meta">Colophon</p><p>© 2026 Eric. Set in Instrument Serif &amp; Inter Tight. Ink simulated live in WebGL2.</p><a href="#" data-top>Back to top ↑</a></div>
+    </div>
+</footer>
+<p class="sr-only" role="status" aria-live="polite" data-sound-status></p>
+<script src="../js/ink-fluid.js"></script>
+<script src="../js/ink.js"></script>
+</body>
+</html>

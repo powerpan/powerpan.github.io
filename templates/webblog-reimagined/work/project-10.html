@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>YOLO26 Multimodal — Eric</title>
+<meta name="description" content="Multi-modal visual detection system based on YOLO26, featuring reusable Backbone and Neck architecture with three independent detection heads, outputting object detection, keypoint localization, and instance segmentation in a single forward pass.">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#ede8df">
+<script>(()=>{const r=document.documentElement;let t,m;try{t=localStorage.getItem('ink-theme');m=localStorage.getItem('ink-motion')}catch(e){}t=t||(matchMedia('(prefers-color-scheme: dark)').matches?'night':'day');if(matchMedia('(prefers-reduced-motion: reduce)').matches)m='off';r.dataset.theme=t;r.dataset.motion=m||'on'})()</script>
+<link rel="preload" href="../assets/fonts/instrument-serif-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../css/ink.css">
+<link rel="stylesheet" href="../css/languages.css">
+<link rel="stylesheet" href="../css/sound.css">
+<script src="../js/ink-sound.js" defer></script>
+<noscript><style>[data-sound-toggle],.volume{display:none!important}</style></noscript>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='26' fill='%23f6401a'/%3E%3Ccircle cx='40' cy='26' r='14' fill='%232337f2' fill-opacity='.85'/%3E%3C/svg%3E">
+<link rel="alternate" hreflang="zh-CN" href="../zh/work/project-10.html">
+</head>
+<body data-ink="quiet">
+<canvas id="ink" aria-hidden="true"></canvas>
+<div class="grain" aria-hidden="true"></div>
+
+<div class="cursor" aria-hidden="true"><span class="cursor-label"></span></div>
+<a class="sr-only" href="#main">Skip to content</a>
+<header class="masthead">
+    <a class="brand" href="../index.html" aria-label="Eric — home">Eric<sup>®</sup></a>
+    <div class="masthead-meta"><span>Portfolio &amp; Journal</span><a href="../zh/work/project-10.html" data-language-switch hreflang="zh-CN" lang="zh-CN" aria-label="Read this page in Chinese">中文</a></div>
+    <div class="masthead-right">
+        <nav class="masthead-nav" aria-label="Primary">
+            <a href="../work/index.html" aria-current="page">Work</a><a href="../journal/index.html">Journal</a><a href="../index.html#about">About</a><a href="../index.html#contact">Contact</a>
+        </nav>
+        <button class="sound-switch" type="button" data-sound-toggle aria-pressed="false" aria-label="Play background music"><canvas class="sound-wave" aria-hidden="true"></canvas><span class="sound-label">Sound</span></button>
+        <button class="theme-switch" type="button" data-theme-toggle aria-pressed="false"><span class="theme-switch-dot" aria-hidden="true"></span><span class="theme-switch-label">Night</span></button>
+        <button class="menu-button" type="button" aria-expanded="false" aria-controls="menu">Menu</button>
+    </div>
+</header>
+<nav class="menu" id="menu" aria-label="Menu">
+    <a href="../index.html">Index</a><a href="../work/index.html"><em>Work</em></a><a href="../journal/index.html">Journal</a><a href="../index.html#contact"><em>Contact</em></a>
+    <div class="menu-foot meta"><span>Local <span data-clock>--:--:--</span></span><button class="sound-switch" type="button" data-sound-toggle aria-pressed="false" aria-label="Play background music"><canvas class="sound-wave" aria-hidden="true"></canvas><span class="sound-label">Sound</span></button><a href="../zh/work/project-10.html" data-language-switch hreflang="zh-CN" lang="zh-CN" aria-label="Read this page in Chinese">中文</a></div>
+</nav>
+<main id="main">
+<div class="page"><p class="kicker"><a href="index.html">Work</a> / AI Vision · YOLO26 · Multi-head</p>
+    <header class="case-hero"><h1 data-split>YOLO26 Multimodal</h1><p class="lede rise">Multi-modal visual detection system based on YOLO26, featuring reusable Backbone and Neck architecture with three independent detection heads, outputting object detection, keypoint localization, and instance segmentation in a single forward pass.</p></header><dl class="case-facts rise"><div><dt class="meta">Role</dt><dd>Independent Developer</dd></div><div><dt class="meta">Duration</dt><dd>3 months</dd></div><div><dt class="meta">Stack</dt><dd>YOLO26 / PyTorch</dd></div><div><dt class="meta">Index</dt><dd>No. 10</dd></div></dl>
+    <div class="case-media"><img src="../assets/vfx/project-atlas.jpg" alt="Concept visualization from the original site" width="1536" height="1024" loading="eager" decoding="async"></div><div class="case-body"><section class="case-section"><div class="case-section-label"><span class="num">01</span><span class="meta">Section</span></div>
+            <div class="case-section-copy prose"><h2 data-split>One Model, Triple Perception</h2><div class="detail-section-label">Overview</div>
+
+            <p class="detail-text">In real-world visual detection scenarios, we often need to simultaneously obtain an object's <strong class="">location</strong> (bounding box), <strong class="">shape</strong> (keypoints), and <strong class="">contour</strong> (segmentation mask). Traditional approaches typically require training a separate model for each task, then combining outputs via multi-model cascading or ensembling — adding system complexity and non-trivial inference latency.</p>
+            <p class="detail-text">The core idea of YOLO26 Multimodal is: leverage YOLO26's <strong class="">reusable Backbone and Neck</strong> to extract unified multi-scale features, then design three independent Detection Head, Keypoint Head, and Segmentation Head, each with its own loss function and output format. The entire system outputs all three result types in a <strong class="">single forward pass</strong>, achieving "one computation, triple perception."</p><div class="badges"></div></div></section><section class="case-section"><div class="case-section-label"><span class="num">02</span><span class="meta">Section</span></div>
+            <div class="case-section-copy prose"><h2 data-split>Multi-Head Architecture</h2><div class="detail-section-label">Architecture</div>
+
+            <p class="detail-text">The architecture follows YOLO's One-Stage design philosophy with key innovations at the Head layer. While traditional YOLO Heads handle only single detection tasks (bounding box + class), we split the Head into three functionally independent branches, each with its own output channels, activation functions, and loss computation logic.</p>
+            <p class="detail-text">The key advantage is <strong class="">feature reuse</strong> — Backbone and Neck features are shared across three Heads, avoiding redundant computation. Each Head can be independently trained and fine-tuned without interference. When only one output type is needed, other Heads can be individually disabled for flexible capability trimming.</p></div></section><section class="case-section"><div class="case-section-label"><span class="num">03</span><span class="meta">Section</span></div>
+            <div class="case-section-copy prose"><h2 data-split>A Reusable Feature Extraction Backbone</h2><div class="detail-section-label">Backbone &amp; Neck</div>
+
+            <p class="detail-text">YOLO26's Backbone is based on CSP (Cross Stage Partial) architecture, using CBS (Conv + BN + SiLU) modules as building blocks, with C2f modules for cross-stage feature fusion. The Neck uses PAN-FPN (Path Aggregation Network + Feature Pyramid Network) for bidirectional top-down and bottom-up feature aggregation.</p>
+            <p class="detail-text">Key design: We added a <strong class="">Channel Split mechanism</strong> at the Neck output, splitting the fused feature map along the channel dimension into three groups for the Detection, Keypoint, and Segmentation Heads. This lightweight separation is more efficient than feature map copying, adding only 0.3% parameters while effectively reducing gradient conflicts between tasks.</p></div></section><section class="case-section"><div class="case-section-label"><span class="num">04</span><span class="meta">Section</span></div>
+            <div class="case-section-copy prose"><h2 data-split>Three-Head Design Details</h2><div class="detail-section-label">Three Heads</div>
+
+            <div class="detail-features">
+                <div class="detail-feature">
+                    <div class="detail-feature-icon">📦</div>
+                    <div class="detail-feature-title">Detection Head</div>
+                    <div class="detail-feature-desc">Handles object detection, outputting bounding box coordinates (x, y, w, h), objectness score, and class probabilities. Uses Decoupled Head design with independent classification and regression branches, CIoU Loss for localization. Anchor-free mode with direct center offset and dimension regression, supporting NMS post-processing.</div>
+                </div>
+                <div class="detail-feature">
+                    <div class="detail-feature-icon">🎯</div>
+                    <div class="detail-feature-title">Keypoint Head</div>
+                    <div class="detail-feature-desc">Handles keypoint detection, outputting K predefined keypoint coordinates with visibility labels. Uses Heatmap-based approach generating H×W Gaussian heatmaps per keypoint, trained with MSE Loss. Supports variable keypoint counts (e.g., 17 for human body, 68 for face, 21 for hand) via flexible configuration.</div>
+                </div>
+                <div class="detail-feature">
+                    <div class="detail-feature-icon">🎭</div>
+                    <div class="detail-feature-title">Segmentation Head</div>
+                    <div class="detail-feature-desc">Handles instance segmentation, generating pixel-level masks for each detected object. Uses Mask Prototype + Coefficients approach (similar to YOLACT), with a lightweight mask decoder requiring only 1ms. Outputs 128×128 mask prototypes, linearly combined via detection head coefficient vectors for final masks, balancing accuracy and speed.</div>
+                </div>
+            </div></div></section><section class="case-section"><div class="case-section-label"><span class="num">05</span><span class="meta">Section</span></div>
+            <div class="case-section-copy prose"><h2 data-split>Multi-Task Loss Design</h2><div class="detail-section-label">Loss Function</div>
+
+            <p class="detail-text">Each Head has its own loss function, with the total loss as a weighted sum:</p>
+            <p class="detail-text">
+                L_total = λ₁ · L_det + λ₂ · L_kpt + λ₃ · L_seg
+            </p>
+            <p class="detail-text">Where <strong class="">L_det</strong> includes CIoU localization loss, classification BCE loss, and objectness BCE loss; <strong class="">L_kpt</strong> uses keypoint heatmap MSE loss plus visibility classification loss; <strong class="">L_seg</strong> combines Dice Loss + BCE Loss for better foreground/background imbalance robustness.</p>
+            <p class="detail-text">Weight coefficients were determined through experimental tuning: λ₁=1.0, λ₂=0.5, λ₃=0.8. We also introduced <strong class="">dynamic weight adjustment</strong> — increasing L_det weight early in training for localization learning, then gradually raising L_kpt and L_seg weights for refined shape output.</p></div></section><section class="case-section"><div class="case-section-label"><span class="num">06</span><span class="meta">Section</span></div>
+            <div class="case-section-copy prose"><h2 data-split>Training Strategy</h2><div class="detail-section-label">Training Strategy</div>
+
+            <p class="detail-text">For the dataset, we collected and annotated approximately <strong class="">12,000 images</strong> with multi-task labels, each containing bounding boxes, keypoint coordinates, and segmentation masks. Data augmentation uses Mosaic + MixUp + Random HSV + horizontal flip, with special geometric transforms for keypoints to ensure synchronized coordinate transformation.</p>
+            <p class="detail-text">Training uses AdamW optimizer with initial learning rate 1e-3 and cosine annealing schedule. Batch size is 32 (4×8 GPU) over 300 epochs. The first 50 epochs use Warmup + frozen Backbone, training only the Neck and three Heads to accelerate convergence and avoid early gradient oscillation.</p></div></section><section class="case-section"><div class="case-section-label"><span class="num">07</span><span class="meta">Section</span></div>
+            <div class="case-section-copy prose"><h2 data-split>Core Inference Code</h2><div class="detail-section-label">Code</div>
+
+            <p class="detail-text">Multi-head inference forward pass flow</p>
+            <div class="detail-code-block">
+                <div class="detail-code-header">
+                    <div class="detail-code-dot"></div>
+                    <div class="detail-code-dot"></div>
+                    <div class="detail-code-dot"></div>
+                    <div class="detail-code-title">multimodal_infer.py</div>
+                </div>
+                <pre class="detail-code-body">import torch
+from yolo26 import YOLO26MultiHead
+
+# Initialize multi-head model
+model = YOLO26MultiHead(
+    backbone='cspdarknet26',
+    neck='pan_fpn',
+    heads={'det': 80, 'kpt': 17, 'seg': 32},
+    channel_split=True
+)
+model.load_state_dict(torch.load('yolo26_multi_best.pt'))
+model.eval()
+
+# Single forward pass → triple output
+with torch.no_grad():
+    det_out, kpt_out, seg_out = model(image)
+
+# Detection: boxes + classes
+boxes = det_out.boxes.xyxy    # [N, 4]
+scores = det_out.scores       # [N, num_classes]
+
+# Keypoints: [N, K, 3] (x, y, visibility)
+keypoints = kpt_out.points
+
+# Segmentation: [N, H, W] binary masks
+masks = seg_out.masks
+
+print(f"Det: {len(boxes)} | Kpt: {keypoints.shape[1]} pts | Mask: {masks.shape}")</pre>
+            </div></div></section><section class="case-section"><div class="case-section-label"><span class="num">08</span><span class="meta">Section</span></div>
+            <div class="case-section-copy prose"><h2 data-split>Experimental Results</h2><div class="detail-section-label">Results</div>
+
+            <dl class="case-facts"><div><dt class="meta">mAP (det)</dt><dd>48.2</dd></div><div><dt class="meta">AP (kpt)</dt><dd>72.6</dd></div><div><dt class="meta">AP (seg)</dt><dd>38.5</dd></div><div><dt class="meta">Latency</dt><dd>18ms</dd></div></dl>
+            <p class="detail-text">Compared to the three-model cascading approach, the multi-head architecture achieves only 0.8 mAP drop in detection while improving inference speed by <strong class="">2.3×</strong> (18ms vs 42ms) and reducing parameters by <strong class="">37%</strong>. This validates the effectiveness of feature sharing + channel separation — in multi-task learning, shared feature extractors not only reduce computation but also improve generalization through inter-task regularization.</p></div></section></div>
+    <a class="next-case" href="project-11.html" data-cursor="Next"><span class="meta">Next project — 11</span><strong>Metro Gate Detection</strong></a></div>
+</main>
+<footer class="colophon">
+    <div class="colophon-name" data-fit aria-hidden="true">Eric</div>
+    <div class="colophon-grid">
+        <div><p class="meta">Index</p><a href="../work/index.html">Work</a><a href="../journal/index.html">Journal</a><a href="../index.html#about">About</a><a href="../index.html#contact">Contact</a></div>
+        <div><p class="meta">Elsewhere</p><a href="https://github.com/powerpan" target="_blank" rel="noopener">GitHub</a><a href="index.html">Work</a><a href="../journal/index.html">Journal</a><a href="../index.html#contact">Contact</a></div>
+        <div><p class="meta">Settings</p><button type="button" data-theme-toggle aria-pressed="false"><span class="theme-switch-label">Night</span> paper</button><br><button type="button" data-motion-toggle aria-pressed="true">Motion: on</button><br><button type="button" class="sound-text" data-sound-toggle aria-pressed="false">Sound: off</button>
+<label class="volume"><span class="meta">Volume</span><input class="ink-range" type="range" min="0" max="1" step="0.05" value="0.6" data-sound-volume aria-label="Music volume"></label></div>
+        <div><p class="meta">Colophon</p><p>© 2026 Eric. Set in Instrument Serif &amp; Inter Tight. Ink simulated live in WebGL2.</p><a href="#" data-top>Back to top ↑</a></div>
+    </div>
+</footer>
+<p class="sr-only" role="status" aria-live="polite" data-sound-status></p>
+<script src="../js/ink-fluid.js"></script>
+<script src="../js/ink.js"></script>
+</body>
+</html>

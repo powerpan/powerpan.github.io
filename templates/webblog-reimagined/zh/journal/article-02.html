@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>当考卷本身有错：我们在测量 AI 的什么？ — Eric</title>
+<meta name="description" content="等价公式拿了零分，修订题库后成绩大涨。先看清考卷和判卷过程，再判断模型究竟进步了多少。">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#ede8df">
+<script>(()=>{const r=document.documentElement;let t,m;try{t=localStorage.getItem('ink-theme');m=localStorage.getItem('ink-motion')}catch(e){}t=t||(matchMedia('(prefers-color-scheme: dark)').matches?'night':'day');if(matchMedia('(prefers-reduced-motion: reduce)').matches)m='off';r.dataset.theme=t;r.dataset.motion=m||'on'})()</script>
+<link rel="preload" href="../../assets/fonts/instrument-serif-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../css/ink.css">
+<link rel="stylesheet" href="../../css/languages.css">
+<link rel="stylesheet" href="../../css/sound.css">
+<script src="../../js/ink-sound.js" defer></script>
+<noscript><style>[data-sound-toggle],.volume{display:none!important}</style></noscript>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='26' fill='%23f6401a'/%3E%3Ccircle cx='40' cy='26' r='14' fill='%232337f2' fill-opacity='.85'/%3E%3C/svg%3E">
+<link rel="alternate" hreflang="en" href="../../journal/article-02.html">
+</head>
+<body data-ink="quiet">
+<canvas id="ink" aria-hidden="true"></canvas>
+<div class="grain" aria-hidden="true"></div>
+
+<div class="cursor" aria-hidden="true"><span class="cursor-label"></span></div>
+<a class="sr-only" href="#main">跳至正文</a>
+<header class="masthead">
+    <a class="brand" href="../index.html" aria-label="Eric — 首页">Eric<sup>®</sup></a>
+    <div class="masthead-meta"><span>作品与手记</span><a href="../../journal/article-02.html" data-language-switch hreflang="en" lang="en" aria-label="Read this page in English">EN</a></div>
+    <div class="masthead-right">
+        <nav class="masthead-nav" aria-label="主导航">
+            <a href="../work/index.html">项目</a><a href="../journal/index.html" aria-current="page">文章</a><a href="../index.html#about">关于</a><a href="../index.html#contact">联系</a>
+        </nav>
+        <button class="sound-switch" type="button" data-sound-toggle aria-pressed="false" aria-label="播放背景音乐"><canvas class="sound-wave" aria-hidden="true"></canvas><span class="sound-label">音乐</span></button>
+        <button class="theme-switch" type="button" data-theme-toggle aria-pressed="false"><span class="theme-switch-dot" aria-hidden="true"></span><span class="theme-switch-label">夜间</span></button>
+        <button class="menu-button" type="button" aria-expanded="false" aria-controls="menu">菜单</button>
+    </div>
+</header>
+<nav class="menu" id="menu" aria-label="菜单">
+    <a href="../index.html">目录</a><a href="../work/index.html"><em>项目</em></a><a href="../journal/index.html">文章</a><a href="../index.html#contact"><em>联系</em></a>
+    <div class="menu-foot meta"><span>本地 <span data-clock>--:--:--</span></span><button class="sound-switch" type="button" data-sound-toggle aria-pressed="false" aria-label="播放背景音乐"><canvas class="sound-wave" aria-hidden="true"></canvas><span class="sound-label">音乐</span></button><a href="../../journal/article-02.html" data-language-switch hreflang="en" lang="en" aria-label="Read this page in English">EN</a></div>
+</nav>
+<main id="main">
+<div class="progress" aria-hidden="true"><i></i></div>
+<div class="page">
+    <header class="article-head">
+        <p class="meta"><a href="index.html">← 文章</a> &nbsp;/&nbsp; <span class="topic" data-topic="1">AI 工程</span></p>
+        <h1 data-split>当考卷本身有错：<em>我们在测量 AI 的什么？</em></h1>
+        <p class="lede rise">等价公式拿了零分，修订题库后成绩大涨。先看清考卷和判卷过程，再判断模型究竟进步了多少。</p>
+        <div class="article-meta meta rise" style="--d:120ms"><span>2026.10.08</span><span>16 分钟</span><span>No. 02</span></div>
+    </header>
+    <div class="article-layout">
+        <nav class="toc" aria-label="目录"><a href="#intro">引言</a><a href="#audit-denominator">95.2% 的分母，是被判错的回答</a><a href="#repaired-tasks">61 分变成 87 分，不只发生了重新判卷</a><a href="#attempt-metrics">四次里答对一次，不是一次就答对</a><a href="#expert-audit">专家也有分歧，错误还可能偏向另一边</a><a href="#coding-tests">测试认定了函数名，需求却没有</a><a href="#benchmark-versions">换新题以后，旧分数怎么比较</a><a href="#grader-regressions">把评分器当作软件来维护</a><a href="#research-boundary">做题与做研究，先分开评价</a></nav>
+        <div class="page-surface"><div class="prose"><section class="detail-section" id="intro">
+            <p class="">PHYBench 有一道绳索张力题，模型和参考答案给出了看起来不一样的式子。用普通的分母有理化，就能把它们写成同一个结果：</p>
+            <pre class=""><code class="language-text">T = P / (3 * sqrt(6))
+  = P * sqrt(6) / (3 * 6)
+  = sqrt(6) * P / 18
+</code></pre>
+            <p class="">但它的 Expression Edit Distance（EED）评分器给了零分，二元判定也是错误。这不是我编造的反例，而是 <a href="https://arxiv.org/html/2609.13009v1" target="_blank" rel="noopener" class="">2026 年 9 月 11 日的物理评测审计论文</a>图 3 记录的案例。模型给出了等价答案，测量系统没有认出来。</p>
+            <p class="">这篇《How Good Are Frontier Models at Physics?》由耶鲁大学等机构的研究者完成，审查了 UGPhysics、PHYBench、PRISM-Physics、HLE-Physics、CMT-Benchmark 和 CritPt 六套测试，范围是文字形式、具有可验证最终答案的封闭式物理题。修复后，一些成绩大幅上涨：GPT-5.6-Sol 在 CMT 的 mean@4 从 61.00% 升到 87.24%，在 HLE-Physics 从 47.28% 升到 78.66%。</p>
+            <p class="">如果只转发这两组数字，很容易把故事写成“AI 已经很会物理，是考卷拖了后腿”。我更想弄清楚的是：哪一部分是原来判错了，哪一部分是题目改了，哪一部分是比较口径变了？这些区分会决定高分究竟能支持多大的结论。</p>
+        </section>
+
+        <section class="detail-section" id="audit-denominator">
+            <h2 class="">95.2% 的分母，是被判错的回答</h2>
+            <p class="">专家把审计案例分为模型错误、评分器错误和题库错误。第一类是题目与参考解都没问题，模型确实答错；第二类是模型答对，评分器拒绝；第三类则包括参考解错误、条件缺失或题目歧义。材料本身有问题时，论文优先把案例归入题库错误，而不是继续当作一场正常考试来判模型。</p>
+            <p class="">四套合并审计里，250 个被拒绝后送审的案例，裁决后有 143 个题库错误、95 个评分器错误、12 个模型错误。因此，95.2% 说的是这批拒绝案例中前两类的占比，不是模型的物理正确率，也不是整个题库 95.2% 有错。CMT 与 CritPt 的审计覆盖方式不同，不包含在这个合并计数里。</p>
+            <p class="">这不是一个可以省掉的统计注脚。审计本来就在寻找“为何判失败”，自然更容易遇到误拒绝。它足以说明这些失败记录不能直接归因于模型，却没有通过随机检查全部题目，给出整个测量系统的完整误差率。</p>
+            <p class="">而且，题库错误未必只是计算粗心。论文图 4 中，CritPt 的 Kitaev 蜂窝模型题要求计算基态能量，却没有明确哈密顿量采用泡利矩阵还是自旋算符。对自旋为 1/2 的系统，采用 <code class="">S = σ/2</code> 后，两体乘积会带来四倍的系数差异。修订题补上了哈密顿量和约定；不能用某位研究者习惯的约定，代替题面没写出来的条件。</p>
+            <p class="">我觉得这比“评分器不够聪明”更值得警惕。如果题目允许不止一种解释，换一个更强的 LLM 裁判也未必能补出唯一正确答案。先判断问题是否可判，再判断模型回答是否正确，是两道不同的工作。</p>
+        </section>
+
+        <section class="detail-section" id="repaired-tasks">
+            <h2 class="">61 分变成 87 分，不只发生了重新判卷</h2>
+            <p class="">CMT 原有 50 道题，专家发现 30 道材料有问题，修复 29 道、删掉一道，最终保留 49 道。HLE-Physics 从排除多模态后的 202 道文字题，剔除 86 道题库错误，留下 116 道。下面的数值来自论文表 1，对应 GPT-5.6-Sol High，在相应工具条件下的 mean@4。</p>
+            <div class="article-table-scroll" tabindex="0" role="region" aria-labelledby="bpbg_table_heading"><table class="">
+<thead id="bpbg_table_heading" class="">
+<tr class="">
+<th scope="col" class="">评测</th>
+<th scope="col" class="">原题数 → 保留题数</th>
+<th scope="col" class="">修订前 → 修订后</th>
+</tr>
+</thead>
+<tbody class=""><tr class="">
+<td class="">CMT-Benchmark</td>
+<td class="">50 → 49</td>
+<td class="">61.00% → 87.24%</td>
+</tr>
+<tr class="">
+<td class="">HLE-Physics</td>
+<td class="">202 → 116</td>
+<td class="">47.28% → 78.66%</td>
+</tr>
+</tbody></table></div>
+            <p class="">有一个细节值得单独纠正：CMT 没有公开的原生评分器，这项研究在修订前后都使用同一个 HLE-adapted evaluator。论文第 3.2.2 节明确把变化归于评测材料修复。不能一看到新成绩就假定换了评分程序，也不能把 CMT 的涨幅全部算成“找回被误判的正确回答”。</p>
+            <p class="">固定原题与模型输出，只改变评分，测的是判卷误差；修正参考解，改变的是判定依据；补充题目条件后重新作答，改变的是任务；删掉题目，还会改变分母和难度构成。每种操作都有正当用途，但不是同一场测量。</p>
+            <p class="">尤其是 HLE。剔除无效题是必要的，可审计集中在模型被拒绝的回答，删除与原先的失败记录有关。保留题集未必仍代表原题集的难度分布。这个提醒不是要求留下坏题，而是要求同时报告哪些题被删、为什么删，以及新成绩针对哪一组任务。</p>
+            <p class="">修订后的结果，可以比旧结果更有解释力，却不一定与旧分数处在同一把尺子上。我会希望报告同时保留“固定输出重评分”和“修订任务重新评测”两个实验，而不是用一个新百分比覆盖旧记录。若多个因素相互作用，也不能随意把贡献相加。</p>
+        </section>
+
+        <section class="detail-section" id="attempt-metrics">
+            <h2 class="">四次里答对一次，不是一次就答对</h2>
+            <p class="">修复后的 CMT 中，GPT-5.6-Sol High 的 mean@4 为 87.24%，pass@4 为 97.96%。前者对每题四次尝试的正确情况取平均，后者只问四次里是否至少成功一次。</p>
+            <p class="">这两个数并不矛盾，但 pass@4 更接近一种有事后判定的覆盖能力。假设四个答案里只有一个正确，三个错误，用户仍然需要辨认哪一个可信。这个指标没有自动提供一个能挑出正确答案的选择器，不能写成“用户问一次，正确概率接近 98%”。</p>
+            <p class="">样本量也会限制结论。49 道题的 pass@4，每一道题约占 2.04 个百分点。只差一两题的排名，首先值得看逐题差异和不确定性，而不是宣布显著的能力鸿沟。同一道题生成四个回答，也不能直接当成四道独立题来扩大统计样本。</p>
+            <p class="">这让我区分三件事：测量是否可重复，是否反映目标能力，以及不同版本能否比较。每次都稳定地拒绝一个等价公式，是可重复的错误，不是有效测量。题目再好，如果工具权限、推理预算或评分版本不停变化，历史分数也未必可比。</p>
+            <p class="">Bowman 和 Dahl 在 <a href="https://aclanthology.org/2021.naacl-main.385/" target="_blank" rel="noopener" class="">2021 年的评测方法论文</a>里就讨论了题集设计、标注可靠性与规模等限制。模型解决的有效题越多，剩余失分越可能受到少量测量缺陷支配。接近饱和有时意味着题集不再能区分前沿模型，而不是模型已经没有短板。</p>
+        </section>
+
+        <section class="detail-section" id="expert-audit">
+            <h2 class="">专家也有分歧，错误还可能偏向另一边</h2>
+            <p class="">引入专家，不等于获得了无误差的裁判。物理论文有 196 个案例由两人审查，初始一致 140 个，分歧 56 个，后来由第三次审查裁决；另有 54 个案例只收到一次审查。71.43% 是双人案例的初始一致率，既不是最终正确率，也不能反过来说剩下 28.57% 的结论全错。</p>
+            <p class="">在边界条件和学科惯例之间划线，本来就需要判断。题目没写的假设，是足够明确的领域默认，还是会改变答案的缺失条件？审查者还看到了模型输出和 AI 生成的初步分析，理解可能受这些信息影响。这是方法上需要控制的风险，不是指控专家有意偏袒模型。</p>
+            <p class="">我会尽量把题目有效性检查放在看模型输出之前，并保留争议理由。还要抽查被判正确的回答：只检查失败，更容易发现假阴性，也就是正确答案被拒绝；错误答案被接受的假阳性，同样会扭曲分数，而且方向相反。</p>
+            <p class="">Epoch AI 在<a href="https://epoch.ai/benchmarks/hle/review" target="_blank" rel="noopener" class="">2026 年 8 月的原版 HLE 审查</a>里，从八个类别各随机取六题，共 48 题，确认 22 题有实质缺陷：12 题按题面无法明确作答，另外 10 题可能误拒绝正确答案，其中五题还可能接受错误答案。这是等额分层抽样的审查结果，不是整个 HLE 的精确缺陷率，更不是 HLE-Rolling 或 HLE-Verified 的结果。</p>
+            <p class="">这些证据支持修复评分，却不支持预设“修好以后分数应该只涨不跌”。扩大等价答案的接受范围时，也要同时检查误接受是否增加。两边都审，才知道修复是不是把一种误差换成了另一种。</p>
+        </section>
+
+        <section class="detail-section" id="coding-tests">
+            <h2 class="">测试认定了函数名，需求却没有</h2>
+            <p class="">编程评测也会遇到同样的错位。OpenAI 的 <a href="https://openai.com/index/why-we-no-longer-evaluate-swe-bench-verified/" target="_blank" rel="noopener" class="">SWE-bench Verified 审查</a>选了 138 个 o3 在多次运行中未能稳定解决的任务，发现其中 59.4% 有实质性的测试或描述问题。这是 500 题中的难题子集，不是全题库随机样本。</p>
+            <p class="">一个 Pylint 任务尤其具体：测试直接导入新函数 <code class="">get_annotation</code>，但问题描述没有要求这个名字。补丁即使通过另一种内部实现满足需求，也可能在收集测试时因为导入失败被拒绝。此时测试把参考补丁的实现细节，写成了需求之外的条件。</p>
+            <p class="">物理题要求结果正确，不该要求分母必须按某一种形式写；软件需求规定行为，也不该悄悄要求内部辅助函数必须叫某个名字。当然，如果接口名本来就是公开协议，测试它完全合理。要检查的是这项约束有没有出现在任务要求里，而不是一概禁止测试实现细节。</p>
+            <p class="">还有相反的风险。公开问题、修复补丁和讨论可能进入训练数据。OpenAI 报告，在部分任务上，被测试的前沿模型能复现人工参考补丁或题面细节。这些观察支持污染担忧，却不能直接量化每个分数有多少来自记忆。</p>
+            <p class="">正确判卷只能证明该回答满足该任务的规则，不能顺便证明模型从未见过题目。评测长期公开、用于训练反馈和模型选择后，成绩也可能更好地反映对这套测试的适应。修复假阴性与排查污染，是两件需要分别做的事。</p>
+        </section>
+
+        <section class="detail-section" id="benchmark-versions">
+            <h2 class="">换新题以后，旧分数怎么比较</h2>
+            <p class=""><a href="https://github.com/LiveBench/LiveBench" target="_blank" rel="noopener" class="">LiveBench</a>持续引入新材料，并强调可验证的客观答案；<a href="https://livecodebench.github.io/" target="_blank" rel="noopener" class="">LiveCodeBench</a>持续收集竞赛题，用时间范围组织评测。这些办法能降低旧题长期暴露带来的风险，但“新”不自动等于“同样难”。</p>
+            <p class="">如果今年模型 A 在一组题上得 80 分，明年模型 B 在另一组题上得 85 分，涨了五分并不能单独证明 B 更强。子领域比例、题目难度和测试设置都可能变了。比较新旧模型，至少应尽量在同一个冻结版本、同一预算和工具条件下重跑，而不是把不同年份的榜单数字接成能力曲线。</p>
+            <p class="">我倾向于保留两个用途不同的集合：稳定且经过验证的题，用来观察回归和配置差异；持续更新、控制暴露时间的新题，用来检查对新任务的表现。已经饱和的旧题仍能检测退化，只是不适合再用来细排最强模型。</p>
+            <p class="">跨版本要校准，也得解释方法和假设。共同题若已被广泛记忆或接近全对，很难继续当作有效锚点。不是加上几个锚题就获得了天然可比性；数据污染、工具配置和题型覆盖仍然需要单独检查。</p>
+        </section>
+
+        <section class="detail-section" id="grader-regressions">
+            <h2 class="">把评分器当作软件来维护</h2>
+            <p class="">落到工程上，我希望 Benchmark 不只保存一个数据集和最终排行榜，还保存产生分数的过程。题目、参考解、评分器、提示词、模型版本、推理预算与工具权限，都应能追溯。题目补一句条件，也要记录它是否改变了正确答案集合，而不是悄悄覆盖。</p>
+            <p class="">生成回答与评分应分离。先保存原始输出和运行配置，评分器修复后就能对同一输出重评；题面改变则另开一次实验。这样才能区别模型进步与测量变化，也方便解释某次排名为何翻转。</p>
+            <p class="">评分器还需要自己的回归样本。对公式，加入代数等价的正例，也加入近似但不等价、单位错误、遗漏条件的负例。分层使用符号计算、数值核验和专家判断；不能只围绕已经见过的误拒绝放宽规则。</p>
+            <p class="">数值代入尤其容易被用过头。有限几个点碰巧相等，不证明恒等；表达式的定义域、奇点和平方根分支都可能影响等价性。比如 <code class="">sqrt(x*x) = x</code> 只在额外条件下成立，对实数的一般表达应是 <code class="">abs(x)</code>。符号化简同样要携带假设，不能拿一个看起来合理的化简结果代替物理约束。</p>
+            <p class="">报告最后可以保留几组并列结果：原题原评分、固定输出校正评分、修订任务重新评测。每组列出题目数、模型与配置、审计范围，以及按题目组织的不确定性。它没有一个总准确率那么简洁，但读者至少能知道自己比较的是哪一次实验。</p>
+        </section>
+
+        <section class="detail-section" id="research-boundary">
+            <h2 class="">做题与做研究，先分开评价</h2>
+            <p class="">这次审计提供了值得认真对待的证据：在明确条件、可验证最终答案的文字物理问题上，一些前沿模型被旧流程低估了。不能为了维护“AI 不懂物理”的直觉，把这些修复后的结果一笔抹掉。</p>
+            <p class="">但物理题通常已经替解题者确定了研究对象、条件和要找的量。开放研究还要决定什么值得问、采用哪种表示、怎样区分解释、怎样根据证据修改假设。把封闭题的分数直接读成独立研究能力，会跳过这段差别。</p>
+            <p class="">论文作者 John Sous 在后续<a href="https://jsous.github.io/blogs/is-physics-dead/" target="_blank" rel="noopener" class="">《Is Physics Dead?》</a>中描述过对开放理论物理问题的初步 Agent 尝试，当时尚未自主完整解决其中任何一道。他说明这些结果不在论文里。它们不是严格的能力上限测试，也不能证明 AI 做不了研究；更合适的用法，是提醒我们把开放研究能力另外定义、另外评估。</p>
+            <p class="">更难的题也不自动更有效。开放任务如果只让另一个模型给出模糊的“很有洞见”，同样可能失去复核依据。需要保存推导、验证过程、可检验的预测和人类评审理由，才能讨论研究进展，而不只是换一种打分语言。</p>
+            <p class="">所以，看完这篇论文，我不会把旧分数当成模型能力的定论，也不会把新分数当成“物理已被解决”。先读题集版本、工具条件、尝试次数和审计范围，再读那个百分比。分数仍然有用，但它得连同产生它的实验一起被理解。</p>
+
+            <p class="">本文依据截至 2026 年 10 月 8 日查阅的一手材料编辑。物理审计数字以 arXiv:2609.13009v1 为准；Epoch 与 OpenAI 的审查对象、抽样方式不同，不能合并计算全行业缺陷率。文中的回归测试和报告方案是作者的工程建议，没有声称已复现这些研究。</p>
+        </section></div></div>
+    </div>
+    <section class="related" aria-labelledby="related-title"><p class="kicker">继续阅读</p><h2 id="related-title">相关<em>文章</em></h2><ol class="journal-list" style="list-style:none"><li><a class="journal-row" href="article-01.html" data-topic="1" data-cursor="阅读">
+        <span class="journal-date">2026.11 · 01</span>
+        <span class="journal-title"><span class="static">模型装得下，为什么还是跑不快？</span><span class="marquee" aria-hidden="true"><span>模型装得下，为什么还是跑不快？ —&nbsp;</span><span>模型装得下，为什么还是跑不快？ —&nbsp;</span><span>模型装得下，为什么还是跑不快？ —&nbsp;</span></span></span>
+        <span class="topic" data-topic="1">AI 工程</span><span class="journal-time">15 分钟</span></a></li><li><a class="journal-row" href="article-15.html" data-topic="1" data-cursor="阅读">
+        <span class="journal-date">2026.05 · 15</span>
+        <span class="journal-title"><span class="static">AI 工程的核心不是让模型万能，而是定义边界</span><span class="marquee" aria-hidden="true"><span>AI 工程的核心不是让模型万能，而是定义边界 —&nbsp;</span><span>AI 工程的核心不是让模型万能，而是定义边界 —&nbsp;</span><span>AI 工程的核心不是让模型万能，而是定义边界 —&nbsp;</span></span></span>
+        <span class="topic" data-topic="1">AI 工程</span><span class="journal-time">8 分钟</span></a></li><li><a class="journal-row" href="article-16.html" data-topic="1" data-cursor="阅读">
+        <span class="journal-date">2026.05 · 16</span>
+        <span class="journal-title"><span class="static">企业 AI 本地部署，第一步不是买 GPU，而是先洗数据</span><span class="marquee" aria-hidden="true"><span>企业 AI 本地部署，第一步不是买 GPU，而是先洗数据 —&nbsp;</span><span>企业 AI 本地部署，第一步不是买 GPU，而是先洗数据 —&nbsp;</span><span>企业 AI 本地部署，第一步不是买 GPU，而是先洗数据 —&nbsp;</span></span></span>
+        <span class="topic" data-topic="1">AI 工程</span><span class="journal-time">7 分钟</span></a></li></ol></section>
+    <nav class="pager" aria-label="更多文章">
+        <a href="article-01.html" data-cursor="上一篇"><span class="meta">← 上一篇</span><strong>模型装得下，为什么还是跑不快？</strong></a>
+        <a href="article-03.html" data-cursor="下一个"><span class="meta">下一篇 →</span><strong>当每个系统都在自保：3.8 GW 负载退出之后</strong></a>
+    </nav>
+</div>
+</main>
+<footer class="colophon">
+    <div class="colophon-name" data-fit aria-hidden="true">Eric</div>
+    <div class="colophon-grid">
+        <div><p class="meta">目录</p><a href="../work/index.html">项目</a><a href="../journal/index.html">文章</a><a href="../index.html#about">关于</a><a href="../index.html#contact">联系</a></div>
+        <div><p class="meta">更多</p><a href="https://github.com/powerpan" target="_blank" rel="noopener">GitHub</a><a href="../work/index.html">项目</a><a href="index.html">文章</a><a href="../index.html#contact">联系</a></div>
+        <div><p class="meta">设置</p><button type="button" data-theme-toggle aria-pressed="false"><span class="theme-switch-label">夜间</span> 纸色</button><br><button type="button" data-motion-toggle aria-pressed="true">动效：开启</button><br><button type="button" class="sound-text" data-sound-toggle aria-pressed="false">音乐：关闭</button>
+<label class="volume"><span class="meta">音量</span><input class="ink-range" type="range" min="0" max="1" step="0.05" value="0.6" data-sound-volume aria-label="音乐音量"></label></div>
+        <div><p class="meta">关于本站</p><p>© 2026 Eric. 中文标题采用 Noto Serif SC，正文采用 Noto Sans SC。水墨以 WebGL2 实时模拟。</p><a href="#" data-top>返回顶部 ↑</a></div>
+    </div>
+</footer>
+<p class="sr-only" role="status" aria-live="polite" data-sound-status></p>
+<script src="../../js/ink-fluid.js"></script>
+<script src="../../js/ink.js"></script>
+</body>
+</html>

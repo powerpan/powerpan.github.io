@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Stop Building Business Systems as CRUD Wrappers — Eric</title>
+<meta name="description" content="Stop Building Business Systems as CRUD Wrappers">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#ede8df">
+<script>(()=>{const r=document.documentElement;let t,m;try{t=localStorage.getItem('ink-theme');m=localStorage.getItem('ink-motion')}catch(e){}t=t||(matchMedia('(prefers-color-scheme: dark)').matches?'night':'day');if(matchMedia('(prefers-reduced-motion: reduce)').matches)m='off';r.dataset.theme=t;r.dataset.motion=m||'on'})()</script>
+<link rel="preload" href="../assets/fonts/instrument-serif-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../css/ink.css">
+<link rel="stylesheet" href="../css/languages.css">
+<link rel="stylesheet" href="../css/sound.css">
+<script src="../js/ink-sound.js" defer></script>
+<noscript><style>[data-sound-toggle],.volume{display:none!important}</style></noscript>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='26' fill='%23f6401a'/%3E%3Ccircle cx='40' cy='26' r='14' fill='%232337f2' fill-opacity='.85'/%3E%3C/svg%3E">
+<link rel="alternate" hreflang="zh-CN" href="../zh/journal/article-25.html">
+</head>
+<body data-ink="quiet">
+<canvas id="ink" aria-hidden="true"></canvas>
+<div class="grain" aria-hidden="true"></div>
+
+<div class="cursor" aria-hidden="true"><span class="cursor-label"></span></div>
+<a class="sr-only" href="#main">Skip to content</a>
+<header class="masthead">
+    <a class="brand" href="../index.html" aria-label="Eric — home">Eric<sup>®</sup></a>
+    <div class="masthead-meta"><span>Portfolio &amp; Journal</span><a href="../zh/journal/article-25.html" data-language-switch hreflang="zh-CN" lang="zh-CN" aria-label="Read this page in Chinese">中文</a></div>
+    <div class="masthead-right">
+        <nav class="masthead-nav" aria-label="Primary">
+            <a href="../work/index.html">Work</a><a href="../journal/index.html" aria-current="page">Journal</a><a href="../index.html#about">About</a><a href="../index.html#contact">Contact</a>
+        </nav>
+        <button class="sound-switch" type="button" data-sound-toggle aria-pressed="false" aria-label="Play background music"><canvas class="sound-wave" aria-hidden="true"></canvas><span class="sound-label">Sound</span></button>
+        <button class="theme-switch" type="button" data-theme-toggle aria-pressed="false"><span class="theme-switch-dot" aria-hidden="true"></span><span class="theme-switch-label">Night</span></button>
+        <button class="menu-button" type="button" aria-expanded="false" aria-controls="menu">Menu</button>
+    </div>
+</header>
+<nav class="menu" id="menu" aria-label="Menu">
+    <a href="../index.html">Index</a><a href="../work/index.html"><em>Work</em></a><a href="../journal/index.html">Journal</a><a href="../index.html#contact"><em>Contact</em></a>
+    <div class="menu-foot meta"><span>Local <span data-clock>--:--:--</span></span><button class="sound-switch" type="button" data-sound-toggle aria-pressed="false" aria-label="Play background music"><canvas class="sound-wave" aria-hidden="true"></canvas><span class="sound-label">Sound</span></button><a href="../zh/journal/article-25.html" data-language-switch hreflang="zh-CN" lang="zh-CN" aria-label="Read this page in Chinese">中文</a></div>
+</nav>
+<main id="main">
+<div class="progress" aria-hidden="true"><i></i></div>
+<div class="page">
+    <header class="article-head">
+        <p class="meta"><a href="index.html">← Journal</a> &nbsp;/&nbsp; <span class="topic" data-topic="4">System Architecture</span></p>
+        <h1 data-split>Stop Building Business Systems as <em>CRUD Wrappers</em></h1>
+        <p class="lede rise"></p>
+        <div class="article-meta meta rise" style="--d:120ms"><span>2026.04.28</span><span>9 min</span><span>No. 25</span></div>
+    </header>
+    <div class="article-layout">
+        <nav class="toc" aria-label="Contents"><a href="#intro">CRUD is not wrong, but it should not be the center</a><a href="#capability">Move from table-centered design to capability-centered design</a><a href="#frontend">Frontend systems should move from pages to tasks</a><a href="#process">State machines, workflows, and events carry real business complexity</a><a href="#rag-agent">RAG and Agents need knowledge layers and tool boundaries</a><a href="#takeaway">Final Thoughts</a></nav>
+        <div class="page-surface"><div class="prose"><section class="detail-section" id="intro">
+            <h2 class="">CRUD is not wrong, but it should not be the center</h2>
+            <p class="">CRUD is an unavoidable foundation in enterprise systems. Users, roles, dictionaries, master data, and tags are often best handled through create, read, update, and delete. The problem is not CRUD itself. The problem is when complex business systems become nothing more than CRUD: create tables, write APIs, build lists, add forms, attach buttons, then leave users to understand the actual process by themselves.</p>
+            <p class="">When a system is only a data-maintenance tool, that approach is fast enough. But once the work involves approvals, tickets, project collaboration, risk handling, weekly reports, or customer follow-up, users do not really want to update a record. They want to complete a task. If the system only provides tables and forms, it pushes process judgment, risk detection, and next-step decisions back onto humans.</p>
+            <p class="">AI Agents make this weakness more visible. Agents need clear business capabilities, not vague low-level data operations. A system that only exposes updateTask, saveReport, and listProject will struggle to let an Agent safely complete a task like “analyze project delay risk and generate a weekly report.”</p>
+        </section>
+
+        <section class="detail-section" id="capability">
+            <h2 class="">Move from table-centered design to capability-centered design</h2>
+            <p class="">Traditional CRUD systems often start from table structure: project, task, report, then APIs and pages. As business complexity grows, the service layer accumulates state checks, permission checks, notification logic, and exception handling. The code may look layered, but the business semantics are buried inside updateStatus and saveSomething.</p>
+            <p class="">A better approach is designing APIs as business actions. An order does not only need updateOrder; it needs pay, cancel, ship, and applyRefund. A task does not only need updateTask; it needs assign, start, submit, reviewPass, and markRisk. These actions express business intent and can define permissions, preconditions, side effects, and audit logs.</p>
+            <p class="">This is especially important for AI Agents. Agent tools should be business capabilities, not database remote controls. Letting an Agent call <strong class="">submitReportForApproval(reportId)</strong> is safer and easier to explain than letting it call updateReportStatus(reportId, status).</p>
+        </section>
+
+        <section class="detail-section" id="frontend">
+            <h2 class="">Frontend systems should move from pages to tasks</h2>
+            <p class="">Many admin frontends look alike: menus, lists, search areas, form modals, and action buttons. They are good for maintaining data, but not always good for moving work forward. Users care about questions like: what do I need to handle today, which project is at risk, which approval is about to time out, and what should I do next?</p>
+            <p class="">That means complex business frontends should not just be collections of pages. They need task workbenches. In a project collaboration system, the core entry should not only be project lists and task lists. It should show progress, completed work, delayed tasks, blockers, pending approvals, recent events, and Agent suggestions.</p>
+            <p class="">This is not a UI decoration issue. It is a responsibility shift. The frontend moves from “help users find tables and operate data” to “help users understand the current situation and complete tasks.” Once Agents enter the system, the frontend also needs human confirmation: which suggestions are drafts, which actions change business state, and which high-risk operations must be approved.</p>
+        </section>
+
+        <section class="detail-section" id="process">
+            <h2 class="">State machines, workflows, and events carry real business complexity</h2>
+            <p class="">Many systems manage complex state with one status field: draft, pending approval, approved, rejected, archived. The field itself is fine, but without legal transitions, any state can be produced by an API call. What needs modeling is who can move an object from which state to which state under what conditions.</p>
+            <p class="">State machines answer how state changes. Workflows answer how processes move forward. Event-driven architecture answers what happened and who should respond. Together, they prevent complex business behavior from being crammed into one giant service method.</p>
+            <p class="">For example, task delay should not only mean changing status to delayed. A fuller design publishes TaskDelayedEvent, lets risk service update project risk, notification service alert the project manager, report service store weekly-report material, and Agent service generate a delay summary. The system records not only the final result, but also the process.</p>
+        </section>
+
+        <section class="detail-section" id="rag-agent">
+            <h2 class="">RAG and Agents need knowledge layers and tool boundaries</h2>
+            <p class="">Intelligent business systems cannot only store final data. They need process knowledge: requirement docs, meeting notes, task comments, approval opinions, historical weekly reports, risk records, and retrospectives. Once these enter a knowledge base, RAG lets Agents generate summaries, suggestions, and reports based on real context.</p>
+            <p class="">But RAG is not finished when documents enter a vector database. Business systems still need permissions, versions, source labels, update times, and citation display. Different projects, departments, and roles can access different documents, and Agent retrieval must follow the same permission boundaries.</p>
+            <p class="">The tool layer also needs boundaries. Low-risk tools can generate report drafts, analyze risks, and summarize meetings. High-risk tools such as submitting approvals, sending emails, closing projects, or changing owners must require human confirmation. Agents can suggest action, but they should not bypass business permissions and audit mechanisms.</p>
+        </section>
+
+        <section class="detail-section" id="takeaway">
+            <h2 class="">Final Thoughts</h2>
+            <p class="">Moving beyond CRUD does not mean throwing CRUD away. It means not letting CRUD become the only abstraction for complex systems. CRUD handles basic data maintenance; the capability layer expresses actions; state machines and workflows control process; events decouple collaboration; knowledge bases and Agents provide intelligence.</p>
+            <p class="">Competitive frontend and backend systems ahead will not just be combinations of tables, forms, and APIs. They will look more like business capability platforms: the frontend becomes a task workbench, the backend exposes authorized, auditable, orchestratable business actions, the data layer stores process and knowledge, and Agents help move tasks forward within controlled boundaries.</p>
+            <p class="">The real upgrade is not adding a chatbot beside CRUD pages. It is moving the system from “managing data” to “advancing business.” <strong class="">In the AI Agent era, the valuable part is not making the model talk, but letting it call business capabilities within clear boundaries so users can complete complex work reliably.</strong></p>
+        </section></div></div>
+    </div>
+    <section class="related" aria-labelledby="related-title"><p class="kicker">Continue reading</p><h2 id="related-title">Related <em>writing</em></h2><ol class="journal-list" style="list-style:none"><li><a class="journal-row" href="article-03.html" data-topic="4" data-cursor="Read">
+        <span class="journal-date">2026.10 · 03</span>
+        <span class="journal-title"><span class="static">When Data Centers Protect Themselves: A 3.8 GW Load Transfer</span><span class="marquee" aria-hidden="true"><span>When Data Centers Protect Themselves: A 3.8 GW Load Transfer —&nbsp;</span><span>When Data Centers Protect Themselves: A 3.8 GW Load Transfer —&nbsp;</span><span>When Data Centers Protect Themselves: A 3.8 GW Load Transfer —&nbsp;</span></span></span>
+        <span class="topic" data-topic="4">System Architecture</span><span class="journal-time">18 min</span></a></li><li><a class="journal-row" href="article-04.html" data-topic="4" data-cursor="Read">
+        <span class="journal-date">2026.10 · 04</span>
+        <span class="journal-title"><span class="static">Can You Search Inside Encrypted Data?</span><span class="marquee" aria-hidden="true"><span>Can You Search Inside Encrypted Data? —&nbsp;</span><span>Can You Search Inside Encrypted Data? —&nbsp;</span><span>Can You Search Inside Encrypted Data? —&nbsp;</span></span></span>
+        <span class="topic" data-topic="4">System Architecture</span><span class="journal-time">34 min</span></a></li><li><a class="journal-row" href="article-08.html" data-topic="4" data-cursor="Read">
+        <span class="journal-date">2026.07 · 08</span>
+        <span class="journal-title"><span class="static">Mac Is Becoming the Ideal Runtime for Personal AI Apps</span><span class="marquee" aria-hidden="true"><span>Mac Is Becoming the Ideal Runtime for Personal AI Apps —&nbsp;</span><span>Mac Is Becoming the Ideal Runtime for Personal AI Apps —&nbsp;</span><span>Mac Is Becoming the Ideal Runtime for Personal AI Apps —&nbsp;</span></span></span>
+        <span class="topic" data-topic="4">System Architecture</span><span class="journal-time">9 min</span></a></li></ol></section>
+    <nav class="pager" aria-label="More articles">
+        <a href="article-24.html" data-cursor="Prev"><span class="meta">← Previous</span><strong>Vision Algorithm Engineers: Do Not Become Process Operators</strong></a>
+        <a href="article-26.html" data-cursor="Next"><span class="meta">Next →</span><strong>AI Agent Architecture: From Chatting to Executing</strong></a>
+    </nav>
+</div>
+</main>
+<footer class="colophon">
+    <div class="colophon-name" data-fit aria-hidden="true">Eric</div>
+    <div class="colophon-grid">
+        <div><p class="meta">Index</p><a href="../work/index.html">Work</a><a href="../journal/index.html">Journal</a><a href="../index.html#about">About</a><a href="../index.html#contact">Contact</a></div>
+        <div><p class="meta">Elsewhere</p><a href="https://github.com/powerpan" target="_blank" rel="noopener">GitHub</a><a href="../work/index.html">Work</a><a href="index.html">Journal</a><a href="../index.html#contact">Contact</a></div>
+        <div><p class="meta">Settings</p><button type="button" data-theme-toggle aria-pressed="false"><span class="theme-switch-label">Night</span> paper</button><br><button type="button" data-motion-toggle aria-pressed="true">Motion: on</button><br><button type="button" class="sound-text" data-sound-toggle aria-pressed="false">Sound: off</button>
+<label class="volume"><span class="meta">Volume</span><input class="ink-range" type="range" min="0" max="1" step="0.05" value="0.6" data-sound-volume aria-label="Music volume"></label></div>
+        <div><p class="meta">Colophon</p><p>© 2026 Eric. Set in Instrument Serif &amp; Inter Tight. Ink simulated live in WebGL2.</p><a href="#" data-top>Back to top ↑</a></div>
+    </div>
+</footer>
+<p class="sr-only" role="status" aria-live="polite" data-sound-status></p>
+<script src="../js/ink-fluid.js"></script>
+<script src="../js/ink.js"></script>
+</body>
+</html>

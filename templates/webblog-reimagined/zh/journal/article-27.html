@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI 工作流争夺战：为什么真正的终局不是工具，而是工作代理层 — Eric</title>
+<meta name="description" content="AI 工作流争夺战：为什么真正的终局不是工具，而是工作代理层">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#ede8df">
+<script>(()=>{const r=document.documentElement;let t,m;try{t=localStorage.getItem('ink-theme');m=localStorage.getItem('ink-motion')}catch(e){}t=t||(matchMedia('(prefers-color-scheme: dark)').matches?'night':'day');if(matchMedia('(prefers-reduced-motion: reduce)').matches)m='off';r.dataset.theme=t;r.dataset.motion=m||'on'})()</script>
+<link rel="preload" href="../../assets/fonts/instrument-serif-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../css/ink.css">
+<link rel="stylesheet" href="../../css/languages.css">
+<link rel="stylesheet" href="../../css/sound.css">
+<script src="../../js/ink-sound.js" defer></script>
+<noscript><style>[data-sound-toggle],.volume{display:none!important}</style></noscript>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='26' fill='%23f6401a'/%3E%3Ccircle cx='40' cy='26' r='14' fill='%232337f2' fill-opacity='.85'/%3E%3C/svg%3E">
+<link rel="alternate" hreflang="en" href="../../journal/article-27.html">
+</head>
+<body data-ink="quiet">
+<canvas id="ink" aria-hidden="true"></canvas>
+<div class="grain" aria-hidden="true"></div>
+
+<div class="cursor" aria-hidden="true"><span class="cursor-label"></span></div>
+<a class="sr-only" href="#main">跳至正文</a>
+<header class="masthead">
+    <a class="brand" href="../index.html" aria-label="Eric — 首页">Eric<sup>®</sup></a>
+    <div class="masthead-meta"><span>作品与手记</span><a href="../../journal/article-27.html" data-language-switch hreflang="en" lang="en" aria-label="Read this page in English">EN</a></div>
+    <div class="masthead-right">
+        <nav class="masthead-nav" aria-label="主导航">
+            <a href="../work/index.html">项目</a><a href="../journal/index.html" aria-current="page">文章</a><a href="../index.html#about">关于</a><a href="../index.html#contact">联系</a>
+        </nav>
+        <button class="sound-switch" type="button" data-sound-toggle aria-pressed="false" aria-label="播放背景音乐"><canvas class="sound-wave" aria-hidden="true"></canvas><span class="sound-label">音乐</span></button>
+        <button class="theme-switch" type="button" data-theme-toggle aria-pressed="false"><span class="theme-switch-dot" aria-hidden="true"></span><span class="theme-switch-label">夜间</span></button>
+        <button class="menu-button" type="button" aria-expanded="false" aria-controls="menu">菜单</button>
+    </div>
+</header>
+<nav class="menu" id="menu" aria-label="菜单">
+    <a href="../index.html">目录</a><a href="../work/index.html"><em>项目</em></a><a href="../journal/index.html">文章</a><a href="../index.html#contact"><em>联系</em></a>
+    <div class="menu-foot meta"><span>本地 <span data-clock>--:--:--</span></span><button class="sound-switch" type="button" data-sound-toggle aria-pressed="false" aria-label="播放背景音乐"><canvas class="sound-wave" aria-hidden="true"></canvas><span class="sound-label">音乐</span></button><a href="../../journal/article-27.html" data-language-switch hreflang="en" lang="en" aria-label="Read this page in English">EN</a></div>
+</nav>
+<main id="main">
+<div class="progress" aria-hidden="true"><i></i></div>
+<div class="page">
+    <header class="article-head">
+        <p class="meta"><a href="index.html">← 文章</a> &nbsp;/&nbsp; <span class="topic" data-topic="2">Agent 自动化</span></p>
+        <h1 data-split>AI 工作流争夺战：为什么真正的终局不是<em>工具</em>，而是工作代理层</h1>
+        <p class="lede rise"></p>
+        <div class="article-meta meta rise" style="--d:120ms"><span>2026.04.27</span><span>10 分钟</span><span>No. 27</span></div>
+    </header>
+    <div class="article-layout">
+        <nav class="toc" aria-label="目录"><a href="#intro">厂商抢的不是工作流，而是工作本身</a><a href="#old-moat">SaaS 时代的护城河：工作流锁定</a><a href="#agent-shift">Agent 改变了入口：用户不一定再进入软件</a><a href="#three-controls">真正的争夺：入口权、上下文权和执行权</a><a href="#product-moat">AI 产品的护城河，正在从功能转向任务闭环</a><a href="#builders">对开发者的启示：不要只做工具，要做代理层</a><a href="#risks">但执行权越大，风险也越大</a><a href="#takeaway">最后：工作流只是入口，委托关系才是终局</a></nav>
+        <div class="page-surface"><div class="prose"><section class="detail-section" id="intro">
+            <h2 class="">厂商抢的不是工作流，而是工作本身</h2>
+            <p class="">最近一段时间，几乎所有大模型厂商都在把 AI 更深地嵌入用户日常工作：写文档、处理邮件、生成代码、分析表格、连接企业知识库、调用外部工具。表面上看，这是在抢占用户工作流；更准确地说，这是在争夺用户完成工作的默认入口。</p>
+            <p class="">在传统 SaaS 时代，谁掌握了用户每天打开的软件，谁就拥有了稳定的粘性。CRM、Office、Figma、Notion 这类产品的价值，不只在于功能本身，而在于它们承载了数据、协作习惯、组织流程和历史资产。用户一旦把工作流迁进去，就很难轻易迁出。</p>
+            <p class="">但 AI 正在改变这个逻辑。未来真正关键的问题不再是 <strong class="">“用户在哪个软件里工作”</strong>，而是 <strong class="">“用户把工作委托给谁完成”</strong>。</p>
+        </section>
+
+        <section class="detail-section" id="old-moat">
+            <h2 class="">SaaS 时代的护城河：工作流锁定</h2>
+            <p class="">过去的产品竞争，很大程度上是围绕工作流展开的。一个产品如果能进入用户的核心流程，就可以自然获得高频使用、数据沉淀和迁移成本。用户不是因为每天都“喜欢”打开某个系统才留下，而是因为工作已经被组织进了这个系统。</p>
+            <p class="">这种锁定机制有三个核心来源：第一，数据在系统里持续累积；第二，团队协作规则依赖系统运转；第三，用户习惯和组织流程被软件塑形。久而久之，产品不再只是工具，而是企业运行方式的一部分。</p>
+            <p class="">所以，在 SaaS 时代，一个很朴素但有效的判断是：<strong class="">谁占据用户每天的工作台，谁就更接近商业上的长期粘性。</strong></p>
+        </section>
+
+        <section class="detail-section" id="agent-shift">
+            <h2 class="">Agent 改变了入口：用户不一定再进入软件</h2>
+            <p class="">AI Agent 的出现，让这个结构开始松动。用户过去需要打开多个软件，分别完成搜索资料、写初稿、改格式、发邮件、同步项目状态等动作。现在，这些动作越来越可能被一个上层代理系统串起来。</p>
+            <p class="">这意味着 UI 不再天然等于入口。用户可以不打开文档编辑器，却让 AI 生成并修改文档；可以不进入 CRM，却让 AI 更新客户状态；可以不逐个查看邮件，却让 AI 总结、分类并起草回复。</p>
+            <p class="">工作流没有消失，但它正在被重新抽象：从 <strong class="">“人在软件里操作流程”</strong>，变成 <strong class="">“人把目标交给 Agent，由 Agent 调度软件完成流程”</strong>。</p>
+            <ul class="">
+                <li class=""><strong class="">过去</strong> —— 人是执行者，软件是工具，工作流嵌在软件界面里</li>
+                <li class=""><strong class="">现在</strong> —— 人提出目标，Agent 负责拆解任务、调用工具和推进结果</li>
+                <li class=""><strong class="">未来</strong> —— 用户粘性不只来自产品使用频率，而来自对 Agent 的委托深度</li>
+            </ul>
+        </section>
+
+        <section class="detail-section" id="three-controls">
+            <h2 class="">真正的争夺：入口权、上下文权和执行权</h2>
+            <p class="">如果只说“各大厂商在抢工作流”，这个判断还不够深入。工作流只是外显现象，底层争夺的是三种控制权：入口权、上下文权和执行权。</p>
+            <p class=""><strong class="">入口权</strong> 决定用户从哪里发起任务。谁成为用户的默认输入框，谁就有机会成为新一代工作操作系统。ChatGPT、Copilot、Gemini 这类产品的战略价值，不只是回答问题，而是成为用户处理工作时的第一站。</p>
+            <p class=""><strong class="">上下文权</strong> 决定 AI 是否真正理解用户。没有上下文的模型只是一个通用助手；有了邮件、文档、代码库、会议记录、企业知识库和权限体系，它才可能变成具体场景里的工作代理。</p>
+            <p class=""><strong class="">执行权</strong> 决定 AI 能不能把任务做完。只会生成文本的 AI 仍然停留在建议层；能调用 API、操作 SaaS、改代码、发邮件、更新数据库的 AI，才真正进入执行层。</p>
+            <p class="">这三层叠在一起，才构成 AI 时代新的平台位。入口负责承接意图，上下文负责理解场景，执行权负责完成闭环。缺少任何一层，产品都很容易退化成一个单点工具。</p>
+        </section>
+
+        <section class="detail-section" id="product-moat">
+            <h2 class="">AI 产品的护城河，正在从功能转向任务闭环</h2>
+            <p class="">在传统产品逻辑里，功能完整性很重要。谁的编辑器更强、谁的表格更好用、谁的项目管理视图更灵活，都会影响用户选择。但在 Agent 时代，用户可能并不关心中间过程发生在哪个工具里，而更关心最终结果是否被稳定完成。</p>
+            <p class="">这会让一批单点工具面临新的压力。一个只解决局部问题的产品，即使体验不错，也可能被更上层的 Agent 编排掉。用户不一定主动打开它，而是让 Agent 在需要时调用它。对产品来说，被调用当然还有价值，但入口权和用户心智会逐渐上移。</p>
+            <p class="">因此，未来 AI 产品的竞争重点会从 <strong class="">“我能提供多少功能”</strong> 转向 <strong class="">“我能替用户完成多少完整任务”</strong>。功能是组件，任务闭环才是结果。</p>
+        </section>
+
+        <section class="detail-section" id="builders">
+            <h2 class="">对开发者的启示：不要只做工具，要做代理层</h2>
+            <p class="">如果从 AI 应用工程的角度看，这个变化非常直接。今天再做一个“AI 版本的某某工具”，很容易陷入功能同质化。真正值得思考的是：你的产品是否能进入用户的任务链条，理解上下文，并推动任务从意图走到结果。</p>
+            <p class="">这要求产品能力不只停留在 prompt 和模型调用上，而要具备更完整的系统设计：工具调用、权限管理、长期记忆、上下文工程、任务规划、失败回滚、可观测性，以及对外部系统的稳定连接。</p>
+            <ul class="">
+                <li class=""><strong class="">不要只做问答</strong> —— 问答解决的是信息获取，Agent 要解决的是任务推进</li>
+                <li class=""><strong class="">不要只做生成</strong> —— 生成内容只是中间状态，用户真正要的是可交付结果</li>
+                <li class=""><strong class="">不要只接一个场景</strong> —— 高价值任务往往跨文档、代码、邮件、数据库和业务系统</li>
+                <li class=""><strong class="">不要忽视信任机制</strong> —— 越靠近执行权，越需要审计、权限、确认点和可回滚能力</li>
+            </ul>
+            <p class="">对个人开发者或小团队来说，这反而是机会。大厂会争夺通用入口，但垂直场景里仍然存在大量具体、复杂、脏数据多、流程长的任务。谁能把一个行业任务闭环做深，谁就有机会形成局部护城河。</p>
+        </section>
+
+        <section class="detail-section" id="risks">
+            <h2 class="">但执行权越大，风险也越大</h2>
+            <p class="">当 AI 从建议层走向执行层，产品责任也会发生变化。一个只是生成文案的系统，出错的代价相对有限；一个能发邮件、改代码、调接口、更新订单状态的 Agent，一旦判断错误，就可能直接影响业务结果。</p>
+            <p class="">这也是为什么未来的 AI 产品不能只追求“更自主”。真正可用的 Agent 系统，必须在自主性和可控性之间建立边界。什么时候自动执行，什么时候请求确认，什么时候只给建议，什么时候触发回滚，这些都将成为产品设计的核心部分。</p>
+            <p class="">换句话说，<strong class="">AI 产品越接近工作代理层，就越不能只像聊天机器人一样设计。</strong>它需要像工程系统一样被设计、监控和约束。</p>
+        </section>
+
+        <section class="detail-section" id="takeaway">
+            <h2 class="">最后：工作流只是入口，委托关系才是终局</h2>
+            <p class="">所以，关于“抢占工作流是否等于获得粘性用户”，我的结论是：在过去，这基本成立；在 AI 时代，它只说对了一半。工作流仍然重要，但它不再是终点，而是厂商争夺入口、上下文和执行权的路径。</p>
+            <p class="">真正的长期粘性，不是用户每天打开你多少次，而是用户愿意把多少工作交给你处理。用户越依赖你理解他的目标、读取他的上下文、调度他的工具、推进他的任务，你就越接近新的平台层。</p>
+            <p class="">未来 AI 产品的核心竞争，不是让用户更频繁地使用某个软件，而是让用户逐渐习惯于把工作本身委托给你。<strong class="">工具解决操作，Agent 承接目标；前者争夺使用时长，后者争夺工作关系。</strong></p>
+        </section></div></div>
+    </div>
+    <section class="related" aria-labelledby="related-title"><p class="kicker">继续阅读</p><h2 id="related-title">相关<em>文章</em></h2><ol class="journal-list" style="list-style:none"><li><a class="journal-row" href="article-05.html" data-topic="2" data-cursor="阅读">
+        <span class="journal-date">2026.09 · 05</span>
+        <span class="journal-title"><span class="static">AI 不需要恶意，也能越过权限边界</span><span class="marquee" aria-hidden="true"><span>AI 不需要恶意，也能越过权限边界 —&nbsp;</span><span>AI 不需要恶意，也能越过权限边界 —&nbsp;</span><span>AI 不需要恶意，也能越过权限边界 —&nbsp;</span></span></span>
+        <span class="topic" data-topic="2">Agent 自动化</span><span class="journal-time">12 分钟</span></a></li><li><a class="journal-row" href="article-14.html" data-topic="2" data-cursor="阅读">
+        <span class="journal-date">2026.05 · 14</span>
+        <span class="journal-title"><span class="static">我做了一次多 Agent 架构实验：复杂架构并不天然更聪明</span><span class="marquee" aria-hidden="true"><span>我做了一次多 Agent 架构实验：复杂架构并不天然更聪明 —&nbsp;</span><span>我做了一次多 Agent 架构实验：复杂架构并不天然更聪明 —&nbsp;</span><span>我做了一次多 Agent 架构实验：复杂架构并不天然更聪明 —&nbsp;</span></span></span>
+        <span class="topic" data-topic="2">Agent 自动化</span><span class="journal-time">8 分钟</span></a></li><li><a class="journal-row" href="article-18.html" data-topic="2" data-cursor="阅读">
+        <span class="journal-date">2026.05 · 18</span>
+        <span class="journal-title"><span class="static">多 Agent 架构的真正问题：不是角色分工，而是上下文边界</span><span class="marquee" aria-hidden="true"><span>多 Agent 架构的真正问题：不是角色分工，而是上下文边界 —&nbsp;</span><span>多 Agent 架构的真正问题：不是角色分工，而是上下文边界 —&nbsp;</span><span>多 Agent 架构的真正问题：不是角色分工，而是上下文边界 —&nbsp;</span></span></span>
+        <span class="topic" data-topic="2">Agent 自动化</span><span class="journal-time">10 分钟</span></a></li></ol></section>
+    <nav class="pager" aria-label="更多文章">
+        <a href="article-26.html" data-cursor="上一篇"><span class="meta">← 上一篇</span><strong>AI Agent 架构：从会聊天到会执行</strong></a>
+        <a href="article-28.html" data-cursor="下一个"><span class="meta">下一篇 →</span><strong>AI 周报｜Agent 平台化、模型继续升级，AI 硬件开始下沉到终端</strong></a>
+    </nav>
+</div>
+</main>
+<footer class="colophon">
+    <div class="colophon-name" data-fit aria-hidden="true">Eric</div>
+    <div class="colophon-grid">
+        <div><p class="meta">目录</p><a href="../work/index.html">项目</a><a href="../journal/index.html">文章</a><a href="../index.html#about">关于</a><a href="../index.html#contact">联系</a></div>
+        <div><p class="meta">更多</p><a href="https://github.com/powerpan" target="_blank" rel="noopener">GitHub</a><a href="../work/index.html">项目</a><a href="index.html">文章</a><a href="../index.html#contact">联系</a></div>
+        <div><p class="meta">设置</p><button type="button" data-theme-toggle aria-pressed="false"><span class="theme-switch-label">夜间</span> 纸色</button><br><button type="button" data-motion-toggle aria-pressed="true">动效：开启</button><br><button type="button" class="sound-text" data-sound-toggle aria-pressed="false">音乐：关闭</button>
+<label class="volume"><span class="meta">音量</span><input class="ink-range" type="range" min="0" max="1" step="0.05" value="0.6" data-sound-volume aria-label="音乐音量"></label></div>
+        <div><p class="meta">关于本站</p><p>© 2026 Eric. 中文标题采用 Noto Serif SC，正文采用 Noto Sans SC。水墨以 WebGL2 实时模拟。</p><a href="#" data-top>返回顶部 ↑</a></div>
+    </div>
+</footer>
+<p class="sr-only" role="status" aria-live="polite" data-sound-status></p>
+<script src="../../js/ink-fluid.js"></script>
+<script src="../../js/ink.js"></script>
+</body>
+</html>

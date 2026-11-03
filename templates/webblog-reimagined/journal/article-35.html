@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>From DETR to YOLOv8: Transformer Evolution in Object Detection — Eric</title>
+<meta name="description" content="From DETR to YOLOv8: Transformer Evolution in Object Detection">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#ede8df">
+<script>(()=>{const r=document.documentElement;let t,m;try{t=localStorage.getItem('ink-theme');m=localStorage.getItem('ink-motion')}catch(e){}t=t||(matchMedia('(prefers-color-scheme: dark)').matches?'night':'day');if(matchMedia('(prefers-reduced-motion: reduce)').matches)m='off';r.dataset.theme=t;r.dataset.motion=m||'on'})()</script>
+<link rel="preload" href="../assets/fonts/instrument-serif-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../css/ink.css">
+<link rel="stylesheet" href="../css/languages.css">
+<link rel="stylesheet" href="../css/sound.css">
+<script src="../js/ink-sound.js" defer></script>
+<noscript><style>[data-sound-toggle],.volume{display:none!important}</style></noscript>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='26' fill='%23f6401a'/%3E%3Ccircle cx='40' cy='26' r='14' fill='%232337f2' fill-opacity='.85'/%3E%3C/svg%3E">
+<link rel="alternate" hreflang="zh-CN" href="../zh/journal/article-35.html">
+</head>
+<body data-ink="quiet">
+<canvas id="ink" aria-hidden="true"></canvas>
+<div class="grain" aria-hidden="true"></div>
+
+<div class="cursor" aria-hidden="true"><span class="cursor-label"></span></div>
+<a class="sr-only" href="#main">Skip to content</a>
+<header class="masthead">
+    <a class="brand" href="../index.html" aria-label="Eric — home">Eric<sup>®</sup></a>
+    <div class="masthead-meta"><span>Portfolio &amp; Journal</span><a href="../zh/journal/article-35.html" data-language-switch hreflang="zh-CN" lang="zh-CN" aria-label="Read this page in Chinese">中文</a></div>
+    <div class="masthead-right">
+        <nav class="masthead-nav" aria-label="Primary">
+            <a href="../work/index.html">Work</a><a href="../journal/index.html" aria-current="page">Journal</a><a href="../index.html#about">About</a><a href="../index.html#contact">Contact</a>
+        </nav>
+        <button class="sound-switch" type="button" data-sound-toggle aria-pressed="false" aria-label="Play background music"><canvas class="sound-wave" aria-hidden="true"></canvas><span class="sound-label">Sound</span></button>
+        <button class="theme-switch" type="button" data-theme-toggle aria-pressed="false"><span class="theme-switch-dot" aria-hidden="true"></span><span class="theme-switch-label">Night</span></button>
+        <button class="menu-button" type="button" aria-expanded="false" aria-controls="menu">Menu</button>
+    </div>
+</header>
+<nav class="menu" id="menu" aria-label="Menu">
+    <a href="../index.html">Index</a><a href="../work/index.html"><em>Work</em></a><a href="../journal/index.html">Journal</a><a href="../index.html#contact"><em>Contact</em></a>
+    <div class="menu-foot meta"><span>Local <span data-clock>--:--:--</span></span><button class="sound-switch" type="button" data-sound-toggle aria-pressed="false" aria-label="Play background music"><canvas class="sound-wave" aria-hidden="true"></canvas><span class="sound-label">Sound</span></button><a href="../zh/journal/article-35.html" data-language-switch hreflang="zh-CN" lang="zh-CN" aria-label="Read this page in Chinese">中文</a></div>
+</nav>
+<main id="main">
+<div class="progress" aria-hidden="true"><i></i></div>
+<div class="page">
+    <header class="article-head">
+        <p class="meta"><a href="index.html">← Journal</a> &nbsp;/&nbsp; <span class="topic" data-topic="3">Vision & Multimodal</span></p>
+        <h1 data-split>From DETR to YOLOv8: Transformer Evolution in Object Detection</h1>
+        <p class="lede rise"></p>
+        <div class="article-meta meta rise" style="--d:120ms"><span>2026.03.15</span><span>12 min</span><span>No. 35</span></div>
+    </header>
+    <div class="article-layout">
+        <nav class="toc" aria-label="Contents"><a href="#intro">Introduction</a><a href="#architecture">DETR Architecture Analysis</a><a href="#attention">Attention Mechanism Optimization</a><a href="#optimization">Model Optimization: TensorRT &amp; ONNX</a><a href="#code">PyTorch Inference Code</a><a href="#benchmark">Benchmark Results</a><a href="#deployment">Engineering Deployment</a><a href="#conclusion">Summary &amp; Outlook</a></nav>
+        <div class="page-surface"><div class="prose"><!-- Section 1: 引言 -->
+        <section class="detail-section" id="intro">
+            <h2 class="">Introduction</h2>
+            <p class="">Object detection is one of the most fundamental tasks in computer vision. From the R-CNN series to YOLO, two-stage and single-stage detectors have continuously evolved over the past decade. However, the emergence of DETR in 2020 completely changed the game — it was the first to introduce Transformer architecture into object detection, replacing traditional anchor-based methods with an end-to-end approach.</p>
+            <p class="">This article starts from DETR's core ideas, progressively introduces its evolution, and shares the challenges and solutions I encountered in engineering practice.</p>
+            <blockquote class="">DETR's core contribution is transforming object detection from "heuristic design" to "end-to-end learning" — a paradigm-level revolution.</blockquote>
+        </section>
+
+        <!-- Section 2: DETR 架构 -->
+        <section class="detail-section" id="architecture">
+            <h2 class="">DETR Architecture Analysis</h2>
+            <p class="">DETR (Detection Transformer) models object detection as a set prediction problem. It uses the Transformer encoder-decoder structure with the Hungarian matching algorithm to directly predict a fixed number of bounding boxes, completely eliminating anchors and NMS post-processing.</p>
+            <p class="">The overall architecture consists of three core components:</p>
+            <ul class="">
+                <li class=""><strong class="">CNN Backbone</strong> — Uses ResNet to extract multi-scale feature maps, encoding input images into high-dimensional semantic representations</li>
+                <li class=""><strong class="">Transformer Encoder</strong> — Establishes global dependencies within feature maps through self-attention, capturing long-range context</li>
+                <li class=""><strong class="">Transformer Decoder</strong> — Uses learnable object queries with cross-attention to encoder output, directly producing prediction results</li>
+            </ul>
+            <p class="">However, original DETR has two major issues: slow training convergence (requiring 500 epochs) and poor small object detection. Deformable DETR introduced deformable attention, focusing attention on key points, improving convergence speed by 10x while significantly boosting small object detection performance.</p>
+        </section>
+
+        <!-- Section 3: Attention 机制 -->
+        <section class="detail-section" id="attention">
+            <h2 class="">Attention Mechanism Optimization</h2>
+            <p class="">The core computational bottleneck of Transformers lies in the attention mechanism. Standard self-attention has O(n²) complexity, which is prohibitively expensive for high-resolution feature maps. In engineering practice, we adopted the following optimization strategies:</p>
+            <ul class="">
+                <li class=""><strong class="">Deformable Attention</strong> — Focuses on only a few key sampling points, reducing complexity from O(n²) to O(n while maintaining detection accuracy</li>
+                <li class=""><strong class="">Multi-Scale Attention</strong> — Performs attention computation across different resolution feature maps, balancing detection of large and small objects</li>
+                <li class=""><strong class="">Linear Attention</strong> — Uses kernel approximation to replace softmax attention with linear attention, further accelerating in specific scenarios</li>
+                <li class=""><strong class="">Flash Attention</strong> — Uses IO-aware tiled computation to reduce GPU HBM access frequency, improving practical runtime efficiency</li>
+            </ul>
+            <blockquote class="">Key insight: deformable attention reduces global attention complexity from O(n²) to O(n), making real-time inference possible. In actual deployment, we observed only 0.3 mAP drop in detection accuracy, but a 4x improvement in inference speed.</blockquote>
+        </section>
+
+        <!-- Section 4: 模型优化 -->
+        <section class="detail-section" id="optimization">
+            <h2 class="">Model Optimization: TensorRT &amp; ONNX</h2>
+            <p class="">Porting DETR models from PyTorch to production requires multiple optimization stages. Here is our complete optimization pipeline:</p>
+            <ul class="">
+                <li class=""><strong class="">ONNX Export</strong> — Uses torch.onnx.export to export models to ONNX format, handling dynamic axes and custom operators</li>
+                <li class=""><strong class="">Graph Optimization</strong> — Uses ONNX Simplifier for constant folding, redundant node elimination, and operator fusion</li>
+                <li class=""><strong class="">TensorRT Quantization</strong> — Applies INT8 quantization with calibration datasets to ensure acceptable accuracy loss</li>
+                <li class=""><strong class="">CUDA Graph Optimization</strong> — Uses CUDA Graph to capture inference computation graphs, eliminating kernel launch overhead</li>
+            </ul>
+            <p class="">The optimized model achieves <strong class="">12ms</strong> end-to-end inference latency on NVIDIA T4 GPU (640x640 input), a <strong class="">3.75x</strong> speedup over the original PyTorch model.</p>
+        </section>
+
+        <!-- Section 5: 代码实现 -->
+        <section class="detail-section" id="code">
+            <h2 class="">PyTorch Inference Code</h2>
+            <p class="">Below is the complete inference pipeline code, including model loading, preprocessing, inference, and post-processing:</p>
+            <div class="detail-code-block">
+                <div class="detail-code-header">
+                    <div class="detail-code-dot"></div>
+                    <div class="detail-code-dot"></div>
+                    <div class="detail-code-dot"></div>
+                    <div class="detail-code-title">inference.py</div>
+                </div>
+                <pre class="detail-code-body">import torch
+import torchvision.transforms as T
+from models import DeformableDETR
+
+# ---- Initialize the model ----
+model = DeformableDETR(num_classes=80, num_queries=300)
+model.load_state_dict(torch.load('checkpoints/detr_v2.pth'))
+model.eval().cuda()
+
+# ---- Preprocessing ----
+transform = T.Compose([
+    T.Resize((640, 640)),
+    T.ToTensor(),
+    T.Normalize([0.485, 0.456, 0.406],
+                [0.229, 0.224, 0.225])
+])
+
+# ---- Inference ----
+with torch.no_grad(), torch.cuda.amp.autocast():
+    image = transform(raw_image).unsqueeze(0).cuda()
+    outputs = model(image)
+    probs = outputs['pred_logits'].softmax(-1)
+    boxes = outputs['pred_boxes']
+    # Filter low-confidence predictions
+    keep = probs.max(-1).values &gt; 0.7
+    results = boxes[keep], probs[keep]</pre>
+            </div>
+        </section>
+
+        <!-- Section 6: Benchmark -->
+        <section class="detail-section" id="benchmark">
+            <h2 class="">Benchmark Results</h2>
+            <p class="">We conducted comprehensive benchmarks on the COCO 2017 validation set, comparing performance across different models and deployment approaches:</p>
+            <ul class="">
+                <li class=""><strong class="">Original DETR (ResNet-50)</strong> — 42.0 mAP, 45ms latency (V100)</li>
+                <li class=""><strong class="">Deformable DETR (ResNet-50)</strong> — 46.2 mAP, 28ms latency (V100)</li>
+                <li class=""><strong class="">Deformable DETR + TensorRT FP16</strong> — 46.0 mAP, 15ms latency (T4)</li>
+                <li class=""><strong class="">Deformable DETR + TensorRT INT8</strong> — 45.5 mAP, 12ms latency (T4)</li>
+                <li class=""><strong class="">YOLOv8-L (baseline)</strong> — 52.9 mAP, 8ms latency (T4)</li>
+            </ul>
+            <p class="">While DETR series still slightly trails YOLO in pure latency metrics, it clearly excels in tasks requiring precise spatial reasoning and complex scene understanding (e.g., occlusion handling, dense objects).</p>
+            <blockquote class="">Selection advice: For precision-first, object-dense industrial scenarios, Deformable DETR + TensorRT is recommended; for latency-sensitive real-time video streams, YOLO remains the more pragmatic choice.</blockquote>
+        </section>
+
+        <!-- Section 7: 工程部署 -->
+        <section class="detail-section" id="deployment">
+            <h2 class="">Engineering Deployment</h2>
+            <p class="">Deploying DETR series models to production faces several key challenges:</p>
+            <ul class="">
+                <li class=""><strong class="">Dynamic Batch</strong> — Different video streams have varying frame rates and resolutions, requiring dynamic batch size support via TensorRT's dynamic shape mechanism</li>
+                <li class=""><strong class="">Model Hot-swap</strong> — Designed an A/B testing framework supporting online detection model switching without service interruption</li>
+                <li class=""><strong class="">Multi-stream Concurrency</strong> — Uses CUDA Stream for parallel inference across multiple video streams, fully utilizing GPU compute resources</li>
+                <li class=""><strong class="">Monitoring &amp; Alerting</strong> — Integrated Prometheus + Grafana for inference latency, GPU utilization, and detection accuracy drift monitoring</li>
+            </ul>
+            <p class="">Ultimately, through TensorRT INT8 quantization + CUDA Graph optimization, we reduced inference latency from 45ms to 12ms, meeting real-time video stream processing requirements. The system processes over 5 million frames daily with GPU utilization stable above 75%.</p>
+        </section>
+
+        <!-- Section 8: 总结 -->
+        <section class="detail-section" id="conclusion">
+            <h2 class="">Summary &amp; Outlook</h2>
+            <p class="">Transformer applications in object detection are just beginning. From DETR to Deformable DETR, and the latest DINO and Co-DETR, this field is rapidly evolving. Future directions worth watching:</p>
+            <ul class="">
+                <li class=""><strong class="">Vision-Language Fusion</strong> — Combining CLIP and other vision-language models for open-vocabulary object detection</li>
+                <li class=""><strong class="">Self-Supervised Pre-training</strong> — Reducing dependence on labeled data, lowering model training costs</li>
+                <li class=""><strong class="">Edge Deployment</strong> — Through knowledge distillation and model compression, pushing DETR to edge devices</li>
+            </ul>
+            <p class="">For engineering teams, the key is finding the balance between model accuracy and inference efficiency. Through careful architecture design and engineering optimization, Transformer-based detectors can absolutely achieve real-time performance in production environments.</p>
+        </section></div></div>
+    </div>
+    <section class="related" aria-labelledby="related-title"><p class="kicker">Continue reading</p><h2 id="related-title">Related <em>writing</em></h2><ol class="journal-list" style="list-style:none"><li><a class="journal-row" href="article-17.html" data-topic="3" data-cursor="Read">
+        <span class="journal-date">2026.05 · 17</span>
+        <span class="journal-title"><span class="static">U-Net Did Not Lose to a Newer Model: In Industrial Vision, Define the Task Before Choosing the Model</span><span class="marquee" aria-hidden="true"><span>U-Net Did Not Lose to a Newer Model: In Industrial Vision, Define the Task Before Choosing the Model —&nbsp;</span><span>U-Net Did Not Lose to a Newer Model: In Industrial Vision, Define the Task Before Choosing the Model —&nbsp;</span><span>U-Net Did Not Lose to a Newer Model: In Industrial Vision, Define the Task Before Choosing the Model —&nbsp;</span></span></span>
+        <span class="topic" data-topic="3">Vision &amp; Multimodal</span><span class="journal-time">8 min</span></a></li><li><a class="journal-row" href="article-24.html" data-topic="3" data-cursor="Read">
+        <span class="journal-date">2026.04 · 24</span>
+        <span class="journal-title"><span class="static">Vision Algorithm Engineers: Do Not Become Process Operators</span><span class="marquee" aria-hidden="true"><span>Vision Algorithm Engineers: Do Not Become Process Operators —&nbsp;</span><span>Vision Algorithm Engineers: Do Not Become Process Operators —&nbsp;</span><span>Vision Algorithm Engineers: Do Not Become Process Operators —&nbsp;</span></span></span>
+        <span class="topic" data-topic="3">Vision &amp; Multimodal</span><span class="journal-time">8 min</span></a></li><li><a class="journal-row" href="article-29.html" data-topic="3" data-cursor="Read">
+        <span class="journal-date">2026.04 · 29</span>
+        <span class="journal-title"><span class="static">After a Vision Model Ships: Do Not Let mAP Become the Only Answer</span><span class="marquee" aria-hidden="true"><span>After a Vision Model Ships: Do Not Let mAP Become the Only Answer —&nbsp;</span><span>After a Vision Model Ships: Do Not Let mAP Become the Only Answer —&nbsp;</span><span>After a Vision Model Ships: Do Not Let mAP Become the Only Answer —&nbsp;</span></span></span>
+        <span class="topic" data-topic="3">Vision &amp; Multimodal</span><span class="journal-time">9 min</span></a></li></ol></section>
+    <nav class="pager" aria-label="More articles">
+        <a href="article-34.html" data-cursor="Prev"><span class="meta">← Previous</span><strong>The &quot;Three-Month Law&quot; of Open Source: From Hype to Abandonment</strong></a>
+        <a href="article-36.html" data-cursor="Next"><span class="meta">Next →</span><strong>Real-Time Data Processing: Flink + Kafka Best Practices</strong></a>
+    </nav>
+</div>
+</main>
+<footer class="colophon">
+    <div class="colophon-name" data-fit aria-hidden="true">Eric</div>
+    <div class="colophon-grid">
+        <div><p class="meta">Index</p><a href="../work/index.html">Work</a><a href="../journal/index.html">Journal</a><a href="../index.html#about">About</a><a href="../index.html#contact">Contact</a></div>
+        <div><p class="meta">Elsewhere</p><a href="https://github.com/powerpan" target="_blank" rel="noopener">GitHub</a><a href="../work/index.html">Work</a><a href="index.html">Journal</a><a href="../index.html#contact">Contact</a></div>
+        <div><p class="meta">Settings</p><button type="button" data-theme-toggle aria-pressed="false"><span class="theme-switch-label">Night</span> paper</button><br><button type="button" data-motion-toggle aria-pressed="true">Motion: on</button><br><button type="button" class="sound-text" data-sound-toggle aria-pressed="false">Sound: off</button>
+<label class="volume"><span class="meta">Volume</span><input class="ink-range" type="range" min="0" max="1" step="0.05" value="0.6" data-sound-volume aria-label="Music volume"></label></div>
+        <div><p class="meta">Colophon</p><p>© 2026 Eric. Set in Instrument Serif &amp; Inter Tight. Ink simulated live in WebGL2.</p><a href="#" data-top>Back to top ↑</a></div>
+    </div>
+</footer>
+<p class="sr-only" role="status" aria-live="polite" data-sound-status></p>
+<script src="../js/ink-fluid.js"></script>
+<script src="../js/ink.js"></script>
+</body>
+</html>

@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Model Fits. Why Is It Still Slow? — Eric</title>
+<meta name="description" content="KV compression saves memory and speeds up kernels. Why does the user see a different gain? Reading GAAC through bandwidth, concurrency, and measurement scope.">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#ede8df">
+<script>(()=>{const r=document.documentElement;let t,m;try{t=localStorage.getItem('ink-theme');m=localStorage.getItem('ink-motion')}catch(e){}t=t||(matchMedia('(prefers-color-scheme: dark)').matches?'night':'day');if(matchMedia('(prefers-reduced-motion: reduce)').matches)m='off';r.dataset.theme=t;r.dataset.motion=m||'on'})()</script>
+<link rel="preload" href="../assets/fonts/instrument-serif-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../css/ink.css">
+<link rel="stylesheet" href="../css/languages.css">
+<link rel="stylesheet" href="../css/sound.css">
+<script src="../js/ink-sound.js" defer></script>
+<noscript><style>[data-sound-toggle],.volume{display:none!important}</style></noscript>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='26' fill='%23f6401a'/%3E%3Ccircle cx='40' cy='26' r='14' fill='%232337f2' fill-opacity='.85'/%3E%3C/svg%3E">
+<link rel="alternate" hreflang="zh-CN" href="../zh/journal/article-01.html">
+</head>
+<body data-ink="quiet">
+<canvas id="ink" aria-hidden="true"></canvas>
+<div class="grain" aria-hidden="true"></div>
+
+<div class="cursor" aria-hidden="true"><span class="cursor-label"></span></div>
+<a class="sr-only" href="#main">Skip to content</a>
+<header class="masthead">
+    <a class="brand" href="../index.html" aria-label="Eric — home">Eric<sup>®</sup></a>
+    <div class="masthead-meta"><span>Portfolio &amp; Journal</span><a href="../zh/journal/article-01.html" data-language-switch hreflang="zh-CN" lang="zh-CN" aria-label="Read this page in Chinese">中文</a></div>
+    <div class="masthead-right">
+        <nav class="masthead-nav" aria-label="Primary">
+            <a href="../work/index.html">Work</a><a href="../journal/index.html" aria-current="page">Journal</a><a href="../index.html#about">About</a><a href="../index.html#contact">Contact</a>
+        </nav>
+        <button class="sound-switch" type="button" data-sound-toggle aria-pressed="false" aria-label="Play background music"><canvas class="sound-wave" aria-hidden="true"></canvas><span class="sound-label">Sound</span></button>
+        <button class="theme-switch" type="button" data-theme-toggle aria-pressed="false"><span class="theme-switch-dot" aria-hidden="true"></span><span class="theme-switch-label">Night</span></button>
+        <button class="menu-button" type="button" aria-expanded="false" aria-controls="menu">Menu</button>
+    </div>
+</header>
+<nav class="menu" id="menu" aria-label="Menu">
+    <a href="../index.html">Index</a><a href="../work/index.html"><em>Work</em></a><a href="../journal/index.html">Journal</a><a href="../index.html#contact"><em>Contact</em></a>
+    <div class="menu-foot meta"><span>Local <span data-clock>--:--:--</span></span><button class="sound-switch" type="button" data-sound-toggle aria-pressed="false" aria-label="Play background music"><canvas class="sound-wave" aria-hidden="true"></canvas><span class="sound-label">Sound</span></button><a href="../zh/journal/article-01.html" data-language-switch hreflang="zh-CN" lang="zh-CN" aria-label="Read this page in Chinese">中文</a></div>
+</nav>
+<main id="main">
+<div class="progress" aria-hidden="true"><i></i></div>
+<div class="page">
+    <header class="article-head">
+        <p class="meta"><a href="index.html">← Journal</a> &nbsp;/&nbsp; <span class="topic" data-topic="1">AI Engineering</span></p>
+        <h1 data-split>The Model Fits. <em>Why Is It Still Slow?</em></h1>
+        <p class="lede rise">KV compression saves memory and speeds up kernels. Why does the user see a different gain? Reading GAAC through bandwidth, concurrency, and measurement scope.</p>
+        <div class="article-meta meta rise" style="--d:120ms"><span>2026.11.03</span><span>15 min</span><span>No. 01</span></div>
+    </header>
+    <div class="article-layout">
+        <nav class="toc" aria-label="Contents"><a href="#intro">Introduction</a><a href="#kv-capacity">The weights fit. Historical tokens still need memory.</a><a href="#fused-reconstruction">Where does the compressed cache get unpacked?</a><a href="#kernel-timing">More computation, less elapsed time</a><a href="#whole-step">A 1.22× kernel does not make the request 1.22× faster</a><a href="#concurrency">Higher total throughput is not faster output for each sequence</a><a href="#fp8-comparison">What changes if the deployment already uses FP8?</a><a href="#deployment-limits">Losslessness leaves several deployment questions open</a><a href="#benchmark-plan">The comparisons I would run before deployment</a></nav>
+        <div class="page-surface"><div class="prose"><section class="detail-section" id="intro">
+<p class="">Memory capacity is usually the first obstacle when running a large language model locally. If BF16 weights will not fit, try 8-bit, then 4-bit. Once the weights finally load, it is tempting to think the hard part is over.</p>
+
+<p class="">Yet generation can slow down again when we introduce long documents, a code repository, or several simultaneous tasks. The model has not run out of memory, and the GPU has substantial theoretical compute. Where is the time going?</p>
+
+<p class="">Guo, George, and Joshi at Notre Dame offer a useful set of results in their October 28, 2026 preprint, <a href="https://arxiv.org/html/2610.38210v1" target="_blank" rel="noopener" class="">GAAC</a>: about 26% less resident KV memory, 1.19–1.27× faster attention kernels at 64K context on DGX Spark, 1.04–1.15× faster complete W4A16 decode steps, and 13%–29% higher aggregate throughput under fixed KV budgets.</p>
+
+<p class="">Those figures describe different experiments. They do not combine into a claim that local models are now 20% faster. I want to use the paper to trace how saved capacity can, or cannot, become speed that a user actually experiences.</p>
+
+</section>
+<section class="detail-section" id="kv-capacity">
+<h2 class="">The weights fit. Historical tokens still need memory.</h2>
+<p class="">Weights are only part of the resident data used during inference. A Transformer also retains historical keys and values so that generating the next token does not require recomputing previous K and V states. This KV cache grows with context length and the number of concurrent sequences.</p>
+
+<p class="">For a typical full-attention architecture, the theoretical storage for one sequence can be approximated as:</p>
+
+<pre class=""><code class="language-text">KV bytes = 2 × layers × KV heads × head dim
+           × context tokens × bytes per element
+</code></pre>
+
+<p class="">The initial 2 accounts for K and V. Consider 32 layers, 8 KV heads, a head dimension of 128, and BF16 storage: that is 128 KiB per token. At 65,536 tokens, one sequence needs 8 GiB; four equally long sequences without shared prefixes need 32 GiB for KV alone. This is an illustrative architecture, not a measured GAAC model, and excludes allocator overhead and temporary workspaces.</p>
+
+<p class="">Weight quantization does not automatically shrink that cache. An 8B model has roughly 16 GB of raw BF16 weights or 4 GB at 4-bit, while its KV may remain BF16. Costs previously overshadowed by the weights become more prominent. GQA, MQA, sliding-window attention, and hybrid attention change that growth, so similarly sized models need not have similar KV requirements.</p>
+
+<p class="">There is a less visible cost, too: caching avoids recomputation, not reading. In standard full attention, each new query still accesses historical keys and combines the corresponding values. Having room to store the data does not guarantee that each generation step can read it quickly enough.</p>
+
+<p class="">That is why I would not evaluate the hardware using TFLOPS alone. Prefill can organize many input tokens into large matrix operations. Small-batch, single-request decode can repeatedly read weights and historical KV while leaving much of the arithmetic hardware underused.</p>
+
+<p class="">As a bandwidth-floor example, suppose a path genuinely must read 8 GiB at an available decimal bandwidth of 1 TB/s. Transfer alone takes about 8.6 ms. This is not a GAAC kernel measurement and ignores cache hits and reuse. It simply illustrates the distance between “already in memory” and “free to access.”</p>
+
+</section>
+<section class="detail-section" id="fused-reconstruction">
+<h2 class="">Where does the compressed cache get unpacked?</h2>
+<p class=""><a href="https://arxiv.org/abs/2205.14135" target="_blank" rel="noopener" class="">FlashAttention</a> already demonstrated the value of reorganizing computation and memory access. GAAC turns to the KV representation itself: if historical states are read repeatedly, can we move fewer bytes without changing the values stored?</p>
+
+<p class="">BF16 consists of one sign bit, eight exponent bits, and seven mantissa bits. GAAC preserves the sign and mantissa and encodes only the exponent. Model-generated exponents are not uniformly distributed; frequently occurring exponents in many head-channels occupy short intervals. Calibration chooses high-coverage windows of length 8 and 16 for each head-channel of K and V in every layer. Encoding then stores offsets from those window bases.</p>
+
+<p class="">Eight elements form a group sharing a 2-bit mode tag. If all elements fit the narrow window, the group uses 3-bit offsets; otherwise it tries 4-bit offsets. If any value still falls outside, the whole group falls back to raw 8-bit exponents. Outliers are not discarded. Poor calibration increases fallback and reduces compression efficiency rather than forcing an unrepresentable value into a short code.</p>
+
+<p class="">In the common 3-bit mode, each element takes <code class="">8 + 3 + 2/8 = 11.25 bits</code>. About 88%–90% of groups use that mode across the five models in the compression evaluation. Complete encoded-size ratios are 1.405–1.407×. A ratio of 1.406 means <code class="">1 - 1/1.406 ≈ 28.9%</code> less encoded storage, not 40.6%. Once fixed slots, block tables, and fallback costs are included, resident KV savings are about 26%. That is not a 26% reduction in the entire model process.</p>
+
+<p class="">Making KV smaller is not enough to make inference faster. A straightforward implementation reads the compressed data, decompresses the whole cache into device memory, and hands it to an ordinary attention kernel. That introduces a full-cache write followed by another read. The saved traffic can disappear in the unpacking process.</p>
+
+<p class="">GAAC fuses reconstruction with attention. The kernel reads compressed tiles and metadata, reconstructs the BF16 values it currently needs, and immediately uses them for attention scores and weighted value sums. It never materializes a complete decompressed cache in external memory. New tokens first enter an incomplete BF16 tail block; a full block is compressed once, rather than repacked with every subsequent token. Blocks that exceed compressed-slot capacity remain in raw BF16.</p>
+
+<p class="">I find these scheduling details as important as the codec. KV is not an archive file: it is appended, read, and released throughout inference. A compact representation may be a poor fit if every consumption requires an expensive detour. “Lossless” here means reconstructing the original KV bit patterns. It does not automatically make attention outputs or complete generated sequences bit-identical across different floating-point kernels. The integrated path still needs numerical validation.</p>
+
+</section>
+<section class="detail-section" id="kernel-timing">
+<h2 class="">More computation, less elapsed time</h2>
+<p class=""><a href="https://arxiv.org/html/2610.38210v1#S4.T5" target="_blank" rel="noopener" class="">Table 5</a> breaks down a decode-attention kernel at 64K context. Times are in microseconds:</p>
+
+<div class="article-table-scroll" tabindex="0" role="region" aria-labelledby="bgkv_table_heading"><table class="">
+<thead id="bgkv_table_heading" class="">
+<tr class="">
+<th scope="col" class="">Component</th>
+<th align="right" scope="col" class="">BF16 / FA2</th>
+<th align="right" scope="col" class="">Decompress first</th>
+<th align="right" scope="col" class="">GAAC fused path</th>
+</tr>
+</thead>
+<tbody class=""><tr class="">
+<td class="">KV loading</td>
+<td align="right" class="">1117.8</td>
+<td align="right" class="">1117.8</td>
+<td align="right" class="">823.5</td>
+</tr>
+<tr class="">
+<td class="">Separate exponent decoding</td>
+<td align="right" class="">—</td>
+<td align="right" class="">930.8</td>
+<td align="right" class="">—</td>
+</tr>
+<tr class="">
+<td class="">Computation, including GAAC reconstruction</td>
+<td align="right" class="">241.5</td>
+<td align="right" class="">241.5</td>
+<td align="right" class="">290.7</td>
+</tr>
+<tr class="">
+<td class="">Total</td>
+<td align="right" class="">1359.3</td>
+<td align="right" class="">2290.1</td>
+<td align="right" class="">1114.2</td>
+</tr>
+</tbody></table></div>
+
+<p class="">GAAC spends 294.3 μs less loading KV and 49.2 μs more on computation, saving a net 245.1 μs. The speedup is about 1.22×, which means roughly 18% less elapsed time. Those are not two ways to say “22% less time.”</p>
+
+<p class="">The decompress-first path takes 2290.1 μs, slower than the uncompressed baseline. The same compressed representation leads to opposite performance outcomes depending on where reconstruction happens and how the result is consumed.</p>
+
+<p class="">Another ablation makes the tradeoff particularly clear. Adding a 2-bit mode improves the compression ratio from 1.406 to 1.439×, about 2.3%, but raises standalone decoding latency from 187.1 to 526.7 μs, around 2.8×. This is the Table 4 codec experiment, not the complete attention timing above. Still, a few more bytes saved do not necessarily pay for the extra cost of reading them.</p>
+
+<p class="">I would therefore not treat reducing computation as the sole direction for optimization. Under a bandwidth bottleneck, some extra arithmetic can buy a larger reduction in memory traffic. How much arithmetic, where reconstruction happens in the memory hierarchy, and whether access remains regular all need to be measured together.</p>
+
+</section>
+<section class="detail-section" id="whole-step">
+<h2 class="">A 1.22× kernel does not make the request 1.22× faster</h2>
+<p class="">A decode step also includes linear layers, MLPs, normalization, weight access, and runtime overhead. Suppose attention originally consumes 40% of the total time and becomes 1.22× faster while everything else stays unchanged:</p>
+
+<pre class=""><code class="language-text">overall speedup = 1 / (0.6 + 0.4 / 1.22)
+                ≈ 1.078
+</code></pre>
+
+<p class="">Overall processing rate improves by only about 7.8%. I chose 40% to illustrate Amdahl's law; it is not a measured fraction from the paper. The relevant question is how much of the original execution time belongs to the component being optimized.</p>
+
+<p class="">GAAC's equal-batch experiment reflects that difference. Complete W4A16 decode steps on DGX Spark improve by 1.04–1.15×. In the two tested hybrid/MoE models, only about a quarter of the layers use full attention, and whole-step gains are around 1.04–1.06×. A faster attention kernel does not confer its percentage gain on every other layer.</p>
+
+<p class="">The ranges also need their conditions attached. The 1.19–1.27× attention result uses batch 1 and 64K context on DGX Spark. The 1.04–1.15× complete-step range spans the tested models and context configurations. These are not a matched end-to-end pair that can simply be subtracted, and neither measures the completion time of a whole user request.</p>
+
+<p class="">For a long document, prefill must process the input first. GAAC's fused path primarily accelerates decode; prefill retains conventional attention and may temporarily expand cached context when necessary. A 64K input followed by a few dozen generated tokens can spend most of its time before the first token. Generating thousands of tokens over that context offers more opportunity for per-step savings to accumulate.</p>
+
+<p class="">The paper reports Qwen3-8B attention speedups of 1.31, 1.27, and 1.25× at 32K, 64K, and 128K. That is a useful warning against translating “long contexts expose memory costs” into “kernel speedup must rise monotonically with context.” Complete-step gains and kernel speedup ratios are different curves.</p>
+
+</section>
+<section class="detail-section" id="concurrency">
+<h2 class="">Higher total throughput is not faster output for each sequence</h2>
+<p class="">A separate experiment fixes the KV-memory budget and increases concurrency to the maximum each system can hold. In <a href="https://arxiv.org/html/2610.38210v1#S4.T2" target="_blank" rel="noopener" class="">Table 2</a>, Qwen3-8B with 64K context and about a 20 GB KV budget fits two BF16 sequences at 19.0 aggregate tok/s. GAAC fits three and produces 22.8 tok/s, a 20% increase.</p>
+
+<p class="">Simple division gives about 9.5 tok/s per sequence for the first setup and 7.6 for the second. This is arithmetic on aggregate throughput, not a per-request latency measurement. It cannot establish an equal-batch slowdown because concurrency has changed. It does establish why aggregate throughput and per-sequence generation rate are not interchangeable metrics.</p>
+
+<p class="">If the device serves one chat user, room for another sequence may offer no immediate benefit. If three tasks maintain separate long contexts, admitting all three instead of making the third wait could improve group completion time. That depends on scheduling and task dependencies. It is a hypothesis to test in deployment, not a multi-agent workflow experiment already performed by GAAC.</p>
+
+<p class="">One contrast in the paper is especially revealing: the hybrid and MoE models show relatively modest equal-batch gains but 27% and 29% higher throughput under fixed KV budgets. Much of that benefit comes from accommodating another concurrent sequence, not from making each computation step faster by the same percentage.</p>
+
+<p class="">An online service also needs queueing and tail-latency measurements. A larger batch can generate more tokens while keeping some requests waiting longer. I would define goodput against the product's requirements, for example counting only requests that meet both first-token and ongoing-generation latency targets. Real-time chat and offline document processing can have different constraints; one throughput ranking cannot select deployments for both.</p>
+
+</section>
+<section class="detail-section" id="fp8-comparison">
+<h2 class="">What changes if the deployment already uses FP8?</h2>
+<p class="">Compression is not the only way to reduce KV costs. <a href="https://arxiv.org/abs/2309.06180" target="_blank" rel="noopener" class="">PagedAttention</a> uses paged allocation and sharing to reduce fragmentation and duplication. Its paper reports 2–4× vLLM throughput against specific contemporary baselines and workloads, not a similar speedup for every matrix operation. GAAC additionally addresses the numerical representation and how attention consumes it.</p>
+
+<p class="">FP8 halves the storage bit width relative to BF16 while introducing numerical approximation. In <a href="https://vllm.ai/blog/2026-04-22-fp8-kvcache" target="_blank" rel="noopener" class="">vLLM's April 2026 report</a>, an H100 Llama-3.1-8B test with 150 requests, concurrency 8, and roughly 20K input/2K output tokens improves aggregate throughput from 450.3 to 517.5 tok/s, about 14.9%. The gpt-oss-20b variant that skips sliding-window layers gains about 4.8%. Different hardware and implementations prevent a ranking against GAAC, but halving bit width clearly does not imply doubling system speed.</p>
+
+<p class="">Lossy paths also need task-accuracy and accumulation-error checks, not just matching cache sizes. GAAC itself achieves only 1.09–1.14× additional lossless compression on FP8 E4M3, and 1.25–1.30× on E5M2. These ratios further compress already quantized data. They neither restore BF16 precision nor establish the throughput gains measured with BF16 KV.</p>
+
+<p class="">I would not conclude that either approach should replace the other. A deployment with mature FP8 kernels needs an incremental comparison. Preserving original BF16 KV values poses a different constraint and offers a different benefit. Hardware, architecture, precision, batch size, and workload need to be aligned before comparing results.</p>
+
+</section>
+<section class="detail-section" id="deployment-limits">
+<h2 class="">Losslessness leaves several deployment questions open</h2>
+<p class="">GAAC's exponent windows depend on calibration. In the positional-drift experiment in <a href="https://arxiv.org/html/2610.38210v1#A3" target="_blank" rel="noopener" class="">Appendix C</a>, a Qwen3-8B layer uses windows calibrated on prompts of at most 8K tokens to process 32K input. Overflow storage for later keys grows substantially; 32K calibration is more stable. RoPE can shift key-exponent distributions with position. Reconstruction remains lossless, but compression efficiency and fallback overhead change.</p>
+
+<p class="">This does not contradict cross-task calibration results. Windows selected on WikiText maintaining similar compression across several code, math, and knowledge tests do not establish coverage of every context length, content distribution, or long-running request trace. Deployment needs measurements of slot waste, fallback rates, prefix sharing, and cache turnover, not just one static cache's ratio.</p>
+
+<p class="">Apple M4 results have a narrower scope, too. The authors implement compressed attention in Metal and compare it with a BF16-KV kernel of the same structure. At 64K context, they obtain about 1.10× for a single sequence and 1.25× for eight. This demonstrates kernel portability, not matching speedups for a complete Mac chat application or agent.</p>
+
+<p class="">I would not infer energy efficiency either. The paper reports no power or energy measurements. The effect of extra computation and reduced traffic on temperature, battery life, and sustained performance needs separate testing. Lossless encoding, attention timing, complete-model quality, and whole-device energy use require distinct evidence.</p>
+
+</section>
+<section class="detail-section" id="benchmark-plan">
+<h2 class="">The comparisons I would run before deployment</h2>
+<p class="">First, fix a reproducible baseline: model and quantization versions, inference framework and kernel, context and output lengths, KV precision, batch size, and request arrivals. Record weight memory, resident KV, and workspace separately. A reduction in one component is not the same percentage reduction in the entire process.</p>
+
+<p class="">Then run two kinds of experiments. Hold concurrency fixed to compare complete decode-step and request latency. Separately, fix the memory budget and allow higher concurrency to compare aggregate throughput, queueing, and goodput. Both matter, but they should not be merged into a single “speed improvement” table.</p>
+
+<p class="">Latency reporting needs its own distinctions. <a href="https://docs.vllm.ai/en/latest/design/metrics/" target="_blank" rel="noopener" class="">vLLM's metrics documentation</a> separates time to first token (TTFT), inter-token latency (ITL), and average time per output token (TPOT). State whether queueing is included, how observations are aggregated, and which output-token denominator is used. An average tokens/s can conceal both a short request's wait and a long request's stalls. P50/P95/P99, task quality, sustained memory use, and energy measurements bring the comparison closer to actual use.</p>
+
+<p class="">For agents, I would also save task traces containing tool waits and repeated prefill. If a task spends most of its duration waiting for external tools, improving decode by 10% will not cut the whole task by 10%. Finding where the time goes determines which layer is worth optimizing next.</p>
+
+<p class="">GAAC does not leave me with a universal speed promise. It makes me more interested in the denominator: encoded bytes or resident memory, one kernel or a complete step, single-user speed or concurrent capacity? Getting the model to fit is where these questions begin.</p>
+
+<p class="">This discussion uses primary materials checked through November 3, 2026. GAAC figures refer to arXiv:2610.38210v1; I have not reproduced the experiments. The capacity calculation, Amdahl example, agent scenario, and proposed deployment comparisons are illustrations or engineering suggestions, not additional experimental results.</p>
+
+</section></div></div>
+    </div>
+    <section class="related" aria-labelledby="related-title"><p class="kicker">Continue reading</p><h2 id="related-title">Related <em>writing</em></h2><ol class="journal-list" style="list-style:none"><li><a class="journal-row" href="article-02.html" data-topic="1" data-cursor="Read">
+        <span class="journal-date">2026.10 · 02</span>
+        <span class="journal-title"><span class="static">When the Exam Is Wrong: What Do AI Scores Measure?</span><span class="marquee" aria-hidden="true"><span>When the Exam Is Wrong: What Do AI Scores Measure? —&nbsp;</span><span>When the Exam Is Wrong: What Do AI Scores Measure? —&nbsp;</span><span>When the Exam Is Wrong: What Do AI Scores Measure? —&nbsp;</span></span></span>
+        <span class="topic" data-topic="1">AI Engineering</span><span class="journal-time">16 min</span></a></li><li><a class="journal-row" href="article-15.html" data-topic="1" data-cursor="Read">
+        <span class="journal-date">2026.05 · 15</span>
+        <span class="journal-title"><span class="static">The Core of AI Engineering Is Not Making Models Omnipotent. It Is Defining Boundaries</span><span class="marquee" aria-hidden="true"><span>The Core of AI Engineering Is Not Making Models Omnipotent. It Is Defining Boundaries —&nbsp;</span><span>The Core of AI Engineering Is Not Making Models Omnipotent. It Is Defining Boundaries —&nbsp;</span><span>The Core of AI Engineering Is Not Making Models Omnipotent. It Is Defining Boundaries —&nbsp;</span></span></span>
+        <span class="topic" data-topic="1">AI Engineering</span><span class="journal-time">8 min</span></a></li><li><a class="journal-row" href="article-16.html" data-topic="1" data-cursor="Read">
+        <span class="journal-date">2026.05 · 16</span>
+        <span class="journal-title"><span class="static">For Enterprise AI On-Prem, the First Step Is Not Buying GPUs. It Is Cleaning Data</span><span class="marquee" aria-hidden="true"><span>For Enterprise AI On-Prem, the First Step Is Not Buying GPUs. It Is Cleaning Data —&nbsp;</span><span>For Enterprise AI On-Prem, the First Step Is Not Buying GPUs. It Is Cleaning Data —&nbsp;</span><span>For Enterprise AI On-Prem, the First Step Is Not Buying GPUs. It Is Cleaning Data —&nbsp;</span></span></span>
+        <span class="topic" data-topic="1">AI Engineering</span><span class="journal-time">7 min</span></a></li></ol></section>
+    <nav class="pager" aria-label="More articles">
+        <a href="article-41.html" data-cursor="Prev"><span class="meta">← Previous</span><strong>SAM 2 in Industrial Inspection: From Prompt Engineering to Production</strong></a>
+        <a href="article-02.html" data-cursor="Next"><span class="meta">Next →</span><strong>When the Exam Is Wrong: What Do AI Scores Measure?</strong></a>
+    </nav>
+</div>
+</main>
+<footer class="colophon">
+    <div class="colophon-name" data-fit aria-hidden="true">Eric</div>
+    <div class="colophon-grid">
+        <div><p class="meta">Index</p><a href="../work/index.html">Work</a><a href="../journal/index.html">Journal</a><a href="../index.html#about">About</a><a href="../index.html#contact">Contact</a></div>
+        <div><p class="meta">Elsewhere</p><a href="https://github.com/powerpan" target="_blank" rel="noopener">GitHub</a><a href="../work/index.html">Work</a><a href="index.html">Journal</a><a href="../index.html#contact">Contact</a></div>
+        <div><p class="meta">Settings</p><button type="button" data-theme-toggle aria-pressed="false"><span class="theme-switch-label">Night</span> paper</button><br><button type="button" data-motion-toggle aria-pressed="true">Motion: on</button><br><button type="button" class="sound-text" data-sound-toggle aria-pressed="false">Sound: off</button>
+<label class="volume"><span class="meta">Volume</span><input class="ink-range" type="range" min="0" max="1" step="0.05" value="0.6" data-sound-volume aria-label="Music volume"></label></div>
+        <div><p class="meta">Colophon</p><p>© 2026 Eric. Set in Instrument Serif &amp; Inter Tight. Ink simulated live in WebGL2.</p><a href="#" data-top>Back to top ↑</a></div>
+    </div>
+</footer>
+<p class="sr-only" role="status" aria-live="polite" data-sound-status></p>
+<script src="../js/ink-fluid.js"></script>
+<script src="../js/ink.js"></script>
+</body>
+</html>

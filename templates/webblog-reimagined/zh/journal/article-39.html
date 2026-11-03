@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>设计可扩展的图像处理流水线：从 Python 脚本到 Kubernetes 集群 — Eric</title>
+<meta name="description" content="设计可扩展的图像处理流水线：从 Python 脚本到 Kubernetes 集群">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#ede8df">
+<script>(()=>{const r=document.documentElement;let t,m;try{t=localStorage.getItem('ink-theme');m=localStorage.getItem('ink-motion')}catch(e){}t=t||(matchMedia('(prefers-color-scheme: dark)').matches?'night':'day');if(matchMedia('(prefers-reduced-motion: reduce)').matches)m='off';r.dataset.theme=t;r.dataset.motion=m||'on'})()</script>
+<link rel="preload" href="../../assets/fonts/instrument-serif-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../css/ink.css">
+<link rel="stylesheet" href="../../css/languages.css">
+<link rel="stylesheet" href="../../css/sound.css">
+<script src="../../js/ink-sound.js" defer></script>
+<noscript><style>[data-sound-toggle],.volume{display:none!important}</style></noscript>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='26' fill='%23f6401a'/%3E%3Ccircle cx='40' cy='26' r='14' fill='%232337f2' fill-opacity='.85'/%3E%3C/svg%3E">
+<link rel="alternate" hreflang="en" href="../../journal/article-39.html">
+</head>
+<body data-ink="quiet">
+<canvas id="ink" aria-hidden="true"></canvas>
+<div class="grain" aria-hidden="true"></div>
+
+<div class="cursor" aria-hidden="true"><span class="cursor-label"></span></div>
+<a class="sr-only" href="#main">跳至正文</a>
+<header class="masthead">
+    <a class="brand" href="../index.html" aria-label="Eric — 首页">Eric<sup>®</sup></a>
+    <div class="masthead-meta"><span>作品与手记</span><a href="../../journal/article-39.html" data-language-switch hreflang="en" lang="en" aria-label="Read this page in English">EN</a></div>
+    <div class="masthead-right">
+        <nav class="masthead-nav" aria-label="主导航">
+            <a href="../work/index.html">项目</a><a href="../journal/index.html" aria-current="page">文章</a><a href="../index.html#about">关于</a><a href="../index.html#contact">联系</a>
+        </nav>
+        <button class="sound-switch" type="button" data-sound-toggle aria-pressed="false" aria-label="播放背景音乐"><canvas class="sound-wave" aria-hidden="true"></canvas><span class="sound-label">音乐</span></button>
+        <button class="theme-switch" type="button" data-theme-toggle aria-pressed="false"><span class="theme-switch-dot" aria-hidden="true"></span><span class="theme-switch-label">夜间</span></button>
+        <button class="menu-button" type="button" aria-expanded="false" aria-controls="menu">菜单</button>
+    </div>
+</header>
+<nav class="menu" id="menu" aria-label="菜单">
+    <a href="../index.html">目录</a><a href="../work/index.html"><em>项目</em></a><a href="../journal/index.html">文章</a><a href="../index.html#contact"><em>联系</em></a>
+    <div class="menu-foot meta"><span>本地 <span data-clock>--:--:--</span></span><button class="sound-switch" type="button" data-sound-toggle aria-pressed="false" aria-label="播放背景音乐"><canvas class="sound-wave" aria-hidden="true"></canvas><span class="sound-label">音乐</span></button><a href="../../journal/article-39.html" data-language-switch hreflang="en" lang="en" aria-label="Read this page in English">EN</a></div>
+</nav>
+<main id="main">
+<div class="progress" aria-hidden="true"><i></i></div>
+<div class="page">
+    <header class="article-head">
+        <p class="meta"><a href="index.html">← 文章</a> &nbsp;/&nbsp; <span class="topic" data-topic="3">视觉多模态</span></p>
+        <h1 data-split>设计可扩展的图像处理流水线：从 Python 脚本到 Kubernetes 集群</h1>
+        <p class="lede rise"></p>
+        <div class="article-meta meta rise" style="--d:120ms"><span>2025.09.05</span><span>11 分钟</span><span>No. 39</span></div>
+    </header>
+    <div class="article-layout">
+        <nav class="toc" aria-label="目录"><a href="#architecture">架构概述</a><a href="#stages">流水线阶段设计</a><a href="#kafka">Kafka 流式架构</a><a href="#worker">Worker 并发模型</a><a href="#k8s">Kubernetes 部署配置</a><a href="#monitoring">监控与可观测性</a><a href="#scaling">扩展策略</a><a href="#conclusion">总结与经验</a></nav>
+        <div class="page-surface"><div class="prose"><!-- Section 1: 架构概述 -->
+        <section class="detail-section" id="architecture">
+            <h2 class="">架构概述</h2>
+            <p class="">在构建实时图像处理系统时，传统的请求-响应模式往往无法满足高吞吐量和低延迟的双重需求。我们需要一种事件驱动的流水线架构，将图像处理拆分为多个独立的阶段，每个阶段可以独立扩展和优化。</p>
+            <p class="">核心设计原则：<strong class="">解耦、可扩展、容错</strong>。每个处理阶段都是一个独立的服务，通过消息队列进行通信，支持水平扩展和故障隔离。</p>
+            <blockquote class="">流水线的价值不在于单个环节的高效，而在于整体的协调与平衡。一个瓶颈节点会拖慢整条链路。</blockquote>
+        </section>
+
+        <!-- Section 2: 流水线阶段 -->
+        <section class="detail-section" id="stages">
+            <h2 class="">流水线阶段设计</h2>
+            <p class="">我们将图像处理拆分为 5 个核心阶段，每个阶段对应一个独立的微服务：</p>
+            <ul class="">
+                <li class=""><strong class="">Ingest</strong> — 接收原始图像，进行格式校验和元数据提取，支持 HTTP / gRPC / WebSocket 多种接入方式</li>
+                <li class=""><strong class="">Preprocess</strong> — 图像缩放、色彩空间转换、归一化、数据增强，输出统一格式的 tensor</li>
+                <li class=""><strong class="">Inference</strong> — 模型推理，支持批量处理和动态 batching，可加载多种模型（分类、检测、分割）</li>
+                <li class=""><strong class="">Postprocess</strong> — 结果解析、NMS、置信度过滤、坐标映射回原图</li>
+                <li class=""><strong class="">Export</strong> — 结果持久化到数据库、回调通知、Webhook 推送、消息队列广播</li>
+            </ul>
+            <p class="">每个阶段通过 Apache Kafka 进行连接，支持背压（backpressure）机制，避免下游过载。Kafka 的分区特性使得我们可以按图像 ID 进行分区，保证同一张图像的处理顺序。</p>
+        </section>
+
+        <!-- Section 3: Kafka 流处理 -->
+        <section class="detail-section" id="kafka">
+            <h2 class="">Kafka 流式架构</h2>
+            <p class="">Kafka 作为流水线的核心消息中间件，承担了数据流转、背压控制和故障恢复三大职责。我们设计了以下 Topic 结构：</p>
+            <ul class="">
+                <li class=""><strong class="">image.ingest</strong> — 原始图像元数据，3 个分区，7 天保留</li>
+                <li class=""><strong class="">image.preprocessed</strong> — 预处理后的 tensor 数据，6 个分区</li>
+                <li class=""><strong class="">image.inference.result</strong> — 推理结果，12 个分区</li>
+                <li class=""><strong class="">image.export</strong> — 最终处理结果，6 个分区</li>
+            </ul>
+            <p class="">关键设计决策：</p>
+            <ul class="">
+                <li class=""><strong class="">消息大小</strong> — 图像数据不直接放入 Kafka，而是存储在 S3/MinIO 中，Kafka 消息只包含引用指针</li>
+                <li class=""><strong class="">消费者组</strong> — 每个阶段使用独立的消费者组，支持独立扩缩容</li>
+                <li class=""><strong class="">Dead Letter Queue</strong> — 处理失败的消息自动转入 DLQ，避免阻塞正常流水线</li>
+            </ul>
+            <blockquote class="">经验教训：Kafka 消息体越小，吞吐量越高。将大块数据（如图像）放入对象存储，Kafka 只传递元数据和指针，是一个经过验证的最佳实践。</blockquote>
+        </section>
+
+        <!-- Section 4: Worker 实现 -->
+        <section class="detail-section" id="worker">
+            <h2 class="">Worker 并发模型</h2>
+            <p class="">每个流水线阶段的 Worker 采用 Go 语言实现，利用 goroutine 实现高并发处理。核心采用 Worker Pool 模式，通过 channel 进行任务分发和结果收集。</p>
+            <p class="">Worker Pool 的设计要点：</p>
+            <ul class="">
+                <li class=""><strong class="">固定大小池</strong> — 避免 goroutine 无限增长导致 OOM，pool 大小根据 CPU 核数和 GPU 显存动态调整</li>
+                <li class=""><strong class="">优雅关闭</strong> — 通过 context 传播取消信号，确保在滚动更新时不丢失正在处理的任务</li>
+                <li class=""><strong class="">健康检查</strong> — 每个 Worker 暴露 /health 端点，Kubernetes 通过探针检测存活状态</li>
+                <li class=""><strong class="">指标采集</strong> — 使用 Prometheus client 记录处理延迟、吞吐量和错误率</li>
+            </ul>
+        </section>
+
+        <!-- Section 5: Kubernetes 部署 -->
+        <section class="detail-section" id="k8s">
+            <h2 class="">Kubernetes 部署配置</h2>
+            <p class="">每个流水线阶段作为一个独立的 Kubernetes Deployment 运行，通过 HPA（Horizontal Pod Autoscaler）根据队列深度自动扩缩容。以下是 Inference Worker 的部署配置：</p>
+            <div class="detail-code-block">
+                <div class="detail-code-header">
+                    <div class="detail-code-dot"></div>
+                    <div class="detail-code-dot"></div>
+                    <div class="detail-code-dot"></div>
+                    <div class="detail-code-title">k8s/inference-worker.yaml</div>
+                </div>
+                <pre class="detail-code-body">apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: inference-worker
+  namespace: image-pipeline
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: inference-worker
+  template:
+    spec:
+      containers:
+      - name: worker
+        image: registry/inference-worker:v2.4.0
+        resources:
+          requests:
+            memory: "4Gi"
+            nvidia.com/gpu: "1"
+          limits:
+            memory: "8Gi"
+            nvidia.com/gpu: "1"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 10</pre>
+            </div>
+            <p class="">关键配置：<code class="">minReplicas: 2</code>，<code class="">maxReplicas: 20</code>，<code class="">targetQueueLength: 100</code>。当队列深度超过阈值时，HPA 会在 30 秒内完成扩容。GPU 节点使用 NVIDIA Device Plugin 和 node affinity 调度到专用 GPU 节点池。</p>
+        </section>
+
+        <!-- Section 6: 监控 -->
+        <section class="detail-section" id="monitoring">
+            <h2 class="">监控与可观测性</h2>
+            <p class="">我们采用三大支柱的可观测性方案，确保流水线的每个环节都透明可控：</p>
+            <ul class="">
+                <li class=""><strong class="">Metrics</strong> — Prometheus 采集每个阶段的吞吐量、延迟 P99、错误率等关键指标，Grafana Dashboard 实时展示</li>
+                <li class=""><strong class="">Logging</strong> — 结构化日志通过 Fluentd 收集到 Elasticsearch，支持实时查询和告警规则</li>
+                <li class=""><strong class="">Tracing</strong> — OpenTelemetry 实现端到端链路追踪，从图像摄入到结果导出全链路可视化</li>
+            </ul>
+            <p class="">关键告警规则：</p>
+            <ul class="">
+                <li class="">Kafka Consumer Lag 超过 1000 时触发 P1 告警</li>
+                <li class="">推理延迟 P99 超过 500ms 时触发自动扩容</li>
+                <li class="">Dead Letter Queue 消息数量持续增长时通知开发团队</li>
+                <li class="">GPU 利用率低于 30% 时触发缩容，节省资源成本</li>
+            </ul>
+        </section>
+
+        <!-- Section 7: 扩展策略 -->
+        <section class="detail-section" id="scaling">
+            <h2 class="">扩展策略</h2>
+            <p class="">在生产环境中，我们采用了分层扩展的策略，确保系统在不同负载下都能高效运行：</p>
+            <ul class="">
+                <li class=""><strong class="">水平扩展</strong> — 每个阶段独立 HPA，根据各自负载自动扩缩，互不影响</li>
+                <li class=""><strong class="">垂直扩展</strong> — GPU 密集型阶段使用 node affinity 调度到专用节点，预留 GPU 资源</li>
+                <li class=""><strong class="">地理扩展</strong> — 多区域部署，就近接入，减少网络延迟，Kafka MirrorMaker 实现跨区域数据同步</li>
+                <li class=""><strong class="">弹性伸缩</strong> — 预热 + 快速扩容策略，应对突发流量，结合 KEDA 实现基于 Kafka lag 的精确扩缩</li>
+            </ul>
+            <p class="">最终系统在生产环境中稳定运行，日均处理 <strong class="">1000 万+</strong> 张图像，P99 延迟控制在 <strong class="">200ms</strong> 以内，可用性达到 <strong class="">99.99%</strong>。系统在大促期间成功应对了 5 倍流量峰值，自动扩容在 2 分钟内完成。</p>
+        </section>
+
+        <!-- Section 8: 总结 -->
+        <section class="detail-section" id="conclusion">
+            <h2 class="">总结与经验</h2>
+            <p class="">构建实时图像处理流水线是一个系统工程，涉及架构设计、消息中间件选型、容器编排和监控告警等多个层面。以下是我们的核心经验：</p>
+            <ul class="">
+                <li class=""><strong class="">先解耦后优化</strong> — 初期优先保证架构的可扩展性，后期再针对瓶颈环节做深度优化</li>
+                <li class=""><strong class="">数据与控制分离</strong> — 大数据走对象存储，控制流走消息队列，避免 Kafka 成为瓶颈</li>
+                <li class=""><strong class="">可观测性先行</strong> — 在上线之前就部署好完整的监控体系，否则出了问题无法定位</li>
+                <li class=""><strong class="">容错设计</strong> — 每个环节都要假设下游会失败，通过 DLQ、重试、熔断保证系统韧性</li>
+            </ul>
+            <p class="">这套架构已经稳定运行超过一年，经历了多次业务高峰和基础设施变更的考验。如果你正在构建类似的系统，希望这些经验能为你提供参考。</p>
+        </section></div></div>
+    </div>
+    <section class="related" aria-labelledby="related-title"><p class="kicker">继续阅读</p><h2 id="related-title">相关<em>文章</em></h2><ol class="journal-list" style="list-style:none"><li><a class="journal-row" href="article-17.html" data-topic="3" data-cursor="阅读">
+        <span class="journal-date">2026.05 · 17</span>
+        <span class="journal-title"><span class="static">U-Net 没有输给新模型：工业视觉里，先定义任务再选择模型</span><span class="marquee" aria-hidden="true"><span>U-Net 没有输给新模型：工业视觉里，先定义任务再选择模型 —&nbsp;</span><span>U-Net 没有输给新模型：工业视觉里，先定义任务再选择模型 —&nbsp;</span><span>U-Net 没有输给新模型：工业视觉里，先定义任务再选择模型 —&nbsp;</span></span></span>
+        <span class="topic" data-topic="3">视觉多模态</span><span class="journal-time">8 分钟</span></a></li><li><a class="journal-row" href="article-24.html" data-topic="3" data-cursor="阅读">
+        <span class="journal-date">2026.04 · 24</span>
+        <span class="journal-title"><span class="static">视觉算法工程师，别把自己做成 流程操作员</span><span class="marquee" aria-hidden="true"><span>视觉算法工程师，别把自己做成 流程操作员 —&nbsp;</span><span>视觉算法工程师，别把自己做成 流程操作员 —&nbsp;</span><span>视觉算法工程师，别把自己做成 流程操作员 —&nbsp;</span></span></span>
+        <span class="topic" data-topic="3">视觉多模态</span><span class="journal-time">8 分钟</span></a></li><li><a class="journal-row" href="article-29.html" data-topic="3" data-cursor="阅读">
+        <span class="journal-date">2026.04 · 29</span>
+        <span class="journal-title"><span class="static">视觉模型上线后：别让 mAP 变成唯一答案</span><span class="marquee" aria-hidden="true"><span>视觉模型上线后：别让 mAP 变成唯一答案 —&nbsp;</span><span>视觉模型上线后：别让 mAP 变成唯一答案 —&nbsp;</span><span>视觉模型上线后：别让 mAP 变成唯一答案 —&nbsp;</span></span></span>
+        <span class="topic" data-topic="3">视觉多模态</span><span class="journal-time">9 分钟</span></a></li></ol></section>
+    <nav class="pager" aria-label="更多文章">
+        <a href="article-38.html" data-cursor="上一篇"><span class="meta">← 上一篇</span><strong>如何客观看待现今女权主义</strong></a>
+        <a href="article-40.html" data-cursor="下一个"><span class="meta">下一篇 →</span><strong>「内卷」与「躺平」：一代人的焦虑与突围</strong></a>
+    </nav>
+</div>
+</main>
+<footer class="colophon">
+    <div class="colophon-name" data-fit aria-hidden="true">Eric</div>
+    <div class="colophon-grid">
+        <div><p class="meta">目录</p><a href="../work/index.html">项目</a><a href="../journal/index.html">文章</a><a href="../index.html#about">关于</a><a href="../index.html#contact">联系</a></div>
+        <div><p class="meta">更多</p><a href="https://github.com/powerpan" target="_blank" rel="noopener">GitHub</a><a href="../work/index.html">项目</a><a href="index.html">文章</a><a href="../index.html#contact">联系</a></div>
+        <div><p class="meta">设置</p><button type="button" data-theme-toggle aria-pressed="false"><span class="theme-switch-label">夜间</span> 纸色</button><br><button type="button" data-motion-toggle aria-pressed="true">动效：开启</button><br><button type="button" class="sound-text" data-sound-toggle aria-pressed="false">音乐：关闭</button>
+<label class="volume"><span class="meta">音量</span><input class="ink-range" type="range" min="0" max="1" step="0.05" value="0.6" data-sound-volume aria-label="音乐音量"></label></div>
+        <div><p class="meta">关于本站</p><p>© 2026 Eric. 中文标题采用 Noto Serif SC，正文采用 Noto Sans SC。水墨以 WebGL2 实时模拟。</p><a href="#" data-top>返回顶部 ↑</a></div>
+    </div>
+</footer>
+<p class="sr-only" role="status" aria-live="polite" data-sound-status></p>
+<script src="../../js/ink-fluid.js"></script>
+<script src="../../js/ink.js"></script>
+</body>
+</html>

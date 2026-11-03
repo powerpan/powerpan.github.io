@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>当技术路线被包装成定律 — Eric</title>
+<meta name="description" content="韬定律背后指向后摩尔时代的真实工程问题，但媒体叙事容易把系统级优化包装成从零发明的新神话。">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#ede8df">
+<script>(()=>{const r=document.documentElement;let t,m;try{t=localStorage.getItem('ink-theme');m=localStorage.getItem('ink-motion')}catch(e){}t=t||(matchMedia('(prefers-color-scheme: dark)').matches?'night':'day');if(matchMedia('(prefers-reduced-motion: reduce)').matches)m='off';r.dataset.theme=t;r.dataset.motion=m||'on'})()</script>
+<link rel="preload" href="../../assets/fonts/instrument-serif-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../css/ink.css">
+<link rel="stylesheet" href="../../css/languages.css">
+<link rel="stylesheet" href="../../css/sound.css">
+<script src="../../js/ink-sound.js" defer></script>
+<noscript><style>[data-sound-toggle],.volume{display:none!important}</style></noscript>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='26' fill='%23f6401a'/%3E%3Ccircle cx='40' cy='26' r='14' fill='%232337f2' fill-opacity='.85'/%3E%3C/svg%3E">
+<link rel="alternate" hreflang="en" href="../../journal/article-09.html">
+</head>
+<body data-ink="quiet">
+<canvas id="ink" aria-hidden="true"></canvas>
+<div class="grain" aria-hidden="true"></div>
+
+<div class="cursor" aria-hidden="true"><span class="cursor-label"></span></div>
+<a class="sr-only" href="#main">跳至正文</a>
+<header class="masthead">
+    <a class="brand" href="../index.html" aria-label="Eric — 首页">Eric<sup>®</sup></a>
+    <div class="masthead-meta"><span>作品与手记</span><a href="../../journal/article-09.html" data-language-switch hreflang="en" lang="en" aria-label="Read this page in English">EN</a></div>
+    <div class="masthead-right">
+        <nav class="masthead-nav" aria-label="主导航">
+            <a href="../work/index.html">项目</a><a href="../journal/index.html" aria-current="page">文章</a><a href="../index.html#about">关于</a><a href="../index.html#contact">联系</a>
+        </nav>
+        <button class="sound-switch" type="button" data-sound-toggle aria-pressed="false" aria-label="播放背景音乐"><canvas class="sound-wave" aria-hidden="true"></canvas><span class="sound-label">音乐</span></button>
+        <button class="theme-switch" type="button" data-theme-toggle aria-pressed="false"><span class="theme-switch-dot" aria-hidden="true"></span><span class="theme-switch-label">夜间</span></button>
+        <button class="menu-button" type="button" aria-expanded="false" aria-controls="menu">菜单</button>
+    </div>
+</header>
+<nav class="menu" id="menu" aria-label="菜单">
+    <a href="../index.html">目录</a><a href="../work/index.html"><em>项目</em></a><a href="../journal/index.html">文章</a><a href="../index.html#contact"><em>联系</em></a>
+    <div class="menu-foot meta"><span>本地 <span data-clock>--:--:--</span></span><button class="sound-switch" type="button" data-sound-toggle aria-pressed="false" aria-label="播放背景音乐"><canvas class="sound-wave" aria-hidden="true"></canvas><span class="sound-label">音乐</span></button><a href="../../journal/article-09.html" data-language-switch hreflang="en" lang="en" aria-label="Read this page in English">EN</a></div>
+</nav>
+<main id="main">
+<div class="progress" aria-hidden="true"><i></i></div>
+<div class="page">
+    <header class="article-head">
+        <p class="meta"><a href="index.html">← 文章</a> &nbsp;/&nbsp; <span class="topic" data-topic="5">技术观察</span></p>
+        <h1 data-split>当技术路线被包装成<em>定律</em></h1>
+        <p class="lede rise">韬定律背后指向后摩尔时代的真实工程问题，但媒体叙事容易把系统级优化包装成从零发明的新神话。</p>
+        <div class="article-meta meta rise" style="--d:120ms"><span>2026.05.28</span><span>6 分钟</span><span>No. 09</span></div>
+    </header>
+    <div class="article-layout">
+        <nav class="toc" aria-label="目录"><a href="#intro">引言</a><a href="#system-efficiency">后摩尔时代确实需要系统级效率</a><a href="#not-new">方向合理，不等于全新发明</a><a href="#media">媒体会把工程问题包装成历史节点</a><a href="#metrics">判断技术路线，要回到硬指标</a><a href="#support">支持国产技术，不等于接受所有包装</a><a href="#takeaway">写在最后</a></nav>
+        <div class="page-surface"><div class="prose"><section class="detail-section" id="intro">
+            <p class="">华为提出“韬定律”之后，相关报道很快进入一种熟悉的叙事节奏：突破摩尔定律、绕开先进制程、国产芯片换道超车、重新定义半导体未来。</p>
+            <p class="">这样的标题有传播力，但也容易把复杂工程压缩成情绪判断。更有价值的讨论，应该先区分三件事：真实的工程创新、企业的战略叙事，以及媒体为了传播效果制造出的技术神话。</p>
+            <p class="">把所有企业叙事都当宣传话术，会错过真实进展；只要冠以“国产突破”就全部接受，也会把复杂产业问题简化成口号。</p>
+        </section>
+
+        <section class="detail-section" id="system-efficiency">
+            <h2 class="">后摩尔时代确实需要系统级效率</h2>
+            <p class="">韬定律并不是完全空洞的概念。它抓住的是一个真实趋势：传统摩尔定律放缓之后，芯片性能提升不可能只靠晶体管继续变小。</p>
+            <p class="">先进制程越来越昂贵，工艺迭代越来越困难，功耗、散热、互连延迟、存储访问和系统通信都在成为新的瓶颈。</p>
+            <p class="">尤其在 AI 计算场景中，很多时候真正限制系统效率的，不是单个计算单元不够快，而是数据搬运太昂贵、芯片之间通信太慢、存储与计算之间距离太远。</p>
+            <p class="">所以，从单点晶体管密度转向系统级效率，这个方向本身是合理的。现代芯片竞争早已不是单纯比谁的晶体管更小，而是制程、封装、互连、架构、编译器、软件生态和系统工程的综合竞赛。</p>
+        </section>
+
+        <section class="detail-section" id="not-new">
+            <h2 class="">方向合理，不等于全新发明</h2>
+            <p class="">问题在于，技术方向合理，不等于它是全新发明；有工程价值，也不等于它已经成为产业定律。</p>
+            <p class="">3D 堆叠、先进封装、异构集成、Chiplet、高速互连、HBM 与计算芯片协同，都是后摩尔时代全球半导体行业长期探索的方向。TSMC、Intel、AMD、NVIDIA 都在各自体系里推进类似路线。</p>
+            <p class="">更准确的说法不是“华为发明了堆叠芯片”，而是：华为在先进制程受限的背景下，把若干后摩尔时代的工程路线重新组织成一套自己的技术叙事，并试图通过 LogicFolding、互连优化、系统协同等方式形成产品化路径。</p>
+        </section>
+
+        <section class="detail-section" id="media">
+            <h2 class="">媒体会把工程问题包装成历史节点</h2>
+            <p class="">一项技术不是首次出现，并不代表它没有价值。很多工程进步的关键不在于“谁第一个提出”，而在于谁能把它做进产品、做成规模、做出可靠性和成本优势。</p>
+            <p class="">但反过来说，不是首次出现的东西，也不能被包装成从零发明。把已有行业趋势重新命名为一个“定律”，本身就是一种叙事行为。</p>
+            <p class="">科技媒体最常见的放大机制，就是把枯燥的工程表达换成容易转发的历史节点。降低互连延迟、优化关键路径、改善封装密度、缩短数据移动距离、提高系统级吞吐，这些词不适合流量传播。</p>
+            <p class="">“新定律”“突破摩尔定律”“换道超车”更适合标题，也更容易激发情绪。国产芯片议题又天然带有情绪放大效应，所以越是困难的长期任务，越需要冷静讨论。</p>
+        </section>
+
+        <section class="detail-section" id="metrics">
+            <h2 class="">判断技术路线，要回到硬指标</h2>
+            <p class="">真正判断韬定律有没有产业价值，不能只看名字，也不能只看发布会，更不能只看“等效 1.4nm”这样的传播表达。芯片技术最后一定要回到几个硬指标上：</p>
+            <ul class="">
+                <li class="">性能是否真的提升，是否能在真实负载中提高计算吞吐、降低延迟。</li>
+                <li class="">功耗和散热是否可控，高密度集成是否会被功耗墙抵消。</li>
+                <li class="">成本和良率是否能够规模化，能否从样品走向商业量产。</li>
+                <li class="">软件生态和应用场景是否能承接，包括编译器、算子库、框架适配、集群互连和开发者迁移成本。</li>
+            </ul>
+            <p class="">这些指标远比“定律”这个名字重要。一个技术路线是否成立，不是由命名决定，而是由产品能力、量产能力和生态能力共同决定。</p>
+        </section>
+
+        <section class="detail-section" id="support">
+            <h2 class="">支持国产技术，不等于接受所有包装</h2>
+            <p class="">理性看待韬定律，不是为了否定华为。华为在受限环境下继续探索制程之外的性能提升路径，本身值得关注。</p>
+            <p class="">后摩尔时代确实不会只剩下先进制程一条路，先进封装、3D 集成、系统级互连和软硬协同都会越来越重要。</p>
+            <p class="">但支持国产技术，不等于接受所有媒体包装。真正成熟的产业信心，不应该建立在“又发明一个新定律”的兴奋上，而应该建立在对工程难度、产业周期和验证标准的清醒理解上。</p>
+        </section>
+
+        <section class="detail-section" id="takeaway">
+            <h2 class="">写在最后</h2>
+            <p class="">韬定律真正值得讨论的地方，不是它是不是华为凭空发明的新技术，而是它暴露出后摩尔时代的共同现实：当几何缩微越来越困难，芯片竞争正在从单点工艺竞赛转向系统工程竞赛。</p>
+            <p class="">未来的芯片性能，越来越取决于制程、封装、互连、架构、软件和应用生态之间的协同能力。华为提出韬定律，是在这种背景下给出的一套自我路线表达。</p>
+            <blockquote class=""><strong class="">对它最理性的态度，不是盲目欢呼，也不是条件反射式嘲讽，而是等待它进入产品、进入量产、进入真实负载，然后用数据说话。</strong></blockquote>
+            <p class="">技术宣传可以制造热度，但真正决定产业位置的，永远是可验证的产品能力。</p>
+        </section></div></div>
+    </div>
+    <section class="related" aria-labelledby="related-title"><p class="kicker">继续阅读</p><h2 id="related-title">相关<em>文章</em></h2><ol class="journal-list" style="list-style:none"><li><a class="journal-row" href="article-06.html" data-topic="5" data-cursor="阅读">
+        <span class="journal-date">2026.09 · 06</span>
+        <span class="journal-title"><span class="static">谁有权训练谁？</span><span class="marquee" aria-hidden="true"><span>谁有权训练谁？ —&nbsp;</span><span>谁有权训练谁？ —&nbsp;</span><span>谁有权训练谁？ —&nbsp;</span></span></span>
+        <span class="topic" data-topic="5">技术观察</span><span class="journal-time">8 分钟</span></a></li><li><a class="journal-row" href="article-07.html" data-topic="5" data-cursor="阅读">
+        <span class="journal-date">2026.08 · 07</span>
+        <span class="journal-title"><span class="static">机器人的三个时钟</span><span class="marquee" aria-hidden="true"><span>机器人的三个时钟 —&nbsp;</span><span>机器人的三个时钟 —&nbsp;</span><span>机器人的三个时钟 —&nbsp;</span></span></span>
+        <span class="topic" data-topic="5">技术观察</span><span class="journal-time">8 分钟</span></a></li><li><a class="journal-row" href="article-10.html" data-topic="5" data-cursor="阅读">
+        <span class="journal-date">2026.05 · 10</span>
+        <span class="journal-title"><span class="static">中国具身智能的真正考验：不是翻跟头，而是商业闭环</span><span class="marquee" aria-hidden="true"><span>中国具身智能的真正考验：不是翻跟头，而是商业闭环 —&nbsp;</span><span>中国具身智能的真正考验：不是翻跟头，而是商业闭环 —&nbsp;</span><span>中国具身智能的真正考验：不是翻跟头，而是商业闭环 —&nbsp;</span></span></span>
+        <span class="topic" data-topic="5">技术观察</span><span class="journal-time">8 分钟</span></a></li></ol></section>
+    <nav class="pager" aria-label="更多文章">
+        <a href="article-08.html" data-cursor="上一篇"><span class="meta">← 上一篇</span><strong>Mac 正在成为个人 AI 应用的理想运行时</strong></a>
+        <a href="article-10.html" data-cursor="下一个"><span class="meta">下一篇 →</span><strong>中国具身智能的真正考验：不是翻跟头，而是商业闭环</strong></a>
+    </nav>
+</div>
+</main>
+<footer class="colophon">
+    <div class="colophon-name" data-fit aria-hidden="true">Eric</div>
+    <div class="colophon-grid">
+        <div><p class="meta">目录</p><a href="../work/index.html">项目</a><a href="../journal/index.html">文章</a><a href="../index.html#about">关于</a><a href="../index.html#contact">联系</a></div>
+        <div><p class="meta">更多</p><a href="https://github.com/powerpan" target="_blank" rel="noopener">GitHub</a><a href="../work/index.html">项目</a><a href="index.html">文章</a><a href="../index.html#contact">联系</a></div>
+        <div><p class="meta">设置</p><button type="button" data-theme-toggle aria-pressed="false"><span class="theme-switch-label">夜间</span> 纸色</button><br><button type="button" data-motion-toggle aria-pressed="true">动效：开启</button><br><button type="button" class="sound-text" data-sound-toggle aria-pressed="false">音乐：关闭</button>
+<label class="volume"><span class="meta">音量</span><input class="ink-range" type="range" min="0" max="1" step="0.05" value="0.6" data-sound-volume aria-label="音乐音量"></label></div>
+        <div><p class="meta">关于本站</p><p>© 2026 Eric. 中文标题采用 Noto Serif SC，正文采用 Noto Sans SC。水墨以 WebGL2 实时模拟。</p><a href="#" data-top>返回顶部 ↑</a></div>
+    </div>
+</footer>
+<p class="sr-only" role="status" aria-live="polite" data-sound-status></p>
+<script src="../../js/ink-fluid.js"></script>
+<script src="../../js/ink.js"></script>
+</body>
+</html>

@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ClassBridge Product Suite — Eric</title>
+<meta name="description" content="One project system, three distinct products: ClassBridge Kids, IELTS Speaking Coach, and Cantonese Speaking Coach. They share an engineering platform while serving different users, learning flows, and data boundaries.">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#ede8df">
+<script>(()=>{const r=document.documentElement;let t,m;try{t=localStorage.getItem('ink-theme');m=localStorage.getItem('ink-motion')}catch(e){}t=t||(matchMedia('(prefers-color-scheme: dark)').matches?'night':'day');if(matchMedia('(prefers-reduced-motion: reduce)').matches)m='off';r.dataset.theme=t;r.dataset.motion=m||'on'})()</script>
+<link rel="preload" href="../assets/fonts/instrument-serif-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../css/ink.css">
+<link rel="stylesheet" href="../css/languages.css">
+<link rel="stylesheet" href="../css/sound.css">
+<script src="../js/ink-sound.js" defer></script>
+<noscript><style>[data-sound-toggle],.volume{display:none!important}</style></noscript>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='26' fill='%23f6401a'/%3E%3Ccircle cx='40' cy='26' r='14' fill='%232337f2' fill-opacity='.85'/%3E%3C/svg%3E">
+<link rel="alternate" hreflang="zh-CN" href="../zh/work/project-09.html">
+</head>
+<body data-ink="quiet">
+<canvas id="ink" aria-hidden="true"></canvas>
+<div class="grain" aria-hidden="true"></div>
+
+<div class="cursor" aria-hidden="true"><span class="cursor-label"></span></div>
+<a class="sr-only" href="#main">Skip to content</a>
+<header class="masthead">
+    <a class="brand" href="../index.html" aria-label="Eric — home">Eric<sup>®</sup></a>
+    <div class="masthead-meta"><span>Portfolio &amp; Journal</span><a href="../zh/work/project-09.html" data-language-switch hreflang="zh-CN" lang="zh-CN" aria-label="Read this page in Chinese">中文</a></div>
+    <div class="masthead-right">
+        <nav class="masthead-nav" aria-label="Primary">
+            <a href="../work/index.html" aria-current="page">Work</a><a href="../journal/index.html">Journal</a><a href="../index.html#about">About</a><a href="../index.html#contact">Contact</a>
+        </nav>
+        <button class="sound-switch" type="button" data-sound-toggle aria-pressed="false" aria-label="Play background music"><canvas class="sound-wave" aria-hidden="true"></canvas><span class="sound-label">Sound</span></button>
+        <button class="theme-switch" type="button" data-theme-toggle aria-pressed="false"><span class="theme-switch-dot" aria-hidden="true"></span><span class="theme-switch-label">Night</span></button>
+        <button class="menu-button" type="button" aria-expanded="false" aria-controls="menu">Menu</button>
+    </div>
+</header>
+<nav class="menu" id="menu" aria-label="Menu">
+    <a href="../index.html">Index</a><a href="../work/index.html"><em>Work</em></a><a href="../journal/index.html">Journal</a><a href="../index.html#contact"><em>Contact</em></a>
+    <div class="menu-foot meta"><span>Local <span data-clock>--:--:--</span></span><button class="sound-switch" type="button" data-sound-toggle aria-pressed="false" aria-label="Play background music"><canvas class="sound-wave" aria-hidden="true"></canvas><span class="sound-label">Sound</span></button><a href="../zh/work/project-09.html" data-language-switch hreflang="zh-CN" lang="zh-CN" aria-label="Read this page in Chinese">中文</a></div>
+</nav>
+<main id="main">
+<div class="page"><p class="kicker"><a href="index.html">Work</a> / Native macOS · Multi-Product Platform · AI Speech</p>
+    <header class="case-hero"><h1 data-split>ClassBridge Product Suite</h1><p class="lede rise">One project system, three distinct products: ClassBridge Kids, IELTS Speaking Coach, and Cantonese Speaking Coach. They share an engineering platform while serving different users, learning flows, and data boundaries.</p></header><dl class="case-facts rise"><div><dt class="meta">Role</dt><dd>Independent Developer</dd></div><div><dt class="meta">Products</dt><dd>Kids / IELTS / Cantonese</dd></div><div><dt class="meta">Stack</dt><dd>SwiftUI / FastAPI / React</dd></div><div><dt class="meta">Index</dt><dd>No. 09</dd></div></dl>
+    <div class="case-media"><img src="../assets/projects/classbridge-suite/kids-dashboard.jpg" alt="ClassBridge Kids English learning dashboard" width="2170" height="1440" loading="eager" decoding="async"></div><div class="case-body"><section class="case-section"><div class="case-section-label"><span class="num">01</span><span class="meta">Section</span></div>
+            <div class="case-section-copy prose"><h2 data-split>Shared Code Does Not Mean a Shared Product</h2><div class="detail-section-label">Product Boundaries</div>
+
+            <p class="detail-text">ClassBridge follows a <strong class="">shared platform plus isolated product context</strong> model. The three products can switch inside one macOS app and reuse the same Cloud Gateway and Admin Web, while every request carries an explicit product identity.</p>
+            <p class="detail-text">Product selection determines navigation, visible content, account authorization, quotas, model configuration, usage logs, and domain data. Kids progress never enters IELTS reports, and IELTS questions never appear in Cantonese lessons.</p>
+            <div class="suite-identity-grid">
+                <div class="suite-identity">
+                    <div class="suite-identity-index">01 / classbridge_kids</div>
+                    <div class="suite-identity-name">ClassBridge Kids</div>
+                    <div class="suite-identity-target">Children preparing for US schools</div>
+                    <div class="suite-identity-desc">A graded learning loop covering school scenarios, subject vocabulary, review, and spoken English.</div>
+                </div>
+                <div class="suite-identity">
+                    <div class="suite-identity-index">02 / ielts_speaking</div>
+                    <div class="suite-identity-name">IELTS Speaking Coach</div>
+                    <div class="suite-identity-target">Adult IELTS speaking candidates</div>
+                    <div class="suite-identity-desc">Part 1, 2, and 3 recording, transcription, AI feedback, history insights, and mock practice.</div>
+                </div>
+                <div class="suite-identity">
+                    <div class="suite-identity-index">03 / cantonese_speaking</div>
+                    <div class="suite-identity-name">Cantonese Speaking Coach</div>
+                    <div class="suite-identity-target">Cantonese learners from Mandarin or English backgrounds</div>
+                    <div class="suite-identity-desc">Practical listening and speaking through reference audio, Jyutping, shadowing, ASR comparison, and feedback.</div>
+                </div>
+            </div><div class="badges"><span class="tag">SwiftUI</span><span class="tag">SwiftPM</span><span class="tag">FastAPI</span><span class="tag">SQLite</span><span class="tag">React</span><span class="tag">Vite</span><span class="tag">TTS</span><span class="tag">ASR</span></div><figure class="rise"><img src="../assets/projects/classbridge-suite/ielts-part-training.jpg" alt="IELTS Speaking Coach Part training workspace" width="2176" height="1442" loading="lazy" decoding="async"><figcaption>02 / IELTS SPEAKING</figcaption></figure></div></section><section class="case-section"><div class="case-section-label"><span class="num">02</span><span class="meta">Section</span></div>
+            <div class="case-section-copy prose"><h2 data-split>Graded English for Children Entering a New School Environment</h2><div class="detail-section-label">Product 01 · Kids</div>
+            <div class="suite-product-heading">
+                <div class="suite-product-number">01</div>
+                <div class="">
+                    <div class="suite-product-name">ClassBridge Kids</div>
+                    <div class="suite-product-id">app_id = classbridge_kids</div>
+                </div>
+            </div>
+
+            <p class="detail-text">Kids is not a generic vocabulary app. It places daily dialogue, classroom language, subject content, and speech practice into grade-based learning pools. The home screen uses level, due review, and mastery state to choose the next step.</p>
+            <p class="detail-text">The learning engine maintains mastery through multi-round practice, appended mistakes, and review schedules. Cloud services provide reference audio, speech assessment, contextual lookup, and AI Q&amp;A without disguising local fallback answers as successful cloud results.</p>
+            <div class="suite-capabilities">
+                <div class="suite-capability">Grade-based school scenarios and subject content</div>
+                <div class="suite-capability">Multi-round learning, retries, and due review</div>
+                <div class="suite-capability">Reference audio, recording assessment, and word diagnostics</div>
+                <div class="suite-capability">Progress, mastery state, and AI Q&amp;A</div>
+            </div><figure class="rise"><img src="../assets/projects/classbridge-suite/cantonese-shadowing.jpg" alt="Cantonese Speaking Coach shadowing practice" width="2572" height="1634" loading="lazy" decoding="async"><figcaption>03 / CANTONESE SPEAKING</figcaption></figure></div></section><section class="case-section"><div class="case-section-label"><span class="num">03</span><span class="meta">Section</span></div>
+            <div class="case-section-copy prose"><h2 data-split>A Repeatable Workbench for the Full Speaking Practice Flow</h2><div class="detail-section-label">Product 02 · IELTS</div>
+            <div class="suite-product-heading">
+                <div class="suite-product-number">02</div>
+                <div class="">
+                    <div class="suite-product-name">IELTS Speaking Coach</div>
+                    <div class="suite-product-id">app_id = ielts_speaking</div>
+                </div>
+            </div>
+
+            <p class="detail-text">The IELTS product maintains separate question banks and practice states for Parts 1, 2, and 3. Native recording, live waveform, Part 2 preparation and response timing, question audio, ASR, and report generation form one continuous flow.</p>
+            <p class="detail-text">A structured bank organizes 1,200 questions into 120 themed sets for single-Part sessions, grouped practice, and mock planning. Feedback covers fluency and coherence, vocabulary, grammar, and pronunciation, and is explicitly labeled as an AI estimated band rather than an official score.</p>
+            <div class="suite-capabilities">
+                <div class="suite-capability">Part 1, 2, and 3 banks with themed sets</div>
+                <div class="suite-capability">Native recording, waveform, timing, and automatic submission</div>
+                <div class="suite-capability">ASR, four-dimension feedback, and bilingual reports</div>
+                <div class="suite-capability">History filters, trend insights, and mock planning</div>
+            </div></div></section><section class="case-section"><div class="case-section-label"><span class="num">04</span><span class="meta">Section</span></div>
+            <div class="case-section-copy prose"><h2 data-split>Practical Cantonese from Reference Audio to Recorded Feedback</h2><div class="detail-section-label">Product 03 · Cantonese</div>
+            <div class="suite-product-heading">
+                <div class="suite-product-number">03</div>
+                <div class="">
+                    <div class="suite-product-name">Cantonese Speaking Coach</div>
+                    <div class="suite-product-id">app_id = cantonese_speaking</div>
+                </div>
+            </div>
+
+            <p class="detail-text">The Cantonese product organizes modules, lessons, words, and phrases with Traditional Chinese, Jyutping, and translations. Learners hear reference Cantonese, record a response, and receive ASR transcription, target-text comparison, and AI-assisted feedback.</p>
+            <p class="detail-text">Reports preserve transcripts, likely issues, naturalness suggestions, next exercises, and review history. The product focuses on practical shadowing and expression without presenting current model capabilities as precise objective scoring of six tones, initials, finals, or lazy sounds.</p>
+            <div class="suite-capabilities">
+                <div class="suite-capability">Modules, lessons, phrases, and Jyutping content</div>
+                <div class="suite-capability">Cantonese reference audio and shadowing recordings</div>
+                <div class="suite-capability">ASR transcript comparison and AI-assisted feedback</div>
+                <div class="suite-capability">Report history, likely issues, and practice guidance</div>
+            </div>
+            <div class="suite-guardrail">Capability boundary: feedback supports learning and does not claim objective precision for Cantonese tones, initials, or finals.</div></div></section><section class="case-section"><div class="case-section-label"><span class="num">05</span><span class="meta">Section</span></div>
+            <div class="case-section-copy prose"><h2 data-split>Reuse Infrastructure and Keep Differences in the Product Layer</h2><div class="detail-section-label">Shared Platform</div>
+
+            <p class="detail-text">The SwiftUI app provides native desktop interaction and product switching. The FastAPI Gateway owns accounts, content delivery, TTS, ASR, AI, quotas, and usage. React Admin Web manages users, content, model profiles, and operations.</p>
+            <p class="detail-text">Shared services provide common capabilities only. Kids sessions, IELTS questions and reports, and Cantonese lessons and feedback use separate domain APIs and tables instead of forcing three business workflows into one conditional data model.</p>
+            <div class="suite-platform-flow">
+                <div class="suite-platform-step">
+                    <div class="suite-platform-index">01 / CLIENT</div>
+                    <div class="suite-platform-title">Native Product Context</div>
+                    <div class="suite-platform-desc">The product selector determines navigation, workspace, account, and API routing.</div>
+                </div>
+                <div class="suite-platform-step">
+                    <div class="suite-platform-index">02 / IDENTITY</div>
+                    <div class="suite-platform-title">Explicit App ID</div>
+                    <div class="suite-platform-desc">Requests carry product ID and version, while tokens and memberships bind to one product.</div>
+                </div>
+                <div class="suite-platform-step">
+                    <div class="suite-platform-index">03 / GATEWAY</div>
+                    <div class="suite-platform-title">Shared Capability Routing</div>
+                    <div class="suite-platform-desc">The Gateway chooses model profiles, prompts, quotas, and feature flags by product.</div>
+                </div>
+                <div class="suite-platform-step">
+                    <div class="suite-platform-index">04 / DOMAIN</div>
+                    <div class="suite-platform-title">Isolated Domain Data</div>
+                    <div class="suite-platform-desc">Progress, question banks, courses, reports, and state machines remain product-specific.</div>
+                </div>
+            </div></div></section><section class="case-section"><div class="case-section-label"><span class="num">06</span><span class="meta">Section</span></div>
+            <div class="case-section-copy prose"><h2 data-split>One Admin Can Operate Three Products Without Blurring Their Experiences</h2><div class="detail-section-label">Isolation &amp; Operations</div>
+
+            <p class="detail-text">The multi-product boundary spans client, API, data, and operations. Admin can inspect shared health and cost while content review, model policy, authorization, and report quality stay filtered and configured by product.</p>
+            <div class="detail-features">
+                <div class="detail-feature">
+                    <div class="detail-feature-icon">01</div>
+                    <div class="detail-feature-title">Navigation Isolation</div>
+                    <div class="detail-feature-desc">Switching products exposes only the matching learning routes and workspace.</div>
+                </div>
+                <div class="detail-feature">
+                    <div class="detail-feature-icon">02</div>
+                    <div class="detail-feature-title">Accounts and Tokens</div>
+                    <div class="detail-feature-desc">Memberships and access tokens bind to app_id and cannot reuse cross-product permissions.</div>
+                </div>
+                <div class="detail-feature">
+                    <div class="detail-feature-icon">03</div>
+                    <div class="detail-feature-title">Content and Progress</div>
+                    <div class="detail-feature-desc">Learning content, question banks, courses, and progress keep their own semantics.</div>
+                </div>
+                <div class="detail-feature">
+                    <div class="detail-feature-icon">04</div>
+                    <div class="detail-feature-title">Models and Prompts</div>
+                    <div class="detail-feature-desc">Each product configures separate model profiles, feedback policy, and feature flags.</div>
+                </div>
+                <div class="detail-feature">
+                    <div class="detail-feature-icon">05</div>
+                    <div class="detail-feature-title">Quota and Cost</div>
+                    <div class="detail-feature-desc">TTS, ASR, AI, and reporting calls record quotas and usage by product.</div>
+                </div>
+                <div class="detail-feature">
+                    <div class="detail-feature-icon">06</div>
+                    <div class="detail-feature-title">Content Operations</div>
+                    <div class="detail-feature-desc">Admin Web manages publishing, review, users, and report quality by product.</div>
+                </div>
+            </div></div></section></div>
+    <a class="next-case" href="project-10.html" data-cursor="Next"><span class="meta">Next project — 10</span><strong>YOLO26 Multimodal</strong></a></div>
+</main>
+<footer class="colophon">
+    <div class="colophon-name" data-fit aria-hidden="true">Eric</div>
+    <div class="colophon-grid">
+        <div><p class="meta">Index</p><a href="../work/index.html">Work</a><a href="../journal/index.html">Journal</a><a href="../index.html#about">About</a><a href="../index.html#contact">Contact</a></div>
+        <div><p class="meta">Elsewhere</p><a href="https://github.com/powerpan" target="_blank" rel="noopener">GitHub</a><a href="index.html">Work</a><a href="../journal/index.html">Journal</a><a href="../index.html#contact">Contact</a></div>
+        <div><p class="meta">Settings</p><button type="button" data-theme-toggle aria-pressed="false"><span class="theme-switch-label">Night</span> paper</button><br><button type="button" data-motion-toggle aria-pressed="true">Motion: on</button><br><button type="button" class="sound-text" data-sound-toggle aria-pressed="false">Sound: off</button>
+<label class="volume"><span class="meta">Volume</span><input class="ink-range" type="range" min="0" max="1" step="0.05" value="0.6" data-sound-volume aria-label="Music volume"></label></div>
+        <div><p class="meta">Colophon</p><p>© 2026 Eric. Set in Instrument Serif &amp; Inter Tight. Ink simulated live in WebGL2.</p><a href="#" data-top>Back to top ↑</a></div>
+    </div>
+</footer>
+<p class="sr-only" role="status" aria-live="polite" data-sound-status></p>
+<script src="../js/ink-fluid.js"></script>
+<script src="../js/ink.js"></script>
+</body>
+</html>

@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Word Note — Eric</title>
+<meta name="description" content="我想把英文课程和阅读里遇到的词，留在自己的词本里。查过的释义、当时的语境和下一次复习，应该能接在一起。">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#ede8df">
+<script>(()=>{const r=document.documentElement;let t,m;try{t=localStorage.getItem('ink-theme');m=localStorage.getItem('ink-motion')}catch(e){}t=t||(matchMedia('(prefers-color-scheme: dark)').matches?'night':'day');if(matchMedia('(prefers-reduced-motion: reduce)').matches)m='off';r.dataset.theme=t;r.dataset.motion=m||'on'})()</script>
+<link rel="preload" href="../../assets/fonts/instrument-serif-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../css/ink.css">
+<link rel="stylesheet" href="../../css/languages.css">
+<link rel="stylesheet" href="../../css/sound.css">
+<script src="../../js/ink-sound.js" defer></script>
+<noscript><style>[data-sound-toggle],.volume{display:none!important}</style></noscript>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='26' fill='%23f6401a'/%3E%3Ccircle cx='40' cy='26' r='14' fill='%232337f2' fill-opacity='.85'/%3E%3C/svg%3E">
+<link rel="alternate" hreflang="en" href="../../work/project-06.html">
+</head>
+<body data-ink="quiet">
+<canvas id="ink" aria-hidden="true"></canvas>
+<div class="grain" aria-hidden="true"></div>
+
+<div class="cursor" aria-hidden="true"><span class="cursor-label"></span></div>
+<a class="sr-only" href="#main">跳至正文</a>
+<header class="masthead">
+    <a class="brand" href="../index.html" aria-label="Eric — 首页">Eric<sup>®</sup></a>
+    <div class="masthead-meta"><span>作品与手记</span><a href="../../work/project-06.html" data-language-switch hreflang="en" lang="en" aria-label="Read this page in English">EN</a></div>
+    <div class="masthead-right">
+        <nav class="masthead-nav" aria-label="主导航">
+            <a href="../work/index.html" aria-current="page">项目</a><a href="../journal/index.html">文章</a><a href="../index.html#about">关于</a><a href="../index.html#contact">联系</a>
+        </nav>
+        <button class="sound-switch" type="button" data-sound-toggle aria-pressed="false" aria-label="播放背景音乐"><canvas class="sound-wave" aria-hidden="true"></canvas><span class="sound-label">音乐</span></button>
+        <button class="theme-switch" type="button" data-theme-toggle aria-pressed="false"><span class="theme-switch-dot" aria-hidden="true"></span><span class="theme-switch-label">夜间</span></button>
+        <button class="menu-button" type="button" aria-expanded="false" aria-controls="menu">菜单</button>
+    </div>
+</header>
+<nav class="menu" id="menu" aria-label="菜单">
+    <a href="../index.html">目录</a><a href="../work/index.html"><em>项目</em></a><a href="../journal/index.html">文章</a><a href="../index.html#contact"><em>联系</em></a>
+    <div class="menu-foot meta"><span>本地 <span data-clock>--:--:--</span></span><button class="sound-switch" type="button" data-sound-toggle aria-pressed="false" aria-label="播放背景音乐"><canvas class="sound-wave" aria-hidden="true"></canvas><span class="sound-label">音乐</span></button><a href="../../work/project-06.html" data-language-switch hreflang="en" lang="en" aria-label="Read this page in English">EN</a></div>
+</nav>
+<main id="main">
+<div class="page"><p class="kicker"><a href="index.html">项目</a> / macOS · SwiftUI · AI Vocabulary</p>
+    <header class="case-hero"><h1 data-split>Word Note</h1><p class="lede rise">我想把英文课程和阅读里遇到的词，留在自己的词本里。查过的释义、当时的语境和下一次复习，应该能接在一起。</p></header><dl class="case-facts rise"><div><dt class="meta">Role</dt><dd>产品设计与原生应用开发</dd></div><div><dt class="meta">Status</dt><dd>本地应用 · 持续开发</dd></div><div><dt class="meta">Stack</dt><dd>SwiftUI / AppKit / SwiftData</dd></div><div><dt class="meta">编号</dt><dd>No. 06</dd></div></dl>
+    <div class="case-media"><img src="../../assets/projects/word-note/01-dashboard-light.png" alt="Word Note 演示首页，展示待处理记录、个人词库、今日复习与课程概览" width="2498" height="1600" loading="eager" decoding="async"></div><div class="case-body"><section class="case-section"><div class="case-section-label"><span class="num">01</span><span class="meta">章节</span></div>
+            <div class="case-section-copy prose"><h2 data-split>先记下来，继续读下去</h2><p class="wordnote-provenance">以下六张图片拍摄于 2026-10-09，来自普通 V1 界面的隔离演示构建 WordNoteQA。使用演示词库与离线预置 AI 响应，不含日常学习资料，也不代表实时模型质量或新版功能已完成验收。保留原始窗口与界面文字，点击可查看原图。</p>
+<div class="detail-section-label">01 / CAPTURE</div>
+
+                <p class="detail-text">做 Word Note 的起点，是我在英文课程、论文和技术资料之间切换时的一点不方便：一个词当时查懂了，过几天又遇见，却只记得“好像查过”。相比从一套固定词表开始，我更想留下自己真正碰到的词句，以及它为什么出现在那一页。</p>
+                <p class="detail-text">所以我把记录入口做得很轻。主窗口可以补课程、来源和备注，菜单栏则能打开一个小浮窗；先输入，保存并排队分析，再继续手头的阅读。精确命中已经收录的英文词时，直接复用本地释义，并把它提到待复习队列，不必为同一个词再请求一次模型。</p>
+
+                <p class="detail-text">输入也不必总从英文开始。只记得“过拟合”时，可以先用中文找英文表达；返回的 overfitting 仍然作为英文候选进入整理流程。上一条结果留着看，输入区可以继续写下一条，不需要一直守着一个等待中的对话框。</p><div class="badges"></div><figure class="rise"><img src="../../assets/projects/word-note/10-floating-quick-add.png" alt="紧凑的 Quick Add 悬浮窗，显示已有英文词 quick 的本地中文释义" width="720" height="264" loading="lazy" decoding="async"><figcaption>浮窗只留下输入和必要的结果。这里的 quick 已在词库中，显示的是本地释义，没有发起新的 AI 查询。</figcaption></figure></div></section><section class="case-section"><div class="case-section-label"><span class="num">02</span><span class="meta">章节</span></div>
+            <div class="case-section-copy prose"><h2 data-split>释义先放在 Inbox</h2><div class="detail-section-label">02 / CONFIRM</div>
+
+                <p class="detail-text">我没有让 AI 生成完就直接写进正式词库。原始输入、课程和笔记先留在 Inbox，候选的中文释义、英文解释、语境和例句放在旁边，确认或修改后再收录。对于专业术语和多义词，这一步很有必要：模型给了一段流畅的解释，不代表它刚好符合我正在读的内容。</p>
+                <p class="detail-text">释义的要求也尽量朴素：先把词本身解释清楚，专业含义确实有区别时再补充。像 quick 这样的普通词，不需要为了显得“懂 AI”而硬加技术语境。没有合适的候选可以手动建词；分析失败则保留原文，留到之后重试。</p><figure class="rise"><img src="../../assets/projects/word-note/03-quick-add-result.png" alt="Quick Add 保留过拟合的英文候选 overfitting，输入区已填写下一条 gradient descent" width="2498" height="1600" loading="lazy" decoding="async"><figcaption>下方是上一条“过拟合”的候选结果，上方已开始记录 gradient descent。这是连续输入的演示，不是响应速度或并发性能测试。</figcaption></figure></div></section><section class="case-section"><div class="case-section-label"><span class="num">03</span><span class="meta">章节</span></div>
+            <div class="case-section-copy prose"><h2 data-split>只记得中文，也能找回来</h2><div class="detail-section-label">03 / RETRIEVE</div>
+
+                <p class="detail-text">词条留下来以后，还要能找得到。我保留英文词头、中文释义、英文解释和例句，也把课程与来源留在详情里。Vocabulary 可以按课程和掌握程度筛选；回到某门课时，不必在所有阅读笔记里重新翻一遍。</p>
+                <p class="detail-text">有时忘掉的恰好是拼写，所以搜索也覆盖中文释义，并兼容简繁体。输入“迅速”，就能找回 quick。这里做的是本地文本检索，不需要再让模型猜一遍；原来保存的文字也不会因为搜索而被改写。</p><figure class="rise"><img src="../../assets/projects/word-note/04-inbox-candidates.png" alt="Inbox 将原始输入、课程与笔记和可编辑的 overfitting 候选放在一起" width="2498" height="1600" loading="lazy" decoding="async"><figcaption>收录前的编辑状态。英文解释、语境和例句是拍摄时填写的演示草稿，尚未执行批量确认；左侧 Failed 也是预设测试记录。</figcaption></figure></div></section><section class="case-section"><div class="case-section-label"><span class="num">04</span><span class="meta">章节</span></div>
+            <div class="case-section-copy prose"><h2 data-split>给回忆留一点空白</h2><div class="detail-section-label">04 / RECALL</div>
+
+                <p class="detail-text">复习页先把答案藏起来。可以从今日到期或薄弱词开始，按课程缩小范围，再选择英文回忆中文，或中文回忆英文。看见解释时觉得熟悉，和自己想得起来，毕竟是两回事。</p>
+                <p class="detail-text">揭晓后由自己选择 Again、Hard、Good 或 Easy，程序据此安排下次复习，不让 AI 替我判定“已经掌握”。暂时不想处理的词可以移到本轮末尾，或延后到明天。这里展示的是现有复习流程；按方向独立排程和可恢复会话仍在新版中验证，没有拿它们来解释这些截图。</p><figure class="rise"><img src="../../assets/projects/word-note/06-chinese-meaning-search.png" alt="在词库中搜索中文迅速，从四个演示词条中找到 quick，右侧保留完整词条详情" width="2498" height="1600" loading="lazy" decoding="async"><figcaption>从意思找回拼写。左侧用“迅速”筛出 quick，右侧仍能看到释义、例句和课程，而不是一条脱离语境的搜索结果。</figcaption></figure></div></section><section class="case-section"><div class="case-section-label"><span class="num">05</span><span class="meta">章节</span></div>
+            <div class="case-section-copy prose"><h2 data-split>小窗口背后的工程取舍</h2><div class="detail-section-label">05 / NATIVE BY DESIGN</div>
+
+                <p class="detail-text">这个工具大部分时间应该安静地待在阅读旁边，所以我选择了原生 macOS：SwiftUI 组织主界面，AppKit 处理悬浮窗和输入补全，SwiftData 保存词库与学习记录。外观可以跟随系统，也可以单独选浅色或黑灰色深色主题，主窗口和浮窗保持一致。</p>
+                <ol class="wordnote-flow">
+                    <li class=""><span class="">01 / INPUT</span><h3 class="">先保存原文</h3><p class="">新查询落到本地记录，再进入分析队列；不把输入只留在请求里。</p></li>
+                    <li class=""><span class="">02 / ANALYSIS</span><h3 class="">模型只给候选</h3><p class="">解析结构化响应，检查英文词条与释义，再交给 Inbox 核对。</p></li>
+                    <li class=""><span class="">03 / VOCABULARY</span><h3 class="">确认后再学习</h3><p class="">正式词库用于检索与复习，与未确认的分析结果分开保存。</p></li>
+                </ol>
+                <p class="detail-text">我把排队分析和界面分开，主窗口与浮窗共用同一条队列。新查询先保存，单条失败不挡住后面的任务；程序重新打开时，也能找回未完成的记录。搜索、补全、查词方向和复习规则放在 WordNoteCore 里，AI 客户端可以替换为预置响应，便于在不调用付费服务的情况下检查流程。</p><figure class="rise"><img src="../../assets/projects/word-note/08-review-answer.png" alt="复习页展开 overfitting 的中文释义，提供四档自评和 Skip、Later 操作" width="2498" height="1600" loading="lazy" decoding="async"><figcaption>答案展开后的状态。截图没有提交评分，也没有为了展示效果制造学习进度。</figcaption></figure></div></section><section class="case-section"><div class="case-section-label"><span class="num">06</span><span class="meta">章节</span></div>
+            <div class="case-section-copy prose"><h2 data-split>目前做到哪里</h2><div class="detail-section-label">06 / WHERE IT STANDS</div>
+
+                <p class="detail-text">Word Note 目前是从源码构建的本地 Mac 应用，没有提供安装包下载，也没有账号或云同步。已有词条的浏览、检索和复习可以离线进行；生成新释义需要联网，并使用自己的 DeepSeek API Key，调用会产生供应商费用。</p>
+                <p class="detail-text">本地优先不等于所有内容都不离开设备：主动分析时，本次输入和相关的课程名称、来源、备注会发送给 DeepSeek，不会把完整词库作为上下文。Key 保存在本机受权限限制的明文环境文件中，不是加密保险库。我希望这些边界是清楚的，而不是用一句“隐私安全”带过。</p>
+                <p class="detail-text">接下来我更在意的是长期使用的可靠性：整理时保护手工修改，备份恢复有清楚的预览，复习中断后能继续。相关新版功能已有实现和测试，仍有集成与实机验收待完成。我会先把这些日常细节打磨好，再考虑更大的功能范围。</p></div></section></div>
+    <a class="next-case" href="project-07.html" data-cursor="下一个"><span class="meta">下一个项目 — 07</span><strong>ML-SHARP</strong></a></div>
+</main>
+<footer class="colophon">
+    <div class="colophon-name" data-fit aria-hidden="true">Eric</div>
+    <div class="colophon-grid">
+        <div><p class="meta">目录</p><a href="../work/index.html">项目</a><a href="../journal/index.html">文章</a><a href="../index.html#about">关于</a><a href="../index.html#contact">联系</a></div>
+        <div><p class="meta">更多</p><a href="https://github.com/powerpan" target="_blank" rel="noopener">GitHub</a><a href="index.html">项目</a><a href="../journal/index.html">文章</a><a href="../index.html#contact">联系</a></div>
+        <div><p class="meta">设置</p><button type="button" data-theme-toggle aria-pressed="false"><span class="theme-switch-label">夜间</span> 纸色</button><br><button type="button" data-motion-toggle aria-pressed="true">动效：开启</button><br><button type="button" class="sound-text" data-sound-toggle aria-pressed="false">音乐：关闭</button>
+<label class="volume"><span class="meta">音量</span><input class="ink-range" type="range" min="0" max="1" step="0.05" value="0.6" data-sound-volume aria-label="音乐音量"></label></div>
+        <div><p class="meta">关于本站</p><p>© 2026 Eric. 中文标题采用 Noto Serif SC，正文采用 Noto Sans SC。水墨以 WebGL2 实时模拟。</p><a href="#" data-top>返回顶部 ↑</a></div>
+    </div>
+</footer>
+<p class="sr-only" role="status" aria-live="polite" data-sound-status></p>
+<script src="../../js/ink-fluid.js"></script>
+<script src="../../js/ink.js"></script>
+</body>
+</html>

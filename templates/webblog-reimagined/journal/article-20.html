@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Essence of Engineering Growth Is Moving Up Abstraction Layers — Eric</title>
+<meta name="description" content="The Essence of Engineering Growth Is Moving Up Abstraction Layers">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#ede8df">
+<script>(()=>{const r=document.documentElement;let t,m;try{t=localStorage.getItem('ink-theme');m=localStorage.getItem('ink-motion')}catch(e){}t=t||(matchMedia('(prefers-color-scheme: dark)').matches?'night':'day');if(matchMedia('(prefers-reduced-motion: reduce)').matches)m='off';r.dataset.theme=t;r.dataset.motion=m||'on'})()</script>
+<link rel="preload" href="../assets/fonts/instrument-serif-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../css/ink.css">
+<link rel="stylesheet" href="../css/languages.css">
+<link rel="stylesheet" href="../css/sound.css">
+<script src="../js/ink-sound.js" defer></script>
+<noscript><style>[data-sound-toggle],.volume{display:none!important}</style></noscript>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='26' fill='%23f6401a'/%3E%3Ccircle cx='40' cy='26' r='14' fill='%232337f2' fill-opacity='.85'/%3E%3C/svg%3E">
+<link rel="alternate" hreflang="zh-CN" href="../zh/journal/article-20.html">
+</head>
+<body data-ink="quiet">
+<canvas id="ink" aria-hidden="true"></canvas>
+<div class="grain" aria-hidden="true"></div>
+
+<div class="cursor" aria-hidden="true"><span class="cursor-label"></span></div>
+<a class="sr-only" href="#main">Skip to content</a>
+<header class="masthead">
+    <a class="brand" href="../index.html" aria-label="Eric — home">Eric<sup>®</sup></a>
+    <div class="masthead-meta"><span>Portfolio &amp; Journal</span><a href="../zh/journal/article-20.html" data-language-switch hreflang="zh-CN" lang="zh-CN" aria-label="Read this page in Chinese">中文</a></div>
+    <div class="masthead-right">
+        <nav class="masthead-nav" aria-label="Primary">
+            <a href="../work/index.html">Work</a><a href="../journal/index.html" aria-current="page">Journal</a><a href="../index.html#about">About</a><a href="../index.html#contact">Contact</a>
+        </nav>
+        <button class="sound-switch" type="button" data-sound-toggle aria-pressed="false" aria-label="Play background music"><canvas class="sound-wave" aria-hidden="true"></canvas><span class="sound-label">Sound</span></button>
+        <button class="theme-switch" type="button" data-theme-toggle aria-pressed="false"><span class="theme-switch-dot" aria-hidden="true"></span><span class="theme-switch-label">Night</span></button>
+        <button class="menu-button" type="button" aria-expanded="false" aria-controls="menu">Menu</button>
+    </div>
+</header>
+<nav class="menu" id="menu" aria-label="Menu">
+    <a href="../index.html">Index</a><a href="../work/index.html"><em>Work</em></a><a href="../journal/index.html">Journal</a><a href="../index.html#contact"><em>Contact</em></a>
+    <div class="menu-foot meta"><span>Local <span data-clock>--:--:--</span></span><button class="sound-switch" type="button" data-sound-toggle aria-pressed="false" aria-label="Play background music"><canvas class="sound-wave" aria-hidden="true"></canvas><span class="sound-label">Sound</span></button><a href="../zh/journal/article-20.html" data-language-switch hreflang="zh-CN" lang="zh-CN" aria-label="Read this page in Chinese">中文</a></div>
+</nav>
+<main id="main">
+<div class="progress" aria-hidden="true"><i></i></div>
+<div class="page">
+    <header class="article-head">
+        <p class="meta"><a href="index.html">← Journal</a> &nbsp;/&nbsp; <span class="topic" data-topic="5">Tech Observation</span></p>
+        <h1 data-split>The Essence of Engineering Growth Is <em>Moving Up Abstraction Layers</em></h1>
+        <p class="lede rise"></p>
+        <div class="article-meta meta rise" style="--d:120ms"><span>2026.05.01</span><span>9 min</span><span>No. 20</span></div>
+    </header>
+    <div class="article-layout">
+        <nav class="toc" aria-label="Contents"><a href="#skill">Fluency is not the same as growth</a><a href="#modules">From tools to code, then modules</a><a href="#architecture">System architecture manages change</a><a href="#business">Business modeling decides system quality</a><a href="#organization">Organization is also written into code</a><a href="#takeaway">Final Thoughts</a></nav>
+        <div class="page-surface"><div class="prose"><section class="detail-section" id="skill">
+            <h2 class="">Fluency is not the same as growth</h2>
+            <p class="">Many engineers reach a stage where they write code faster, know frameworks better, and have seen many bugs, but still start complex problems with “how do I implement this?”</p>
+            <p class="">A requirement arrives, so they add a field, write an API, and edit a page. A model performs poorly, so they tune parameters or retrain. A system slows down, so they add cache, indexes, or machines. These reactions are not always wrong, but they stay at a low abstraction layer.</p>
+            <p class="">Real engineering growth is not only more experience. It is moving the problem view upward: from code to modules, from modules to systems, from systems to business, and from business to collaboration and long-term evolution cost.</p>
+        </section>
+
+        <section class="detail-section" id="modules">
+            <h2 class="">From tools to code, then modules</h2>
+            <p class="">Early engineering work is about making features real. Syntax, frameworks, APIs, pages, databases, deployment, and debugging are fundamentals. Without implementation ability, architecture and abstraction are empty.</p>
+            <p class="">But tools are means, and code is expression. The hard part is not what tool to use, but what structure a concept should be expressed as. Controller, Service, and Repository are not just folders; they express responsibility boundaries.</p>
+            <p class="">When attention moves from “how do I write this code?” to “where should this code live?” the engineer starts module design. Module design separates things with different responsibilities, change frequencies, and dependency directions.</p>
+        </section>
+
+        <section class="detail-section" id="architecture">
+            <h2 class="">System architecture manages change</h2>
+            <p class="">Above module design is system architecture. Architecture asks how the whole system is layered, how it communicates, how state is managed, how failures are handled, and how it evolves.</p>
+            <p class="">The essence of architecture is not drawing complex diagrams. It is managing change. Good architecture separates what should be stable from what can change. Core business concepts should be stable; external integration methods can change.</p>
+            <p class="">If every requirement causes broad modification, the abstraction boundary may be wrong. If every local change pulls the whole system, dependency direction may be wrong. If the team becomes afraid to modify the system, change isolation is missing.</p>
+        </section>
+
+        <section class="detail-section" id="business">
+            <h2 class="">Business modeling decides system quality</h2>
+            <p class="">Many people treat architecture as technical choice: monolith or microservices, MySQL or PostgreSQL, REST or RPC. At a deeper level, system quality often depends more on business modeling.</p>
+            <p class="">A software system is a model of reality. Tables, APIs, modules, state machines, and permission models are all expressions of business concepts inside a technical system.</p>
+            <p class="">A low-level implementer asks how to add the field. A stronger engineer asks what business concept that field represents. Is the concept stable, which model owns it, and how will it affect future workflows? Those questions decide whether the system stays coherent.</p>
+        </section>
+
+        <section class="detail-section" id="organization">
+            <h2 class="">Organization is also written into code</h2>
+            <p class="">As abstraction rises further, many technical problems reveal themselves as organizational problems.</p>
+            <p class="">Code is the sediment of organizational behavior. If a team rewards delivery speed but not system quality, code becomes short-sighted. If requirements are chaotic, models get polluted by temporary needs. If responsibility boundaries are unclear, module boundaries rarely stay clean.</p>
+            <p class="">A mature engineer can make hidden long-term cost visible, lift local implementation problems into structural problems, and connect structural problems back to collaboration and decision-making. This is not leaving technology behind; it is understanding technical reality more completely.</p>
+        </section>
+
+        <section class="detail-section" id="takeaway">
+            <h2 class="">Final Thoughts</h2>
+            <p class="">Moving up abstraction layers does not mean moving away from code. Real abstraction must connect top and bottom: a bug leads to code, code reveals module boundaries, modules reveal system structure, and systems reveal business models.</p>
+            <p class="">Abstraction that cannot return to implementation is empty talk. Implementation that cannot rise to structural judgment is manual labor. Mature engineering means writing the code and explaining why it belongs where it is.</p>
+            <p class="">Engineering growth is not getting farther from code. It is seeing deeper structure through code. Code is the result, the system is the structure, business is the source, and organization is the soil. Moving between these layers is reliable engineering capability.</p>
+        </section></div></div>
+    </div>
+    <section class="related" aria-labelledby="related-title"><p class="kicker">Continue reading</p><h2 id="related-title">Related <em>writing</em></h2><ol class="journal-list" style="list-style:none"><li><a class="journal-row" href="article-06.html" data-topic="5" data-cursor="Read">
+        <span class="journal-date">2026.09 · 06</span>
+        <span class="journal-title"><span class="static">Who Gets to Train on Whom?</span><span class="marquee" aria-hidden="true"><span>Who Gets to Train on Whom? —&nbsp;</span><span>Who Gets to Train on Whom? —&nbsp;</span><span>Who Gets to Train on Whom? —&nbsp;</span></span></span>
+        <span class="topic" data-topic="5">Tech Observation</span><span class="journal-time">8 min</span></a></li><li><a class="journal-row" href="article-07.html" data-topic="5" data-cursor="Read">
+        <span class="journal-date">2026.08 · 07</span>
+        <span class="journal-title"><span class="static">The Three Clocks of Robotics</span><span class="marquee" aria-hidden="true"><span>The Three Clocks of Robotics —&nbsp;</span><span>The Three Clocks of Robotics —&nbsp;</span><span>The Three Clocks of Robotics —&nbsp;</span></span></span>
+        <span class="topic" data-topic="5">Tech Observation</span><span class="journal-time">8 min</span></a></li><li><a class="journal-row" href="article-09.html" data-topic="5" data-cursor="Read">
+        <span class="journal-date">2026.05 · 09</span>
+        <span class="journal-title"><span class="static">When a Technology Roadmap Becomes a Law</span><span class="marquee" aria-hidden="true"><span>When a Technology Roadmap Becomes a Law —&nbsp;</span><span>When a Technology Roadmap Becomes a Law —&nbsp;</span><span>When a Technology Roadmap Becomes a Law —&nbsp;</span></span></span>
+        <span class="topic" data-topic="5">Tech Observation</span><span class="journal-time">6 min</span></a></li></ol></section>
+    <nav class="pager" aria-label="More articles">
+        <a href="article-19.html" data-cursor="Prev"><span class="meta">← Previous</span><strong>When Multi-Agent Is Actually Needed: Splitting, Collaboration, and Result Merging</strong></a>
+        <a href="article-21.html" data-cursor="Next"><span class="meta">Next →</span><strong>AI Agents Are Reshaping System Architecture: From Feature Systems to Task Systems</strong></a>
+    </nav>
+</div>
+</main>
+<footer class="colophon">
+    <div class="colophon-name" data-fit aria-hidden="true">Eric</div>
+    <div class="colophon-grid">
+        <div><p class="meta">Index</p><a href="../work/index.html">Work</a><a href="../journal/index.html">Journal</a><a href="../index.html#about">About</a><a href="../index.html#contact">Contact</a></div>
+        <div><p class="meta">Elsewhere</p><a href="https://github.com/powerpan" target="_blank" rel="noopener">GitHub</a><a href="../work/index.html">Work</a><a href="index.html">Journal</a><a href="../index.html#contact">Contact</a></div>
+        <div><p class="meta">Settings</p><button type="button" data-theme-toggle aria-pressed="false"><span class="theme-switch-label">Night</span> paper</button><br><button type="button" data-motion-toggle aria-pressed="true">Motion: on</button><br><button type="button" class="sound-text" data-sound-toggle aria-pressed="false">Sound: off</button>
+<label class="volume"><span class="meta">Volume</span><input class="ink-range" type="range" min="0" max="1" step="0.05" value="0.6" data-sound-volume aria-label="Music volume"></label></div>
+        <div><p class="meta">Colophon</p><p>© 2026 Eric. Set in Instrument Serif &amp; Inter Tight. Ink simulated live in WebGL2.</p><a href="#" data-top>Back to top ↑</a></div>
+    </div>
+</footer>
+<p class="sr-only" role="status" aria-live="polite" data-sound-status></p>
+<script src="../js/ink-fluid.js"></script>
+<script src="../js/ink.js"></script>
+</body>
+</html>

@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>StackForge CLI — Eric</title>
+<meta name="description" content="Full-stack project scaffolding tool — one command generates Vue frontend + backend API + Docker config, letting teams stand on best practices from day one.">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#ede8df">
+<script>(()=>{const r=document.documentElement;let t,m;try{t=localStorage.getItem('ink-theme');m=localStorage.getItem('ink-motion')}catch(e){}t=t||(matchMedia('(prefers-color-scheme: dark)').matches?'night':'day');if(matchMedia('(prefers-reduced-motion: reduce)').matches)m='off';r.dataset.theme=t;r.dataset.motion=m||'on'})()</script>
+<link rel="preload" href="../assets/fonts/instrument-serif-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../css/ink.css">
+<link rel="stylesheet" href="../css/languages.css">
+<link rel="stylesheet" href="../css/sound.css">
+<script src="../js/ink-sound.js" defer></script>
+<noscript><style>[data-sound-toggle],.volume{display:none!important}</style></noscript>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='26' fill='%23f6401a'/%3E%3Ccircle cx='40' cy='26' r='14' fill='%232337f2' fill-opacity='.85'/%3E%3C/svg%3E">
+<link rel="alternate" hreflang="zh-CN" href="../zh/work/project-15.html">
+</head>
+<body data-ink="quiet">
+<canvas id="ink" aria-hidden="true"></canvas>
+<div class="grain" aria-hidden="true"></div>
+
+<div class="cursor" aria-hidden="true"><span class="cursor-label"></span></div>
+<a class="sr-only" href="#main">Skip to content</a>
+<header class="masthead">
+    <a class="brand" href="../index.html" aria-label="Eric — home">Eric<sup>®</sup></a>
+    <div class="masthead-meta"><span>Portfolio &amp; Journal</span><a href="../zh/work/project-15.html" data-language-switch hreflang="zh-CN" lang="zh-CN" aria-label="Read this page in Chinese">中文</a></div>
+    <div class="masthead-right">
+        <nav class="masthead-nav" aria-label="Primary">
+            <a href="../work/index.html" aria-current="page">Work</a><a href="../journal/index.html">Journal</a><a href="../index.html#about">About</a><a href="../index.html#contact">Contact</a>
+        </nav>
+        <button class="sound-switch" type="button" data-sound-toggle aria-pressed="false" aria-label="Play background music"><canvas class="sound-wave" aria-hidden="true"></canvas><span class="sound-label">Sound</span></button>
+        <button class="theme-switch" type="button" data-theme-toggle aria-pressed="false"><span class="theme-switch-dot" aria-hidden="true"></span><span class="theme-switch-label">Night</span></button>
+        <button class="menu-button" type="button" aria-expanded="false" aria-controls="menu">Menu</button>
+    </div>
+</header>
+<nav class="menu" id="menu" aria-label="Menu">
+    <a href="../index.html">Index</a><a href="../work/index.html"><em>Work</em></a><a href="../journal/index.html">Journal</a><a href="../index.html#contact"><em>Contact</em></a>
+    <div class="menu-foot meta"><span>Local <span data-clock>--:--:--</span></span><button class="sound-switch" type="button" data-sound-toggle aria-pressed="false" aria-label="Play background music"><canvas class="sound-wave" aria-hidden="true"></canvas><span class="sound-label">Sound</span></button><a href="../zh/work/project-15.html" data-language-switch hreflang="zh-CN" lang="zh-CN" aria-label="Read this page in Chinese">中文</a></div>
+</nav>
+<main id="main">
+<div class="page"><p class="kicker"><a href="index.html">Work</a> / DevTools · Vue · PHP</p>
+    <header class="case-hero"><h1 data-split>StackForge CLI</h1><p class="lede rise">Full-stack project scaffolding tool — one command generates Vue frontend + backend API + Docker config, letting teams stand on best practices from day one.</p></header><dl class="case-facts rise"><div><dt class="meta">Type</dt><dd>CLI Tool</dd></div><div><dt class="meta">Language</dt><dd>Python + Shell</dd></div><div><dt class="meta">License</dt><dd>MIT</dd></div><div><dt class="meta">Status</dt><dd>Active</dd></div><div><dt class="meta">Index</dt><dd>No. 15</dd></div></dl>
+    <div class="case-media"><img src="../assets/vfx/project-atlas.jpg" alt="Concept visualization from the original site" width="1536" height="1024" loading="eager" decoding="async"></div><div class="case-body"><section class="case-section"><div class="case-section-label"><span class="num">01</span><span class="meta">Section</span></div>
+            <div class="case-section-copy prose"><h2 data-split>Why StackForge?</h2><div class="detail-toc">
+            <div class="detail-toc-item"></div>
+            <div class="detail-toc-item"></div>
+            <div class="detail-toc-item"></div>
+            <div class="detail-toc-item"></div>
+            <div class="detail-toc-item"></div>
+        </div>
+<div class="detail-section-label">Overview</div>
+
+            <p class="detail-text">Every new project requires scaffolding from scratch — choosing frameworks, configuring ESLint, setting up CI/CD, writing Dockerfiles, managing environment variables... This repetitive work consumes valuable development time.</p>
+            <p class="detail-text"><strong class="">StackForge CLI</strong> encapsulates these best practices into composable templates, generating production-grade project skeletons with a single command. Supporting <strong class="">Vue + PHP/Python</strong> tech stacks, it auto-generates frontend project structure, backend API templates, Docker configuration, and CI/CD pipelines.</p>
+            <p class="detail-text">With 20+ built-in project templates covering Vue + Flask, Vue + Spring Boot, Vue + PHP Laravel and other mainstream development scenarios. The core engine is written in Python with a YAML-based template system for flexibility and extensibility.</p><div class="badges"><span class="tag">▸ Python</span><span class="tag">▸ Vue</span><span class="tag">▸ PHP</span><span class="tag">▸ Docker</span><span class="tag">▸ JavaScript</span><span class="tag">▸ YAML</span><span class="tag">▸ Git</span><span class="tag">▸ Shell</span></div></div></section><section class="case-section"><div class="case-section-label"><span class="num">02</span><span class="meta">Section</span></div>
+            <div class="case-section-copy prose"><h2 data-split>Core Technology</h2><div class="detail-section-label">Tech Stack</div>
+
+            <p class="detail-text">StackForge uses a lightweight architecture with Python core + Shell helpers, YAML-based template system, and support for custom template extensions.</p></div></section><section class="case-section"><div class="case-section-label"><span class="num">03</span><span class="meta">Section</span></div>
+            <div class="case-section-copy prose"><h2 data-split>Design Philosophy</h2><div class="detail-section-label">Core Features</div>
+
+            <div class="detail-features">
+                <div class="detail-feature">
+                    <div class="detail-feature-icon">🧩</div>
+                    <div class="detail-feature-title">Vue Project Templates</div>
+                    <div class="detail-feature-desc">Built-in Vue 2/3 project templates with auto-generated component structure, routing, state management, and TypeScript support — ready to use out of the box.</div>
+                </div>
+                <div class="detail-feature">
+                    <div class="detail-feature-icon">🚀</div>
+                    <div class="detail-feature-title">API Scaffolding</div>
+                    <div class="detail-feature-desc">Supports PHP Laravel, Python Flask/FastAPI, Java Spring Boot and other backend templates, auto-generating RESTful API skeletons and database models.</div>
+                </div>
+                <div class="detail-feature">
+                    <div class="detail-feature-icon">🐳</div>
+                    <div class="detail-feature-title">Docker Configuration</div>
+                    <div class="detail-feature-desc">Auto-generates Dockerfile and docker-compose.yml with separate dev and prod configurations, built-in health checks and resource limits.</div>
+                </div>
+                <div class="detail-feature">
+                    <div class="detail-feature-icon">🔌</div>
+                    <div class="detail-feature-title">CI/CD Templates</div>
+                    <div class="detail-feature-desc">Built-in GitHub Actions and GitLab CI templates for auto-generated test, build, and deployment pipelines with multi-environment support.</div>
+                </div>
+            </div></div></section><section class="case-section"><div class="case-section-label"><span class="num">04</span><span class="meta">Section</span></div>
+            <div class="case-section-copy prose"><h2 data-split>Impact</h2><div class="detail-section-label">Metrics</div>
+
+            <dl class="case-facts"><div><dt class="meta">+ Templates</dt><dd>20</dd></div><div><dt class="meta">Downloads</dt><dd>2000</dd></div><div><dt class="meta">GitHub Stars</dt><dd>50</dd></div><div><dt class="meta">Satisfaction %</dt><dd>95</dd></div></dl></div></section><section class="case-section"><div class="case-section-label"><span class="num">05</span><span class="meta">Section</span></div>
+            <div class="case-section-copy prose"><h2 data-split>Quick Start</h2><div class="detail-section-label">Usage Example</div>
+
+            <p class="detail-text">A single command initializes a complete Vue + PHP full-stack project. StackForge interactively guides you through tech stack selection and automatically generates all configuration files.</p>
+
+            <div class="detail-code-block">
+                <div class="detail-code-header">
+                    <div class="detail-code-dot"></div>
+                    <div class="detail-code-dot"></div>
+                    <div class="detail-code-dot"></div>
+                    <div class="detail-code-title">terminal</div>
+                </div>
+                <pre class="detail-code-body">$ pip install stackforge
+$ stackforge init my-app --template vue-laravel
+
+⚡ StackForge v1.2.0
+✓ Scaffolding Vue 3 project structure...
+✓ Generating Laravel API backend...
+✓ Creating Docker configuration (dev + prod)
+✓ Setting up GitHub Actions CI/CD
+
+🎉 Project ready!
+   cd my-app &amp;&amp; docker-compose up -d</pre>
+            </div>
+
+            <div class="detail-code-block">
+                <div class="detail-code-header">
+                    <div class="detail-code-dot"></div>
+                    <div class="detail-code-dot"></div>
+                    <div class="detail-code-dot"></div>
+                    <div class="detail-code-title">stackforge.config.yaml</div>
+                </div>
+                <pre class="detail-code-body">name: my-app
+template: vue-laravel
+frontend:
+  framework: vue3
+  typescript: true
+  pinia: true
+backend:
+  framework: laravel
+  database: mysql
+  auth: jwt
+devops:
+  docker: true
+  ci: github-actions</pre>
+            </div></div></section></div>
+    <a class="next-case" href="project-01.html" data-cursor="Next"><span class="meta">Next project — 01</span><strong>Civilization Z</strong></a></div>
+</main>
+<footer class="colophon">
+    <div class="colophon-name" data-fit aria-hidden="true">Eric</div>
+    <div class="colophon-grid">
+        <div><p class="meta">Index</p><a href="../work/index.html">Work</a><a href="../journal/index.html">Journal</a><a href="../index.html#about">About</a><a href="../index.html#contact">Contact</a></div>
+        <div><p class="meta">Elsewhere</p><a href="https://github.com/powerpan" target="_blank" rel="noopener">GitHub</a><a href="index.html">Work</a><a href="../journal/index.html">Journal</a><a href="../index.html#contact">Contact</a></div>
+        <div><p class="meta">Settings</p><button type="button" data-theme-toggle aria-pressed="false"><span class="theme-switch-label">Night</span> paper</button><br><button type="button" data-motion-toggle aria-pressed="true">Motion: on</button><br><button type="button" class="sound-text" data-sound-toggle aria-pressed="false">Sound: off</button>
+<label class="volume"><span class="meta">Volume</span><input class="ink-range" type="range" min="0" max="1" step="0.05" value="0.6" data-sound-volume aria-label="Music volume"></label></div>
+        <div><p class="meta">Colophon</p><p>© 2026 Eric. Set in Instrument Serif &amp; Inter Tight. Ink simulated live in WebGL2.</p><a href="#" data-top>Back to top ↑</a></div>
+    </div>
+</footer>
+<p class="sr-only" role="status" aria-live="polite" data-sound-status></p>
+<script src="../js/ink-fluid.js"></script>
+<script src="../js/ink.js"></script>
+</body>
+</html>

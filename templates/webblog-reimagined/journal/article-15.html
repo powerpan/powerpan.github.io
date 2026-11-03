@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Core of AI Engineering Is Not Making Models Omnipotent. It Is Defining Boundaries — Eric</title>
+<meta name="description" content="Mature AI engineering does not package a model as a universal assistant. It places the model inside a system with clear boundaries, responsibility, and risk control.">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#ede8df">
+<script>(()=>{const r=document.documentElement;let t,m;try{t=localStorage.getItem('ink-theme');m=localStorage.getItem('ink-motion')}catch(e){}t=t||(matchMedia('(prefers-color-scheme: dark)').matches?'night':'day');if(matchMedia('(prefers-reduced-motion: reduce)').matches)m='off';r.dataset.theme=t;r.dataset.motion=m||'on'})()</script>
+<link rel="preload" href="../assets/fonts/instrument-serif-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../css/ink.css">
+<link rel="stylesheet" href="../css/languages.css">
+<link rel="stylesheet" href="../css/sound.css">
+<script src="../js/ink-sound.js" defer></script>
+<noscript><style>[data-sound-toggle],.volume{display:none!important}</style></noscript>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='26' fill='%23f6401a'/%3E%3Ccircle cx='40' cy='26' r='14' fill='%232337f2' fill-opacity='.85'/%3E%3C/svg%3E">
+<link rel="alternate" hreflang="zh-CN" href="../zh/journal/article-15.html">
+</head>
+<body data-ink="quiet">
+<canvas id="ink" aria-hidden="true"></canvas>
+<div class="grain" aria-hidden="true"></div>
+
+<div class="cursor" aria-hidden="true"><span class="cursor-label"></span></div>
+<a class="sr-only" href="#main">Skip to content</a>
+<header class="masthead">
+    <a class="brand" href="../index.html" aria-label="Eric — home">Eric<sup>®</sup></a>
+    <div class="masthead-meta"><span>Portfolio &amp; Journal</span><a href="../zh/journal/article-15.html" data-language-switch hreflang="zh-CN" lang="zh-CN" aria-label="Read this page in Chinese">中文</a></div>
+    <div class="masthead-right">
+        <nav class="masthead-nav" aria-label="Primary">
+            <a href="../work/index.html">Work</a><a href="../journal/index.html" aria-current="page">Journal</a><a href="../index.html#about">About</a><a href="../index.html#contact">Contact</a>
+        </nav>
+        <button class="sound-switch" type="button" data-sound-toggle aria-pressed="false" aria-label="Play background music"><canvas class="sound-wave" aria-hidden="true"></canvas><span class="sound-label">Sound</span></button>
+        <button class="theme-switch" type="button" data-theme-toggle aria-pressed="false"><span class="theme-switch-dot" aria-hidden="true"></span><span class="theme-switch-label">Night</span></button>
+        <button class="menu-button" type="button" aria-expanded="false" aria-controls="menu">Menu</button>
+    </div>
+</header>
+<nav class="menu" id="menu" aria-label="Menu">
+    <a href="../index.html">Index</a><a href="../work/index.html"><em>Work</em></a><a href="../journal/index.html">Journal</a><a href="../index.html#contact"><em>Contact</em></a>
+    <div class="menu-foot meta"><span>Local <span data-clock>--:--:--</span></span><button class="sound-switch" type="button" data-sound-toggle aria-pressed="false" aria-label="Play background music"><canvas class="sound-wave" aria-hidden="true"></canvas><span class="sound-label">Sound</span></button><a href="../zh/journal/article-15.html" data-language-switch hreflang="zh-CN" lang="zh-CN" aria-label="Read this page in Chinese">中文</a></div>
+</nav>
+<main id="main">
+<div class="progress" aria-hidden="true"><i></i></div>
+<div class="page">
+    <header class="article-head">
+        <p class="meta"><a href="index.html">← Journal</a> &nbsp;/&nbsp; <span class="topic" data-topic="1">AI Engineering</span></p>
+        <h1 data-split>The Core of AI Engineering Is Not Making Models Omnipotent. It Is <em>Defining Boundaries</em></h1>
+        <p class="lede rise">Mature AI engineering does not package a model as a universal assistant. It places the model inside a system with clear boundaries, responsibility, and risk control.</p>
+        <div class="article-meta meta rise" style="--d:120ms"><span>2026.05.10</span><span>8 min</span><span>No. 15</span></div>
+    </header>
+    <div class="article-layout">
+        <nav class="toc" aria-label="Contents"><a href="#wish">Universal AI Is Not a Deliverable Requirement</a><a href="#scope">Translate Wishes Into Tasks</a><a href="#responsibility">AI Handles Semantics; It Does Not Bear Responsibility</a><a href="#risk">Without Boundaries, Efficiency Tools Become Risk Systems</a><a href="#guardrails">Six Boundaries Must Become Engineering Design</a><a href="#levels">Layered Automation Is More Reliable Than One-Step Autonomy</a><a href="#engineer">The Engineer’s Value Is Designing Guardrails</a></nav>
+        <div class="page-surface"><div class="prose"><section class="detail-section" id="wish">
+            <h2 class="">Universal AI Is Not a Deliverable Requirement</h2>
+            <p class="">In enterprise AI projects, the common misunderstanding is not underestimating AI, but overestimating it. When customers first see large model capabilities, it is natural to imagine that if AI can write, summarize, and call tools, it might also manage projects, analyze operations, reply to customers, or even make decisions.</p>
+            <p class="">That idea is not strange. Every new technology invites people to imagine whether it can replace an entire old workflow. But in real engineering, the hard part is often not making the model do more. It is deciding what the model should not do.</p>
+            <blockquote class="">Mature AI engineering is not packaging a model as a universal assistant. It is placing the model inside a system with clear boundaries, explicit responsibility, and controllable risk.</blockquote>
+        </section>
+
+        <section class="detail-section" id="scope">
+            <h2 class="">Translate Wishes Into Tasks</h2>
+            <p class="">When a customer asks whether AI can automatically manage projects, that is not a deliverable requirement. It is a target imagination. Engineering must first break it into concrete tasks such as project status summaries, delay risk alerts, blocker identification, and weekly report drafts.</p>
+            <p class="">When a customer asks whether AI can replace customer service, it should not be interpreted as fully automated support. It can become FAQ retrieval, standard reply suggestions, ticket classification, low-risk automatic replies, and high-risk escalation to humans.</p>
+            <p class="">This translation process is the first boundary in AI engineering. The customer describes a target state; engineers define the executable scope.</p>
+        </section>
+
+        <section class="detail-section" id="responsibility">
+            <h2 class="">AI Handles Semantics; It Does Not Bear Responsibility</h2>
+            <p class="">Large models are good at language, context, and semantic relationships. That makes them useful for retrieval, summarization, classification, extraction, draft generation, candidate suggestions, anomaly hints, and natural-language interaction.</p>
+            <p class="">Those capabilities are valuable, but they do not mean AI can bear final responsibility. It is reasonable for AI to summarize contract risks, but dangerous for it to decide whether a contract can be signed. It is reasonable for AI to analyze production anomalies, but automatic shutdown, line scheduling, or key parameter changes require strict rules and human confirmation.</p>
+            <p class="">The maturity of an enterprise AI system is not whether it can answer more questions. It is whether it can stop at the right place.</p>
+        </section>
+
+        <section class="detail-section" id="risk">
+            <h2 class="">Without Boundaries, Efficiency Tools Become Risk Systems</h2>
+            <p class="">Many AI demos look smooth, but real business introduces old documents, conflicting definitions, incomplete data, and questions with no standard answer. Without boundaries, AI can quickly turn from an efficiency tool into a risk system.</p>
+            <ul class="">
+                <li class=""><strong class="">Fact risk</strong>: treating historical versions as current rules.</li>
+                <li class=""><strong class="">Permission risk</strong>: centralizing permission problems that used to be scattered.</li>
+                <li class=""><strong class="">Execution risk</strong>: once tools, data edits, or emails are involved, mistakes enter the workflow directly.</li>
+                <li class=""><strong class="">Responsibility risk</strong>: without sources, context, and execution traces, errors are hard to audit.</li>
+                <li class=""><strong class="">Scope expansion risk</strong>: once customers see AI do one thing, they keep asking it to do more.</li>
+            </ul>
+            <p class="">AI projects are not more advanced because they are more open. The closer they get to production, the more they need to narrow and control scope.</p>
+        </section>
+
+        <section class="detail-section" id="guardrails">
+            <h2 class="">Six Boundaries Must Become Engineering Design</h2>
+            <p class="">An AI system should define at least six boundary types: data, task, risk, permission, output, and responsibility.</p>
+            <p class="">Data boundaries define which data can enter the knowledge base, what must be desensitized, and what only certain roles can access. Task boundaries define whether AI is a search assistant, a drafting assistant, or an executor. Risk boundaries define whether errors are reversible and whether money, contracts, safety, or compliance are involved.</p>
+            <p class="">Permission boundaries include not only menu permissions but natural-language permissions. Output boundaries require sources, scope, uncertainty, and human confirmation cues. Responsibility boundaries preserve logs, audits, and feedback mechanisms.</p>
+            <p class="">Boundaries cannot stay in slides. They must become permission systems, knowledge-base partitions, tool-call permissions, human confirmations, rollback paths, low-confidence refusal, citations, and audit logs.</p>
+        </section>
+
+        <section class="detail-section" id="levels">
+            <h2 class="">Layered Automation Is More Reliable Than One-Step Autonomy</h2>
+            <p class="">Many companies want full automation from the start, but a better rollout path is to raise automation gradually according to risk level.</p>
+            <ul class="">
+                <li class=""><strong class="">L1: Assisted retrieval</strong>, only helping people find material.</li>
+                <li class=""><strong class="">L2: Assisted summarization</strong>, organizing information without final judgment.</li>
+                <li class=""><strong class="">L3: Candidate generation</strong>, producing reports, plans, code, or reply drafts for human confirmation.</li>
+                <li class=""><strong class="">L4: Low-risk automation</strong>, handling reversible tasks under clear rules.</li>
+                <li class=""><strong class="">L5: High-risk decision support</strong>, giving suggestions while humans retain final responsibility.</li>
+            </ul>
+            <p class="">In many cases, L1 to L3 already create clear value with better control. High-risk scenarios should not chase full automation. They should prioritize traceability, intervention, and rollback.</p>
+        </section>
+
+        <section class="detail-section" id="engineer">
+            <h2 class="">The Engineer’s Value Is Designing Guardrails</h2>
+            <p class="">AI project documents should not only say what the system can do. They should also say what it cannot do: no policy answers without sources, no automatic contract, quote, or financial-data changes, no bypassing approval for high-risk actions, and no access to unauthorized data.</p>
+            <p class="">In AI projects, engineers cannot be only implementers. They must also design boundaries, because customer AI requirements are often technical imagination rather than precise requirements.</p>
+            <blockquote class="">A mature AI engineer does not answer every customer “can it” with “we can try.” They know where to brake. Good AI engineering does not remove the brakes; it installs them before acceleration.</blockquote>
+        </section></div></div>
+    </div>
+    <section class="related" aria-labelledby="related-title"><p class="kicker">Continue reading</p><h2 id="related-title">Related <em>writing</em></h2><ol class="journal-list" style="list-style:none"><li><a class="journal-row" href="article-01.html" data-topic="1" data-cursor="Read">
+        <span class="journal-date">2026.11 · 01</span>
+        <span class="journal-title"><span class="static">The Model Fits. Why Is It Still Slow?</span><span class="marquee" aria-hidden="true"><span>The Model Fits. Why Is It Still Slow? —&nbsp;</span><span>The Model Fits. Why Is It Still Slow? —&nbsp;</span><span>The Model Fits. Why Is It Still Slow? —&nbsp;</span></span></span>
+        <span class="topic" data-topic="1">AI Engineering</span><span class="journal-time">15 min</span></a></li><li><a class="journal-row" href="article-02.html" data-topic="1" data-cursor="Read">
+        <span class="journal-date">2026.10 · 02</span>
+        <span class="journal-title"><span class="static">When the Exam Is Wrong: What Do AI Scores Measure?</span><span class="marquee" aria-hidden="true"><span>When the Exam Is Wrong: What Do AI Scores Measure? —&nbsp;</span><span>When the Exam Is Wrong: What Do AI Scores Measure? —&nbsp;</span><span>When the Exam Is Wrong: What Do AI Scores Measure? —&nbsp;</span></span></span>
+        <span class="topic" data-topic="1">AI Engineering</span><span class="journal-time">16 min</span></a></li><li><a class="journal-row" href="article-16.html" data-topic="1" data-cursor="Read">
+        <span class="journal-date">2026.05 · 16</span>
+        <span class="journal-title"><span class="static">For Enterprise AI On-Prem, the First Step Is Not Buying GPUs. It Is Cleaning Data</span><span class="marquee" aria-hidden="true"><span>For Enterprise AI On-Prem, the First Step Is Not Buying GPUs. It Is Cleaning Data —&nbsp;</span><span>For Enterprise AI On-Prem, the First Step Is Not Buying GPUs. It Is Cleaning Data —&nbsp;</span><span>For Enterprise AI On-Prem, the First Step Is Not Buying GPUs. It Is Cleaning Data —&nbsp;</span></span></span>
+        <span class="topic" data-topic="1">AI Engineering</span><span class="journal-time">7 min</span></a></li></ol></section>
+    <nav class="pager" aria-label="More articles">
+        <a href="article-14.html" data-cursor="Prev"><span class="meta">← Previous</span><strong>I Ran a Multi-Agent Architecture Experiment: Complex Systems Are Not Automatically Smarter</strong></a>
+        <a href="article-16.html" data-cursor="Next"><span class="meta">Next →</span><strong>For Enterprise AI On-Prem, the First Step Is Not Buying GPUs. It Is Cleaning Data</strong></a>
+    </nav>
+</div>
+</main>
+<footer class="colophon">
+    <div class="colophon-name" data-fit aria-hidden="true">Eric</div>
+    <div class="colophon-grid">
+        <div><p class="meta">Index</p><a href="../work/index.html">Work</a><a href="../journal/index.html">Journal</a><a href="../index.html#about">About</a><a href="../index.html#contact">Contact</a></div>
+        <div><p class="meta">Elsewhere</p><a href="https://github.com/powerpan" target="_blank" rel="noopener">GitHub</a><a href="../work/index.html">Work</a><a href="index.html">Journal</a><a href="../index.html#contact">Contact</a></div>
+        <div><p class="meta">Settings</p><button type="button" data-theme-toggle aria-pressed="false"><span class="theme-switch-label">Night</span> paper</button><br><button type="button" data-motion-toggle aria-pressed="true">Motion: on</button><br><button type="button" class="sound-text" data-sound-toggle aria-pressed="false">Sound: off</button>
+<label class="volume"><span class="meta">Volume</span><input class="ink-range" type="range" min="0" max="1" step="0.05" value="0.6" data-sound-volume aria-label="Music volume"></label></div>
+        <div><p class="meta">Colophon</p><p>© 2026 Eric. Set in Instrument Serif &amp; Inter Tight. Ink simulated live in WebGL2.</p><a href="#" data-top>Back to top ↑</a></div>
+    </div>
+</footer>
+<p class="sr-only" role="status" aria-live="polite" data-sound-status></p>
+<script src="../js/ink-fluid.js"></script>
+<script src="../js/ink.js"></script>
+</body>
+</html>

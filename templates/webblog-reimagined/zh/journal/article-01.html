@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>模型装得下，为什么还是跑不快？ — Eric</title>
+<meta name="description" content="KV 压缩省了内存，内核也变快了；用户为什么未必得到同样的提速？从 GAAC 的实验看本地推理的带宽、并发和测量口径。">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#ede8df">
+<script>(()=>{const r=document.documentElement;let t,m;try{t=localStorage.getItem('ink-theme');m=localStorage.getItem('ink-motion')}catch(e){}t=t||(matchMedia('(prefers-color-scheme: dark)').matches?'night':'day');if(matchMedia('(prefers-reduced-motion: reduce)').matches)m='off';r.dataset.theme=t;r.dataset.motion=m||'on'})()</script>
+<link rel="preload" href="../../assets/fonts/instrument-serif-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../css/ink.css">
+<link rel="stylesheet" href="../../css/languages.css">
+<link rel="stylesheet" href="../../css/sound.css">
+<script src="../../js/ink-sound.js" defer></script>
+<noscript><style>[data-sound-toggle],.volume{display:none!important}</style></noscript>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='26' fill='%23f6401a'/%3E%3Ccircle cx='40' cy='26' r='14' fill='%232337f2' fill-opacity='.85'/%3E%3C/svg%3E">
+<link rel="alternate" hreflang="en" href="../../journal/article-01.html">
+</head>
+<body data-ink="quiet">
+<canvas id="ink" aria-hidden="true"></canvas>
+<div class="grain" aria-hidden="true"></div>
+
+<div class="cursor" aria-hidden="true"><span class="cursor-label"></span></div>
+<a class="sr-only" href="#main">跳至正文</a>
+<header class="masthead">
+    <a class="brand" href="../index.html" aria-label="Eric — 首页">Eric<sup>®</sup></a>
+    <div class="masthead-meta"><span>作品与手记</span><a href="../../journal/article-01.html" data-language-switch hreflang="en" lang="en" aria-label="Read this page in English">EN</a></div>
+    <div class="masthead-right">
+        <nav class="masthead-nav" aria-label="主导航">
+            <a href="../work/index.html">项目</a><a href="../journal/index.html" aria-current="page">文章</a><a href="../index.html#about">关于</a><a href="../index.html#contact">联系</a>
+        </nav>
+        <button class="sound-switch" type="button" data-sound-toggle aria-pressed="false" aria-label="播放背景音乐"><canvas class="sound-wave" aria-hidden="true"></canvas><span class="sound-label">音乐</span></button>
+        <button class="theme-switch" type="button" data-theme-toggle aria-pressed="false"><span class="theme-switch-dot" aria-hidden="true"></span><span class="theme-switch-label">夜间</span></button>
+        <button class="menu-button" type="button" aria-expanded="false" aria-controls="menu">菜单</button>
+    </div>
+</header>
+<nav class="menu" id="menu" aria-label="菜单">
+    <a href="../index.html">目录</a><a href="../work/index.html"><em>项目</em></a><a href="../journal/index.html">文章</a><a href="../index.html#contact"><em>联系</em></a>
+    <div class="menu-foot meta"><span>本地 <span data-clock>--:--:--</span></span><button class="sound-switch" type="button" data-sound-toggle aria-pressed="false" aria-label="播放背景音乐"><canvas class="sound-wave" aria-hidden="true"></canvas><span class="sound-label">音乐</span></button><a href="../../journal/article-01.html" data-language-switch hreflang="en" lang="en" aria-label="Read this page in English">EN</a></div>
+</nav>
+<main id="main">
+<div class="progress" aria-hidden="true"><i></i></div>
+<div class="page">
+    <header class="article-head">
+        <p class="meta"><a href="index.html">← 文章</a> &nbsp;/&nbsp; <span class="topic" data-topic="1">AI 工程</span></p>
+        <h1 data-split>模型装得下，<em>为什么还是跑不快？</em></h1>
+        <p class="lede rise">KV 压缩省了内存，内核也变快了；用户为什么未必得到同样的提速？从 GAAC 的实验看本地推理的带宽、并发和测量口径。</p>
+        <div class="article-meta meta rise" style="--d:120ms"><span>2026.11.03</span><span>15 分钟</span><span>No. 01</span></div>
+    </header>
+    <div class="article-layout">
+        <nav class="toc" aria-label="目录"><a href="#intro">引言</a><a href="#kv-capacity">权重放下了，历史 token 还在占内存</a><a href="#fused-reconstruction">压缩以后，在哪里解开？</a><a href="#kernel-timing">多做一点计算，反而少花了时间</a><a href="#whole-step">内核的 1.22 倍，传不到整个请求上</a><a href="#concurrency">总吞吐多了，单条序列未必更快</a><a href="#fp8-comparison">已经用了 FP8，还能照搬这些收益吗？</a><a href="#deployment-limits">无损保证之外，还有哪些没测完</a><a href="#benchmark-plan">真要部署，我会怎样做对照</a></nav>
+        <div class="page-surface"><div class="prose"><section class="detail-section" id="intro">
+<p class="">本地部署大模型时，显存容量往往是第一道门槛。BF16 放不下，就换成 8-bit，再不行就用 4-bit。等权重终于加载成功，我们很容易以为最困难的部分已经过去了。</p>
+
+<p class="">可一旦接入长文档、代码仓库，或者让几个任务同时运行，生成速度又可能慢下来。模型没有溢出内存，GPU 的理论算力也不低，时间究竟花在哪里？</p>
+
+<p class="">Notre Dame 的 Guo、George 和 Joshi 在 2026 年 10 月 28 日发布的预印本 <a href="https://arxiv.org/html/2610.38210v1" target="_blank" rel="noopener" class="">GAAC</a>提供了一组值得拆开读的结果：驻留 KV 内存减少约 26%，DGX Spark 上 64K 上下文的注意力内核加速 1.19–1.27 倍，完整 W4A16 decode step 加速 1.04–1.15 倍，固定 KV 预算下的聚合吞吐提高 13%–29%。</p>
+
+<p class="">这些数字都成立，但对应不同实验。它们没有共同指向一个“本地模型提速 20%”的结论。我更想借这篇论文看清楚：节省的容量，经过怎样的执行路径，才能变成用户感受到的速度。</p>
+
+</section>
+<section class="detail-section" id="kv-capacity">
+<h2 class="">权重放下了，历史 token 还在占内存</h2>
+<p class="">权重只是推理时驻留数据的一部分。Transformer 还要保存历史 token 的 Key 和 Value，避免生成新 token 时重新计算历史 K、V。这份 KV Cache 随上下文增长，也会随并发序列数增加。</p>
+
+<p class="">对常见的全注意力结构，单条序列的理论存储量可以近似写成：</p>
+
+<pre class=""><code class="language-text">KV bytes = 2 × layers × KV heads × head dim
+           × context tokens × bytes per element
+</code></pre>
+
+<p class="">最前面的 2 代表 K 和 V。假设 32 层、8 个 KV head、head dimension 为 128，使用 BF16，每个 token 的 KV 就是 128 KiB。上下文达到 65,536 token，一条序列需要 8 GiB；四条相同长度、没有共享前缀的序列，单是 KV 就需要 32 GiB。这是示意架构的计算，不是 GAAC 某个模型的实测内存，也未计入分配器和临时工作区。</p>
+
+<p class="">权重量化不会自动缩小这份缓存。一个 8B 模型的纯权重，BF16 粗算约 16 GB，4-bit 约 4 GB，但 KV 可能仍用 BF16。原来被权重掩盖的成本，就会显得越来越突出。GQA、MQA、滑动窗口和混合注意力能改变增长方式，因此参数量相近的模型，也不一定需要相同的 KV 容量。</p>
+
+<p class="">还有一个更隐蔽的问题：KV Cache 避免了重复计算，却没有消除读取。标准全注意力生成新 token 时，当前 Query 仍要访问历史 Key，再结合 Value 得到输出。数据放得下，只代表有地方存，不代表每一步都能及时读完。</p>
+
+<p class="">这也是为什么我不会只看 TFLOPS。Prefill 可以把许多输入 token 组织成较大的矩阵运算；单请求、小 batch 的 decode 则可能反复读取权重和历史 KV，计算单元还没忙起来，访存已经占据了相当多时间。</p>
+
+<p class="">举个纯粹的带宽下限例子：若某段路径确实要读取 8 GiB 数据，可用带宽为十进制的 1 TB/s，仅传输就需要约 8.6 ms。它不是 GAAC 的内核计时，也不考虑缓存命中和访存重用，只说明“已经在内存里”与“访问没有成本”差得很远。</p>
+
+</section>
+<section class="detail-section" id="fused-reconstruction">
+<h2 class="">压缩以后，在哪里解开？</h2>
+<p class=""><a href="https://arxiv.org/abs/2205.14135" target="_blank" rel="noopener" class="">FlashAttention</a>已经展示过重新组织计算与存储访问的价值。GAAC 把关注点进一步放到 KV 的表示上：既然历史缓存要被反复读取，能不能少搬一些字节，又不改变保存的数值？</p>
+
+<p class="">BF16 有 1 位符号、8 位指数和 7 位尾数。GAAC 保留符号和尾数，只编码指数。模型产生的指数并非均匀分布，很多 head-channel 的常见指数集中在短区间内。校准时，为每层 K、V 的各 head-channel 选出长度为 8 和 16 的高覆盖区间；实际编码保存相对区间基值的偏移。</p>
+
+<p class="">数据按 8 个元素组成一组，组内共享 2-bit 模式标签：全部落在较窄窗口，就用 3-bit 偏移；否则尝试 4-bit；仍有越界值，整组回退到原始 8-bit 指数。这不是丢弃异常值。校准不准会让更多组回退，影响压缩效率，不会把无法表示的数硬塞进短编码。</p>
+
+<p class="">在常见的 3-bit 模式里，每个元素摊到 <code class="">8 + 3 + 2/8 = 11.25 bit</code>。论文测试的五个模型中，约 88%–90% 的组采用这种模式，完整编码体积的压缩比为 1.405–1.407 倍。以 1.406 为例，体积节省是 <code class="">1 - 1/1.406 ≈ 28.9%</code>，不是 40.6%。算上固定槽位、块表和回退等运行时成本，驻留 KV 节省约 26%，也不是整个模型进程少用了 26% 内存。</p>
+
+<p class="">不过，只把 KV 压小，还不足以让推理更快。最直接的实现是读取压缩数据，完整解压到设备内存，再交给普通注意力内核。这样多了一次完整缓存的写出，后续又要把它读回来，压缩省下的流量可能被重新花掉。</p>
+
+<p class="">GAAC 将重建融合进注意力内核。内核读取压缩 tile 和元数据，恢复当前要用的 BF16 数值，随即计算注意力分数和 Value 加权和，不在外部内存中物化一整份解压缓存。新 token 则先写入未满的 BF16 尾块，块满后只压缩一次；后续生成不反复重打包历史块。压缩块超出固定槽容量时，直接保留原始 BF16。</p>
+
+<p class="">我觉得这些调度细节和编码本身一样值得看。KV 不是压完就归档的文件，它还要不断追加、读取、释放。压缩率再漂亮，若每次消费都要多跑一段昂贵流程，也未必适合推理。这里的“无损”特指恢复原始 KV 位模式，不等于不同浮点内核的注意力输出、整条生成序列都天然逐位一致，集成后仍要验证数值行为。</p>
+
+</section>
+<section class="detail-section" id="kernel-timing">
+<h2 class="">多做一点计算，反而少花了时间</h2>
+<p class=""><a href="https://arxiv.org/html/2610.38210v1#S4.T5" target="_blank" rel="noopener" class="">论文 Table 5</a>把 64K 上下文的 decode-attention 内核计时拆成了几项，单位为微秒：</p>
+
+<div class="article-table-scroll" tabindex="0" role="region" aria-labelledby="bgkv_table_heading"><table class="">
+<thead id="bgkv_table_heading" class="">
+<tr class="">
+<th scope="col" class="">耗时项目</th>
+<th align="right" scope="col" class="">BF16 / FA2</th>
+<th align="right" scope="col" class="">先解压再计算</th>
+<th align="right" scope="col" class="">GAAC 融合路径</th>
+</tr>
+</thead>
+<tbody class=""><tr class="">
+<td class="">KV 读取</td>
+<td align="right" class="">1117.8</td>
+<td align="right" class="">1117.8</td>
+<td align="right" class="">823.5</td>
+</tr>
+<tr class="">
+<td class="">独立指数解码</td>
+<td align="right" class="">—</td>
+<td align="right" class="">930.8</td>
+<td align="right" class="">—</td>
+</tr>
+<tr class="">
+<td class="">计算（GAAC 含融合重建）</td>
+<td align="right" class="">241.5</td>
+<td align="right" class="">241.5</td>
+<td align="right" class="">290.7</td>
+</tr>
+<tr class="">
+<td class="">总耗时</td>
+<td align="right" class="">1359.3</td>
+<td align="right" class="">2290.1</td>
+<td align="right" class="">1114.2</td>
+</tr>
+</tbody></table></div>
+
+<p class="">GAAC 少花了 294.3 μs 读取 KV，却多花了 49.2 μs 计算，净省 245.1 μs。内核加速比约 1.22 倍，换成耗时口径是下降约 18%，不能把二者都写成“时间少了 22%”。</p>
+
+<p class="">先解压再计算的路径反而达到 2290.1 μs，比未压缩的基线更慢。相同的压缩数据，因为还原位置和后续访问方式不同，最后得到相反的性能结果。</p>
+
+<p class="">另一个消融实验更直接。加入 2-bit 模式后，压缩比从 1.406 提高到 1.439 倍，约改善 2.3%；独立解码耗时却从 187.1 μs 增至 526.7 μs，约为原来的 2.8 倍。这是 Table 4 的 codec 测试，不是前表的完整注意力计时，但取舍很清楚：多省几个字节，不一定付得起读取它们的代价。</p>
+
+<p class="">因此我不会把“计算更少”当作性能优化的唯一方向。带宽受限时，适量增加计算能换来更大的访存节省；但增加多少、在哪一级存储重建、访问是否规则，都必须一起测。</p>
+
+</section>
+<section class="detail-section" id="whole-step">
+<h2 class="">内核的 1.22 倍，传不到整个请求上</h2>
+<p class="">注意力之外，decode step 还包含线性层、MLP、归一化、权重访问以及运行时开销。假设注意力原本占总时间的 40%，把它加速到 1.22 倍，其余部分不变：</p>
+
+<pre class=""><code class="language-text">overall speedup = 1 / (0.6 + 0.4 / 1.22)
+                ≈ 1.078
+</code></pre>
+
+<p class="">整体速率只提高约 7.8%。这里的 40% 是我为解释 Amdahl 定律设的假设，不是论文实测占比。真正要查的是，优化对象在原系统里到底占多少时间。</p>
+
+<p class="">GAAC 的同 batch 实验正好印证了这个差别。DGX Spark 上，完整 W4A16 decode step 的加速范围是 1.04–1.15 倍；测试中的两个混合/MoE 模型只有约四分之一的层使用全注意力，整体收益约 1.04–1.06 倍。不能因为某个注意力内核加速明显，就让其他层也分享同样的百分比。</p>
+
+<p class="">范围也要读仔细。DGX Spark 上 1.19–1.27 倍的注意力结果针对 batch 1、64K 上下文；1.04–1.15 倍的完整步骤范围则来自所测模型和上下文配置。它们不是一对可以直接相减的同条件端到端数据，更不是整个用户请求的完成时间。</p>
+
+<p class="">对长文档尤其如此。Prefill 要先处理输入，GAAC 的融合路径主要加速 decode，prefill 仍走常规注意力，必要时还需临时展开缓存。如果输入 64K token 后只生成几十个 token，大量等待可能已经发生在第一个 token 之前；若在这份上下文上持续输出几千个 token，逐步节省才更容易累计。</p>
+
+<p class="">论文在 Qwen3-8B 上给出的注意力加速，在 32K、64K、128K 分别为 1.31、1.27、1.25 倍。这也提醒我，不要把“长上下文更容易暴露访存瓶颈”误写成“上下文越长，加速倍数必然单调上升”。完整步骤收益和内核倍率，是不同曲线。</p>
+
+</section>
+<section class="detail-section" id="concurrency">
+<h2 class="">总吞吐多了，单条序列未必更快</h2>
+<p class="">另一组实验固定 KV 内存预算，再分别把并发数加到各自能容纳的上限。<a href="https://arxiv.org/html/2610.38210v1#S4.T2" target="_blank" rel="noopener" class="">Table 2</a>中，Qwen3-8B 在 64K 上下文、约 20 GB KV 预算下，BF16 能放 2 条序列，聚合吞吐 19.0 tok/s；GAAC 能放 3 条，达到 22.8 tok/s，增加 20%。</p>
+
+<p class="">如果只做算术平均，前者每条约 9.5 tok/s，后者约 7.6 tok/s。这个除法不是逐请求延迟测量，不能证明 GAAC 在相同 batch 下让单请求变慢，因为两边并发数已经不同。但它足以说明，聚合吞吐不是单条序列速度的同义词。</p>
+
+<p class="">若一台设备只服务一个聊天用户，多放一条序列可能没有直接价值。若有三个各自维护长上下文的任务，原来第三个必须排队，现在都能驻留，任务组可能更早完成。不过，这取决于调度与任务依赖，是部署时该测的假设，不是论文已经完成的多 Agent 工作流实验。</p>
+
+<p class="">论文中有个很有说服力的反差：混合和 MoE 模型在相同 batch 下加速较小，固定 KV 预算后的吞吐收益却达到 27% 和 29%。更多收益来自容纳额外并发，而不是单个计算步骤突然快了同样的幅度。</p>
+
+<p class="">在线服务还得继续看排队和尾延迟。一个系统可以用更大的 batch 生成更多 token，却让部分请求等得更久。我会按产品目标定义 goodput，例如只统计同时满足首 token 和持续输出延迟要求的请求。实时聊天和离线文档处理可以有不同约束，不能拿同一个吞吐排名直接决定部署。</p>
+
+</section>
+<section class="detail-section" id="fp8-comparison">
+<h2 class="">已经用了 FP8，还能照搬这些收益吗？</h2>
+<p class="">减少 KV 成本不只有压缩格式这一条路。<a href="https://arxiv.org/abs/2309.06180" target="_blank" rel="noopener" class="">PagedAttention</a>通过分页分配与共享减少碎片和重复占用；其论文中的 vLLM 在当时特定基线、模型和负载下获得 2–4 倍吞吐，不是把每个矩阵运算加速了几倍。GAAC 进一步处理的是缓存的数值表示，以及内核怎样消费它。</p>
+
+<p class="">FP8 则把 BF16 KV 的存储位宽减半，同时引入数值近似。<a href="https://vllm.ai/blog/2026-04-22-fp8-kvcache" target="_blank" rel="noopener" class="">vLLM 2026 年 4 月的报告</a>中，H100 上 Llama-3.1-8B 的 150 请求、并发 8、约 20K 输入/2K 输出测试，聚合吞吐从 450.3 提高到 517.5 tok/s，约 14.9%；跳过滑动窗口层的 gpt-oss-20b 约提高 4.8%。这些是另一套硬件和实现，不能用来和 GAAC 排名，但同样说明位宽减半不等于整机翻倍。</p>
+
+<p class="">有损路径还要测试任务精度和累积误差，不能只把缓存文件大小对齐。GAAC 自己在 FP8 E4M3 上的额外无损压缩只有 1.09–1.14 倍，E5M2 为 1.25–1.30 倍；这是在已经量化的数据上继续压缩，不是恢复 BF16 精度，也不能直接套用 BF16 的吞吐收益。</p>
+
+<p class="">我不会据此说哪一种方案应该取代另一种。如果部署已经有成熟的 FP8 内核，就要测增量收益；如果更在意保存原始 BF16 KV，无损方案有不同的约束和价值。比较前得先对齐硬件、模型架构、精度、batch 和工作负载。</p>
+
+</section>
+<section class="detail-section" id="deployment-limits">
+<h2 class="">无损保证之外，还有哪些没测完</h2>
+<p class="">GAAC 的指数窗口依赖校准。<a href="https://arxiv.org/html/2610.38210v1#A3" target="_blank" rel="noopener" class="">附录 C</a>用 Qwen3-8B 的一层做位置漂移实验：短于或等于 8K 的校准窗口用于 32K 输入后，后段 Key 的溢出存储明显增多；用 32K 校准则较稳定。RoPE 会让 Key 的指数分布随位置变化。结果不会因此有损，但压缩率和回退开销会变。</p>
+
+<p class="">这与跨任务校准的结果并不冲突。WikiText 上选的窗口能在若干代码、数学和知识测试上维持接近的压缩率，不代表任意长度、内容和长期请求轨迹都已经覆盖。落地时还要看槽位浪费、回退比例、前缀共享和缓存周转，不能只读一段静态 KV 的压缩比。</p>
+
+<p class="">Apple M4 的结果也需要限定范围。作者用 Metal 实现压缩注意力，与同结构 BF16 KV 内核比较；64K 上下文单序列约 1.10 倍、8 条序列约 1.25 倍。这是注意力内核的可移植性证据，不是完整 Mac 聊天程序或 Agent 已经同幅度提速。</p>
+
+<p class="">我也没有据此做能效判断。论文没有报告功率和能耗；额外计算与减少搬运怎样影响温度、续航和持续性能，还需要实际测量。无损编码、注意力计时、完整模型质量、整机能效，是几件要分别验证的事。</p>
+
+</section>
+<section class="detail-section" id="benchmark-plan">
+<h2 class="">真要部署，我会怎样做对照</h2>
+<p class="">先固定一条能复现的基线：模型及量化版本、推理框架和内核、上下文与输出长度、KV 精度、batch、请求到达方式。容量分别记录权重、驻留 KV 和工作区，不把某个分项的下降写成整个进程的下降。</p>
+
+<p class="">然后做两类实验。一类保持相同并发，看完整 decode step 和请求延迟；另一类固定内存预算，允许增加并发，看聚合吞吐、排队与 goodput。二者都需要，只是不能混在一张“速度提升”表里。</p>
+
+<p class="">延迟记录也要分层。<a href="https://docs.vllm.ai/en/latest/design/metrics/" target="_blank" rel="noopener" class="">vLLM 的指标文档</a>区分首 token 时间 TTFT、输出间隔 ITL 和每输出 token 的平均耗时 TPOT。报告时应写清是否包含排队、怎样聚合，以及输出 token 数的分母，避免平均 tokens/s 把短请求的等待和长请求的卡顿都遮住。再配合 P50/P95/P99、任务质量、持续运行的内存和能耗，才比较接近实际使用。</p>
+
+<p class="">对于 Agent，我还会保存包含工具等待和重新 prefill 的任务轨迹。若一次任务大部分时间在等外部工具，把 decode 改善 10% 并不会让任务总时长也缩短 10%。先确认时间花在哪里，才能判断下一个优化该落在哪一层。</p>
+
+<p class="">读完 GAAC，我没有得到一个统一的提速承诺。它让我更愿意追问那些百分比的分母：省下的是编码字节还是驻留内存，快的是一个内核还是完整步骤，多出来的是单用户速度还是并发容量。模型装下之后，这些问题才刚开始。</p>
+
+<p class="">本文依据截至 2026 年 11 月 3 日查阅的一手材料讨论，GAAC 数字以 arXiv:2610.38210v1 为准，尚未自行复现。文中的容量演算、Amdahl 示例、Agent 场景和部署对照方案分别属于示意或工程建议，不是补充实验结果。</p>
+
+</section></div></div>
+    </div>
+    <section class="related" aria-labelledby="related-title"><p class="kicker">继续阅读</p><h2 id="related-title">相关<em>文章</em></h2><ol class="journal-list" style="list-style:none"><li><a class="journal-row" href="article-02.html" data-topic="1" data-cursor="阅读">
+        <span class="journal-date">2026.10 · 02</span>
+        <span class="journal-title"><span class="static">当考卷本身有错：我们在测量 AI 的什么？</span><span class="marquee" aria-hidden="true"><span>当考卷本身有错：我们在测量 AI 的什么？ —&nbsp;</span><span>当考卷本身有错：我们在测量 AI 的什么？ —&nbsp;</span><span>当考卷本身有错：我们在测量 AI 的什么？ —&nbsp;</span></span></span>
+        <span class="topic" data-topic="1">AI 工程</span><span class="journal-time">16 分钟</span></a></li><li><a class="journal-row" href="article-15.html" data-topic="1" data-cursor="阅读">
+        <span class="journal-date">2026.05 · 15</span>
+        <span class="journal-title"><span class="static">AI 工程的核心不是让模型万能，而是定义边界</span><span class="marquee" aria-hidden="true"><span>AI 工程的核心不是让模型万能，而是定义边界 —&nbsp;</span><span>AI 工程的核心不是让模型万能，而是定义边界 —&nbsp;</span><span>AI 工程的核心不是让模型万能，而是定义边界 —&nbsp;</span></span></span>
+        <span class="topic" data-topic="1">AI 工程</span><span class="journal-time">8 分钟</span></a></li><li><a class="journal-row" href="article-16.html" data-topic="1" data-cursor="阅读">
+        <span class="journal-date">2026.05 · 16</span>
+        <span class="journal-title"><span class="static">企业 AI 本地部署，第一步不是买 GPU，而是先洗数据</span><span class="marquee" aria-hidden="true"><span>企业 AI 本地部署，第一步不是买 GPU，而是先洗数据 —&nbsp;</span><span>企业 AI 本地部署，第一步不是买 GPU，而是先洗数据 —&nbsp;</span><span>企业 AI 本地部署，第一步不是买 GPU，而是先洗数据 —&nbsp;</span></span></span>
+        <span class="topic" data-topic="1">AI 工程</span><span class="journal-time">7 分钟</span></a></li></ol></section>
+    <nav class="pager" aria-label="更多文章">
+        <a href="article-41.html" data-cursor="上一篇"><span class="meta">← 上一篇</span><strong>SAM 2 在工业质检中的落地实践：从 Prompt Engineering 到产线部署</strong></a>
+        <a href="article-02.html" data-cursor="下一个"><span class="meta">下一篇 →</span><strong>当考卷本身有错：我们在测量 AI 的什么？</strong></a>
+    </nav>
+</div>
+</main>
+<footer class="colophon">
+    <div class="colophon-name" data-fit aria-hidden="true">Eric</div>
+    <div class="colophon-grid">
+        <div><p class="meta">目录</p><a href="../work/index.html">项目</a><a href="../journal/index.html">文章</a><a href="../index.html#about">关于</a><a href="../index.html#contact">联系</a></div>
+        <div><p class="meta">更多</p><a href="https://github.com/powerpan" target="_blank" rel="noopener">GitHub</a><a href="../work/index.html">项目</a><a href="index.html">文章</a><a href="../index.html#contact">联系</a></div>
+        <div><p class="meta">设置</p><button type="button" data-theme-toggle aria-pressed="false"><span class="theme-switch-label">夜间</span> 纸色</button><br><button type="button" data-motion-toggle aria-pressed="true">动效：开启</button><br><button type="button" class="sound-text" data-sound-toggle aria-pressed="false">音乐：关闭</button>
+<label class="volume"><span class="meta">音量</span><input class="ink-range" type="range" min="0" max="1" step="0.05" value="0.6" data-sound-volume aria-label="音乐音量"></label></div>
+        <div><p class="meta">关于本站</p><p>© 2026 Eric. 中文标题采用 Noto Serif SC，正文采用 Noto Sans SC。水墨以 WebGL2 实时模拟。</p><a href="#" data-top>返回顶部 ↑</a></div>
+    </div>
+</footer>
+<p class="sr-only" role="status" aria-live="polite" data-sound-status></p>
+<script src="../../js/ink-fluid.js"></script>
+<script src="../../js/ink.js"></script>
+</body>
+</html>

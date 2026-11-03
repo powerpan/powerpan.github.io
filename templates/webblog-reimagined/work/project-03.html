@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BF Badminton — Eric</title>
+<meta name="description" content="A full-stack venue platform connecting online reservations, walk-in court use, member top-ups, store pickup and financial reconciliation, with dedicated workspaces for customers, front-desk staff, administrators and maintenance staff.">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#ede8df">
+<script>(()=>{const r=document.documentElement;let t,m;try{t=localStorage.getItem('ink-theme');m=localStorage.getItem('ink-motion')}catch(e){}t=t||(matchMedia('(prefers-color-scheme: dark)').matches?'night':'day');if(matchMedia('(prefers-reduced-motion: reduce)').matches)m='off';r.dataset.theme=t;r.dataset.motion=m||'on'})()</script>
+<link rel="preload" href="../assets/fonts/instrument-serif-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../css/ink.css">
+<link rel="stylesheet" href="../css/languages.css">
+<link rel="stylesheet" href="../css/sound.css">
+<script src="../js/ink-sound.js" defer></script>
+<noscript><style>[data-sound-toggle],.volume{display:none!important}</style></noscript>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='26' fill='%23f6401a'/%3E%3Ccircle cx='40' cy='26' r='14' fill='%232337f2' fill-opacity='.85'/%3E%3C/svg%3E">
+<link rel="alternate" hreflang="zh-CN" href="../zh/work/project-03.html">
+</head>
+<body data-ink="quiet">
+<canvas id="ink" aria-hidden="true"></canvas>
+<div class="grain" aria-hidden="true"></div>
+
+<div class="cursor" aria-hidden="true"><span class="cursor-label"></span></div>
+<a class="sr-only" href="#main">Skip to content</a>
+<header class="masthead">
+    <a class="brand" href="../index.html" aria-label="Eric — home">Eric<sup>®</sup></a>
+    <div class="masthead-meta"><span>Portfolio &amp; Journal</span><a href="../zh/work/project-03.html" data-language-switch hreflang="zh-CN" lang="zh-CN" aria-label="Read this page in Chinese">中文</a></div>
+    <div class="masthead-right">
+        <nav class="masthead-nav" aria-label="Primary">
+            <a href="../work/index.html" aria-current="page">Work</a><a href="../journal/index.html">Journal</a><a href="../index.html#about">About</a><a href="../index.html#contact">Contact</a>
+        </nav>
+        <button class="sound-switch" type="button" data-sound-toggle aria-pressed="false" aria-label="Play background music"><canvas class="sound-wave" aria-hidden="true"></canvas><span class="sound-label">Sound</span></button>
+        <button class="theme-switch" type="button" data-theme-toggle aria-pressed="false"><span class="theme-switch-dot" aria-hidden="true"></span><span class="theme-switch-label">Night</span></button>
+        <button class="menu-button" type="button" aria-expanded="false" aria-controls="menu">Menu</button>
+    </div>
+</header>
+<nav class="menu" id="menu" aria-label="Menu">
+    <a href="../index.html">Index</a><a href="../work/index.html"><em>Work</em></a><a href="../journal/index.html">Journal</a><a href="../index.html#contact"><em>Contact</em></a>
+    <div class="menu-foot meta"><span>Local <span data-clock>--:--:--</span></span><button class="sound-switch" type="button" data-sound-toggle aria-pressed="false" aria-label="Play background music"><canvas class="sound-wave" aria-hidden="true"></canvas><span class="sound-label">Sound</span></button><a href="../zh/work/project-03.html" data-language-switch hreflang="zh-CN" lang="zh-CN" aria-label="Read this page in Chinese">中文</a></div>
+</nav>
+<main id="main">
+<div class="page"><p class="kicker"><a href="index.html">Work</a> / Venue Operations · Transactions · Vue 3 / Tornado</p>
+    <header class="case-hero"><h1 data-split>BF Badminton</h1><p class="lede rise">A full-stack venue platform connecting online reservations, walk-in court use, member top-ups, store pickup and financial reconciliation, with dedicated workspaces for customers, front-desk staff, administrators and maintenance staff.</p></header><dl class="case-facts rise"><div><dt class="meta">Role</dt><dd>Full-stack Developer</dd></div><div><dt class="meta">Focus</dt><dd>Venue Workflows &amp; Transaction Integrity</dd></div><div><dt class="meta">Stack</dt><dd>Tornado / Vue 3 / Redis</dd></div><div><dt class="meta">Index</dt><dd>No. 03</dd></div></dl>
+    <div class="case-media"><img src="../assets/projects/greenbird-badminton/booking-20260929.jpg" alt="BF Badminton two-hour court selection, 10 percent member discount and simulated Alipay option" width="1120" height="1099" loading="eager" decoding="async"></div><div class="case-body"><section class="case-section"><div class="case-section-label"><span class="num">01</span><span class="meta">Section</span></div>
+            <div class="case-section-copy prose"><h2 data-split>Beyond Booking: Support the Daily Work of a Venue</h2><div class="detail-section-label">Overview</div>
+
+            <p class="detail-text">BF Badminton starts with <strong class="">a shared court schedule for online and walk-in service</strong>, connecting member accounts, payment orders, stock, pickup credentials, events and community features. Customers book and purchase; front-desk staff handle walk-ins, top-ups and collection; administrators manage operations and permissions; maintenance staff have read-only access to maintenance schedules.</p>
+            <p class="detail-text">The frontend uses Vue 3, TypeScript, Pinia, and Element Plus. The backend uses Tornado's asynchronous request model with an aiomysql pool and asynchronous Redis client for network and database I/O.</p>
+
+            <p class="greenbird-note">Screenshots captured on 2026-09-29 show the local isolated demo, with the original Chinese interface; most historical transactions date to September 24. Payment is an in-project simulation, not the official Alipay sandbox or a real transfer. Production HTTPS deployment, WeChat public-account linking and physical scanning devices require separate acceptance. Select an image to open its original.</p><div class="badges"><span class="tag">Python Tornado</span><span class="tag">Vue 3</span><span class="tag">TypeScript</span><span class="tag">Pinia</span><span class="tag">MySQL / InnoDB</span><span class="tag">Redis</span><span class="tag">JWT</span><span class="tag">Nginx</span></div><figure class="rise"><img src="../assets/projects/greenbird-badminton/checkout-20260929.jpg" alt="BF store cart showing price revalidation and stored-value or simulated Alipay checkout" width="1135" height="616" loading="lazy" decoding="async"><figcaption>Cart checkout: balance, total and two payment channels, with price revalidation before ordering. No order was submitted; the background test product and its missing-image placeholder remain unchanged.</figcaption></figure></div></section><section class="case-section"><div class="case-section-label"><span class="num">02</span><span class="meta">Section</span></div>
+            <div class="case-section-copy prose"><h2 data-split>Protect Court Use and Payments with Transactions, Row Locks and Idempotency</h2><div class="detail-section-label">Concurrency Control</div>
+
+            <p class="detail-text">New bookings now use MySQL transactions as the authoritative boundary. <code class="">FOR UPDATE</code> locks the relevant court rows before checking active bookings, maintenance blocks and confirmed prices; reservations, payment orders and audit records commit together. Online booking, walk-ins, extensions and rescheduling share conflict rules. Redis still handles verification codes, tokens and existing temporary locks, but is no longer the primary safeguard against duplicate occupancy in new bookings.</p>
+            <div class="greenbird-concurrency">
+                <div class="greenbird-concurrency-step">
+                    <div class="greenbird-concurrency-index">01 / ASYNC I/O</div>
+                    <div class="greenbird-concurrency-title">Asynchronous Entry</div>
+                    <div class="greenbird-concurrency-desc">Tornado coroutines with asynchronous MySQL and Redis clients reduce thread blocking during I/O waits.</div>
+                </div>
+                <div class="greenbird-concurrency-step">
+                    <div class="greenbird-concurrency-index">02 / COURT ROW LOCK</div>
+                    <div class="greenbird-concurrency-title">Shared Court Row Locks</div>
+                    <div class="greenbird-concurrency-desc">Online, walk-in, rescheduling and maintenance transactions lock court rows before checking time ranges and active occupancy.</div>
+                </div>
+                <div class="greenbird-concurrency-step">
+                    <div class="greenbird-concurrency-index">03 / IDEMPOTENCY</div>
+                    <div class="greenbird-concurrency-title">Idempotency &amp; Constraints</div>
+                    <div class="greenbird-concurrency-desc">Request keys, parameter hashes and stored results let identical retries reuse outcomes and reject changed parameters, protecting credits and redemption.</div>
+                </div>
+                <div class="greenbird-concurrency-step">
+                    <div class="greenbird-concurrency-index">04 / EXPIRATION</div>
+                    <div class="greenbird-concurrency-title">Expiration &amp; Recovery</div>
+                    <div class="greenbird-concurrency-desc">Expired pending orders release court, stock or wallet holds. Critical state and ledger changes commit together or roll back.</div>
+                </div>
+            </div>
+            <p class="detail-text">The repository records a run through real Tornado HTTP routes with JWT and role checks: macOS arm64, Python 3.14.3, MySQL 5.7.28 and a pool limit of 10. Each scenario used one initial request followed by 200 requests with a concurrency cap of 20.</p>
+            <div class="greenbird-benchmark" tabindex="0" role="region" aria-labelledby="greenbirdBenchmarkTitle">
+                <table class="">
+                    <caption id="greenbirdBenchmarkTitle" class="">Local concurrency sample (2026-09-24)</caption>
+                    <thead class=""><tr class=""><th scope="col" class="">Scenario</th><th scope="col" class="">P50 (ms)</th><th scope="col" class="">P95 (ms)</th><th scope="col" class="">Failures / samples</th></tr></thead>
+                    <tbody class="">
+                        <tr class=""><th scope="row" class="">Store checkout quote</th><td class="">15.39</td><td class="">17.93</td><td class="">0 / 200</td></tr>
+                        <tr class=""><th scope="row" class="">Simulated store collection</th><td class="">61.00</td><td class="">74.46</td><td class="">0 / 200</td></tr>
+                        <tr class=""><th scope="row" class="">Global ledger query</th><td class="">305.47</td><td class="">349.48</td><td class="">0 / 200</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <a class="greenbird-source" href="../assets/projects/greenbird-badminton/benchmark-20260924.json">Read the original measurements (JSON)</a>
+            <div class="greenbird-note">These figures come from a local isolated-database run on 2026-09-24. They do not establish production QPS, thousand-user concurrency or public-network multi-instance capacity, and were not rerun for this screenshot update.</div><figure class="rise"><img src="../assets/projects/greenbird-badminton/pickup-20260929.jpg" alt="BF front-desk lookup of a collected order with operator, collection time and completed status" width="1120" height="912" loading="lazy" decoding="async"><figcaption>Collection result: this demo order was collected on September 24, with its operator and timestamp retained. This is not a reusable pickup credential or evidence of physical-scanner acceptance.</figcaption></figure></div></section><section class="case-section"><div class="case-section-label"><span class="num">03</span><span class="meta">Section</span></div>
+            <div class="case-section-copy prose"><h2 data-split>From Continuous-Slot Recommendations to Quotes and Rescheduling</h2><div class="detail-section-label">Reservation Lifecycle</div>
+
+            <p class="detail-text">Customers can select consecutive slots or supply an earliest start, duration and court preference to find <strong class="">fully available windows</strong>. Prefix sums identify contiguous openings; candidates are ranked by start-time deviation, preference, price and fragmented gaps. Up to three suggestions include reasons. A recommendation does not hold a slot: availability is checked again when booking.</p>
+            <p class="detail-text">Before confirmation, the quote shows list price, member discount, amount due and available balance, with stored value or project-internal simulated Alipay. Changed prices or benefits require reconfirmation; valid pending orders retain their agreed price snapshot. Cancellation, expiration and rescheduling handle resource release and price differences separately. Refunds return to the original payment channel, so simulated Alipay refunds do not credit the member wallet.</p><figure class="rise"><img src="../assets/projects/greenbird-badminton/frontdesk-20260929.jpg" alt="BF front-desk workspace with three court schedules and walk-in booking entry points" width="1120" height="1419" loading="lazy" decoding="async"><figcaption>Front-desk schedule: availability and walk-in entry points for three courts, alongside extensions, top-ups and collection workflows.</figcaption></figure></div></section><section class="case-section"><div class="case-section-label"><span class="num">04</span><span class="meta">Section</span></div>
+            <div class="case-section-copy prose"><h2 data-split>A Membership Account Beyond Discount Labels</h2><div class="detail-section-label">Membership &amp; Community</div>
+
+            <p class="detail-text">The member center manages tier, expiry, balance, points and account history. Front-desk staff or administrators can process simulated top-ups, preserving the reason, operator and related business record. Pending holds are shown separately from available balance, allowing customers to reconcile top-ups, spending, refunds and manual adjustments rather than seeing only a balance.</p>
+            <p class="detail-text">Event registration, the player community, announcements, and notifications extend the platform across transactions, organization, and community engagement instead of limiting it to a booking tool.</p><figure class="rise"><img src="../assets/projects/greenbird-badminton/ledger-20260929.jpg" alt="BF administrator ledger separating simulated channel receipts, wallet spending, refunds and manual adjustments" width="1120" height="2148" loading="lazy" decoding="async"><figcaption>Global ledger: channel receipts and refunds are reconciled separately from wallet spending. Manual credits include demo opening balances and must not be read as operating revenue.</figcaption></figure></div></section><section class="case-section"><div class="case-section-label"><span class="num">05</span><span class="meta">Section</span></div>
+            <div class="case-section-copy prose"><h2 data-split>Payment Is Not the End: Make Collection Traceable</h2><div class="detail-section-label">Club Commerce</div>
+
+            <p class="detail-text">Checkout rechecks price, stock and available balance and supports <strong class="">stored value and simulated Alipay</strong>. Pending orders reserve stock; successful payment creates a pickup QR code and readable code. Front-desk staff or administrators look up the order before confirming whole-order collection. Each order can be redeemed only once. A refund request freezes collection, and a completed refund invalidates the credential.</p></div></section><section class="case-section"><div class="case-section-label"><span class="num">06</span><span class="meta">Section</span></div>
+            <div class="case-section-copy prose"><h2 data-split>Shared Business Records, Clearly Separated Roles</h2><div class="detail-section-label">Front Desk &amp; Roles</div>
+
+            <p class="detail-text">Front-desk staff open courts for unregistered walk-in customers at the full-slot list price. Arriving at 14:10 for 14:00–15:00 still incurs the full slot charge and ends at 15:00. Adjacent extensions, payments and operators remain traceable. Front-desk staff cannot publish events or announcements; maintenance staff only view reasons and scheduled windows, with reopening controlled by administrators.</p></div></section><section class="case-section"><div class="case-section-label"><span class="num">07</span><span class="meta">Section</span></div>
+            <div class="case-section-copy prose"><h2 data-split>Explain Each Receipt, Not Just a Revenue Total</h2><div class="detail-section-label">Reconciliation &amp; Operations</div>
+
+            <p class="detail-text">The global ledger distinguishes channel receipts, top-ups, wallet spending and refunds, so a 100-yuan top-up followed by 100 yuan of wallet spending does not become 200 yuan of channel receipts. An ended booking is not proof of attendance: attendance rate and recording coverage are reported separately, and manual adjustments are kept out of operating receipts.</p>
+
+            <div class="detail-features">
+                <div class="detail-feature">
+                    <div class="detail-feature-icon">01</div>
+                    <div class="detail-feature-title">Concurrency-Safe Booking</div>
+                    <div class="detail-feature-desc">Court row locks, transaction checks, idempotency and expiration protect business state.</div>
+                </div>
+                <div class="detail-feature">
+                    <div class="detail-feature-icon">02</div>
+                    <div class="detail-feature-title">Member Ledger</div>
+                    <div class="detail-feature-desc">Top-ups, spending, refunds and manual adjustments retain their original business record and operator.</div>
+                </div>
+                <div class="detail-feature">
+                    <div class="detail-feature-icon">03</div>
+                    <div class="detail-feature-title">One-Time Pickup Redemption</div>
+                    <div class="detail-feature-desc">Payment creates a credential for whole-order collection; refunds freeze pickup and repeated redemption is blocked.</div>
+                </div>
+                <div class="detail-feature">
+                    <div class="detail-feature-icon">04</div>
+                    <div class="detail-feature-title">Events and Community</div>
+                    <div class="detail-feature-desc">Supports event registration, player content, announcements, and in-app notifications.</div>
+                </div>
+                <div class="detail-feature">
+                    <div class="detail-feature-icon">05</div>
+                    <div class="detail-feature-title">Operational Analytics</div>
+                    <div class="detail-feature-desc">Separate booking rate, attendance rate and recording coverage instead of treating unknown attendance as absence.</div>
+                </div>
+                <div class="detail-feature">
+                    <div class="detail-feature-icon">06</div>
+                    <div class="detail-feature-title">Configurable Rules</div>
+                    <div class="detail-feature-desc">Business hours, slot intervals, daily limits, and timeout policies are adjustable.</div>
+                </div>
+            </div></div></section></div>
+    <a class="next-case" href="project-04.html" data-cursor="Next"><span class="meta">Next project — 04</span><strong>Moyu Night Library</strong></a></div>
+</main>
+<footer class="colophon">
+    <div class="colophon-name" data-fit aria-hidden="true">Eric</div>
+    <div class="colophon-grid">
+        <div><p class="meta">Index</p><a href="../work/index.html">Work</a><a href="../journal/index.html">Journal</a><a href="../index.html#about">About</a><a href="../index.html#contact">Contact</a></div>
+        <div><p class="meta">Elsewhere</p><a href="https://github.com/powerpan" target="_blank" rel="noopener">GitHub</a><a href="index.html">Work</a><a href="../journal/index.html">Journal</a><a href="../index.html#contact">Contact</a></div>
+        <div><p class="meta">Settings</p><button type="button" data-theme-toggle aria-pressed="false"><span class="theme-switch-label">Night</span> paper</button><br><button type="button" data-motion-toggle aria-pressed="true">Motion: on</button><br><button type="button" class="sound-text" data-sound-toggle aria-pressed="false">Sound: off</button>
+<label class="volume"><span class="meta">Volume</span><input class="ink-range" type="range" min="0" max="1" step="0.05" value="0.6" data-sound-volume aria-label="Music volume"></label></div>
+        <div><p class="meta">Colophon</p><p>© 2026 Eric. Set in Instrument Serif &amp; Inter Tight. Ink simulated live in WebGL2.</p><a href="#" data-top>Back to top ↑</a></div>
+    </div>
+</footer>
+<p class="sr-only" role="status" aria-live="polite" data-sound-status></p>
+<script src="../js/ink-fluid.js"></script>
+<script src="../js/ink.js"></script>
+</body>
+</html>

@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Civilization Z — Eric</title>
+<meta name="description" content="I wanted to put AI decisions on a map where their consequences are visible. Civilization Z is my attempt: three civilizations set out from their capitals to explore, build and compete, while I can switch between watching and taking command.">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#ede8df">
+<script>(()=>{const r=document.documentElement;let t,m;try{t=localStorage.getItem('ink-theme');m=localStorage.getItem('ink-motion')}catch(e){}t=t||(matchMedia('(prefers-color-scheme: dark)').matches?'night':'day');if(matchMedia('(prefers-reduced-motion: reduce)').matches)m='off';r.dataset.theme=t;r.dataset.motion=m||'on'})()</script>
+<link rel="preload" href="../assets/fonts/instrument-serif-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../css/ink.css">
+<link rel="stylesheet" href="../css/languages.css">
+<link rel="stylesheet" href="../css/sound.css">
+<script src="../js/ink-sound.js" defer></script>
+<noscript><style>[data-sound-toggle],.volume{display:none!important}</style></noscript>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='26' fill='%23f6401a'/%3E%3Ccircle cx='40' cy='26' r='14' fill='%232337f2' fill-opacity='.85'/%3E%3C/svg%3E">
+<link rel="alternate" hreflang="zh-CN" href="../zh/work/project-01.html">
+</head>
+<body data-ink="quiet">
+<canvas id="ink" aria-hidden="true"></canvas>
+<div class="grain" aria-hidden="true"></div>
+
+<div class="cursor" aria-hidden="true"><span class="cursor-label"></span></div>
+<a class="sr-only" href="#main">Skip to content</a>
+<header class="masthead">
+    <a class="brand" href="../index.html" aria-label="Eric — home">Eric<sup>®</sup></a>
+    <div class="masthead-meta"><span>Portfolio &amp; Journal</span><a href="../zh/work/project-01.html" data-language-switch hreflang="zh-CN" lang="zh-CN" aria-label="Read this page in Chinese">中文</a></div>
+    <div class="masthead-right">
+        <nav class="masthead-nav" aria-label="Primary">
+            <a href="../work/index.html" aria-current="page">Work</a><a href="../journal/index.html">Journal</a><a href="../index.html#about">About</a><a href="../index.html#contact">Contact</a>
+        </nav>
+        <button class="sound-switch" type="button" data-sound-toggle aria-pressed="false" aria-label="Play background music"><canvas class="sound-wave" aria-hidden="true"></canvas><span class="sound-label">Sound</span></button>
+        <button class="theme-switch" type="button" data-theme-toggle aria-pressed="false"><span class="theme-switch-dot" aria-hidden="true"></span><span class="theme-switch-label">Night</span></button>
+        <button class="menu-button" type="button" aria-expanded="false" aria-controls="menu">Menu</button>
+    </div>
+</header>
+<nav class="menu" id="menu" aria-label="Menu">
+    <a href="../index.html">Index</a><a href="../work/index.html"><em>Work</em></a><a href="../journal/index.html">Journal</a><a href="../index.html#contact"><em>Contact</em></a>
+    <div class="menu-foot meta"><span>Local <span data-clock>--:--:--</span></span><button class="sound-switch" type="button" data-sound-toggle aria-pressed="false" aria-label="Play background music"><canvas class="sound-wave" aria-hidden="true"></canvas><span class="sound-label">Sound</span></button><a href="../zh/work/project-01.html" data-language-switch hreflang="zh-CN" lang="zh-CN" aria-label="Read this page in Chinese">中文</a></div>
+</nav>
+<main id="main">
+<div class="page"><p class="kicker"><a href="index.html">Work</a> / AI Agents · Strategy Game · Simulation</p>
+    <header class="case-hero"><h1 data-split>Civilization Z</h1><p class="lede rise">I wanted to put AI decisions on a map where their consequences are visible. Civilization Z is my attempt: three civilizations set out from their capitals to explore, build and compete, while I can switch between watching and taking command.</p></header><dl class="case-facts rise"><div><dt class="meta">Role</dt><dd>Game &amp; AI application development</dd></div><div><dt class="meta">Status</dt><dd>Playable locally · In development</dd></div><div><dt class="meta">Stack</dt><dd>React / TypeScript / Fastify</dd></div><div><dt class="meta">Index</dt><dd>No. 01</dd></div></dl>
+    <div class="case-media"><img src="../assets/projects/civilization-z/menu.webp" alt="Civilization Z main menu over an ancient city landscape, with spectating, custom world, challenge, tutorial and save options" width="1920" height="1080" loading="eager" decoding="async"></div><div class="case-body"><section class="case-section"><div class="case-section-label"><span class="num">01</span><span class="meta">Section</span></div>
+            <div class="case-section-copy prose"><h2 data-split>Why I wanted to build an AI civilization sandbox</h2><p class="civ-provenance">These are screenshots from the running game, using manually staged scenarios to show different parts of the experience. They are not an autonomous AI playthrough. The images retain the original Chinese UI; select one to view it at full size.</p>
+<div class="detail-section-label">01 / THE WORLD</div>
+
+            <p class="detail-text">If several AIs developed on the same continent, how would they choose their paths? That is the question I most wanted to explore with Civilization Z. I gave three civilizations a default 24 × 18 hex map and a capital each, with fog to explore, cities to establish and resources to gather. They act in sequence before a shared settlement phase, with a default limit of 60 rounds.</p>
+            <p class="detail-text">What interests me is how those choices change the map: where a city goes, how resources are split between research and expansion, and when to prepare for conflict. I kept a free offline rule-based strategy so the game can run without an API; it does not call a language model. Connecting DeepSeek → Jev lets me observe model decisions under the same rules. For now, it is a single-player sandbox running in a local browser.</p><div class="badges"><span class="tag">TypeScript</span><span class="tag">React 19</span><span class="tag">Canvas 2D</span><span class="tag">Fastify</span><span class="tag">JSON Schema / AJV</span><span class="tag">DeepSeek</span><span class="tag">Jev</span></div><figure class="rise"><img src="../assets/projects/civilization-z/world.webp" alt="Civilization Z hex map showing three civilizations, cities, borders and units in a manually staged scenario" width="1920" height="1080" loading="lazy" decoding="async"><figcaption>One shared continent: mountain passes, mineral belts and borders shape where the three civilizations can grow.</figcaption></figure></div></section><section class="case-section"><div class="case-section-label"><span class="num">02</span><span class="meta">Section</span></div>
+            <div class="case-section-copy prose"><h2 data-split>Making city development a choice</h2><div class="detail-section-label">02 / CITY BUILDING</div>
+
+            <p class="detail-text">I wanted a city to need attention after it was founded. Population, food and production set its pace; granaries, workshops, libraries and new units take multiple rounds. Build another settler first, or invest in a library? Limited production time gives that choice weight.</p>
+            <p class="detail-text">Research, industry and military specializations give cities different roles, alongside limited construction investment. I also kept direct controls: during a takeover, players can select a city to arrange production or a unit to set a destination and inspect attack risks. Natural language is useful for expressing intent, but it should not be required for every move.</p><figure class="rise"><img src="../assets/projects/civilization-z/city.webp" alt="Civilization Z city drawer showing population, yields, workshop production and city specialization" width="1920" height="1080" loading="lazy" decoding="async"><figcaption>Building a city: population, production, construction and specialization give each settlement a role.</figcaption></figure></div></section><section class="case-section"><div class="case-section-label"><span class="num">03</span><span class="meta">Section</span></div>
+            <div class="case-section-copy prose"><h2 data-split>Leaving room for different paths</h2><div class="detail-section-label">03 / VICTORY PATHS</div>
+
+            <p class="detail-text">Victory conditions give development a purpose. I set up two ways to finish early: a science victory requires Scientific Method followed by its research project; conquest requires control of every initial capital at once. If neither happens before the round limit, the game is decided by a combined score.</p>
+            <p class="detail-text">I want these routes to pull against one another. Research depends on city output, expansion requires construction, and preparing for war uses resources too. Shared limits on time and resources let an immediate choice shape the later game. Giving each route a fair chance is still part of the balancing work ahead.</p><figure class="rise"><img src="../assets/projects/civilization-z/research.webp" alt="Civilization Z research drawer showing Scientific Method progress, science yield and completed technologies" width="1920" height="1080" loading="lazy" decoding="async"><figcaption>The path of knowledge: technologies unlock over time, with research and city development shaping the route ahead.</figcaption></figure></div></section><section class="case-section"><div class="case-section-label"><span class="num">04</span><span class="meta">Section</span></div>
+            <div class="case-section-copy prose"><h2 data-split>Taking part without having to take over</h2><div class="detail-section-label">04 / PLAYER AGENCY</div>
+
+            <p class="detail-text">When AI simply keeps playing, it can be hard to tell why it stopped or what it is working toward. I added map action bubbles, a location-aware chronicle and public goals to make spectating easier to follow. Intentions stay separate from results. Viewers can follow a civilization or region and pause automatically at events such as a declaration of war or an attack on a capital.</p>
+            <p class="detail-text">I split participation into two levels. A lighter intervention gives a civilization direction for five AI decisions, such as prioritizing research or defending territory, while leaving individual moves to it. For direct control, players can take over at its next eligible action phase. Leaving ends that phase, with AI returning in the following round.</p><figure class="rise"><img src="../assets/projects/civilization-z/goals.webp" alt="Civilization Z strategy drawer showing declared research, settlement and unit-training goals for three civilizations" width="1920" height="1080" loading="lazy" decoding="async"><figcaption>Three ambitions: declared goals sit side by side, ready to compare with what each civilization does next.</figcaption></figure></div></section><section class="case-section"><div class="case-section-label"><span class="num">05</span><span class="meta">Section</span></div>
+            <div class="case-section-copy prose"><h2 data-split>Letting the map tell the story</h2><div class="detail-section-label">05 / ON THE MAP</div>
+
+            <p class="detail-text">I would rather a viewer remember a fight at a mountain pass or a city changing hands than another few lines in a log. Units move under terrain, movement and occupancy rules; the engine resolves attacks and counterattacks. The interface then turns those events into paths, damage numbers and bubbles. Even a long march has visible progress on the map.</p>
+            <p class="detail-text">I chose miniature cities, hand-painted terrain and an antique-map palette, with city art changing as population grows. Drawers open only when needed, leaving most of the screen to the world. Resource and military overlays, labels and text sizing are adjustable. Rather than display everything at once, I want the current situation to be readable at a glance.</p><figure class="rise"><img src="../assets/projects/civilization-z/combat.webp" alt="Civilization Z units fighting near a mountain pass, with an attack bubble and damage numbers for both sides" width="1920" height="1080" loading="lazy" decoding="async"><figcaption>Clash at the pass: the location, losses on both sides and action feedback appear directly on the map.</figcaption></figure></div></section><section class="case-section"><div class="case-section-label"><span class="num">06</span><span class="meta">Section</span></div>
+            <div class="case-section-copy prose"><h2 data-split>Connecting model decisions to a rule engine</h2><div class="detail-section-label">06 / THE DECISION PIPELINE</div>
+
+            <p class="detail-text">The engineering separation I care most about is between a model expressing intent and the game changing state. TypeScript workspaces hold the rule engine, AI adapter, shared contracts, Fastify server and React frontend. Model decisions follow the four stages below. The offline strategy produces candidate commands directly, but uses the same rule validation.</p>
+            <ol class="civ-pipeline">
+                <li class="civ-pipeline-step">
+                    <div class="civ-pipeline-index">01 / OBSERVE</div>
+                    <h3 class="civ-pipeline-title">Scoped observation</h3>
+                    <p class="civ-pipeline-desc">Each civilization receives its own state, visible map and private memory. Spectators can see the whole world; a model decides from its civilization's perspective.</p>
+                </li>
+                <li class="civ-pipeline-step">
+                    <div class="civ-pipeline-index">02 / TRANSLATE</div>
+                    <h3 class="civ-pipeline-title">Strategy &amp; translation</h3>
+                    <p class="civ-pipeline-desc">DeepSeek proposes actions and Jev translates them into structured commands tied to source text spans. Plans, quotations and unresolved text are not executed directly.</p>
+                </li>
+                <li class="civ-pipeline-step">
+                    <div class="civ-pipeline-index">03 / VALIDATE</div>
+                    <h3 class="civ-pipeline-title">Server adjudication</h3>
+                    <p class="civ-pipeline-desc">The server checks the run, state version and control authority. The rule engine then validates commands and resolves movement, construction and combat.</p>
+                </li>
+                <li class="civ-pipeline-step">
+                    <div class="civ-pipeline-index">04 / RECORD</div>
+                    <h3 class="civ-pipeline-title">Facts &amp; feedback</h3>
+                    <p class="civ-pipeline-desc">Execution results become events that drive the map, chronicle and next observation. Blocked actions retain their reasons for explanation and debugging.</p>
+                </li>
+            </ol>
+            <p class="detail-text">Human natural-language commands also go through preview, confirmation and execution. Loading a save creates a new runtime instance so old requests cannot change the restored world. Model budgets are tracked separately, and loading an earlier save does not reset consumed calls. These are quiet details, but they matter when pause, takeover and saving need to work together reliably.</p>
+            <p class="detail-text">I kept pause, single-step and speed controls in the viewing experience. Sometimes I just want to watch development; sometimes I want to stop and understand one decision. Saves let a game continue, while the chronicle recalls key events. A full replay of model responses is not implemented yet; that is a different problem from restoring a game.</p></div></section><section class="case-section"><div class="case-section-label"><span class="num">07</span><span class="meta">Section</span></div>
+            <div class="case-section-copy prose"><h2 data-split>Next, I want to make each game worth following</h2><div class="detail-section-label">07 / CURRENT STATE</div>
+
+            <p class="detail-text">Around the core game, I added a main menu, an opening film, background music and a five-step offline tutorial, plus two fixed challenges: defending a capital and bringing a trailing civilization back into contention. I want a first-time player to know where to start without first learning the model configuration or a long list of rules.</p>
+            <p class="detail-text">My next focus is the pace of a whole game: whether the early development phase stays interesting, whether war and research both offer opportunities, and whether the later rounds still have decisions worth stepping into. Finishing a game is the baseline. I want it to let me observe AI decisions and give someone a reason to watch the next round.</p>
+            <p class="detail-text">For now, I am continuing it as a local single-player project; I have not opened a public online demo or released the source. Offline play has no model-call costs. Real-model play and natural-language translation require provider configuration and involve API costs.</p></div></section></div>
+    <a class="next-case" href="project-02.html" data-cursor="Next"><span class="meta">Next project — 02</span><strong>Trading Simulator</strong></a></div>
+</main>
+<footer class="colophon">
+    <div class="colophon-name" data-fit aria-hidden="true">Eric</div>
+    <div class="colophon-grid">
+        <div><p class="meta">Index</p><a href="../work/index.html">Work</a><a href="../journal/index.html">Journal</a><a href="../index.html#about">About</a><a href="../index.html#contact">Contact</a></div>
+        <div><p class="meta">Elsewhere</p><a href="https://github.com/powerpan" target="_blank" rel="noopener">GitHub</a><a href="index.html">Work</a><a href="../journal/index.html">Journal</a><a href="../index.html#contact">Contact</a></div>
+        <div><p class="meta">Settings</p><button type="button" data-theme-toggle aria-pressed="false"><span class="theme-switch-label">Night</span> paper</button><br><button type="button" data-motion-toggle aria-pressed="true">Motion: on</button><br><button type="button" class="sound-text" data-sound-toggle aria-pressed="false">Sound: off</button>
+<label class="volume"><span class="meta">Volume</span><input class="ink-range" type="range" min="0" max="1" step="0.05" value="0.6" data-sound-volume aria-label="Music volume"></label></div>
+        <div><p class="meta">Colophon</p><p>© 2026 Eric. Set in Instrument Serif &amp; Inter Tight. Ink simulated live in WebGL2.</p><a href="#" data-top>Back to top ↑</a></div>
+    </div>
+</footer>
+<p class="sr-only" role="status" aria-live="polite" data-sound-status></p>
+<script src="../js/ink-fluid.js"></script>
+<script src="../js/ink.js"></script>
+</body>
+</html>

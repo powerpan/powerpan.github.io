@@ -2,27 +2,27 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://erichz.site/zh/</loc>
-    <lastmod>2026-10-08</lastmod>
+    <lastmod>2026-11-03</lastmod>
   </url>
   <url>
     <loc>https://erichz.site/en/</loc>
-    <lastmod>2026-10-08</lastmod>
+    <lastmod>2026-11-03</lastmod>
   </url>
   <url>
     <loc>https://erichz.site/blog/</loc>
-    <lastmod>2026-10-08</lastmod>
+    <lastmod>2026-11-03</lastmod>
   </url>
   <url>
     <loc>https://erichz.site/en/blog/</loc>
-    <lastmod>2026-10-08</lastmod>
+    <lastmod>2026-11-03</lastmod>
   </url>
   <url>
     <loc>https://erichz.site/blog/topics/ai</loc>
-    <lastmod>2026-10-08</lastmod>
+    <lastmod>2026-11-03</lastmod>
   </url>
   <url>
     <loc>https://erichz.site/en/blog/topics/ai</loc>
-    <lastmod>2026-10-08</lastmod>
+    <lastmod>2026-11-03</lastmod>
   </url>
   <url>
     <loc>https://erichz.site/blog/topics/agent</loc>
@@ -63,6 +63,14 @@
   <url>
     <loc>https://erichz.site/en/blog/topics/essay</loc>
     <lastmod>2026-05-25</lastmod>
+  </url>
+  <url>
+    <loc>https://erichz.site/blog/gaac-kv-cache-bandwidth</loc>
+    <lastmod>2026-11-03</lastmod>
+  </url>
+  <url>
+    <loc>https://erichz.site/en/blog/gaac-kv-cache-bandwidth</loc>
+    <lastmod>2026-11-03</lastmod>
   </url>
   <url>
     <loc>https://erichz.site/blog/physics-benchmark-grading</loc>

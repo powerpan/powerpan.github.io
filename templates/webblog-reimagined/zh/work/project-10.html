@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>YOLO26 Multimodal — Eric</title>
+<meta name="description" content="基于 YOLO26 的多模态视觉检测系统，通过可复用的 Backbone 与 Neck 架构，设计三个独立检测头，在单次前向推理中同时输出目标检测、关键点定位与实例分割三类结果。">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#ede8df">
+<script>(()=>{const r=document.documentElement;let t,m;try{t=localStorage.getItem('ink-theme');m=localStorage.getItem('ink-motion')}catch(e){}t=t||(matchMedia('(prefers-color-scheme: dark)').matches?'night':'day');if(matchMedia('(prefers-reduced-motion: reduce)').matches)m='off';r.dataset.theme=t;r.dataset.motion=m||'on'})()</script>
+<link rel="preload" href="../../assets/fonts/instrument-serif-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../css/ink.css">
+<link rel="stylesheet" href="../../css/languages.css">
+<link rel="stylesheet" href="../../css/sound.css">
+<script src="../../js/ink-sound.js" defer></script>
+<noscript><style>[data-sound-toggle],.volume{display:none!important}</style></noscript>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='26' fill='%23f6401a'/%3E%3Ccircle cx='40' cy='26' r='14' fill='%232337f2' fill-opacity='.85'/%3E%3C/svg%3E">
+<link rel="alternate" hreflang="en" href="../../work/project-10.html">
+</head>
+<body data-ink="quiet">
+<canvas id="ink" aria-hidden="true"></canvas>
+<div class="grain" aria-hidden="true"></div>
+
+<div class="cursor" aria-hidden="true"><span class="cursor-label"></span></div>
+<a class="sr-only" href="#main">跳至正文</a>
+<header class="masthead">
+    <a class="brand" href="../index.html" aria-label="Eric — 首页">Eric<sup>®</sup></a>
+    <div class="masthead-meta"><span>作品与手记</span><a href="../../work/project-10.html" data-language-switch hreflang="en" lang="en" aria-label="Read this page in English">EN</a></div>
+    <div class="masthead-right">
+        <nav class="masthead-nav" aria-label="主导航">
+            <a href="../work/index.html" aria-current="page">项目</a><a href="../journal/index.html">文章</a><a href="../index.html#about">关于</a><a href="../index.html#contact">联系</a>
+        </nav>
+        <button class="sound-switch" type="button" data-sound-toggle aria-pressed="false" aria-label="播放背景音乐"><canvas class="sound-wave" aria-hidden="true"></canvas><span class="sound-label">音乐</span></button>
+        <button class="theme-switch" type="button" data-theme-toggle aria-pressed="false"><span class="theme-switch-dot" aria-hidden="true"></span><span class="theme-switch-label">夜间</span></button>
+        <button class="menu-button" type="button" aria-expanded="false" aria-controls="menu">菜单</button>
+    </div>
+</header>
+<nav class="menu" id="menu" aria-label="菜单">
+    <a href="../index.html">目录</a><a href="../work/index.html"><em>项目</em></a><a href="../journal/index.html">文章</a><a href="../index.html#contact"><em>联系</em></a>
+    <div class="menu-foot meta"><span>本地 <span data-clock>--:--:--</span></span><button class="sound-switch" type="button" data-sound-toggle aria-pressed="false" aria-label="播放背景音乐"><canvas class="sound-wave" aria-hidden="true"></canvas><span class="sound-label">音乐</span></button><a href="../../work/project-10.html" data-language-switch hreflang="en" lang="en" aria-label="Read this page in English">EN</a></div>
+</nav>
+<main id="main">
+<div class="page"><p class="kicker"><a href="index.html">项目</a> / AI Vision · YOLO26 · Multi-head</p>
+    <header class="case-hero"><h1 data-split>YOLO26 Multimodal</h1><p class="lede rise">基于 YOLO26 的多模态视觉检测系统，通过可复用的 Backbone 与 Neck 架构，设计三个独立检测头，在单次前向推理中同时输出目标检测、关键点定位与实例分割三类结果。</p></header><dl class="case-facts rise"><div><dt class="meta">Role</dt><dd>独立开发者</dd></div><div><dt class="meta">Duration</dt><dd>3 months</dd></div><div><dt class="meta">Stack</dt><dd>YOLO26 / PyTorch</dd></div><div><dt class="meta">编号</dt><dd>No. 10</dd></div></dl>
+    <div class="case-media"><img src="../../assets/vfx/project-atlas.jpg" alt="原站概念可视化" width="1536" height="1024" loading="eager" decoding="async"></div><div class="case-body"><section class="case-section"><div class="case-section-label"><span class="num">01</span><span class="meta">章节</span></div>
+            <div class="case-section-copy prose"><h2 data-split>一个模型，三重感知</h2><div class="detail-section-label">Overview</div>
+
+            <p class="detail-text">在实际视觉检测场景中，我们往往需要同时获取目标的<strong class="">位置</strong>（检测框）、<strong class="">形态</strong>（关键点）和<strong class="">轮廓</strong>（分割掩码）。传统方案通常需要为每种任务单独训练一个模型，再通过多模型级联或集成的方式组合输出——这不仅增加了系统复杂度，也带来了不可忽视的推理延迟。</p>
+            <p class="detail-text">YOLO26 Multimodal 项目的核心思路是：利用 YOLO26 的<strong class="">可复用 Backbone 和 Neck</strong> 提取统一的多尺度特征，然后设计三个独立的 Detection Head、Keypoint Head 和 Segmentation Head，分别指向各自的损失函数和输出格式。整个系统在<strong class="">单次前向推理</strong>中同时输出三类结果，实现了「一次计算，多重感知」。</p><div class="badges"></div></div></section><section class="case-section"><div class="case-section-label"><span class="num">02</span><span class="meta">章节</span></div>
+            <div class="case-section-copy prose"><h2 data-split>多头架构设计</h2><div class="detail-section-label">Architecture</div>
+
+            <p class="detail-text">整体架构遵循 YOLO 系列的 One-Stage 设计哲学，但在 Head 层做了关键创新。传统 YOLO 的 Head 通常只负责单一的检测任务（bounding box + class），而我们将 Head 拆分为三个功能独立的分支，每个分支有自己的输出通道数、激活函数和损失计算逻辑。</p>
+            <p class="detail-text">这种设计的最大优势在于<strong class="">特征复用</strong>——Backbone 和 Neck 提取的特征被三个 Head 共享，避免了重复计算。同时，每个 Head 可以独立训练和微调，互不干扰。当只需要其中某一类输出时，可以单独关闭其他 Head，实现灵活的功能裁剪。</p></div></section><section class="case-section"><div class="case-section-label"><span class="num">03</span><span class="meta">章节</span></div>
+            <div class="case-section-copy prose"><h2 data-split>可复用的特征提取基座</h2><div class="detail-section-label">Backbone &amp; Neck</div>
+
+            <p class="detail-text">YOLO26 的 Backbone 基于 CSP（Cross Stage Partial）架构，采用 CBS（Conv + BN + SiLU）模块作为基础构建单元，通过 C2f 模块实现跨阶段的特征融合。Neck 部分使用 PAN-FPN（Path Aggregation Network + Feature Pyramid Network）结构，实现自顶向下和自底向上的双向特征聚合。</p>
+            <p class="detail-text">关键设计：我们在 Neck 的输出端增加了<strong class="">通道分离机制</strong>（Channel Split），将融合后的特征图按通道维度拆分为三组，分别送入 Detection Head、Keypoint Head 和 Segmentation Head。这种轻量级的分离方式比直接复制特征图更高效，参数量仅增加 0.3%，但能有效减少不同任务之间的梯度冲突。</p></div></section><section class="case-section"><div class="case-section-label"><span class="num">04</span><span class="meta">章节</span></div>
+            <div class="case-section-copy prose"><h2 data-split>三头设计详解</h2><div class="detail-section-label">Three Heads</div>
+
+            <div class="detail-features">
+                <div class="detail-feature">
+                    <div class="detail-feature-icon">📦</div>
+                    <div class="detail-feature-title">Detection Head</div>
+                    <div class="detail-feature-desc">负责目标检测任务，输出 bounding box 坐标 (x, y, w, h)、objectness score 和类别概率。采用 Decoupled Head 设计，分类和回归分支独立，使用 CIoU Loss 作为定位损失。Anchor-free 模式，直接回归中心点偏移和宽高，支持 NMS 后处理。</div>
+                </div>
+                <div class="detail-feature">
+                    <div class="detail-feature-icon">🎯</div>
+                    <div class="detail-feature-title">Keypoint Head</div>
+                    <div class="detail-feature-desc">负责关键点检测任务，输出预定义的 K 个关键点坐标及其可见性标签。采用 Heatmap-based 方案，每个关键点生成 H×W 的高斯热力图，使用 MSE Loss 训练。支持可变关键点数量（如人体 17 点、面部 68 点、手部 21 点），通过配置文件灵活定义。</div>
+                </div>
+                <div class="detail-feature">
+                    <div class="detail-feature-icon">🎭</div>
+                    <div class="detail-feature-title">Segmentation Head</div>
+                    <div class="detail-feature-desc">负责实例分割任务，为每个检测到的目标生成像素级掩码。采用 Mask Prototype + Coefficients 方案（类似 YOLACT），轻量级掩码解码器仅需 1ms。输出 128×128 的掩码原型，通过检测头的系数向量线性组合生成最终掩码，兼顾精度与速度。</div>
+                </div>
+            </div></div></section><section class="case-section"><div class="case-section-label"><span class="num">05</span><span class="meta">章节</span></div>
+            <div class="case-section-copy prose"><h2 data-split>多任务损失函数设计</h2><div class="detail-section-label">Loss Function</div>
+
+            <p class="detail-text">三个 Head 各自拥有独立的损失函数，总损失为加权和：</p>
+            <p class="detail-text">
+                L_total = λ₁ · L_det + λ₂ · L_kpt + λ₃ · L_seg
+            </p>
+            <p class="detail-text">其中 <strong class="">L_det</strong> 包括 CIoU 定位损失、分类 BCE 损失和 objectness BCE 损失；<strong class="">L_kpt</strong> 使用关键点热力图的 MSE 损失加上可见性分类损失；<strong class="">L_seg</strong> 采用 Dice Loss + BCE Loss 的组合，对前景/背景不平衡更鲁棒。</p>
+            <p class="detail-text">权重系数通过实验调优确定：λ₁=1.0, λ₂=0.5, λ₃=0.8。我们还引入了<strong class="">动态权重调整</strong>策略——在训练初期增大 L_det 的权重让模型先学会定位，中后期逐步提升 L_kpt 和 L_seg 的权重让模型精细化形态输出。</p></div></section><section class="case-section"><div class="case-section-label"><span class="num">06</span><span class="meta">章节</span></div>
+            <div class="case-section-copy prose"><h2 data-split>训练策略</h2><div class="detail-section-label">Training Strategy</div>
+
+            <p class="detail-text">数据集方面，我们收集并标注了约 <strong class="">12,000 张</strong>多任务标注图像，每张图像同时包含检测框、关键点坐标和分割掩码三类标注。数据增强采用 Mosaic + MixUp + Random HSV + 水平翻转的组合策略，并针对关键点任务做了特殊的几何变换（确保关键点坐标同步变换）。</p>
+            <p class="detail-text">训练采用 AdamW 优化器，初始学习率 1e-3，余弦退火调度。Batch size 为 32（4×8 GPU），总训练 epoch 为 300。前 50 epoch 使用 Warmup + 冻结 Backbone 策略，仅训练 Neck 和三个 Head，加速收敛并避免早期的梯度震荡。</p></div></section><section class="case-section"><div class="case-section-label"><span class="num">07</span><span class="meta">章节</span></div>
+            <div class="case-section-copy prose"><h2 data-split>核心推理代码</h2><div class="detail-section-label">Code</div>
+
+            <p class="detail-text">多头推理的前向传播流程</p>
+            <div class="detail-code-block">
+                <div class="detail-code-header">
+                    <div class="detail-code-dot"></div>
+                    <div class="detail-code-dot"></div>
+                    <div class="detail-code-dot"></div>
+                    <div class="detail-code-title">multimodal_infer.py</div>
+                </div>
+                <pre class="detail-code-body">import torch
+from yolo26 import YOLO26MultiHead
+
+# Initialize multi-head model
+model = YOLO26MultiHead(
+    backbone='cspdarknet26',
+    neck='pan_fpn',
+    heads={'det': 80, 'kpt': 17, 'seg': 32},
+    channel_split=True
+)
+model.load_state_dict(torch.load('yolo26_multi_best.pt'))
+model.eval()
+
+# Single forward pass → triple output
+with torch.no_grad():
+    det_out, kpt_out, seg_out = model(image)
+
+# Detection: boxes + classes
+boxes = det_out.boxes.xyxy    # [N, 4]
+scores = det_out.scores       # [N, num_classes]
+
+# Keypoints: [N, K, 3] (x, y, visibility)
+keypoints = kpt_out.points
+
+# Segmentation: [N, H, W] binary masks
+masks = seg_out.masks
+
+print(f"Det: {len(boxes)} | Kpt: {keypoints.shape[1]} pts | Mask: {masks.shape}")</pre>
+            </div></div></section><section class="case-section"><div class="case-section-label"><span class="num">08</span><span class="meta">章节</span></div>
+            <div class="case-section-copy prose"><h2 data-split>实验结果</h2><div class="detail-section-label">Results</div>
+
+            <dl class="case-facts"><div><dt class="meta">mAP (det)</dt><dd>48.2</dd></div><div><dt class="meta">AP (kpt)</dt><dd>72.6</dd></div><div><dt class="meta">AP (seg)</dt><dd>38.5</dd></div><div><dt class="meta">Latency</dt><dd>18ms</dd></div></dl>
+            <p class="detail-text">与三模型级联方案相比，多头架构在检测 mAP 仅下降 0.8 的情况下，推理速度提升了 <strong class="">2.3 倍</strong>（18ms vs 42ms），参数量减少了 <strong class="">37%</strong>。这证明了特征共享 + 通道分离策略的有效性——在多任务学习中，共享特征提取器不仅能减少计算量，还能通过任务间的正则化效应提升泛化能力。</p></div></section></div>
+    <a class="next-case" href="project-11.html" data-cursor="下一个"><span class="meta">下一个项目 — 11</span><strong>Metro Gate Detection</strong></a></div>
+</main>
+<footer class="colophon">
+    <div class="colophon-name" data-fit aria-hidden="true">Eric</div>
+    <div class="colophon-grid">
+        <div><p class="meta">目录</p><a href="../work/index.html">项目</a><a href="../journal/index.html">文章</a><a href="../index.html#about">关于</a><a href="../index.html#contact">联系</a></div>
+        <div><p class="meta">更多</p><a href="https://github.com/powerpan" target="_blank" rel="noopener">GitHub</a><a href="index.html">项目</a><a href="../journal/index.html">文章</a><a href="../index.html#contact">联系</a></div>
+        <div><p class="meta">设置</p><button type="button" data-theme-toggle aria-pressed="false"><span class="theme-switch-label">夜间</span> 纸色</button><br><button type="button" data-motion-toggle aria-pressed="true">动效：开启</button><br><button type="button" class="sound-text" data-sound-toggle aria-pressed="false">音乐：关闭</button>
+<label class="volume"><span class="meta">音量</span><input class="ink-range" type="range" min="0" max="1" step="0.05" value="0.6" data-sound-volume aria-label="音乐音量"></label></div>
+        <div><p class="meta">关于本站</p><p>© 2026 Eric. 中文标题采用 Noto Serif SC，正文采用 Noto Sans SC。水墨以 WebGL2 实时模拟。</p><a href="#" data-top>返回顶部 ↑</a></div>
+    </div>
+</footer>
+<p class="sr-only" role="status" aria-live="polite" data-sound-status></p>
+<script src="../../js/ink-fluid.js"></script>
+<script src="../../js/ink.js"></script>
+</body>
+</html>

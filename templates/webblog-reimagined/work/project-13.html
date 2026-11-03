@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DataFlow Pipeline — Eric</title>
+<meta name="description" content="Real-time data processing pipeline built on Apache Flink and Kafka, supporting high-throughput stream computing and visual monitoring — a core hands-on project for big data coursework.">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#ede8df">
+<script>(()=>{const r=document.documentElement;let t,m;try{t=localStorage.getItem('ink-theme');m=localStorage.getItem('ink-motion')}catch(e){}t=t||(matchMedia('(prefers-color-scheme: dark)').matches?'night':'day');if(matchMedia('(prefers-reduced-motion: reduce)').matches)m='off';r.dataset.theme=t;r.dataset.motion=m||'on'})()</script>
+<link rel="preload" href="../assets/fonts/instrument-serif-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../css/ink.css">
+<link rel="stylesheet" href="../css/languages.css">
+<link rel="stylesheet" href="../css/sound.css">
+<script src="../js/ink-sound.js" defer></script>
+<noscript><style>[data-sound-toggle],.volume{display:none!important}</style></noscript>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='26' fill='%23f6401a'/%3E%3Ccircle cx='40' cy='26' r='14' fill='%232337f2' fill-opacity='.85'/%3E%3C/svg%3E">
+<link rel="alternate" hreflang="zh-CN" href="../zh/work/project-13.html">
+</head>
+<body data-ink="quiet">
+<canvas id="ink" aria-hidden="true"></canvas>
+<div class="grain" aria-hidden="true"></div>
+
+<div class="cursor" aria-hidden="true"><span class="cursor-label"></span></div>
+<a class="sr-only" href="#main">Skip to content</a>
+<header class="masthead">
+    <a class="brand" href="../index.html" aria-label="Eric — home">Eric<sup>®</sup></a>
+    <div class="masthead-meta"><span>Portfolio &amp; Journal</span><a href="../zh/work/project-13.html" data-language-switch hreflang="zh-CN" lang="zh-CN" aria-label="Read this page in Chinese">中文</a></div>
+    <div class="masthead-right">
+        <nav class="masthead-nav" aria-label="Primary">
+            <a href="../work/index.html" aria-current="page">Work</a><a href="../journal/index.html">Journal</a><a href="../index.html#about">About</a><a href="../index.html#contact">Contact</a>
+        </nav>
+        <button class="sound-switch" type="button" data-sound-toggle aria-pressed="false" aria-label="Play background music"><canvas class="sound-wave" aria-hidden="true"></canvas><span class="sound-label">Sound</span></button>
+        <button class="theme-switch" type="button" data-theme-toggle aria-pressed="false"><span class="theme-switch-dot" aria-hidden="true"></span><span class="theme-switch-label">Night</span></button>
+        <button class="menu-button" type="button" aria-expanded="false" aria-controls="menu">Menu</button>
+    </div>
+</header>
+<nav class="menu" id="menu" aria-label="Menu">
+    <a href="../index.html">Index</a><a href="../work/index.html"><em>Work</em></a><a href="../journal/index.html">Journal</a><a href="../index.html#contact"><em>Contact</em></a>
+    <div class="menu-foot meta"><span>Local <span data-clock>--:--:--</span></span><button class="sound-switch" type="button" data-sound-toggle aria-pressed="false" aria-label="Play background music"><canvas class="sound-wave" aria-hidden="true"></canvas><span class="sound-label">Sound</span></button><a href="../zh/work/project-13.html" data-language-switch hreflang="zh-CN" lang="zh-CN" aria-label="Read this page in Chinese">中文</a></div>
+</nav>
+<main id="main">
+<div class="page"><p class="kicker"><a href="index.html">Work</a> / Big Data · Flink · Kafka</p>
+    <header class="case-hero"><h1 data-split>DataFlow Pipeline</h1><p class="lede rise">Real-time data processing pipeline built on Apache Flink and Kafka, supporting high-throughput stream computing and visual monitoring — a core hands-on project for big data coursework.</p></header><dl class="case-facts rise"><div><dt class="meta">Role</dt><dd>Core Developer</dd></div><div><dt class="meta">Duration</dt><dd>3 months</dd></div><div><dt class="meta">Team</dt><dd>4 People</dd></div><div><dt class="meta">Index</dt><dd>No. 13</dd></div></dl>
+    <div class="case-media"><img src="../assets/vfx/project-atlas.jpg" alt="Concept visualization from the original site" width="1536" height="1024" loading="eager" decoding="async"></div><div class="case-body"><section class="case-section"><div class="case-section-label"><span class="num">01</span><span class="meta">Section</span></div>
+            <div class="case-section-copy prose"><h2 data-split>Real-Time Streaming Data Platform</h2><div class="detail-section-label">Overview</div>
+
+            <p class="detail-text">DataFlow Pipeline is a real-time data processing platform built on <strong class="">Apache Flink + Kafka</strong>. Users configure data processing tasks through a Vue frontend, which are orchestrated into DAG graphs and executed by the Flink engine, with Kafka as the message middleware for efficient data flow.</p>
+            <p class="detail-text">The platform supports multiple data source integrations (MySQL, Redis, Kafka Topics) with built-in operators for data cleaning, aggregation, and window computation. The Java backend provides RESTful APIs for the frontend, with Redis caching for real-time task status queries. As a core big data course project, it successfully processed <strong class="">million-level daily</strong> simulated data streams.</p><div class="badges"><span class="tag">Java</span><span class="tag">Python</span><span class="tag">Apache Flink</span><span class="tag">Apache Kafka</span><span class="tag">MySQL</span><span class="tag">Redis</span><span class="tag">Docker</span><span class="tag">Vue</span></div></div></section><section class="case-section"><div class="case-section-label"><span class="num">02</span><span class="meta">Section</span></div>
+            <div class="case-section-copy prose"><h2 data-split>Architecture</h2><div class="detail-section-label">Tech Stack</div>
+
+            <p class="detail-text">Full-stack big data solution with stream computing + visual monitoring</p></div></section><section class="case-section"><div class="case-section-label"><span class="num">03</span><span class="meta">Section</span></div>
+            <div class="case-section-copy prose"><h2 data-split>Core Capabilities</h2><div class="detail-section-label">Key Features</div>
+
+            <div class="detail-features">
+                <div class="detail-feature">
+                    <div class="detail-feature-icon">🔄</div>
+                    <div class="detail-feature-title">Stream Processing Engine</div>
+                    <div class="detail-feature-desc">High-performance stream processing engine based on Flink, supporting window computation, state management, and Exactly-Once semantic guarantees</div>
+                </div>
+                <div class="detail-feature">
+                    <div class="detail-feature-icon">📊</div>
+                    <div class="detail-feature-title">Visual Monitoring</div>
+                    <div class="detail-feature-desc">Vue frontend displaying real-time task status, throughput, and latency metrics with task start/stop and configuration management</div>
+                </div>
+                <div class="detail-feature">
+                    <div class="detail-feature-icon">🛡️</div>
+                    <div class="detail-feature-title">Fault Tolerance and Recovery</div>
+                    <div class="detail-feature-desc">Automatic task failure recovery based on Flink Checkpoint mechanism, with Kafka persistent messaging ensuring zero data loss</div>
+                </div>
+                <div class="detail-feature">
+                    <div class="detail-feature-icon">📈</div>
+                    <div class="detail-feature-title">Multidimensional Analytics</div>
+                    <div class="detail-feature-desc">Built-in aggregation, filtering, Join, window and other data processing operators with custom UDF extension support</div>
+                </div>
+            </div></div></section><section class="case-section"><div class="case-section-label"><span class="num">04</span><span class="meta">Section</span></div>
+            <div class="case-section-copy prose"><h2 data-split>Performance Metrics</h2><div class="detail-section-label">Performance</div>
+
+            <dl class="case-facts"><div><dt class="meta">TPS</dt><dd>500K+</dd></div><div><dt class="meta">Availability</dt><dd>99.9%</dd></div><div><dt class="meta">Latency</dt><dd>100ms</dd></div><div><dt class="meta">Jobs</dt><dd>15+</dd></div></dl></div></section><section class="case-section"><div class="case-section-label"><span class="num">05</span><span class="meta">Section</span></div>
+            <div class="case-section-copy prose"><h2 data-split>Flink Streaming Job</h2><div class="detail-section-label">Code Sample</div>
+
+            <p class="detail-text">Core Flink job definition for real-time Kafka data stream processing</p>
+            <div class="detail-code-block">
+                <div class="detail-code-header">
+                    <div class="detail-code-dot"></div>
+                    <div class="detail-code-dot"></div>
+                    <div class="detail-code-dot"></div>
+                    <div class="detail-code-title">StreamJob.java</div>
+                </div>
+                <pre class="detail-code-body">import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
+import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer;
+
+// Define the Flink streaming job
+public class StreamJob {
+    public static void main(String[] args) throws Exception {
+        StreamExecutionEnvironment env =
+            StreamExecutionEnvironment.getExecutionEnvironment();
+
+        // Kafka source with auto-commit
+        FlinkKafkaConsumer&lt;String&gt; consumer =
+            new FlinkKafkaConsumer&lt;&gt;(
+                "sensor-data",
+                new SimpleStringSchema(),
+                kafkaProps
+            );
+
+        env.addSource(consumer)
+           .map(new DataParser())
+           .keyBy(DataEvent::getDeviceId)
+           .window(TumblingProcessingTimeWindows.of(
+               Time.seconds(10)))
+           .aggregate(new AvgAggregator())
+           .addSink(new MySQLSink());
+
+        env.execute("DataFlow Pipeline");
+    }
+}</pre>
+            </div></div></section></div>
+    <a class="next-case" href="project-14.html" data-cursor="Next"><span class="meta">Next project — 14</span><strong>PixelMind SDK</strong></a></div>
+</main>
+<footer class="colophon">
+    <div class="colophon-name" data-fit aria-hidden="true">Eric</div>
+    <div class="colophon-grid">
+        <div><p class="meta">Index</p><a href="../work/index.html">Work</a><a href="../journal/index.html">Journal</a><a href="../index.html#about">About</a><a href="../index.html#contact">Contact</a></div>
+        <div><p class="meta">Elsewhere</p><a href="https://github.com/powerpan" target="_blank" rel="noopener">GitHub</a><a href="index.html">Work</a><a href="../journal/index.html">Journal</a><a href="../index.html#contact">Contact</a></div>
+        <div><p class="meta">Settings</p><button type="button" data-theme-toggle aria-pressed="false"><span class="theme-switch-label">Night</span> paper</button><br><button type="button" data-motion-toggle aria-pressed="true">Motion: on</button><br><button type="button" class="sound-text" data-sound-toggle aria-pressed="false">Sound: off</button>
+<label class="volume"><span class="meta">Volume</span><input class="ink-range" type="range" min="0" max="1" step="0.05" value="0.6" data-sound-volume aria-label="Music volume"></label></div>
+        <div><p class="meta">Colophon</p><p>© 2026 Eric. Set in Instrument Serif &amp; Inter Tight. Ink simulated live in WebGL2.</p><a href="#" data-top>Back to top ↑</a></div>
+    </div>
+</footer>
+<p class="sr-only" role="status" aria-live="polite" data-sound-status></p>
+<script src="../js/ink-fluid.js"></script>
+<script src="../js/ink.js"></script>
+</body>
+</html>
