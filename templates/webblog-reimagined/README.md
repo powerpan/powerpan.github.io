@@ -17,7 +17,7 @@ python3 -m http.server 4191 --bind 127.0.0.1
 
 也可以直接打开 `index.html` 或 `zh/index.html`。
 
-每种语言均包含 1 个首页、1 个项目列表、15 个项目页、1 个文章列表、40 篇文章和 6 个专题页，共 **128 页**。
+每种语言均包含 1 个首页、1 个项目列表、15 个项目页、1 个文章列表、41 篇文章和 6 个专题页，共 **130 页**。2026-11-03 新增《模型装得下，为什么还是跑不快？》，已按新版前端上线；130页正文、22个静态资源及双语文章入口完成正式域名核验。
 
 ## 设计与内容
 
@@ -104,9 +104,9 @@ node tools/preview-production.cjs
 
 4191 的设计预览继续禁止收录；4192 的生产包预览可检查正式路径。Cloudflare 的 `pages.dev` 域名通过 `_headers` 禁止收录，正式域名页面可索引。静态跳转和头部配置分别依据 [Pages Redirects](https://developers.cloudflare.com/pages/configuration/redirects/) 与 [Headers](https://developers.cloudflare.com/pages/configuration/headers/)，多语言声明依据 [Google hreflang 文档](https://developers.google.com/search/docs/specialty/international/localized-versions)。本地服务器模拟这些路由用于验收，实际 CDN 行为仍需发布后检查。
 
-本次将验收后的 `dist/` 直接上传至既有 Cloudflare Pages 项目 `powerpan-github-io`，没有提交、推送或合并 Git。英文正式入口为 <https://erichz.site/en/>，中文为 <https://erichz.site/zh/>。
+首次换版时将验收后的 `dist/` 直接上传至既有 Cloudflare Pages 项目 `powerpan-github-io`，当时没有提交、推送或合并 Git。2026-11-03 已将正在使用的新版必要源码提交并推送，仍使用验收后的生产包直接发布。英文正式入口为 <https://erichz.site/en/>，中文为 <https://erichz.site/zh/>。
 
-旧构建的 Git 自动生产部署已暂停，防止后续推送再次发布旧设计；原主站构建命令 `node tools/build_site.js` 和输出目录 `_site` 保留，预览分支规则不变。后续内容更新需在本模板中重新构建并发布。若要恢复 Git 自动生产部署，先将本模板源码提交并推送至仓库，再修改构建命令与输出目录、完成验收后开启。推荐的仓库根目录构建命令如下；只有构建和检查都成功才继续发布：
+旧构建的 Git 自动生产部署仍暂停，防止后续推送再次发布旧设计；原主站构建命令 `node tools/build_site.js` 和输出目录 `_site` 保留，预览分支规则不变。后续内容更新需在本模板中重新构建并发布。新版源码现已纳入仓库；若以后恢复 Git 自动生产部署，还需修改构建命令与输出目录、完成验收后另行开启，本次未改变此设置。推荐的仓库根目录构建命令如下；只有构建和检查都成功才继续发布：
 
 ```sh
 npm ci --include=dev && node templates/webblog-reimagined/tools/release.cjs && node --test templates/webblog-reimagined/tools/release.test.cjs
