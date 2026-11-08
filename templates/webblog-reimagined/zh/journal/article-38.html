@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>WebGPU 入门：在浏览器中运行深度学习推理的性能优化指南 — Eric</title>
-<meta name="description" content="WebGPU 入门：在浏览器中运行深度学习推理的性能优化指南">
+<title>实时数据处理架构设计：Flink + Kafka 的流式计算最佳实践 — Eric</title>
+<meta name="description" content="实时数据处理架构设计：Flink + Kafka 的流式计算最佳实践">
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#ede8df">
 <script>(()=>{const r=document.documentElement;let t,m;try{t=localStorage.getItem('ink-theme');m=localStorage.getItem('ink-motion')}catch(e){}t=t||(matchMedia('(prefers-color-scheme: dark)').matches?'night':'day');if(matchMedia('(prefers-reduced-motion: reduce)').matches)m='off';r.dataset.theme=t;r.dataset.motion=m||'on'})()</script>
@@ -43,164 +43,185 @@
 <div class="progress" aria-hidden="true"><i></i></div>
 <div class="page">
     <header class="article-head">
-        <p class="meta"><a href="index.html">← 文章</a> &nbsp;/&nbsp; <span class="topic" data-topic="1">AI 工程</span></p>
-        <h1 data-split>WebGPU 入门：在浏览器中运行深度学习推理的性能优化指南</h1>
+        <p class="meta"><a href="index.html">← 文章</a> &nbsp;/&nbsp; <span class="topic" data-topic="4">系统架构</span></p>
+        <h1 data-split>实时数据处理架构设计：Flink + Kafka 的流式计算最佳实践</h1>
         <p class="lede rise"></p>
-        <div class="article-meta meta rise" style="--d:120ms"><span>2025.11.10</span><span>15 分钟</span><span>No. 38</span></div>
+        <div class="article-meta meta rise" style="--d:120ms"><span>2026.01.20</span><span>10 分钟</span><span>No. 38</span></div>
     </header>
     <div class="article-layout">
-        <nav class="toc" aria-label="目录"><a href="#intro">概述</a><a href="#fundamentals">WebGPU 核心概念</a><a href="#compute">Compute Pipeline 搭建</a><a href="#shader">WGSL 着色器编程</a><a href="#onnx">在浏览器中运行 ONNX 模型</a><a href="#memory">GPU 内存管理策略</a><a href="#benchmark">性能基准测试</a><a href="#tips">实战建议与最佳实践</a></nav>
-        <div class="page-surface"><div class="prose"><!-- Section 1: 概述 -->
+        <nav class="toc" aria-label="目录"><a href="#intro">为什么要用流式计算</a><a href="#architecture">整体架构设计</a><a href="#kafka">Kafka Topic 设计与配置</a><a href="#flink">Flink 核心概念</a><a href="#code">Flink 实时聚合示例</a><a href="#exactlyonce">Exactly-Once 语义实现</a><a href="#state">状态管理与优化</a><a href="#tuning">性能调优实践</a><a href="#conclusion">总结</a></nav>
+        <div class="page-surface"><div class="prose"><!-- Section 1: 引言 -->
         <section class="detail-section" id="intro">
-            <h2 class="">概述</h2>
-            <p class="">WebGPU 正在彻底改变浏览器中高性能计算的格局。作为 WebGL 的继任者，它不仅提供了更现代的图形 API，更重要的是暴露了强大的 Compute Shader 能力——这意味着我们终于可以在浏览器中高效地运行深度学习推理，而无需依赖 WebAssembly 的 workaround。</p>
-            <p class="">作为一名在学习视觉模型开发的学生，我对"能否在浏览器中跑模型"这个问题特别感兴趣。本文将从零开始，带你了解 WebGPU 的核心概念，并通过实际的 ML 推理案例，展示如何在浏览器中获得接近原生 GPU 的性能。</p>
-            <blockquote class="">WebGPU 的出现标志着浏览器从 "图形渲染工具" 升级为 "通用 GPU 计算平台"，这是 Web 平台能力的一次质的飞跃。</blockquote>
+            <h2 class="">为什么要用流式计算</h2>
+            <p class="">在大数据时代，传统的批处理模式已经无法满足业务对实时性的要求。用户行为分析、实时风控、IoT 数据监控等场景要求数据从产生到产生洞察的延迟控制在秒级甚至毫秒级。Apache Flink 和 Apache Kafka 的组合，为构建高吞吐、低延迟、Exactly-Once 语义的实时数据处理管道提供了成熟的技术方案。</p>
+            <p class="">本文将从架构设计、核心概念、代码实现和生产部署四个层面，分享我在课程项目和实习中使用 Flink + Kafka 构建实时数据处理系统的实践经验。</p>
+            <blockquote class="">流式计算的本质不是"更快的批处理"，而是一种完全不同的数据处理范式——数据到达即处理，而非攒够一批再处理。</blockquote>
         </section>
 
-        <!-- Section 2: WebGPU 基础 -->
-        <section class="detail-section" id="fundamentals">
-            <h2 class="">WebGPU 核心概念</h2>
-            <p class="">WebGPU 是由 W3C GPU Working Group 开发的全新 Web API，设计灵感来自 Vulkan、Metal 和 Direct3D 12。与 WebGL 相比，它提供了更底层的 GPU 访问能力，同时保持了 Web 平台的安全性和可移植性。</p>
-            <p class="">WebGPU 的核心抽象包括：</p>
+        <!-- Section 2: 架构概述 -->
+        <section class="detail-section" id="architecture">
+            <h2 class="">整体架构设计</h2>
+            <p class="">一个典型的 Flink + Kafka 实时数据处理架构包含以下核心组件：</p>
             <ul class="">
-                <li class=""><strong class="">GPUDevice</strong> — 逻辑设备，所有 GPU 资源的创建者和计算命令的提交者</li>
-                <li class=""><strong class="">GPUBuffer</strong> — GPU 可见的内存块，用于存储输入输出数据</li>
-                <li class=""><strong class="">GPUShaderModule</strong> — 编译后的 WGSL 着色器程序</li>
-                <li class=""><strong class="">GPUComputePipeline</strong> — 计算管线，定义了着色器和绑定布局</li>
-                <li class=""><strong class="">GPUCommandEncoder</strong> — 命令录制器，将多个 GPU 操作打包为 command buffer</li>
+                <li class=""><strong class="">数据源层（Kafka Producers）</strong> — 业务系统、日志采集器（Flume/Filebeat）、IoT 设备等将数据写入 Kafka Topic</li>
+                <li class=""><strong class="">消息缓冲层（Kafka）</strong> — 作为数据总线，提供持久化存储、解耦生产者和消费者、支持多消费者并行读取</li>
+                <li class=""><strong class="">计算层（Flink）</strong> — 从 Kafka 消费数据，执行窗口聚合、流关联、CEP 等计算逻辑，结果写回 Kafka 或外部存储</li>
+                <li class=""><strong class="">存储层</strong> — 计算结果持久化到 MySQL、Redis、Elasticsearch 等，供下游应用查询</li>
+                <li class=""><strong class="">展示层</strong> — 实时 Dashboard（Grafana）或业务系统消费计算结果进行展示和告警</li>
             </ul>
-            <p class="">最关键的区别在于：WebGPU 原生支持 <strong class="">Compute Shader</strong>，这是一个通用的 GPU 并行计算接口。在 WebGL 时代，我们只能通过 "将计算伪装成渲染" 的 hack 来利用 GPU 的并行能力，而 WebGPU 让这一切变得自然而高效。</p>
+            <p class="">这种分层架构的核心优势在于：每层都可以独立扩展和替换。例如，当需要支持新的数据源时，只需添加新的 Kafka Producer，无需修改 Flink 作业代码。</p>
         </section>
 
-        <!-- Section 3: Compute Shader -->
-        <section class="detail-section" id="compute">
-            <h2 class="">Compute Pipeline 搭建</h2>
-            <p class="">WebGPU 的使用流程遵循一个清晰的模式：请求适配器 - 请求设备 - 创建 Buffer - 编写 Shader - 构建 Pipeline - 提交执行。每一步都是显式的，给你最大的控制权。</p>
-            <p class="">与 WebGL 的状态机模型不同，WebGPU 采用命令缓冲区（Command Buffer）模式：先录制所有 GPU 命令，然后一次性提交。这种设计天然适合 ML 推理的批处理场景。</p>
-            <p class="">在 ML 推理场景中，典型的工作流程是：</p>
+        <!-- Section 3: Kafka 配置 -->
+        <section class="detail-section" id="kafka">
+            <h2 class="">Kafka Topic 设计与配置</h2>
+            <p class="">Kafka 的 Topic 设计直接影响系统的吞吐量和容错能力。以下是我们的最佳实践：</p>
             <ul class="">
-                <li class=""><strong class="">模型加载</strong> — 将 ONNX 模型解析为计算图，为每个算子创建对应的 compute pipeline</li>
-                <li class=""><strong class="">权重上传</strong> — 将模型权重一次性写入 GPU storage buffer</li>
-                <li class=""><strong class="">推理执行</strong> — 逐层 dispatch compute shader，通过 buffer 传递中间结果</li>
-                <li class=""><strong class="">结果读回</strong> — 使用 mapAsync 异步读取最终输出 tensor</li>
+                <li class=""><strong class="">分区策略</strong> — 分区数 = max(目标吞吐量 / 单分区吞吐量, 消费者实例数)。我们通常从 6-12 个分区开始，根据实际负载动态调整</li>
+                <li class=""><strong class="">副本因子</strong> — 生产环境建议 replication.factor=3，配合 min.insync.replicas=2，确保在单节点故障时不丢数据</li>
+                <li class=""><strong class="">消息保留</strong> — 热数据 Topic 设置 24 小时保留，冷数据 Topic 设置 7 天保留，支持 Flink 作业的回放和重算</li>
+                <li class=""><strong class="">消息压缩</strong> — 使用 LZ4 压缩，在吞吐量和 CPU 开销之间取得最佳平衡</li>
             </ul>
+            <p class="">一个关键的设计决策是：是否将大消息（如完整的用户行为事件）直接放入 Kafka？答案是尽量避免。Kafka 对大消息的处理效率较低，建议将大消息体（超过 1KB）存储到对象存储（S3/MinIO），Kafka 消息只包含引用指针。</p>
         </section>
 
-        <!-- Section 4: WGSL Shader 代码 -->
-        <section class="detail-section" id="shader">
-            <h2 class="">WGSL 着色器编程</h2>
-            <p class="">WGSL（WebGPU Shading Language）是 WebGPU 的着色器语言，语法类似 Rust，支持向量化操作和共享内存。对于 ML 推理，我们需要将矩阵乘法、激活函数等操作翻译为 WGSL compute shader。</p>
-            <p class="">以下是一个使用 Shared Memory Tiling 优化的矩阵乘法 shader，这是 Transformer 模型中最核心的计算操作：</p>
+        <!-- Section 4: Flink 核心概念 -->
+        <section class="detail-section" id="flink">
+            <h2 class="">Flink 核心概念</h2>
+            <p class="">理解 Flink 的核心概念是构建可靠流处理应用的基础：</p>
+            <ul class="">
+                <li class=""><strong class="">Event Time vs Processing Time</strong> — Event Time 是数据产生的时间，Processing Time 是数据被处理的时间。生产环境应始终使用 Event Time，配合 Watermark 处理乱序数据</li>
+                <li class=""><strong class="">Watermark</strong> — 用于衡量 Event Time 的进展。当 Watermark 超过窗口结束时间时，Flink 触发窗口计算。合理设置 Watermark 延迟是平衡准确性和延迟的关键</li>
+                <li class=""><strong class="">Checkpoint</strong> — Flink 的容错机制，定期将作业状态快照持久化到 HDFS/S3。作业失败时从最近的 Checkpoint 恢复，实现 Exactly-Once 语义</li>
+                <li class=""><strong class="">State</strong> — Flink 提供了丰富的状态后端（RocksDB、Heap），支持 Keyed State 和 Operator State，是实现复杂流处理逻辑的基础</li>
+            </ul>
+            <blockquote class="">Watermark 的设置是一门艺术：设太小会导致迟到数据被丢弃，设太大会增加计算延迟。建议从数据的实际乱序程度出发，通过实验找到最优值。</blockquote>
+        </section>
+
+        <!-- Section 5: 代码实现 -->
+        <section class="detail-section" id="code">
+            <h2 class="">Flink 实时聚合示例</h2>
+            <p class="">以下是一个实时用户行为聚合的完整示例，展示如何从 Kafka 读取数据、按用户分组、计算 5 分钟滚动窗口内的行为统计：</p>
             <div class="detail-code-block">
                 <div class="detail-code-header">
                     <div class="detail-code-dot"></div>
                     <div class="detail-code-dot"></div>
                     <div class="detail-code-dot"></div>
-                    <div class="detail-code-title">matmul_tiled.wgsl</div>
+                    <div class="detail-code-title">UserBehaviorAggregator.java</div>
                 </div>
-                <pre class="detail-code-body">// Tiled matrix multiplication with shared memory
-const TILE: u32 = 16u;
+                <pre class="detail-code-body">public class UserBehaviorAggregator {
+    public static void main(String[] args) throws Exception {
+        StreamExecutionEnvironment env =
+            StreamExecutionEnvironment.getExecutionEnvironment();
+        env.enableCheckpointing(60000); // 60s checkpoint
 
-@group(0) @binding(0) var&lt;storage&gt; A: array&lt;f32&gt;;
-@group(0) @binding(1) var&lt;storage&gt; B: array&lt;f32&gt;;
-@group(0) @binding(2) var&lt;storage, read_write&gt; C: array&lt;f32&gt;;
-@group(0) @binding(3) var&lt;uniform&gt; params: vec4&lt;u32&gt;; // M, N, K, _
+        // 从 Kafka 读取用户行为事件
+        KafkaSource&lt;UserEvent&gt; source = KafkaSource.&lt;UserEvent&gt;builder()
+            .setBootstrapServers("kafka:9092")
+            .setTopics("user.events")
+            .setGroupId("flink-behavior-agg")
+            .setValueOnlyDeserializer(new UserEventDeserializer())
+            .build();
 
-var&lt;workgroup&gt; tileA: array&lt;array&lt;f32, TILE&gt;, TILE&gt;;
-var&lt;workgroup&gt; tileB: array&lt;array&lt;f32, TILE&gt;, TILE&gt;;
+        // 5 分钟滚动窗口聚合
+        env.fromSource(source, WatermarkStrategy
+            .&lt;UserEvent&gt;forBoundedOutOfOrderness(Duration.ofSeconds(10))
+            .withTimestampAssigner((e, t) -&gt; e.getTimestamp()),
+            KafkaSourceOffsets.initializer())
 
-@compute @workgroup_size(TILE, TILE)
-fn main(
-    @builtin(global_invocation_id) gid: vec3&lt;u32&gt;,
-    @builtin(local_invocation_id) lid: vec3&lt;u32&gt;,
-) {
-  let M = params.x; let N = params.y; let K = params.z;
-  let row = gid.x; let col = gid.y;
-  var sum = 0.0;
-  for (var t = 0u; t &lt; K; t += TILE) {
-    tileA[lid.x][lid.y] = A[row * K + t + lid.y];
-    tileB[lid.x][lid.y] = B[(t + lid.x) * N + col];
-    workgroupBarrier();
-    for (var k = 0u; k &lt; TILE; k++) {
-      sum += tileA[lid.x][k] * tileB[k][lid.y];
-    }
-    workgroupBarrier();
-  }
-  C[row * N + col] = sum;
-}</pre>
-            </div>
-            <p class="">这个 tiled 版本利用了 workgroup shared memory，将全局内存访问次数减少了 TILE 倍。在实际测试中，tiled 版本比朴素实现快 <strong class="">8-12 倍</strong>。</p>
+                    .keyBy(UserEvent::getUserId)
+                    .window(TumblingEventTimeWindows.of(Time.minutes(5)))
+                    .aggregate(new BehaviorCountAggregate())
+                    .sinkTo(kafkaSink);
+            }
+        }</pre>
+                </div>
+
+            <p class="">关键配置说明：<code class="">forBoundedOutOfOrderness(10s)</code> 表示允许数据最多迟到 10 秒；<code class="">enableCheckpointing(60000)</code> 每 60 秒做一次状态快照，确保 Exactly-Once 语义。</p>
         </section>
 
-        <!-- Section 5: ONNX 模型 -->
-        <section class="detail-section" id="onnx">
-            <h2 class="">在浏览器中运行 ONNX 模型</h2>
-            <p class="">ONNX Runtime Web 是连接 WebGPU 和深度学习模型的桥梁。它将 ONNX 模型中的每个算子映射为 WebGPU compute shader，实现了端到端的浏览器内推理。</p>
-            <p class="">核心工作流程包括：</p>
+        <!-- Section 6: Exactly-Once -->
+        <section class="detail-section" id="exactlyonce">
+            <h2 class="">Exactly-Once 语义实现</h2>
+            <p class="">Exactly-Once 是流处理系统的核心挑战。Flink 通过 Checkpoint + 两阶段提交协议实现了端到端的 Exactly-Once：</p>
             <ul class="">
-                <li class=""><strong class="">模型加载</strong> — 通过 fetch 加载 .onnx 模型文件，解析计算图结构</li>
-                <li class=""><strong class="">后端选择</strong> — 使用 <code class="">ort.env.webgpu</code> 启用 WebGPU 后端，自动检测设备能力</li>
-                <li class=""><strong class="">算子映射</strong> — ONNX 算子（Conv、MatMul、Softmax 等）自动编译为 WGSL shader</li>
-                <li class=""><strong class="">内存管理</strong> — ORT Web 自动管理 GPU buffer 的分配和回收，支持 tensor 数据的零拷贝传输</li>
+                <li class=""><strong class="">Source 端</strong> — Kafka Source 在 Checkpoint 时记录当前消费的 offset，恢复时从 Checkpoint 的 offset 开始消费</li>
+                <li class=""><strong class="">算子端</strong> — Flink 的状态后端（如 RocksDB）在 Checkpoint 时将所有状态持久化到分布式存储</li>
+                <li class=""><strong class="">Sink 端</strong> — 使用 Kafka Sink 的事务写入模式（KafkaProducer + 事务），只有在 Checkpoint 完成后才提交消息</li>
             </ul>
-            <p class="">对于 Transformer 模型，ORT Web 还支持 KV Cache 优化，将自注意力的计算复杂度从 O(n²) 降低到 O(n)，显著提升长序列推理效率。</p>
+            <p class="">配置要点：</p>
+            <ul class="">
+                <li class="">设置 <code class="">CheckpointingMode.EXACTLY_ONCE</code></li>
+                <li class="">Kafka Sink 使用 <code class="">DeliveryGuarantee.EXACTLY_ONCE</code></li>
+                <li class="">Kafka Consumer 设置 <code class="">isolation.level=read_committed</code></li>
+                <li class="">Checkpoint 间隔不宜过长（建议 30s-60s），否则恢复时间会很长</li>
+            </ul>
+            <blockquote class="">Exactly-Once 的代价是性能。在我们的测试中，开启 Exactly-Once 后吞吐量下降约 15%，但对于金融、风控等场景，数据准确性远比吞吐量重要。</blockquote>
         </section>
 
-        <!-- Section 6: 内存管理 -->
-        <section class="detail-section" id="memory">
-            <h2 class="">GPU 内存管理策略</h2>
-            <p class="">WebGPU 的内存模型与原生 GPU API 非常相似。Buffer 是 GPU 可见的内存块，关键的优化点在于最小化 CPU 与 GPU 之间的数据传输。</p>
-            <p class="">对于 ML 推理场景，推荐以下最佳实践：</p>
+        <!-- Section 7: 状态管理 -->
+        <section class="detail-section" id="state">
+            <h2 class="">状态管理与优化</h2>
+            <p class="">Flink 的状态管理能力是其区别于简单消息转发器的核心优势。合理使用 State 可以实现复杂的流处理逻辑：</p>
             <ul class="">
-                <li class=""><strong class="">Staging Buffer 模式</strong> — 使用 staging buffer 作为 CPU/GPU 的桥梁，避免直接映射 storage buffer 带来的性能损失</li>
-                <li class=""><strong class="">Buffer 复用</strong> — 对于相同形状的 tensor，复用已分配的 buffer 减少 GC 压力</li>
-                <li class=""><strong class="">异步 Map</strong> — 使用 mapAsync 避免阻塞主线程，保持 UI 响应性</li>
-                <li class=""><strong class="">精度选择</strong> — 在精度允许的情况下使用 f16，将显存占用减半，推理速度提升 40-60%</li>
+                <li class=""><strong class="">ValueState</strong> — 存储单个值，适用于计数器、累加器等场景</li>
+                <li class=""><strong class="">ListState</strong> — 存储元素列表，适用于最近 N 条记录的缓存</li>
+                <li class=""><strong class="">MapState</strong> — 存储 Key-Value 映射，适用于去重、关联等场景</li>
+                <li class=""><strong class="">ReducingState / AggregatingState</strong> — 支持增量聚合，避免每次窗口触发时遍历所有元素</li>
             </ul>
-            <p class="">模型权重应该在初始化时一次性上传到 GPU，推理过程中只传输输入 tensor。对于 MobileNetV3 级别的模型（约 15MB 权重），初始化上传耗时约 50ms，之后的每次推理只需传输输入图像数据（约 0.6MB）。</p>
-            <blockquote class="">内存优化的核心原则：让数据尽可能留在 GPU 上，减少跨设备传输。每一次 CPU-GPU 数据拷贝都是潜在的性能瓶颈。</blockquote>
+            <p class="">状态后端选择：</p>
+            <ul class="">
+                <li class=""><strong class="">HeapStateBackend</strong> — 状态存储在 JVM 堆内存，适合状态量小（GB 级别以下）的场景，读写速度快</li>
+                <li class=""><strong class="">RocksDBStateBackend</strong> — 状态存储在本地磁盘（RocksDB），支持增量 Checkpoint，适合状态量大（TB 级别）的生产环境</li>
+            </ul>
+            <p class="">我们使用 RocksDB + 增量 Checkpoint 的组合，将 Checkpoint 时间从全量的 45 秒降低到增量的 3-5 秒，显著减少了 Checkpoint 对正常处理的干扰。</p>
         </section>
 
-        <!-- Section 7: 性能基准 -->
-        <section class="detail-section" id="benchmark">
-            <h2 class="">性能基准测试</h2>
-            <p class="">我们在三种方案上跑了一系列基准测试，使用相同的 MobileNetV3 模型处理 224x224 的输入图像。测试环境为 MacBook Pro M3 Max + Chrome 125。</p>
+        <!-- Section 8: 性能调优 -->
+        <section class="detail-section" id="tuning">
+            <h2 class="">性能调优实践</h2>
+            <p class="">以下是我们在实际项目中总结的 Flink + Kafka 性能调优经验：</p>
             <ul class="">
-                <li class=""><strong class="">WebGPU Compute Shader</strong> — 8ms / inference, GPU 利用率 92%</li>
-                <li class=""><strong class="">WebGL (ONNX Runtime)</strong> — 45ms / inference, GPU 利用率 35%</li>
-                <li class=""><strong class="">WebAssembly (WASM)</strong> — 120ms / inference, CPU 单线程</li>
+                <li class=""><strong class="">并行度设置</strong> — Flink 算子并行度应与 Kafka 分区数对齐。Source 并行度 = Kafka 分区数，算子并行度根据 CPU 密集度调整</li>
+                <li class=""><strong class="">网络缓冲</strong> — 增大 <code class="">taskmanager.memory.network.fraction</code>（默认 0.1），提升 Shuffle 效率，推荐设为 0.2</li>
+                <li class=""><strong class="">反压处理</strong> — 使用 Flink Web UI 的反压监控，定位瓶颈算子。常见原因：下游写入慢、窗口过大、状态后端配置不当</li>
+                <li class=""><strong class="">Kafka 优化</strong> — 增大 <code class="">fetch.min.bytes</code> 和 <code class="">fetch.max.wait.ms</code>，减少小批量拉取的网络开销</li>
             </ul>
-            <p class="">WebGPU 的推理速度是 WebGL 的 <strong class="">5.6 倍</strong>，是纯 WebAssembly 的 <strong class="">15 倍</strong>。更重要的是，WebGPU 的性能在处理更大模型时优势更加明显——对于 BERT-base 级别的模型，差距可以拉大到 20 倍以上。</p>
-            <p class="">当然，WebGPU 也有其局限性：浏览器支持尚未完全普及（目前约 78% 的桌面浏览器支持），以及某些旧设备的驱动兼容性问题。但对于面向现代浏览器的 Web 应用来说，WebGPU 已经是 ML 推理的最佳选择。</p>
+            <p class="">调优前后对比：</p>
+            <ul class="">
+                <li class=""><strong class="">吞吐量</strong> — 从 50K events/s 提升到 200K events/s</li>
+                <li class=""><strong class="">端到端延迟</strong> — P99 从 2.5s 降低到 800ms</li>
+                <li class=""><strong class="">Checkpoint 耗时</strong> — 从 45s 降低到 3-5s（增量 Checkpoint）</li>
+                <li class=""><strong class="">资源利用率</strong> — CPU 利用率从 40% 提升到 70%</li>
+            </ul>
         </section>
 
-        <!-- Section 8: 实战建议 -->
-        <section class="detail-section" id="tips">
-            <h2 class="">实战建议与最佳实践</h2>
-            <p class="">基于我们在生产环境中的经验，总结以下 WebGPU ML 推理的最佳实践：</p>
+        <!-- Section 9: 总结 -->
+        <section class="detail-section" id="conclusion">
+            <h2 class="">总结</h2>
+            <p class="">Flink + Kafka 的组合为实时数据处理提供了工业级的解决方案。核心优势在于：</p>
             <ul class="">
-                <li class=""><strong class="">渐进增强</strong> — 首选 WebGPU，fallback 到 WebGL，最后 fallback 到 WASM，确保最大兼容性</li>
-                <li class=""><strong class="">模型量化</strong> — 使用 INT8 量化将模型大小减小 4 倍，推理速度提升 2-3 倍，精度损失通常在 1% 以内</li>
-                <li class=""><strong class="">预热推理</strong> — 页面加载后立即执行一次 dummy 推理，触发 shader 编译和 GPU buffer 分配</li>
-                <li class=""><strong class="">Worker 线程</strong> — 将推理放在 Web Worker 中执行，避免阻塞主线程导致 UI 卡顿</li>
+                <li class=""><strong class="">真正的流处理</strong> — 逐条处理而非微批，延迟更低</li>
+                <li class=""><strong class="">Exactly-Once 语义</strong> — 端到端的数据准确性保证</li>
+                <li class=""><strong class="">丰富的状态管理</strong> — 支持复杂的有状态计算逻辑</li>
+                <li class=""><strong class="">强大的容错能力</strong> — Checkpoint 机制确保作业可恢复</li>
             </ul>
-            <p class="">WebGPU 生态正在快速发展，W3C 规范仍在持续迭代。建议持续关注 Chrome DevRel 博客和 WebGPU Explainer，及时跟进 API 变更和新特性。</p>
+            <p class="">当然，这套方案也有学习曲线陡峭、运维复杂度高等挑战。建议从小规模 PoC 开始，逐步积累经验后再推广到生产环境。对于团队来说，流式计算不是一个可以"一蹴而就"的技术，而是需要持续投入和优化的工程实践。</p>
         </section></div></div>
     </div>
-    <section class="related" aria-labelledby="related-title"><p class="kicker">继续阅读</p><h2 id="related-title">相关<em>文章</em></h2><ol class="journal-list" style="list-style:none"><li><a class="journal-row" href="article-01.html" data-topic="1" data-cursor="阅读">
-        <span class="journal-date">2026.11 · 01</span>
-        <span class="journal-title"><span class="static">模型出错，为什么总想着重新训练？</span><span class="marquee" aria-hidden="true"><span>模型出错，为什么总想着重新训练？ —&nbsp;</span><span>模型出错，为什么总想着重新训练？ —&nbsp;</span><span>模型出错，为什么总想着重新训练？ —&nbsp;</span></span></span>
-        <span class="topic" data-topic="1">AI 工程</span><span class="journal-time">13 分钟</span></a></li><li><a class="journal-row" href="article-02.html" data-topic="1" data-cursor="阅读">
-        <span class="journal-date">2026.11 · 02</span>
-        <span class="journal-title"><span class="static">模型装得下，为什么还是跑不快？</span><span class="marquee" aria-hidden="true"><span>模型装得下，为什么还是跑不快？ —&nbsp;</span><span>模型装得下，为什么还是跑不快？ —&nbsp;</span><span>模型装得下，为什么还是跑不快？ —&nbsp;</span></span></span>
-        <span class="topic" data-topic="1">AI 工程</span><span class="journal-time">15 分钟</span></a></li><li><a class="journal-row" href="article-03.html" data-topic="1" data-cursor="阅读">
-        <span class="journal-date">2026.10 · 03</span>
-        <span class="journal-title"><span class="static">当考卷本身有错：我们在测量 AI 的什么？</span><span class="marquee" aria-hidden="true"><span>当考卷本身有错：我们在测量 AI 的什么？ —&nbsp;</span><span>当考卷本身有错：我们在测量 AI 的什么？ —&nbsp;</span><span>当考卷本身有错：我们在测量 AI 的什么？ —&nbsp;</span></span></span>
-        <span class="topic" data-topic="1">AI 工程</span><span class="journal-time">15 分钟</span></a></li></ol></section>
+    <section class="related" aria-labelledby="related-title"><p class="kicker">继续阅读</p><h2 id="related-title">相关<em>文章</em></h2><ol class="journal-list" style="list-style:none"><li><a class="journal-row" href="article-05.html" data-topic="4" data-cursor="阅读">
+        <span class="journal-date">2026.10 · 05</span>
+        <span class="journal-title"><span class="static">当每个系统都在自保：3.8 GW 负载退出之后</span><span class="marquee" aria-hidden="true"><span>当每个系统都在自保：3.8 GW 负载退出之后 —&nbsp;</span><span>当每个系统都在自保：3.8 GW 负载退出之后 —&nbsp;</span><span>当每个系统都在自保：3.8 GW 负载退出之后 —&nbsp;</span></span></span>
+        <span class="topic" data-topic="4">系统架构</span><span class="journal-time">16 分钟</span></a></li><li><a class="journal-row" href="article-06.html" data-topic="4" data-cursor="阅读">
+        <span class="journal-date">2026.10 · 06</span>
+        <span class="journal-title"><span class="static">加密后的数据，真的还能做模糊查询吗？</span><span class="marquee" aria-hidden="true"><span>加密后的数据，真的还能做模糊查询吗？ —&nbsp;</span><span>加密后的数据，真的还能做模糊查询吗？ —&nbsp;</span><span>加密后的数据，真的还能做模糊查询吗？ —&nbsp;</span></span></span>
+        <span class="topic" data-topic="4">系统架构</span><span class="journal-time">33 分钟</span></a></li><li><a class="journal-row" href="article-10.html" data-topic="4" data-cursor="阅读">
+        <span class="journal-date">2026.07 · 10</span>
+        <span class="journal-title"><span class="static">Mac 正在成为个人 AI 应用的理想运行时</span><span class="marquee" aria-hidden="true"><span>Mac 正在成为个人 AI 应用的理想运行时 —&nbsp;</span><span>Mac 正在成为个人 AI 应用的理想运行时 —&nbsp;</span><span>Mac 正在成为个人 AI 应用的理想运行时 —&nbsp;</span></span></span>
+        <span class="topic" data-topic="4">系统架构</span><span class="journal-time">9 分钟</span></a></li></ol></section>
     <nav class="pager" aria-label="更多文章">
-        <a href="article-37.html" data-cursor="上一篇"><span class="meta">← 上一篇</span><strong>实时数据处理架构设计：Flink + Kafka 的流式计算最佳实践</strong></a>
-        <a href="article-39.html" data-cursor="下一个"><span class="meta">下一篇 →</span><strong>如何客观看待现今女权主义</strong></a>
+        <a href="article-37.html" data-cursor="上一篇"><span class="meta">← 上一篇</span><strong>从 DETR 到 YOLOv8：Transformer 在目标检测中的演进与工程实践</strong></a>
+        <a href="article-39.html" data-cursor="下一个"><span class="meta">下一篇 →</span><strong>WebGPU 入门：在浏览器中运行深度学习推理的性能优化指南</strong></a>
     </nav>
 </div>
 </main>

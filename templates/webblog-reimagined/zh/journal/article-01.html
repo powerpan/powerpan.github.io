@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>模型出错，为什么总想着重新训练？ — Eric</title>
-<meta name="description" content="Qwen 的数学成绩从 7.9% 涨到 48.1%，动的只有 0.016% 的权重。先看它究竟修好了什么，再谈模型调试该怎样做。">
+<title>道具是假的——看《我阿爹想旅行》 — Eric</title>
+<meta name="description" content="道具倉裏都是假的。莫子珊陪阿爹走的那一程，倒讓她看見了自己一直沒看懂的人。">
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#ede8df">
 <script>(()=>{const r=document.documentElement;let t,m;try{t=localStorage.getItem('ink-theme');m=localStorage.getItem('ink-motion')}catch(e){}t=t||(matchMedia('(prefers-color-scheme: dark)').matches?'night':'day');if(matchMedia('(prefers-reduced-motion: reduce)').matches)m='off';r.dataset.theme=t;r.dataset.motion=m||'on'})()</script>
@@ -43,142 +43,56 @@
 <div class="progress" aria-hidden="true"><i></i></div>
 <div class="page">
     <header class="article-head">
-        <p class="meta"><a href="index.html">← 文章</a> &nbsp;/&nbsp; <span class="topic" data-topic="1">AI 工程</span></p>
-        <h1 data-split>模型出错，为什么总想着<em>重新训练</em>？</h1>
-        <p class="lede rise">Qwen 的数学成绩从 7.9% 涨到 48.1%，动的只有 0.016% 的权重。先看它究竟修好了什么，再谈模型调试该怎样做。</p>
-        <div class="article-meta meta rise" style="--d:120ms"><span>2026.11.03</span><span>13 分钟</span><span>No. 01</span></div>
+        <p class="meta"><a href="index.html">← 文章</a> &nbsp;/&nbsp; <span class="topic" data-topic="6">社会随笔</span></p>
+        <h1 data-split>道具是假的——看<em>《我阿爹想旅行》</em></h1>
+        <p class="lede rise">道具倉裏都是假的。莫子珊陪阿爹走的那一程，倒讓她看見了自己一直沒看懂的人。</p>
+        <div class="article-meta meta rise" style="--d:120ms"><span>2026.11.08</span><span>5 分钟</span><span>No. 01</span></div>
     </header>
     <div class="article-layout">
-        <nav class="toc" aria-label="目录"><a href="#intro">引言</a><a href="#loop-repair">它一直在推理，就是交不出答案</a><a href="#gemma-control">换成 Gemma，为什么几乎没涨分？</a><a href="#car-patch">这辆车缺的，是先倒一下</a><a href="#reading-computation">读懂权重，得读到计算关系</a><a href="#writing-networks">把打砖块的规则，直接编进矩阵</a><a href="#debugging-cost">0.016% 的补丁，花了约 20 个小时</a><a href="#patch-and-regression">模型维修，也得留下补丁和回滚按钮</a></nav>
+        <nav class="toc" aria-label="目录"><a href="#intro">引言</a><a href="#prop-room">道具倉裏那隻碗</a><a href="#old-stories">洪金寶出現之後</a><a href="#okinawa">再去一次沖繩</a></nav>
         <div class="page-surface"><div class="prose"><section class="detail-section" id="intro">
-<p class="">模型数学题做得差，我们通常先补数据、改训练、加参数。MIT CSAIL 这次给出了另一个诊断：它可能一直在想，却没能把答案写出来。</p>
-
-<p class="">在 11 月 2 日发布的<a href="https://rikiyat.github.io/blog/weight-space-programming/" target="_blank" rel="noopener" class="">Weight-Space Programming 研究</a>中，GPT-6 Astra 直接检查并修改 Qwen3.5-0.8B 的权重，把 MATH-500 平均准确率从 7.9% 拉到了 48.1%。改动约占 0.016%，全程没有反向传播。</p>
-
-<p class="">比涨分更值得盯住的是另一列：原模型有 93.0% 的 MATH-500 输出耗尽了 32,768 token，修改后降到 33.1%。大量失败发生在重复推理里。Astra 先找出了这类故障，再动了内部参数。</p>
-
-<p class="">我更愿意把这件事放进模型维修的工具箱。分数低只是症状，背后可能是能力欠缺，也可能是已有能力被某个失效机制卡住。连这两类问题都没分清就重训，计算花出去了，故障还可能留在原处。</p>
+    <p class="">女兒守在父親的病床邊，劇組忽然來電話，叫她去道具倉拿一隻大湯碗。</p>
+    <p class=""><a href="https://usercontent.hkiff.org.hk/Press/HKIPM2026/WIP/W03_bilingual_Good_Trip_re_final_FTP.pdf" target="_blank" rel="noopener" class="">《我阿爹想旅行》</a>從這麼一件小差事開始。莫子珊是電影美術助理，整天在片場和醫院之間來回跑。她本來想留下陪父親，父親卻堅持陪她去。兩父女半夜溜出醫院，拿了碗，然後阿爹一踩油門，開去澳門找舊友討公道；下一站竟然是沖繩，他要向在那裏開旅行社的妻子再求一次婚。</p>
+    <p class="">一個癌症末期、連床都下不了的病人，怎麼可能說走就走？電影偏偏讓他走。</p>
 </section>
 
-<section class="detail-section" id="loop-repair">
-<h2 class="">它一直在推理，就是交不出答案</h2>
-
-<p class="">Qwen 的实验允许 Astra 使用一个能读写权重的 Python 环境，以及有限次数的前向测试。练习材料来自 GSM8K 和 MATH 的训练集等，正式评测留在运行结束后，编辑器看不到测试结果。<a href="https://github.com/RikiyaT/lm_understand-logs/blob/main/exp8_math/README.md" target="_blank" rel="noopener" class="">实验日志</a>把每次操作和最终评测都保留了下来。</p>
-
-<p class="">Astra 对比能正常推进的推理和反复绕圈的推理，检查内部激活，再用干预测试缩小范围。最终补丁落在第 15 层和第 19 层 MLP 的 <code class="">down_proj</code>：各选 64 列，削弱它们向残差流写入的循环相关方向，共涉及 131,072 个权重。</p>
-
-<p class="">这里动的是特征方向和矩阵列之间的关系。一个方向由很多参数共同写出，某个参数也可能同时服务于多种计算。把它想成删掉两个“坏神经元”，反而会丢掉这次诊断最有价值的部分。</p>
-
-<p class="">最终运行记录还列了几种检验：改变干预强度、单独测试不同层，以及用等范数的随机方向作对照。看到某种激活跟循环一起出现，只能得到线索；对相关位置动手后，故障能否按预期减轻，才开始回答因果问题。这类实验应当成为调试器的基本能力。</p>
-
-<p class="">下面是研究公开的 Qwen 结果。评测开启 Thinking，输出上限为 32,768 token，采样设置在修改前后保持一致；MATH-500 每题采样 4 次，GSM8K 和 IFEval 每题 2 次，报告所有样本的平均准确率。</p>
-
-<div class="article-table-scroll" tabindex="0" role="region" aria-labelledby="bwsp_table_heading"><table class="">
-<thead id="bwsp_table_heading" class=""><tr class=""><th scope="col" class="">运行</th><th scope="col" class="">MATH-500</th><th scope="col" class="">GSM8K</th><th scope="col" class="">IFEval</th><th scope="col" class="">触及 token 上限</th></tr></thead>
-<tbody class="">
-<tr class=""><th scope="row" class="">原模型</th><td class="">7.9%</td><td class="">13.8%</td><td class="">21.0%</td><td class="">93.0%</td></tr>
-<tr class=""><th scope="row" class="">10 次前向预算</th><td class="">12.3%</td><td class="">25.7%</td><td class="">49.0%</td><td class="">87.2%</td></tr>
-<tr class=""><th scope="row" class="">25 次前向预算</th><td class="">14.1%</td><td class="">25.1%</td><td class="">39.9%</td><td class="">86.4%</td></tr>
-<tr class=""><th scope="row" class="">50 次前向预算</th><td class="">48.1%</td><td class="">67.1%</td><td class="">62.3%</td><td class="">33.1%</td></tr>
-</tbody>
-</table></div>
-
-<p class="">指令遵循也跟着上涨，这和修复循环的解释相吻合：一个总在重复的模型，连执行格式要求、正常结束回答都容易失败。研究的<a href="https://github.com/RikiyaT/lm_understand-logs/blob/main/exp8_math/runs/p50c/final_answer.md" target="_blank" rel="noopener" class="">最终练习确认记录</a>还区分了原本被截断与原本能完成的输出，改善主要来自前一类。分数回升有了可追踪的行为解释。</p>
+<section class="detail-section" id="prop-room">
+    <h2 class="">道具倉裏那隻碗</h2>
+    <p class="">片名裏最要緊的是那個「想」字。可以是想要去，也可以是想像自己去了。黃綺琳在<a href="https://www.stheadline.com/film-drama/3623418" target="_blank" rel="noopener" class="">訪問</a>裏提到唐代的《離魂記》：身體留在原地，魂魄卻跑了出去。這趟旅程一會兒穿進古裝戲，一會兒又像老港產片，張家輝還突然講出一口流利日文。</p>
+    <p class="">女兒偏偏做美術。她每天的工作，就是把不存在的東西做得像真的。道具倉裏有假的碗、假的牆、假的古董；演員對着它們掉下來的眼淚，倒是真的。</p>
+    <p class="">我喜歡電影把那隻碗放在出發之前。子珊只是去拿一件道具，阿爹卻借這個機會，拉着她去做平日總沒做成的事。一趟編出來的旅行，讓兩個人好好待在一起。</p>
 </section>
 
-<section class="detail-section" id="gemma-control">
-<h2 class="">换成 Gemma，为什么几乎没涨分？</h2>
-
-<p class="">研究团队又让 Astra 修改 Gemma 3 270M。这次碰到的是算术错误、无效的代数步骤等普通推理失误。模型很少陷入 Qwen 那样的长循环，寻找局部补丁就没有那么顺利。</p>
-
-<p class="">Gemma 原来的 MATH-500 为 6.8%，50 次前向预算后为 7.0%。它使用自己的采样配置和 8,192 token 上限。这个对照告诉我，定位到一种稳定、集中的异常，比笼统要求“提高数学能力”更适合现在的权重编程。</p>
-
-<p class="">两种诊断对应两种工作。反复生成同一段话，可以收集正常和循环的上下文，设计干预，观察行为是否随之改变。缺少某类推理能力，则要处理知识、表示和跨层计算。把后者也交给一个局部补丁，往往只是换个位置碰运气。</p>
-
-<p class="">所以我会先找“本来能做，却稳定地做不出来”的故障：重复生成、某种格式下持续失效、某个状态触发异常动作。成功标准也随之具体起来：能否消除这类失败，原本正常的任务又保留了多少。</p>
+<section class="detail-section" id="old-stories">
+    <h2 class="">洪金寶出現之後</h2>
+    <p class="">莫鎮強是個會讓女兒丟臉的阿爹。愛講食字爛笑話，有話直說，頭頂梳着幾條 barcode。那架舊車他老說要留給子女，好像是甚麼了不起的遺產。他講自己的往事，女兒聽一半，信一半。</p>
+    <p class="">直到父親走了以後，她遇見洪金寶，才發現父親講過的某件事，竟然是真的。</p>
+    <p class="">這一下比告別那場戲更戳我。阿爹已經不在，沒法再跟女兒說一句「你睇，我都話係真㗎啦」。可是她心裏那個父親，就在那一秒變了。以前聽到耳熟的故事，忽然多了一點她沒聽進去的東西。</p>
+    <p class="">我們大概都太熟悉父母在家裏的樣子。知道他生氣時會突然不說話，猜得到他下一句要講甚麼；至於他年輕時是怎樣的人、在外頭交過甚麼朋友，卻說不出多少。就算他講過，當年也只當他在吹牛。</p>
+    <p class="">我也喜歡電影讓阿爹留在原來的樣子。舊車還是那架舊車，爛笑話也沒變好笑。子珊多知道了一件事，從前看他不順眼的時候也照樣算數。人走了，沒必要把他修成一尊完美的像。</p>
 </section>
 
-<section class="detail-section" id="car-patch">
-<h2 class="">这辆车缺的，是先倒一下</h2>
-
-<p class="">另一个实验更像给控制程序打补丁。一个 PPO 网络负责让汽车爬坡，却学成了不断向前冲、不断卡住。Astra 拿到权重、场景说明和一段运行记录后，给网络加入一条读取位置与速度的控制路径：先倒车留出加速距离，再向前冲。</p>
-
-<p class="">汽车越过特定位置后，新路径退出，后续继续由原网络控制。<a href="https://github.com/RikiyaT/lm_understand-logs/blob/main/exp4_fix_car/README.md" target="_blank" rel="noopener" class="">这次单次修改</a>改了约 3.5% 的权重，在 1,024 次该关卡测试中全部成功。补丁接管的时机、执行的动作和退出条件，都能和任务过程对应上。</p>
-
-<p class="">这个案例抓住了维修的要点：原系统已经有大量可用行为，缺的是一个特定阶段的动作。保留已经学会的部分，把故障发生处修好，比把整个策略再丢进训练器里更有针对性。</p>
-</section>
-
-<section class="detail-section" id="reading-computation">
-<h2 class="">读懂权重，得读到计算关系</h2>
-
-<p class="">这些补丁靠什么找出来？研究先做了一组读取实验：四个形状相同、各有 17,253 个参数的游戏网络，Astra 根据权重和输入输出含义，辨认出了各自训练的游戏。进一步的实验则拿掉约 720 万参数字符模型的输入、输出层，只留下中间 Transformer Blocks。</p>
-
-<p class="">拿掉首尾层，等于收走字符到向量、向量到字符的直接映射，也收走了跑一段文本看结果的捷径。Astra 可以用 Python 分析中间权重，却不能把任何输入送进网络。这使问题落在了矩阵本身透露出的计算结构上。</p>
-
-<p class="">Astra 区分了学习 Python、英语和罗马字日语的网络，并找到了与实测吻合的归纳头。它通过矩阵之间的组合关系，寻找读取前文、匹配片段和复制后续内容的结构。这些<a href="https://transformer-circuits.pub/2022/in-context-learning-and-induction-heads/" target="_blank" rel="noopener" class="">归纳头机制</a>已有研究基础；有意思的是，推理模型开始自己选择分析步骤，去找这样的计算。</p>
-
-<p class="">这种分析还得跨过参数表示的差异。把隐藏神经元重新排列，同时调整前后连接，网络功能可以完全不变。<a href="https://arxiv.org/abs/2209.04836" target="_blank" rel="noopener" class="">Git Re-Basin</a>讨论的权重置换对称性，恰好提醒我们：某个编号的神经元很难成为跨模型通用的维修接口。</p>
-
-<p class="">我更关心工具能否描述稳定的计算关系：什么状态被读入，经过哪些变换，最后写入哪个方向。描述越接近可验证的计算过程，换模型、换训练种子时，才越有机会重新定位。只给一个“第几层有问题”的答案，还远远不够动手维修。</p>
-</section>
-
-<section class="detail-section" id="writing-networks">
-<h2 class="">把打砖块的规则，直接编进矩阵</h2>
-
-<p class="">读取之外，Astra 还从零写了 MinAtar 游戏网络。研究给它规则、环境源代码和输入输出定义，要求直接生成权重，期间不能运行游戏检查效果。在 Breakout 中，它先估算小球落点，再根据挡板位置决定动作，把这套算法写成矩阵和激活函数。</p>
-
-<p class="">最终平均得分为 517.4；对照 PPO 训练 1 亿步和 5 亿步分别为 15.8、25.3。这里最有意思的是求解路径：Astra 拿着明文规则设计控制算法，再把算法放进指定网络；PPO 通过与环境交互和奖励学习策略。网络成了执行一个已知算法的载体。</p>
-
-<p class="">9×9 围棋实验又向前走了一步。Astra 在约 148 万参数的网络里分层表达棋子、气、危险棋块和落子评分；得到有限对局反馈后，再修改导致失败的计算部分。写出的网络可以继续接受调试反馈，算法构造和实验修正接在了一起。</p>
-
-<p class="">这让我想到训练模型与编写模型可以怎样配合。规则明确的状态机、局部控制逻辑、特殊情况处理，适合尝试直接构造；复杂的视觉表示和语言知识继续从数据里学习。工程师多了一种组合方式：在已有能力上接入一段能解释、能测试的计算。</p>
-</section>
-
-<section class="detail-section" id="debugging-cost">
-<h2 class="">0.016% 的补丁，花了约 20 个小时</h2>
-
-<p class="">直接改权重已有很长的研究积累。<a href="https://arxiv.org/abs/2202.05262" target="_blank" rel="noopener" class="">ROME</a>通过修改前馈层权重定向更新事实关联，机制可解释性也一直用激活和参数干预检验内部计算。Weight-Space Programming 把诊断、选择实验、构造修改这些步骤，交给通用推理模型来组织。</p>
-
-<p class="">这很像代码代理从写一段函数，走到了读项目、跑测试、按错误继续修改。只是它现在面对的工件换成了张量和激活，报错换成了行为故障。</p>
-
-<p class="">但小补丁照样可能花很久。Qwen 效果最好的运行用了 50 次批量前向测试、80 次 Python 操作和 158 轮交互，墙钟时间约 20.3 小时，其中约 4.7 小时是服务不可用后的等待。一次前向工具调用最多可以生成 512 道练习题，或读取 1,024 条文本的内部状态。</p>
-
-<p class="">表里的 10、25、50 次预算也各自对应独立运行和不同补丁。25 次运行最后关掉了一个注意力头；50 次才找到了两个 MLP 的循环相关方向。这个过程需要机制搜索，预算增加并不会自动兑换成同样比例的收益。</p>
-
-<p class="">所以我会把采样调整、外部控制、常规微调和内部编辑放在同一张成本表里：解决的是不是同一个故障，需要多少数据和计算，成功能否重复，维护又要多花多少。省掉反向传播当然有价值，完整的诊断与验证成本同样得付账。</p>
-</section>
-
-<section class="detail-section" id="patch-and-regression">
-<h2 class="">模型维修，也得留下补丁和回滚按钮</h2>
-
-<p class="">如果把这条路用进项目，我会从稳定故障的回放集开始。保存触发问题的输入、模型版本、采样参数与运行环境，再配一组本来正常的样本。诊断代理每提出一种内部机制，就给它一个能推翻这个解释的对照实验，最后才决定动哪些张量。</p>
-
-<p class="">放到视觉任务里，也可以从某种目标姿态或成像条件下持续误判的样本入手，对照正常样本的激活。这里值得投入的是诊断流程：把“这一类图总是错”逐步追到可干预的计算，再检验修改后的结果。沿着指标盲目换模型，只会重新积累一套不理解的失败。</p>
-
-<p class="">补丁则应该绑定原始 Checkpoint 的哈希，保存修改的张量、索引、精度和差分，以及生成它的实验记录。部署时校验基座，出现副作用时回到原版。神经元排列、模型版本或量化方式一变，就重新确认补丁还作用在原来的计算上。</p>
-
-<p class="">连续修两个故障时，还要测补丁组合。第二次编辑面对的是第一次改过的内部表示，单个补丁分别有效，叠起来仍可能互相抵消。原版、补丁 A、补丁 B、A 后接 B，都留下同一组回放结果，才能判断该接受增量修改，还是重新诊断。</p>
-
-<p class="">回归范围要超出目标分数。<a href="https://proceedings.neurips.cc/paper_files/paper/2024/hash/370fa2e691f57eb319bc263a07dad4a5-Abstract-Conference.html" target="_blank" rel="noopener" class="">NeurIPS 2024 的模型编辑评估</a>记录了连续编辑对通用能力的损害；<a href="https://arxiv.org/abs/2601.17343" target="_blank" rel="noopener" class="">后续局部性研究</a>又发现，一些常用指标对副作用不够敏感。参数改得少，行为影响仍可能很广，测试必须去找这些影响。</p>
-
-<p class="">对 Qwen 这样的循环修复，我会同时测答案质量、截断率、输出长度、格式遵循和原本能正常完成的任务。只看更早结束，很容易把“修好循环”做成“更快放弃”。再加上多次独立诊断、未参与搜索的回放样本和明确的回滚条件，才能知道工具是否值得持续使用。</p>
-
-<p class="">我期待模型开发把维修认真补起来。Checkpoint 可以保留训练得到的能力，也可以接受有记录、有测试的局部改造。下次再遇到稳定失败，先问它卡在了哪里。能定位、能干预、能回归，再决定需要补丁，还是确实需要一次新的训练。</p>
+<section class="detail-section" id="okinawa">
+    <h2 class="">再去一次沖繩</h2>
+    <p class="">戲外也有一個做電影的女兒。<a href="https://www.stheadline.com/film-drama/3623418" target="_blank" rel="noopener" class="">黃綺琳談過</a>，家裏只有父親支持她拍電影。父親癌症復發後，還撐着拐杖到《金都》片場探班。後期製作時，他已經臥床，仍叫她繼續拍。她跟父親最後一次旅行，去的就是沖繩。</p>
+    <p class="">莫子珊身上有她的影子，阿爹也揉進了黃鐦父親的細節，譬如那架說要留給子女的舊車。片裏那家人是兩位導演一點一點拼出來的。到了沖繩，戲裏的路就跟黃綺琳走過的路接上了。</p>
+    <p class="">人走了，不能再一起吃飯、聊天，可活着的那個人還在往前走。也許隔了十年，碰上同一件難事，才明白他當時為甚麼那樣選；也許哪天有人提起他，才知道原來他在別人面前是另一副樣子。回憶裏還有些地方，要等我們長到那裏才看得見。</p>
+    <p class="">阿爹想旅行，可他已經走不動了。於是他的女兒，替他把這個「想」字，拍成了一部電影。</p>
 </section></div></div>
     </div>
-    <section class="related" aria-labelledby="related-title"><p class="kicker">继续阅读</p><h2 id="related-title">相关<em>文章</em></h2><ol class="journal-list" style="list-style:none"><li><a class="journal-row" href="article-02.html" data-topic="1" data-cursor="阅读">
-        <span class="journal-date">2026.11 · 02</span>
-        <span class="journal-title"><span class="static">模型装得下，为什么还是跑不快？</span><span class="marquee" aria-hidden="true"><span>模型装得下，为什么还是跑不快？ —&nbsp;</span><span>模型装得下，为什么还是跑不快？ —&nbsp;</span><span>模型装得下，为什么还是跑不快？ —&nbsp;</span></span></span>
-        <span class="topic" data-topic="1">AI 工程</span><span class="journal-time">15 分钟</span></a></li><li><a class="journal-row" href="article-03.html" data-topic="1" data-cursor="阅读">
-        <span class="journal-date">2026.10 · 03</span>
-        <span class="journal-title"><span class="static">当考卷本身有错：我们在测量 AI 的什么？</span><span class="marquee" aria-hidden="true"><span>当考卷本身有错：我们在测量 AI 的什么？ —&nbsp;</span><span>当考卷本身有错：我们在测量 AI 的什么？ —&nbsp;</span><span>当考卷本身有错：我们在测量 AI 的什么？ —&nbsp;</span></span></span>
-        <span class="topic" data-topic="1">AI 工程</span><span class="journal-time">15 分钟</span></a></li><li><a class="journal-row" href="article-16.html" data-topic="1" data-cursor="阅读">
-        <span class="journal-date">2026.05 · 16</span>
-        <span class="journal-title"><span class="static">AI 工程的核心不是让模型万能，而是定义边界</span><span class="marquee" aria-hidden="true"><span>AI 工程的核心不是让模型万能，而是定义边界 —&nbsp;</span><span>AI 工程的核心不是让模型万能，而是定义边界 —&nbsp;</span><span>AI 工程的核心不是让模型万能，而是定义边界 —&nbsp;</span></span></span>
-        <span class="topic" data-topic="1">AI 工程</span><span class="journal-time">8 分钟</span></a></li></ol></section>
+    <section class="related" aria-labelledby="related-title"><p class="kicker">继续阅读</p><h2 id="related-title">相关<em>文章</em></h2><ol class="journal-list" style="list-style:none"><li><a class="journal-row" href="article-13.html" data-topic="6" data-cursor="阅读">
+        <span class="journal-date">2026.05 · 13</span>
+        <span class="journal-title"><span class="static">把家庭当成一个系统：中产返贫背后的风险架构问题</span><span class="marquee" aria-hidden="true"><span>把家庭当成一个系统：中产返贫背后的风险架构问题 —&nbsp;</span><span>把家庭当成一个系统：中产返贫背后的风险架构问题 —&nbsp;</span><span>把家庭当成一个系统：中产返贫背后的风险架构问题 —&nbsp;</span></span></span>
+        <span class="topic" data-topic="6">社会随笔</span><span class="journal-time">7 分钟</span></a></li><li><a class="journal-row" href="article-40.html" data-topic="6" data-cursor="阅读">
+        <span class="journal-date">2025.10 · 40</span>
+        <span class="journal-title"><span class="static">如何客观看待现今女权主义</span><span class="marquee" aria-hidden="true"><span>如何客观看待现今女权主义 —&nbsp;</span><span>如何客观看待现今女权主义 —&nbsp;</span><span>如何客观看待现今女权主义 —&nbsp;</span></span></span>
+        <span class="topic" data-topic="6">社会随笔</span><span class="journal-time">10 分钟</span></a></li><li><a class="journal-row" href="article-42.html" data-topic="6" data-cursor="阅读">
+        <span class="journal-date">2025.08 · 42</span>
+        <span class="journal-title"><span class="static">「内卷」与「躺平」：一代人的焦虑与突围</span><span class="marquee" aria-hidden="true"><span>「内卷」与「躺平」：一代人的焦虑与突围 —&nbsp;</span><span>「内卷」与「躺平」：一代人的焦虑与突围 —&nbsp;</span><span>「内卷」与「躺平」：一代人的焦虑与突围 —&nbsp;</span></span></span>
+        <span class="topic" data-topic="6">社会随笔</span><span class="journal-time">10 分钟</span></a></li></ol></section>
     <nav class="pager" aria-label="更多文章">
-        <a href="article-42.html" data-cursor="上一篇"><span class="meta">← 上一篇</span><strong>SAM 2 在工业质检中的落地实践：从 Prompt Engineering 到产线部署</strong></a>
-        <a href="article-02.html" data-cursor="下一个"><span class="meta">下一篇 →</span><strong>模型装得下，为什么还是跑不快？</strong></a>
+        <a href="article-43.html" data-cursor="上一篇"><span class="meta">← 上一篇</span><strong>SAM 2 在工业质检中的落地实践：从 Prompt Engineering 到产线部署</strong></a>
+        <a href="article-02.html" data-cursor="下一个"><span class="meta">下一篇 →</span><strong>模型出错，为什么总想着重新训练？</strong></a>
     </nav>
 </div>
 </main>

@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>WebGPU: Running Deep Learning Inference in the Browser — Eric</title>
-<meta name="description" content="WebGPU: Running Deep Learning Inference in the Browser">
+<title>Real-Time Data Processing: Flink + Kafka Best Practices — Eric</title>
+<meta name="description" content="Real-Time Data Processing: Flink + Kafka Best Practices">
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#ede8df">
 <script>(()=>{const r=document.documentElement;let t,m;try{t=localStorage.getItem('ink-theme');m=localStorage.getItem('ink-motion')}catch(e){}t=t||(matchMedia('(prefers-color-scheme: dark)').matches?'night':'day');if(matchMedia('(prefers-reduced-motion: reduce)').matches)m='off';r.dataset.theme=t;r.dataset.motion=m||'on'})()</script>
@@ -43,164 +43,185 @@
 <div class="progress" aria-hidden="true"><i></i></div>
 <div class="page">
     <header class="article-head">
-        <p class="meta"><a href="index.html">← Journal</a> &nbsp;/&nbsp; <span class="topic" data-topic="1">AI Engineering</span></p>
-        <h1 data-split>WebGPU: Running Deep Learning Inference in the Browser</h1>
+        <p class="meta"><a href="index.html">← Journal</a> &nbsp;/&nbsp; <span class="topic" data-topic="4">System Architecture</span></p>
+        <h1 data-split>Real-Time Data Processing: Flink + Kafka Best Practices</h1>
         <p class="lede rise"></p>
-        <div class="article-meta meta rise" style="--d:120ms"><span>2025.11.10</span><span>15 min</span><span>No. 38</span></div>
+        <div class="article-meta meta rise" style="--d:120ms"><span>2026.01.20</span><span>10 min</span><span>No. 38</span></div>
     </header>
     <div class="article-layout">
-        <nav class="toc" aria-label="Contents"><a href="#intro">Overview</a><a href="#fundamentals">WebGPU Core Concepts</a><a href="#compute">Compute Pipeline Setup</a><a href="#shader">WGSL Shader Programming</a><a href="#onnx">Running ONNX Models in Browser</a><a href="#memory">GPU Memory Management</a><a href="#benchmark">Performance Benchmarks</a><a href="#tips">Best Practices</a></nav>
-        <div class="page-surface"><div class="prose"><!-- Section 1: 概述 -->
+        <nav class="toc" aria-label="Contents"><a href="#intro">Why Streaming?</a><a href="#architecture">Overall Architecture</a><a href="#kafka">Kafka Topic Design</a><a href="#flink">Flink Core Concepts</a><a href="#code">Flink Real-Time Aggregation</a><a href="#exactlyonce">Exactly-Once Semantics</a><a href="#state">State Management</a><a href="#tuning">Performance Tuning</a><a href="#conclusion">Summary</a></nav>
+        <div class="page-surface"><div class="prose"><!-- Section 1: 引言 -->
         <section class="detail-section" id="intro">
-            <h2 class="">Overview</h2>
-            <p class="">WebGPU is fundamentally transforming high-performance computing in browsers. As WebGL's successor, it not only provides a more modern graphics API but, more importantly, exposes powerful Compute Shader capabilities — meaning we can finally run deep learning inference efficiently in browsers without relying on WebAssembly workarounds.</p>
-            <p class="">As a student learning vision model development, I'm particularly interested in "can we run models in the browser?" This article starts from zero, introducing WebGPU's core concepts and demonstrating how to achieve near-native GPU performance in browsers through practical ML inference cases.</p>
-            <blockquote class="">WebGPU expands the browser from a graphics-rendering tool into a general-purpose GPU computing platform, a significant leap in what the web can do.</blockquote>
+            <h2 class="">Why Streaming?</h2>
+            <p class="">In the era of big data, traditional batch processing can no longer meet business requirements for real-time analytics. User behavior analysis, real-time risk control, and IoT data monitoring all require data-to-insight latency controlled at the second or even millisecond level. The combination of Apache Flink and Apache Kafka provides a mature technical solution for building high-throughput, low-latency, Exactly-Once semantic real-time data processing pipelines.</p>
+            <p class="">This article shares practical experience from course projects and internships using Flink + Kafka to build real-time data processing systems, covering architecture design, core concepts, code implementation, and production deployment.</p>
+            <blockquote class="">Stream processing is not merely faster batch processing. It is a different data-processing paradigm: process data as it arrives, rather than waiting for a batch to accumulate.</blockquote>
         </section>
 
-        <!-- Section 2: WebGPU 基础 -->
-        <section class="detail-section" id="fundamentals">
-            <h2 class="">WebGPU Core Concepts</h2>
-            <p class="">WebGPU is a new Web API developed by the W3C GPU Working Group, inspired by Vulkan, Metal, and Direct3D 12. Compared to WebGL, it provides lower-level GPU access while maintaining Web platform security and portability.</p>
-            <p class="">WebGPU's core abstractions include:</p>
+        <!-- Section 2: 架构概述 -->
+        <section class="detail-section" id="architecture">
+            <h2 class="">Overall Architecture</h2>
+            <p class="">A typical Flink + Kafka real-time data processing architecture includes the following core components:</p>
             <ul class="">
-                <li class=""><strong class="">GPUDevice</strong> — Logical device, creator of all GPU resources and submitter of compute commands</li>
-                <li class=""><strong class="">GPUBuffer</strong> — GPU-visible memory block for storing input/output data</li>
-                <li class=""><strong class="">GPUShaderModule</strong> — Compiled WGSL shader program</li>
-                <li class=""><strong class="">GPUComputePipeline</strong> — Compute pipeline defining shader and binding layouts</li>
-                <li class=""><strong class="">GPUCommandEncoder</strong> — Command recorder that batches multiple GPU operations into a command buffer</li>
+                <li class=""><strong class="">Data Source Layer (Kafka Producers)</strong> — Business systems, log collectors (Flume/Filebeat), and IoT devices write data to Kafka Topics</li>
+                <li class=""><strong class="">Message Buffer Layer (Kafka)</strong> — Serves as the data bus, providing persistent storage, decoupling producers and consumers, and supporting parallel reads by multiple consumers</li>
+                <li class=""><strong class="">Compute Layer (Flink)</strong> — Consumes data from Kafka, executes window aggregation, stream joins, CEP, and other computation logic, writing results back to Kafka or external storage</li>
+                <li class=""><strong class="">Storage Layer</strong> — Persists computation results to MySQL, Redis, Elasticsearch, etc., for downstream application queries</li>
+                <li class=""><strong class="">Display Layer</strong> — Real-time Dashboards (Grafana) or business systems consume computation results for visualization and alerting</li>
             </ul>
-            <p class="">The most critical difference is: WebGPU natively supports <strong class="">Compute Shader</strong>, a general-purpose GPU parallel computing interface. In the WebGL era, we could only hack GPU parallelism by "disguising computation as rendering," but WebGPU makes this natural and efficient.</p>
+            <p class="">The core advantage of this layered architecture is that each layer can be independently scaled and replaced. For example, when supporting new data sources, you only need to add new Kafka Producers without modifying Flink job code.</p>
         </section>
 
-        <!-- Section 3: Compute Shader -->
-        <section class="detail-section" id="compute">
-            <h2 class="">Compute Pipeline Setup</h2>
-            <p class="">WebGPU's usage follows a clear pattern: request adapter → request device → create Buffer → write Shader → build Pipeline → submit execution. Every step is explicit, giving you maximum control.</p>
-            <p class="">Unlike WebGL's state machine model, WebGPU uses a Command Buffer pattern: record all GPU commands first, then submit them in one batch. This design is naturally suited for ML inference batch processing scenarios.</p>
-            <p class="">In ML inference scenarios, the typical workflow is:</p>
+        <!-- Section 3: Kafka 配置 -->
+        <section class="detail-section" id="kafka">
+            <h2 class="">Kafka Topic Design</h2>
+            <p class="">Kafka Topic design directly impacts system throughput and fault tolerance. Here are our best practices:</p>
             <ul class="">
-                <li class=""><strong class="">Model Loading</strong> — Parse ONNX model into computation graph, creating corresponding compute pipelines for each operator</li>
-                <li class=""><strong class="">Weight Upload</strong> — Write model weights to GPU storage buffer in one batch</li>
-                <li class=""><strong class="">Inference Execution</strong> — Dispatch compute shaders layer by layer, passing intermediate results through buffers</li>
-                <li class=""><strong class="">Result Readback</strong> — Use mapAsync to asynchronously read final output tensors</li>
+                <li class=""><strong class="">Partition Strategy</strong> — Partitions = max(target throughput / single partition throughput, consumer instances). We typically start with 6-12 partitions and dynamically adjust based on actual load</li>
+                <li class=""><strong class="">Replication Factor</strong> — Production environments recommend replication.factor=3 with min.insync.replicas=2, ensuring no data loss on single-node failure</li>
+                <li class=""><strong class="">Message Retention</strong> — Hot data Topics set to 24-hour retention, cold data Topics to 7-day retention, supporting Flink job replay and recomputation</li>
+                <li class=""><strong class="">Message Compression</strong> — Uses LZ4 compression, achieving the best balance between throughput and CPU overhead</li>
             </ul>
+            <p class="">A key design decision: should large messages (like complete user behavior events) go directly into Kafka? The answer is to avoid it. Kafka handles large messages inefficiently — store large payloads (over 1KB) in object storage (S3/MinIO), with Kafka messages containing only reference pointers.</p>
         </section>
 
-        <!-- Section 4: WGSL Shader 代码 -->
-        <section class="detail-section" id="shader">
-            <h2 class="">WGSL Shader Programming</h2>
-            <p class="">WGSL (WebGPU Shading Language) is WebGPU's shader language with Rust-like syntax, supporting vectorized operations and shared memory. For ML inference, we need to translate matrix multiplication, activation functions, and other operations into WGSL compute shaders.</p>
-            <p class="">Below is a matrix multiplication shader optimized with Shared Memory Tiling — the most fundamental computation in Transformer models:</p>
+        <!-- Section 4: Flink 核心概念 -->
+        <section class="detail-section" id="flink">
+            <h2 class="">Flink Core Concepts</h2>
+            <p class="">Understanding Flink's core concepts is the foundation for building reliable stream processing applications:</p>
+            <ul class="">
+                <li class=""><strong class="">Event Time vs Processing Time</strong> — Event Time is when data was produced; Processing Time is when it's processed. Production environments should always use Event Time with Watermarks for out-of-order data</li>
+                <li class=""><strong class="">Watermark</strong> — Measures Event Time progress. When Watermark exceeds window end time, Flink triggers window computation. Properly setting Watermark delay is key to balancing accuracy and latency</li>
+                <li class=""><strong class="">Checkpoint</strong> — Flink's fault tolerance mechanism, periodically persisting job state snapshots to HDFS/S3. On job failure, recovery from the latest Checkpoint achieves Exactly-Once semantics</li>
+                <li class=""><strong class="">State</strong> — Flink provides rich state backends (RocksDB, Heap), supporting Keyed State and Operator State, forming the foundation for complex stream processing logic</li>
+            </ul>
+            <blockquote class="">Choosing a watermark is a balancing act. Too small an allowance drops late data; too large an allowance increases latency. Start with the actual degree of out-of-order arrival and find the right value through experiments.</blockquote>
+        </section>
+
+        <!-- Section 5: 代码实现 -->
+        <section class="detail-section" id="code">
+            <h2 class="">Flink Real-Time Aggregation</h2>
+            <p class="">Below is a complete real-time user behavior aggregation example, demonstrating how to read from Kafka, group by user, and compute behavior statistics within 5-minute tumbling windows:</p>
             <div class="detail-code-block">
                 <div class="detail-code-header">
                     <div class="detail-code-dot"></div>
                     <div class="detail-code-dot"></div>
                     <div class="detail-code-dot"></div>
-                    <div class="detail-code-title">matmul_tiled.wgsl</div>
+                    <div class="detail-code-title">UserBehaviorAggregator.java</div>
                 </div>
-                <pre class="detail-code-body">// Tiled matrix multiplication with shared memory
-const TILE: u32 = 16u;
+                <pre class="detail-code-body">public class UserBehaviorAggregator {
+    public static void main(String[] args) throws Exception {
+        StreamExecutionEnvironment env =
+            StreamExecutionEnvironment.getExecutionEnvironment();
+        env.enableCheckpointing(60000); // 60s checkpoint
 
-@group(0) @binding(0) var&lt;storage&gt; A: array&lt;f32&gt;;
-@group(0) @binding(1) var&lt;storage&gt; B: array&lt;f32&gt;;
-@group(0) @binding(2) var&lt;storage, read_write&gt; C: array&lt;f32&gt;;
-@group(0) @binding(3) var&lt;uniform&gt; params: vec4&lt;u32&gt;; // M, N, K, _
+        // Read user activity events from Kafka
+        KafkaSource&lt;UserEvent&gt; source = KafkaSource.&lt;UserEvent&gt;builder()
+            .setBootstrapServers("kafka:9092")
+            .setTopics("user.events")
+            .setGroupId("flink-behavior-agg")
+            .setValueOnlyDeserializer(new UserEventDeserializer())
+            .build();
 
-var&lt;workgroup&gt; tileA: array&lt;array&lt;f32, TILE&gt;, TILE&gt;;
-var&lt;workgroup&gt; tileB: array&lt;array&lt;f32, TILE&gt;, TILE&gt;;
+        // Aggregate over five-minute tumbling windows
+        env.fromSource(source, WatermarkStrategy
+            .&lt;UserEvent&gt;forBoundedOutOfOrderness(Duration.ofSeconds(10))
+            .withTimestampAssigner((e, t) -&gt; e.getTimestamp()),
+            KafkaSourceOffsets.initializer())
 
-@compute @workgroup_size(TILE, TILE)
-fn main(
-    @builtin(global_invocation_id) gid: vec3&lt;u32&gt;,
-    @builtin(local_invocation_id) lid: vec3&lt;u32&gt;,
-) {
-  let M = params.x; let N = params.y; let K = params.z;
-  let row = gid.x; let col = gid.y;
-  var sum = 0.0;
-  for (var t = 0u; t &lt; K; t += TILE) {
-    tileA[lid.x][lid.y] = A[row * K + t + lid.y];
-    tileB[lid.x][lid.y] = B[(t + lid.x) * N + col];
-    workgroupBarrier();
-    for (var k = 0u; k &lt; TILE; k++) {
-      sum += tileA[lid.x][k] * tileB[k][lid.y];
-    }
-    workgroupBarrier();
-  }
-  C[row * N + col] = sum;
-}</pre>
-            </div>
-            <p class="">This tiled version leverages workgroup shared memory, reducing global memory access by a factor of TILE. In actual tests, the tiled version is <strong class="">8-12x faster</strong> than the naive implementation.</p>
+                    .keyBy(UserEvent::getUserId)
+                    .window(TumblingEventTimeWindows.of(Time.minutes(5)))
+                    .aggregate(new BehaviorCountAggregate())
+                    .sinkTo(kafkaSink);
+            }
+        }</pre>
+                </div>
+
+            <p class="">Key configuration notes: <code class="">forBoundedOutOfOrderness(10s)</code> allows data to arrive up to 10 seconds late; <code class="">enableCheckpointing(60000)</code> takes a state snapshot every 60 seconds, ensuring Exactly-Once semantics.</p>
         </section>
 
-        <!-- Section 5: ONNX 模型 -->
-        <section class="detail-section" id="onnx">
-            <h2 class="">Running ONNX Models in Browser</h2>
-            <p class="">ONNX Runtime Web bridges WebGPU and deep learning models. It maps each ONNX operator to a WebGPU compute shader, enabling end-to-end in-browser inference.</p>
-            <p class="">Core workflow includes:</p>
+        <!-- Section 6: Exactly-Once -->
+        <section class="detail-section" id="exactlyonce">
+            <h2 class="">Exactly-Once Semantics</h2>
+            <p class="">Exactly-Once is the core challenge of stream processing systems. Flink achieves end-to-end Exactly-Once through Checkpoint + two-phase commit protocol:</p>
             <ul class="">
-                <li class=""><strong class="">Model Loading</strong> — Load .onnx model file via fetch, parse computation graph structure</li>
-                <li class=""><strong class="">Backend Selection</strong> — Use <code class="">ort.env.webgpu</code> to enable WebGPU backend, auto-detecting device capabilities</li>
-                <li class=""><strong class="">Operator Mapping</strong> — ONNX operators (Conv, MatMul, Softmax, etc.) auto-compile to WGSL shaders</li>
-                <li class=""><strong class="">Memory Management</strong> — ORT Web auto-manages GPU buffer allocation and reclamation, supporting zero-copy tensor data transfer</li>
+                <li class=""><strong class="">Source Side</strong> — Kafka Source records current consumption offset during Checkpoint, resuming from the Checkpoint offset on recovery</li>
+                <li class=""><strong class="">Operator Side</strong> — Flink's state backend (e.g., RocksDB) persists all state to distributed storage during Checkpoint</li>
+                <li class=""><strong class="">Sink Side</strong> — Uses Kafka Sink's transactional write mode (KafkaProducer + transactions), only committing messages after Checkpoint completion</li>
             </ul>
-            <p class="">For Transformer models, ORT Web also supports KV Cache optimization, reducing self-attention computation complexity from O(n²) to O(n), significantly improving long-sequence inference efficiency.</p>
+            <p class="">Configuration essentials:</p>
+            <ul class="">
+                <li class="">Set <code class="">CheckpointingMode.EXACTLY_ONCE</code></li>
+                <li class="">Kafka Sink uses <code class="">DeliveryGuarantee.EXACTLY_ONCE</code></li>
+                <li class="">Kafka Consumer sets <code class="">isolation.level=read_committed</code></li>
+                <li class="">Checkpoint interval shouldn't be too long (recommended 30s-60s), otherwise recovery time will be excessive</li>
+            </ul>
+            <blockquote class="">Exactly-once processing has a performance cost. In our tests, enabling it reduced throughput by about 15%, but for finance and risk-control workloads, data accuracy matters much more than throughput.</blockquote>
         </section>
 
-        <!-- Section 6: 内存管理 -->
-        <section class="detail-section" id="memory">
-            <h2 class="">GPU Memory Management</h2>
-            <p class="">WebGPU's memory model closely resembles native GPU APIs. Buffers are GPU-visible memory blocks, with the key optimization being minimizing CPU-GPU data transfer.</p>
-            <p class="">For ML inference scenarios, the following best practices are recommended:</p>
+        <!-- Section 7: 状态管理 -->
+        <section class="detail-section" id="state">
+            <h2 class="">State Management</h2>
+            <p class="">Flink's state management capability is its core advantage over simple message forwarders. Proper State usage enables complex stream processing logic:</p>
             <ul class="">
-                <li class=""><strong class="">Staging Buffer Pattern</strong> — Use staging buffers as CPU/GPU bridges, avoiding performance loss from directly mapping storage buffers</li>
-                <li class=""><strong class="">Buffer Reuse</strong> — For same-shaped tensors, reuse allocated buffers to reduce GC pressure</li>
-                <li class=""><strong class="">Async Map</strong> — Use mapAsync to avoid blocking the main thread, maintaining UI responsiveness</li>
-                <li class=""><strong class="">Precision Selection</strong> — Use f16 when precision allows, halving VRAM usage and improving inference speed by 40-60%</li>
+                <li class=""><strong class="">ValueState</strong> — Stores a single value, suitable for counters, accumulators, and similar scenarios</li>
+                <li class=""><strong class="">ListState</strong> — Stores element lists, suitable for caching the most recent N records</li>
+                <li class=""><strong class="">MapState</strong> — Stores Key-Value mappings, suitable for deduplication, joins, and similar scenarios</li>
+                <li class=""><strong class="">ReducingState / AggregatingState</strong> — Supports incremental aggregation, avoiding traversal of all elements on each window trigger</li>
             </ul>
-            <p class="">Model weights should be uploaded to GPU once during initialization; only input tensors are transferred during inference. For MobileNetV3-level models (~15MB weights), initialization upload takes ~50ms, with each subsequent inference only needing to transfer input image data (~0.6MB).</p>
-            <blockquote class="">The core principle of memory optimization is to keep data on the GPU as much as possible and minimize transfers between devices. Every CPU-GPU copy is a potential bottleneck.</blockquote>
+            <p class="">State backend selection:</p>
+            <ul class="">
+                <li class=""><strong class="">HeapStateBackend</strong> — State stored in JVM heap memory, suitable for small state volumes (under GB level), with fast read/write</li>
+                <li class=""><strong class="">RocksDBStateBackend</strong> — State stored on local disk (RocksDB), supports incremental Checkpoint, suitable for large state volumes (TB level) in production</li>
+            </ul>
+            <p class="">We use the RocksDB + incremental Checkpoint combination, reducing Checkpoint time from 45 seconds (full) to 3-5 seconds (incremental), significantly reducing Checkpoint interference with normal processing.</p>
         </section>
 
-        <!-- Section 7: 性能基准 -->
-        <section class="detail-section" id="benchmark">
-            <h2 class="">Performance Benchmarks</h2>
-            <p class="">We ran a series of benchmarks using the same MobileNetV3 model processing 224x224 input images. Test environment: MacBook Pro M3 Max + Chrome 125.</p>
+        <!-- Section 8: 性能调优 -->
+        <section class="detail-section" id="tuning">
+            <h2 class="">Performance Tuning</h2>
+            <p class="">Below are our Flink + Kafka performance tuning experiences from actual projects:</p>
             <ul class="">
-                <li class=""><strong class="">WebGPU Compute Shader</strong> — 8ms / inference, 92% GPU utilization</li>
-                <li class=""><strong class="">WebGL (ONNX Runtime)</strong> — 45ms / inference, 35% GPU utilization</li>
-                <li class=""><strong class="">WebAssembly (WASM)</strong> — 120ms / inference, single-threaded CPU</li>
+                <li class=""><strong class="">Parallelism Settings</strong> — Flink operator parallelism should align with Kafka partition count. Source parallelism = Kafka partition count; operator parallelism adjusted based on CPU intensity</li>
+                <li class=""><strong class="">Network Buffers</strong> — Increase <code class="">taskmanager.memory.network.fraction</code> (default 0.1) to improve Shuffle efficiency; recommended value is 0.2</li>
+                <li class=""><strong class="">Backpressure Handling</strong> — Use Flink Web UI's backpressure monitoring to locate bottleneck operators. Common causes: slow downstream writes, oversized windows, improper state backend configuration</li>
+                <li class=""><strong class="">Kafka Optimization</strong> — Increase <code class="">fetch.min.bytes</code> and <code class="">fetch.max.wait.ms</code> to reduce small-batch fetch network overhead</li>
             </ul>
-            <p class="">WebGPU inference is <strong class="">5.6x faster</strong> than WebGL and <strong class="">15x faster</strong> than pure WebAssembly. More importantly, WebGPU's advantage grows with larger models — for BERT-base level models, the gap can exceed 20x.</p>
-            <p class="">WebGPU also has limitations: browser support isn't fully universal (~78% of desktop browsers currently support it), and some older devices have driver compatibility issues. But for modern browser-targeted Web applications, WebGPU is already the best choice for ML inference.</p>
+            <p class="">Before and after tuning comparison:</p>
+            <ul class="">
+                <li class=""><strong class="">Throughput</strong> — From 50K events/s to 200K events/s</li>
+                <li class=""><strong class="">End-to-End Latency</strong> — P99 from 2.5s to 800ms</li>
+                <li class=""><strong class="">Checkpoint Duration</strong> — From 45s to 3-5s (incremental Checkpoint)</li>
+                <li class=""><strong class="">Resource Utilization</strong> — CPU utilization from 40% to 70%</li>
+            </ul>
         </section>
 
-        <!-- Section 8: 实战建议 -->
-        <section class="detail-section" id="tips">
-            <h2 class="">Best Practices</h2>
-            <p class="">Based on our production experience, here are WebGPU ML inference best practices:</p>
+        <!-- Section 9: 总结 -->
+        <section class="detail-section" id="conclusion">
+            <h2 class="">Summary</h2>
+            <p class="">The Flink + Kafka combination provides an industrial-grade solution for real-time data processing. Core advantages:</p>
             <ul class="">
-                <li class=""><strong class="">Progressive Enhancement</strong> — Prefer WebGPU, fallback to WebGL, then WASM for maximum compatibility</li>
-                <li class=""><strong class="">Model Quantization</strong> — INT8 quantization reduces model size 4x and improves inference speed 2-3x, with typical accuracy loss under 1%</li>
-                <li class=""><strong class="">Warm-up Inference</strong> — Execute a dummy inference immediately after page load to trigger shader compilation and GPU buffer allocation</li>
-                <li class=""><strong class="">Worker Threads</strong> — Run inference in Web Workers to avoid blocking the main thread and causing UI jank</li>
+                <li class=""><strong class="">True Stream Processing</strong> — Record-by-record processing instead of micro-batching, with lower latency</li>
+                <li class=""><strong class="">Exactly-Once Semantics</strong> — End-to-end data accuracy guarantee</li>
+                <li class=""><strong class="">Rich State Management</strong> — Supports complex stateful computation logic</li>
+                <li class=""><strong class="">Strong Fault Tolerance</strong> — Checkpoint mechanism ensures job recoverability</li>
             </ul>
-            <p class="">The WebGPU ecosystem is rapidly evolving, with the W3C spec still iterating. Follow the Chrome DevRel blog and WebGPU Explainer to stay updated on API changes and new features.</p>
+            <p class="">Of course, this solution also has challenges like a steep learning curve and high operational complexity. Start with small-scale PoCs, gradually accumulate experience, then expand to production. For teams, stream processing isn't a "quick win" technology, but an engineering practice requiring sustained investment and optimization.</p>
         </section></div></div>
     </div>
-    <section class="related" aria-labelledby="related-title"><p class="kicker">Continue reading</p><h2 id="related-title">Related <em>writing</em></h2><ol class="journal-list" style="list-style:none"><li><a class="journal-row" href="article-01.html" data-topic="1" data-cursor="Read">
-        <span class="journal-date">2026.11 · 01</span>
-        <span class="journal-title"><span class="static">Why Retrain Every Time a Model Breaks?</span><span class="marquee" aria-hidden="true"><span>Why Retrain Every Time a Model Breaks? —&nbsp;</span><span>Why Retrain Every Time a Model Breaks? —&nbsp;</span><span>Why Retrain Every Time a Model Breaks? —&nbsp;</span></span></span>
-        <span class="topic" data-topic="1">AI Engineering</span><span class="journal-time">13 min</span></a></li><li><a class="journal-row" href="article-02.html" data-topic="1" data-cursor="Read">
-        <span class="journal-date">2026.11 · 02</span>
-        <span class="journal-title"><span class="static">The Model Fits. Why Is It Still Slow?</span><span class="marquee" aria-hidden="true"><span>The Model Fits. Why Is It Still Slow? —&nbsp;</span><span>The Model Fits. Why Is It Still Slow? —&nbsp;</span><span>The Model Fits. Why Is It Still Slow? —&nbsp;</span></span></span>
-        <span class="topic" data-topic="1">AI Engineering</span><span class="journal-time">15 min</span></a></li><li><a class="journal-row" href="article-03.html" data-topic="1" data-cursor="Read">
-        <span class="journal-date">2026.10 · 03</span>
-        <span class="journal-title"><span class="static">When the Exam Is Wrong: What Do AI Scores Measure?</span><span class="marquee" aria-hidden="true"><span>When the Exam Is Wrong: What Do AI Scores Measure? —&nbsp;</span><span>When the Exam Is Wrong: What Do AI Scores Measure? —&nbsp;</span><span>When the Exam Is Wrong: What Do AI Scores Measure? —&nbsp;</span></span></span>
-        <span class="topic" data-topic="1">AI Engineering</span><span class="journal-time">15 min</span></a></li></ol></section>
+    <section class="related" aria-labelledby="related-title"><p class="kicker">Continue reading</p><h2 id="related-title">Related <em>writing</em></h2><ol class="journal-list" style="list-style:none"><li><a class="journal-row" href="article-05.html" data-topic="4" data-cursor="Read">
+        <span class="journal-date">2026.10 · 05</span>
+        <span class="journal-title"><span class="static">When Data Centers Protect Themselves: A 3.8 GW Load Transfer</span><span class="marquee" aria-hidden="true"><span>When Data Centers Protect Themselves: A 3.8 GW Load Transfer —&nbsp;</span><span>When Data Centers Protect Themselves: A 3.8 GW Load Transfer —&nbsp;</span><span>When Data Centers Protect Themselves: A 3.8 GW Load Transfer —&nbsp;</span></span></span>
+        <span class="topic" data-topic="4">System Architecture</span><span class="journal-time">16 min</span></a></li><li><a class="journal-row" href="article-06.html" data-topic="4" data-cursor="Read">
+        <span class="journal-date">2026.10 · 06</span>
+        <span class="journal-title"><span class="static">Can You Search Inside Encrypted Data?</span><span class="marquee" aria-hidden="true"><span>Can You Search Inside Encrypted Data? —&nbsp;</span><span>Can You Search Inside Encrypted Data? —&nbsp;</span><span>Can You Search Inside Encrypted Data? —&nbsp;</span></span></span>
+        <span class="topic" data-topic="4">System Architecture</span><span class="journal-time">33 min</span></a></li><li><a class="journal-row" href="article-10.html" data-topic="4" data-cursor="Read">
+        <span class="journal-date">2026.07 · 10</span>
+        <span class="journal-title"><span class="static">Mac Is Becoming the Ideal Runtime for Personal AI Apps</span><span class="marquee" aria-hidden="true"><span>Mac Is Becoming the Ideal Runtime for Personal AI Apps —&nbsp;</span><span>Mac Is Becoming the Ideal Runtime for Personal AI Apps —&nbsp;</span><span>Mac Is Becoming the Ideal Runtime for Personal AI Apps —&nbsp;</span></span></span>
+        <span class="topic" data-topic="4">System Architecture</span><span class="journal-time">9 min</span></a></li></ol></section>
     <nav class="pager" aria-label="More articles">
-        <a href="article-37.html" data-cursor="Prev"><span class="meta">← Previous</span><strong>Real-Time Data Processing: Flink + Kafka Best Practices</strong></a>
-        <a href="article-39.html" data-cursor="Next"><span class="meta">Next →</span><strong>How to Objectively View Modern Feminism</strong></a>
+        <a href="article-37.html" data-cursor="Prev"><span class="meta">← Previous</span><strong>From DETR to YOLOv8: Transformer Evolution in Object Detection</strong></a>
+        <a href="article-39.html" data-cursor="Next"><span class="meta">Next →</span><strong>WebGPU: Running Deep Learning Inference in the Browser</strong></a>
     </nav>
 </div>
 </main>

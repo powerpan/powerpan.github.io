@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>When the Exam Is Wrong: What Do AI Scores Measure? — Eric</title>
-<meta name="description" content="An equivalent formula earns zero; repaired tasks produce higher scores. Read the exam and its grading procedure before deciding how much the model improved.">
+<title>The Model Fits. Why Is It Still Slow? — Eric</title>
+<meta name="description" content="A 26% smaller cache buys a much smaller gain per decode step. GAAC exposes three different problems in local inference: capacity, latency, and concurrency.">
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#ede8df">
 <script>(()=>{const r=document.documentElement;let t,m;try{t=localStorage.getItem('ink-theme');m=localStorage.getItem('ink-motion')}catch(e){}t=t||(matchMedia('(prefers-color-scheme: dark)').matches?'night':'day');if(matchMedia('(prefers-reduced-motion: reduce)').matches)m='off';r.dataset.theme=t;r.dataset.motion=m||'on'})()</script>
@@ -44,128 +44,191 @@
 <div class="page">
     <header class="article-head">
         <p class="meta"><a href="index.html">← Journal</a> &nbsp;/&nbsp; <span class="topic" data-topic="1">AI Engineering</span></p>
-        <h1 data-split>When the Exam Is Wrong: <em>What Do AI Scores Measure?</em></h1>
-        <p class="lede rise">An equivalent formula earns zero; repaired tasks produce higher scores. Read the exam and its grading procedure before deciding how much the model improved.</p>
-        <div class="article-meta meta rise" style="--d:120ms"><span>2026.10.08</span><span>15 min</span><span>No. 03</span></div>
+        <h1 data-split>The Model Fits. <em>Why Is It Still Slow?</em></h1>
+        <p class="lede rise">A 26% smaller cache buys a much smaller gain per decode step. GAAC exposes three different problems in local inference: capacity, latency, and concurrency.</p>
+        <div class="article-meta meta rise" style="--d:120ms"><span>2026.11.03</span><span>15 min</span><span>No. 03</span></div>
     </header>
     <div class="article-layout">
-        <nav class="toc" aria-label="Contents"><a href="#intro">Introduction</a><a href="#audit-denominator">The denominator behind 95.2% is rejected answers</a><a href="#repaired-tasks">From 61 to 87, the exam changed too</a><a href="#attempt-metrics">Behind 97.96% are four attempts</a><a href="#expert-audit">Expert grading needs auditing too</a><a href="#coding-tests">The tests required a function name the task did not</a><a href="#benchmark-versions">New questions make old scores harder to compare</a><a href="#grader-regressions">Maintain the evaluator as software</a><a href="#research-boundary">From solving physics problems to doing research</a></nav>
+        <nav class="toc" aria-label="Contents"><a href="#intro">Introduction</a><a href="#kv-capacity">The weights fit. Historical tokens still need memory.</a><a href="#fused-reconstruction">Where does the compressed cache get unpacked?</a><a href="#kernel-timing">More computation, less elapsed time</a><a href="#whole-step">A 1.22× kernel does not make the request 1.22× faster</a><a href="#concurrency">Does serving one more request count as faster?</a><a href="#fp8-comparison">What changes if the deployment already uses FP8?</a><a href="#deployment-limits">Integration is where the work starts</a><a href="#benchmark-plan">The comparisons I would run before deployment</a></nav>
         <div class="page-surface"><div class="prose"><section class="detail-section" id="intro">
-            <p class="">A rope-tension question in PHYBench produced a model answer that looked different from the reference. Ordinary denominator rationalization turns them into the same expression:</p>
-            <pre class=""><code class="language-text">T = P / (3 * sqrt(6))
-  = P * sqrt(6) / (3 * 6)
-  = sqrt(6) * P / 18
+<p class="">Memory capacity is usually the first obstacle when running a large language model locally. If BF16 weights will not fit, try 8-bit, then 4-bit. Once the weights finally load, it is tempting to think the hard part is over.</p>
+
+<p class="">Yet generation can slow down again when we introduce long documents, a code repository, or several simultaneous tasks. The model has not run out of memory, and the GPU has substantial theoretical compute. Where is the time going?</p>
+
+<p class="">Guo, George, and Joshi at Notre Dame offer a useful set of results in their October 28, 2026 preprint, <a href="https://arxiv.org/html/2610.38210v1" target="_blank" rel="noopener" class="">GAAC</a>: about 26% less resident KV memory, 1.19–1.27× faster attention kernels at 64K context on DGX Spark, 1.04–1.15× faster complete W4A16 decode steps, and 13%–29% higher aggregate throughput under fixed KV budgets.</p>
+
+<p class="">Getting the model into memory clears the first hurdle. What often limits speed next is moving data into the compute units at every step. GAAC is interesting because the same memory saving produces very different gains at the kernel, model, and serving levels.</p>
+
+</section>
+<section class="detail-section" id="kv-capacity">
+<h2 class="">The weights fit. Historical tokens still need memory.</h2>
+<p class="">Weights are only part of the resident data used during inference. A Transformer also retains historical keys and values so that generating the next token does not require recomputing previous K and V states. This KV cache grows with context length and the number of concurrent sequences.</p>
+
+<p class="">For a typical full-attention architecture, the theoretical storage for one sequence can be approximated as:</p>
+
+<pre class=""><code class="language-text">KV bytes = 2 × layers × KV heads × head dim
+           × context tokens × bytes per element
 </code></pre>
-            <p class="">The Expression Edit Distance (EED) evaluator nevertheless awarded zero credit and a failed binary judgment. Figure 3 of a <a href="https://arxiv.org/html/2609.13009v1" target="_blank" rel="noopener" class="">physics benchmark audit submitted on September 11, 2026</a> records the error: the model supplied an ordinary algebraic equivalent and the grading program counted it as a failure.</p>
-            <p class="">Researchers at Yale and other institutions conducted the study, How Good Are Frontier Models at Physics?, across six benchmarks: UGPhysics, PHYBench, PRISM-Physics, HLE-Physics, CMT-Benchmark, and CritPt. Its scope is text-only, closed-ended physics problems with verifiable final answers. Some scores rose sharply after repair: GPT-5.6-Sol's mean@4 increased from 61.00% to 87.24% on CMT and from 47.28% to 78.66% on HLE-Physics.</p>
-            <p class="">This exposes a weak point in evaluation. We spend enormous effort tracking a model's score while treating the questions and grading program as an inherently sound ruler. A faulty ruler makes even a precise percentage misleading. Separating grading errors, repaired questions, and repeated attempts shows what actually changed here.</p>
-        </section>
 
-        <section class="detail-section" id="audit-denominator">
-            <h2 class="">The denominator behind 95.2% is rejected answers</h2>
-            <p class="">Experts classified cases as model errors, grader errors, or benchmark errors. In the first category, the problem and reference are sound and the model is wrong. In the second, a correct response is rejected. The third covers incorrect references, missing conditions, and ambiguous questions. When benchmark materials are defective, the paper gives that classification precedence rather than grading the response as though the task were valid.</p>
-            <p class="">Across four pooled audits, 250 rejected cases ended with 143 benchmark errors, 95 grader errors, and 12 model errors. Those 250 rejections are the denominator behind the widely cited 95.2%: most audited failures were traced to the measurement process. CMT and CritPt used different audit coverage and are counted separately.</p>
-            <p class="">The reviewed sample was selected to investigate where those failures came from. Following rejected answers naturally exposes false rejections. The immediate result is a different explanation of these lost points. Estimating defects across the whole question pool calls for a separate sample drawn across that pool.</p>
-            <p class="">Benchmark errors are not always careless arithmetic, either. In Figure 4, a CritPt question about the Kitaev honeycomb model asks for ground-state energy without explicitly specifying a Hamiltonian using Pauli matrices or spin operators. For spin 1/2, using <code class="">S = σ/2</code> changes the two-body product by a factor of four. The repaired question supplies the Hamiltonian and convention. An individual researcher's customary convention cannot substitute for a condition absent from the question.</p>
-            <p class="">Missing conditions are harder to fix than a grader that fails to recognize an equation. Even a stronger LLM judge has to choose a physical convention first. Leaving the solver and grader to guess what the question should have specified undermines a common basis for judgment from the start.</p>
-        </section>
+<p class="">The initial 2 accounts for K and V. Take a hypothetical full-attention architecture: 32 layers, 8 KV heads, a head dimension of 128, and BF16 storage. Its KV takes 128 KiB per token, or 8 GiB at 65,536 tokens. Four equally long sequences without shared prefixes need 32 GiB for KV alone. Allocator overhead and temporary workspaces come on top.</p>
 
-        <section class="detail-section" id="repaired-tasks">
-            <h2 class="">From 61 to 87, the exam changed too</h2>
-            <p class="">CMT originally contained 50 questions. Experts found defects in 30, repaired 29, and excluded one, leaving 49. For HLE-Physics, 202 text-only questions remained after multimodal exclusions; removing 86 benchmark-error questions left 116. The figures below come from Table 1 and refer to GPT-5.6-Sol High's mean@4 under the corresponding tool conditions.</p>
-            <div class="article-table-scroll" tabindex="0" role="region" aria-labelledby="bpbg_table_heading"><table class="">
-<thead id="bpbg_table_heading" class="">
+<p class="">Weight quantization does not automatically shrink that cache. An 8B model has roughly 16 GB of raw BF16 weights or 4 GB at 4-bit, while its KV may remain BF16. Costs previously overshadowed by the weights become more prominent. GQA, MQA, sliding-window attention, and hybrid attention change that growth, so similarly sized models need not have similar KV requirements.</p>
+
+<p class="">Caching carries another bill. Each generated token in standard full attention accesses historical keys and combines their values. Previous computation is reused, but reading its results has to be paid for again at every step.</p>
+
+<p class="">At that point, a high TFLOPS figure can sit idle. Prefill organizes many input tokens into large matrix operations. Small-batch, single-request decode repeatedly reads weights and historical KV. The arithmetic units wait for data while memory bandwidth is already busy.</p>
+
+<p class="">Suppose a path reads 8 GiB from device memory each step at an available decimal bandwidth of 1 TB/s. The ideal transfer floor is already about 8.6 ms. Cache hits, reuse, and bandwidth utilization change the bill, but reading still costs time. Long-context generation pays it repeatedly.</p>
+
+</section>
+<section class="detail-section" id="fused-reconstruction">
+<h2 class="">Where does the compressed cache get unpacked?</h2>
+<p class=""><a href="https://arxiv.org/abs/2205.14135" target="_blank" rel="noopener" class="">FlashAttention</a> already demonstrated the value of reorganizing computation and memory access. GAAC turns to the KV representation itself: if historical states are read repeatedly, can we move fewer bytes without changing the values stored?</p>
+
+<p class="">BF16 consists of one sign bit, eight exponent bits, and seven mantissa bits. GAAC preserves the sign and mantissa and encodes only the exponent. Model-generated exponents are not uniformly distributed; frequently occurring exponents in many head-channels occupy short intervals. Calibration chooses high-coverage windows of length 8 and 16 for each head-channel of K and V in every layer. Encoding then stores offsets from those window bases.</p>
+
+<p class="">Eight elements share a 2-bit mode tag. A group uses 3-bit offsets if every element fits the narrow window, then tries 4-bit offsets, and falls back to raw 8-bit exponents if necessary. Outliers take the fallback path. Calibration mismatch costs compression efficiency while preserving the original values.</p>
+
+<p class="">In the common 3-bit mode, each element takes <code class="">8 + 3 + 2/8 = 11.25 bits</code>. About 88%–90% of groups use it across five tested models, yielding complete encoded-size ratios of 1.405–1.407×. At 1.406, encoded storage falls by <code class="">1 - 1/1.406 ≈ 28.9%</code>. Fixed slots, block tables, and fallback consume some of that saving, leaving about 26% less resident KV memory. Weights and other runtime allocations keep their own costs.</p>
+
+<p class="">Making KV smaller is not enough to make inference faster. A straightforward implementation reads the compressed data, decompresses the whole cache into device memory, and hands it to an ordinary attention kernel. That introduces a full-cache write followed by another read. The saved traffic can disappear in the unpacking process.</p>
+
+<p class="">GAAC fuses reconstruction with attention. The kernel reads compressed tiles and metadata, reconstructs the BF16 values it currently needs, and immediately uses them for attention scores and weighted value sums. It never materializes a complete decompressed cache in external memory. New tokens first enter an incomplete BF16 tail block; a full block is compressed once, rather than repacked with every subsequent token. Blocks that exceed compressed-slot capacity remain in raw BF16.</p>
+
+<p class="">This scheduling determines whether compression belongs in the inference path. KV is appended, read, and released throughout a request, and historical blocks are consumed repeatedly by later tokens. GAAC preserves original KV bit patterns and reconstructs them where they are used. Integration then compares the floating-point kernel's numerical behavior and task quality against the baseline. That is a more useful target than a prettier compression ratio alone.</p>
+
+</section>
+<section class="detail-section" id="kernel-timing">
+<h2 class="">More computation, less elapsed time</h2>
+<p class=""><a href="https://arxiv.org/html/2610.38210v1#S4.T5" target="_blank" rel="noopener" class="">Table 5</a> breaks down a decode-attention kernel at 64K context. Times are in microseconds:</p>
+
+<div class="article-table-scroll" tabindex="0" role="region" aria-labelledby="bgkv_table_heading"><table class="">
+<thead id="bgkv_table_heading" class="">
 <tr class="">
-<th scope="col" class="">Benchmark</th>
-<th scope="col" class="">Original → retained questions</th>
-<th scope="col" class="">Before → after correction</th>
+<th scope="col" class="">Component</th>
+<th align="right" scope="col" class="">BF16 / FA2</th>
+<th align="right" scope="col" class="">Decompress first</th>
+<th align="right" scope="col" class="">GAAC fused path</th>
 </tr>
 </thead>
 <tbody class=""><tr class="">
-<td class="">CMT-Benchmark</td>
-<td class="">50 → 49</td>
-<td class="">61.00% → 87.24%</td>
+<td class="">KV loading</td>
+<td align="right" class="">1117.8</td>
+<td align="right" class="">1117.8</td>
+<td align="right" class="">823.5</td>
 </tr>
 <tr class="">
-<td class="">HLE-Physics</td>
-<td class="">202 → 116</td>
-<td class="">47.28% → 78.66%</td>
+<td class="">Separate exponent decoding</td>
+<td align="right" class="">—</td>
+<td align="right" class="">930.8</td>
+<td align="right" class="">—</td>
+</tr>
+<tr class="">
+<td class="">Computation, including GAAC reconstruction</td>
+<td align="right" class="">241.5</td>
+<td align="right" class="">241.5</td>
+<td align="right" class="">290.7</td>
+</tr>
+<tr class="">
+<td class="">Total</td>
+<td align="right" class="">1359.3</td>
+<td align="right" class="">2290.1</td>
+<td align="right" class="">1114.2</td>
 </tr>
 </tbody></table></div>
-            <p class="">CMT's increase primarily comes from repairing benchmark materials. Its native evaluator was unavailable, so the study used the same HLE-adapted evaluator before and after repair, as Section 3.2.2 explains. Locating the error in a specific part of the process is more useful than a general claim that the old grader underestimated the model.</p>
-            <p class="">Keeping the original problem and response fixed while changing the grade tests grading error. Correcting a reference changes the judgment basis. Adding conditions and generating a new response changes the task. Excluding questions changes the denominator and difficulty composition. Each operation can be justified, but they are not the same measurement.</p>
-            <p class="">HLE's revisions particularly need a record. Auditing begins with rejected answers and then excludes invalid questions, linking deletion decisions to earlier failure records. Publish the exclusions, reasons, and retained set together so readers can inspect the new exam's composition alongside the higher score.</p>
-            <p class="">Repair the bad questions and publish the repair process as part of the experiment. Report fixed-output re-grading separately from fresh attempts on repaired tasks. Keeping the earlier records lets us distinguish better measurement from better models. A polished new percentage cannot carry that history by itself.</p>
-        </section>
 
-        <section class="detail-section" id="attempt-metrics">
-            <h2 class="">Behind 97.96% are four attempts</h2>
-            <p class="">On repaired CMT, GPT-5.6-Sol High achieves 87.24% mean@4 and 97.96% pass@4. The former averages correctness over four attempts per question. The latter asks only whether at least one of those four attempts succeeds.</p>
-            <p class="">pass@4 measures whether at least one of four attempts succeeds. If one answer is right and three are wrong, the user still has to pick the right one. That selection problem is difficult in a product and easy to overlook behind a figure near 98%. Single-attempt performance and an answer-selection mechanism are needed to connect the result to use.</p>
-            <p class="">With 49 questions, each contributes about 2.04 percentage points to pass@4. Rankings separated by one or two questions need their per-question differences shown. Four attempts at the same problem still share that problem; uncertainty should be organized by question. Near the ceiling, these details determine how much a ranking means.</p>
-            <p class="">I therefore distinguish repeatability, validity for the target capability, and comparability across versions. Consistently rejecting an equivalent expression is a repeatable mistake, not valid measurement. Even excellent questions cannot guarantee comparable historical scores if tool access, reasoning budgets, or evaluator versions keep changing.</p>
-            <p class="">Bowman and Dahl discussed task design, annotation reliability, and scale in their <a href="https://aclanthology.org/2021.naacl-main.385/" target="_blank" rel="noopener" class="">2021 evaluation-methodology paper</a>. As models approach the ceiling, a few defective tasks and grading errors gain more influence over rankings. At that point, the exam itself needs an upgrade.</p>
-        </section>
+<p class="">GAAC saves 294.3 μs on KV loading and spends an extra 49.2 μs on computation, saving 245.1 μs overall. That is about a 1.22× kernel speedup, or 18% less elapsed time. Extra arithmetic buys a larger reduction in memory traffic.</p>
 
-        <section class="detail-section" id="expert-audit">
-            <h2 class="">Expert grading needs auditing too</h2>
-            <p class="">Expert review contains real disagreements. Of 196 double-reviewed cases, 140 initially agreed and 56 went to a third review; another 54 cases received one review. The 71.43% figure records initial agreement among double-reviewed cases. Publishing how disagreements were resolved gives expert judgment a route to scrutiny.</p>
-            <p class="">The distinction between a domain convention and a missing condition can rest on a reviewer's judgment. Reviewers also saw model responses and preliminary AI analysis, information that can influence their reading. Checking question validity first and retaining independent opinions and adjudication reasons reduces reliance on any one expert's intuition.</p>
-            <p class="">I would try to assess question validity before showing the model response and preserve reasons for disagreements. Accepted responses also need sampling. Checking only failures more readily uncovers false negatives, where correct answers are rejected. False positives, where wrong answers are accepted, also distort scores, in the opposite direction.</p>
-            <p class="">In its <a href="https://epoch.ai/benchmarks/hle/review" target="_blank" rel="noopener" class="">August 2026 review of the original HLE</a>, Epoch AI randomly selected six questions from each of eight categories, 48 in total. It confirmed substantive defects in 22: 12 were unanswerable as written, and 10 could reject correct answers, with five of those also potentially accepting wrong answers. This equally stratified sample exposes errors in both directions.</p>
-            <p class="">Audit both directions when repairing a grader. A wider acceptance rule can recover lost credit and admit wrong answers. Regression tests should contain both valid transformations and plausible but incorrect expressions, exercising the fix from both sides.</p>
-        </section>
+<p class="">The decompress-first path takes 2290.1 μs, slower than the uncompressed baseline. The same compressed representation leads to opposite performance outcomes depending on where reconstruction happens and how the result is consumed.</p>
 
-        <section class="detail-section" id="coding-tests">
-            <h2 class="">The tests required a function name the task did not</h2>
-            <p class="">Coding evaluation has the same mismatch. OpenAI's <a href="https://openai.com/index/why-we-no-longer-evaluate-swe-bench-verified/" target="_blank" rel="noopener" class="">SWE-bench Verified review</a> focused on 138 difficult tasks that o3 repeatedly failed to solve reliably. It found substantive testing or specification problems in 59.4% of that subset. So many failures tied to the test contract warrant a closer reading of “the model failed the tests.”</p>
-            <p class="">One Pylint task is especially concrete: tests directly imported a new function, <code class="">get_annotation</code>, although the problem statement did not require that name. A patch meeting the requirement through another internal implementation could still be rejected during test collection because the import failed. The tests had turned a detail of the reference patch into an unstated requirement.</p>
-            <p class="">A physics question asks for a correct result; a software requirement specifies behavior. If an internal helper's name is an acceptance condition, put it in the public task contract. When tests silently make the reference patch's implementation the only accepted solution, the score also measures guessing how the author wrote it.</p>
-            <p class="">Public tasks also face data contamination. Fixes and discussions remain visible and can enter training. OpenAI observed frontier models reproducing reference patches or question details in some tasks, a reason to investigate exposure and memory's contribution to scores.</p>
-            <p class="">The more often a test guides training feedback, model selection, and public rankings, the more development adapts to it. Evaluation maintenance needs both better grading and tracking of task exposure. Familiarity with the measuring tool can otherwise look like broader ability.</p>
-        </section>
+<p class="">The standalone codec ablation in Table 4 makes the tradeoff sharper. Adding a 2-bit mode improves the ratio from 1.406 to 1.439×, about 2.3%, while decoding latency jumps from 187.1 to 526.7 μs, roughly 2.8×. A small storage saving purchases a much larger reading cost.</p>
 
-        <section class="detail-section" id="benchmark-versions">
-            <h2 class="">New questions make old scores harder to compare</h2>
-            <p class=""><a href="https://github.com/LiveBench/LiveBench" target="_blank" rel="noopener" class="">LiveBench</a> continually introduces new material and emphasizes objectively verifiable answers. <a href="https://livecodebench.github.io/" target="_blank" rel="noopener" class="">LiveCodeBench</a> collects contest problems over time and organizes evaluation by date ranges. These approaches reduce risks from prolonged exposure, but "new" does not automatically mean "equally difficult."</p>
-            <p class="">If model A scores 80 on one set this year and model B scores 85 on another next year, the five-point increase alone does not prove B is stronger. Subfield coverage, difficulty, and settings may have changed. Comparing new and old models should at least involve rerunning them on one frozen release under the same budget and tool conditions, rather than stitching annual leaderboard figures into a capability curve.</p>
-            <p class="">I would retain two sets for different purposes. Stable, validated questions help track regressions and configuration differences. New questions with controlled exposure help evaluate performance on new tasks. Saturated old questions can still detect degradation; they just become poor instruments for finely ranking the strongest models.</p>
-            <p class="">Cross-version comparisons need their calibration process on the record. Shared questions lose discriminating power once widely memorized or nearly saturated. Report task coverage, tool configuration, exposure time, and anchor performance so readers can see how scores from different years connect.</p>
-        </section>
+<p class="">On a bandwidth-limited path, giving the GPU more arithmetic can be the route to better performance. The question is how much traffic it replaces and how reconstruction, access granularity, and layout fit together. Optimizing arithmetic and memory traffic in isolation makes it easy to save the wrong thing.</p>
 
-        <section class="detail-section" id="grader-regressions">
-            <h2 class="">Maintain the evaluator as software</h2>
-            <p class="">In engineering terms, I want a benchmark to preserve the process producing a score, not just a dataset and leaderboard. Questions, references, graders, prompts, model versions, reasoning budgets, and tool permissions must be traceable. Even adding one condition should record whether the valid-answer set changed, rather than quietly overwriting the task.</p>
-            <p class="">Response generation and scoring should be separated. Preserve raw outputs and run settings so evaluator repairs can re-score the same responses. A changed question starts another experiment. That separation makes it possible to distinguish model progress from measurement changes and explain a ranking reversal.</p>
-            <p class="">Graders need their own regression cases. For formulas, include positive examples of algebraic equivalence and negative examples that look similar but differ, have wrong units, or omit conditions. Layer symbolic computation, numerical checks, and expert review. Do not just relax rules around previously observed false rejections.</p>
-            <p class="">Numerical substitution is easy to overuse. Equality at a few points does not establish an identity. Domains, singularities, and square-root branches can change equivalence. For example, <code class="">sqrt(x*x) = x</code> requires additional conditions; for general real numbers the result is <code class="">abs(x)</code>. Symbolic simplification also needs assumptions. A plausible-looking simplification cannot substitute for physical constraints.</p>
-            <p class="">A report can retain parallel results: original tasks and grader, corrected scores for fixed outputs, and new evaluations of repaired tasks. Each should identify question counts, model and configuration, audit coverage, and uncertainty organized by question. It is less concise than one overall accuracy, but readers can identify which experiment they are comparing.</p>
-        </section>
+</section>
+<section class="detail-section" id="whole-step">
+<h2 class="">A 1.22× kernel does not make the request 1.22× faster</h2>
+<p class="">A decode step also includes linear layers, MLPs, normalization, weight access, and runtime overhead. Suppose attention originally consumes 40% of the total time and becomes 1.22× faster while everything else stays unchanged:</p>
 
-        <section class="detail-section" id="research-boundary">
-            <h2 class="">From solving physics problems to doing research</h2>
-            <p class="">The audit's strongest finding is concrete: older procedures underestimated frontier models on a set of text-only physics problems with explicit conditions and verifiable final answers. Credit lost to defective questions and graders should be restored. Protecting an intuition that AI cannot do physics is a poor reason to keep a faulty ruler.</p>
-            <p class="">But a problem set normally supplies the subject, conditions, and quantity to find. Open research also requires deciding what is worth asking, choosing representations, distinguishing explanations, and revising assumptions in response to evidence. Reading closed-ended scores as independent research ability skips that difference.</p>
-            <p class="">In the subsequent <a href="https://jsous.github.io/blogs/is-physics-dead/" target="_blank" rel="noopener" class="">Is Physics Dead?</a>, author John Sous describes preliminary agent experiments outside the paper. None of the open theoretical-physics problems had yet been solved completely and autonomously. Open research needs its own evaluation of problem selection, derivation, verification, and revision to capture more of what research involves.</p>
-            <p class="">Harder tasks are not automatically more valid. An open task scored only by another model's vague claim of "insight" can also lose its basis for review. Derivations, validation steps, testable predictions, and human-review reasons need to be preserved to discuss research progress rather than merely change the scoring vocabulary.</p>
-            <p class="">I want leaderboards to place the questions, grading program, and experimental setup beside the score. Repair defective tasks, correct misjudgments, and retain historical versions. Models deserve a fair exam, and readers deserve to know how the score was produced.</p>
+<pre class=""><code class="language-text">overall speedup = 1 / (0.6 + 0.4 / 1.22)
+                ≈ 1.078
+</code></pre>
+
+<p class="">Overall processing rate improves by only about 7.8%. Amdahl's law puts a number on the ceiling of a local optimization: the gain depends on its original share of execution time. Map the complete step before deciding how much engineering effort a kernel deserves.</p>
+
+<p class="">GAAC measures this in its equal-batch experiment. On DGX Spark, attention at batch 1 and 64K context improves by 1.19–1.27×. Complete W4A16 decode steps improve by 1.04–1.15× across the tested model and context configurations. The two hybrid/MoE models use full attention in only about a quarter of their layers and gain around 1.04–1.06× for the complete step. Other layers and weight access still consume much of the time.</p>
 
 
-        </section></div></div>
+
+<p class="">For a long document, prefill must process the input first. GAAC's fused path primarily accelerates decode; prefill retains conventional attention and may temporarily expand cached context when necessary. A 64K input followed by a few dozen generated tokens can spend most of its time before the first token. Generating thousands of tokens over that context offers more opportunity for per-step savings to accumulate.</p>
+
+<p class="">Kernel ratios have their own shape. Qwen3-8B attention gains are 1.31, 1.27, and 1.25× at 32K, 64K, and 128K context. Complete-step gains follow a different curve as the share of KV access changes. Picking the largest multiplier for a headline is easy. Finding where the actual workload sits on those curves is useful.</p>
+
+</section>
+<section class="detail-section" id="concurrency">
+<h2 class="">Does serving one more request count as faster?</h2>
+<p class="">A separate experiment fixes the KV-memory budget and increases concurrency to the maximum each system can hold. In <a href="https://arxiv.org/html/2610.38210v1#S4.T2" target="_blank" rel="noopener" class="">Table 2</a>, Qwen3-8B with 64K context and about a 20 GB KV budget fits two BF16 sequences at 19.0 aggregate tok/s. GAAC fits three and produces 22.8 tok/s, a 20% increase.</p>
+
+<p class="">Dividing the totals by active sequences gives about 9.5 tok/s per sequence in the first setup and 7.6 in the second. Concurrency changes from two to three: the device produces more tokens overall while the arithmetic share per sequence falls. Alongside aggregate throughput, I want measured per-request ITL and completion time to see what the extra capacity buys.</p>
+
+<p class="">For one person's chat assistant, room for another sequence has limited value. Consider three tasks with separate long contexts: admitting the third instead of queueing it can change group completion time. Comparing such task traces reveals how scheduling and dependencies affect the experience.</p>
+
+<p class="">One contrast in the paper is especially revealing: the hybrid and MoE models show relatively modest equal-batch gains but 27% and 29% higher throughput under fixed KV budgets. Much of that benefit comes from accommodating another concurrent sequence, not from making each computation step faster by the same percentage.</p>
+
+<p class="">Online serving also has to account for queueing and tail latency. A larger batch can produce more tokens while leaving some users waiting longer. I would tie goodput directly to the product, for example counting only requests that meet both first-token and ongoing-generation latency targets. Chat needs responsiveness; offline document processing values batch completion. The product determines the target.</p>
+
+</section>
+<section class="detail-section" id="fp8-comparison">
+<h2 class="">What changes if the deployment already uses FP8?</h2>
+<p class=""><a href="https://arxiv.org/abs/2309.06180" target="_blank" rel="noopener" class="">PagedAttention</a> established the importance of cache management. Paged allocation and sharing reduce fragmentation and duplication; its vLLM evaluation reports 2–4× throughput against contemporary baselines on the tested models and workloads. GAAC moves into the representation itself and how attention consumes compressed data. Much of serving performance lives around the matrix operations.</p>
+
+<p class="">FP8 halves the KV storage width relative to BF16 and introduces numerical approximation. In <a href="https://vllm.ai/blog/2026-04-22-fp8-kvcache" target="_blank" rel="noopener" class="">vLLM's April 2026 report</a>, an H100 Llama-3.1-8B test with 150 requests, concurrency 8, and roughly 20K input/2K output tokens improves aggregate throughput from 450.3 to 517.5 tok/s, about 14.9%. The gpt-oss-20b variant that skips sliding-window layers gains about 4.8%. Architecture and execution determine how bit-width savings reach system throughput.</p>
+
+<p class="">The precision tradeoff differs too. GAAC adds 1.09–1.14× lossless compression to already quantized FP8 E4M3 and 1.25–1.30× to E5M2, preserving the quantized values. Task-quality tests still need to cover the initial FP8 approximation and the accumulation behavior of the consuming kernel.</p>
+
+<p class="">Start the comparison from the deployed baseline. A system with mature FP8 kernels measures the incremental benefit of further compression. A system that needs original BF16 KV measures the cost of preserving it. Align hardware, architecture, precision, batch size, and workload, then compare.</p>
+
+</section>
+<section class="detail-section" id="deployment-limits">
+<h2 class="">Integration is where the work starts</h2>
+<p class="">GAAC's exponent windows depend on calibration. In the positional-drift experiment in <a href="https://arxiv.org/html/2610.38210v1#A3" target="_blank" rel="noopener" class="">Appendix C</a>, a Qwen3-8B layer uses windows calibrated on prompts of at most 8K tokens to process 32K input. Overflow storage for later keys grows substantially; 32K calibration is more stable. RoPE can shift key-exponent distributions with position. Reconstruction remains lossless, but compression efficiency and fallback overhead change.</p>
+
+<p class="">Cross-task tests provide a useful starting point: windows selected on WikiText retain similar compression across several code, math, and knowledge tasks. Next, run longer contexts and sustained request traces while tracking slot waste, fallback rates, prefix sharing, and cache turnover. Production workloads keep changing shape; the cache has to handle that.</p>
+
+<p class="">On Apple M4, the authors implement compressed attention in Metal and compare it with a BF16-KV kernel of the same structure. At 64K context, gains are about 1.10× for one sequence and 1.25× for eight. The kernel has crossed a platform boundary. Putting it into a complete Mac inference framework and measuring first-token, ongoing-generation, and task-completion time is the next useful step.</p>
+
+<p class="">Personal devices also have a thermal and battery budget. The paper provides memory and timing results; power and energy remain to be measured. Evaluating extra arithmetic against reduced traffic requires power traces, runtime, and sustained-load tests. Energy per token belongs in a local-deployment comparison too.</p>
+
+</section>
+<section class="detail-section" id="benchmark-plan">
+<h2 class="">The comparisons I would run before deployment</h2>
+<p class="">Fix a reproducible baseline: model and quantization versions, inference framework and kernel, context and output lengths, KV precision, batch size, and request arrivals. Account for weights, resident KV, and workspace separately so the bottleneck has somewhere to show up.</p>
+
+<p class="">Run two separate comparisons. Hold concurrency fixed and measure complete decode-step and request latency. Fix the memory budget, allow more concurrency, and measure aggregate throughput, queueing, and goodput. One asks how much faster the same user's request gets; the other asks how much more work the device can take.</p>
+
+<p class="">Latency reporting needs its own distinctions. <a href="https://docs.vllm.ai/en/latest/design/metrics/" target="_blank" rel="noopener" class="">vLLM's metrics documentation</a> separates time to first token (TTFT), inter-token latency (ITL), and average time per output token (TPOT). State whether queueing is included, how observations are aggregated, and which output-token denominator is used. An average tokens/s can conceal both a short request's wait and a long request's stalls. P50/P95/P99, task quality, sustained memory use, and energy measurements bring the comparison closer to actual use.</p>
+
+<p class="">For agents, I would also save task traces containing tool waits and repeated prefill. If a task spends most of its duration waiting for external tools, improving decode by 10% will not cut the whole task by 10%. Finding where the time goes determines which layer is worth optimizing next.</p>
+
+<p class="">The easiest mistake in local inference is treating a model that fits as a job finished. Smaller weights leave historical caches, data movement, and scheduling with their own bills. GAAC trades extra arithmetic for less traffic, and the gains are realized differently along the execution path. The next time a result promises 20% more speed, I will look for the complete timing breakdown before deciding to integrate it.</p>
+
+
+
+</section></div></div>
     </div>
-    <section class="related" aria-labelledby="related-title"><p class="kicker">Continue reading</p><h2 id="related-title">Related <em>writing</em></h2><ol class="journal-list" style="list-style:none"><li><a class="journal-row" href="article-01.html" data-topic="1" data-cursor="Read">
-        <span class="journal-date">2026.11 · 01</span>
-        <span class="journal-title"><span class="static">Why Retrain Every Time a Model Breaks?</span><span class="marquee" aria-hidden="true"><span>Why Retrain Every Time a Model Breaks? —&nbsp;</span><span>Why Retrain Every Time a Model Breaks? —&nbsp;</span><span>Why Retrain Every Time a Model Breaks? —&nbsp;</span></span></span>
-        <span class="topic" data-topic="1">AI Engineering</span><span class="journal-time">13 min</span></a></li><li><a class="journal-row" href="article-02.html" data-topic="1" data-cursor="Read">
+    <section class="related" aria-labelledby="related-title"><p class="kicker">Continue reading</p><h2 id="related-title">Related <em>writing</em></h2><ol class="journal-list" style="list-style:none"><li><a class="journal-row" href="article-02.html" data-topic="1" data-cursor="Read">
         <span class="journal-date">2026.11 · 02</span>
-        <span class="journal-title"><span class="static">The Model Fits. Why Is It Still Slow?</span><span class="marquee" aria-hidden="true"><span>The Model Fits. Why Is It Still Slow? —&nbsp;</span><span>The Model Fits. Why Is It Still Slow? —&nbsp;</span><span>The Model Fits. Why Is It Still Slow? —&nbsp;</span></span></span>
-        <span class="topic" data-topic="1">AI Engineering</span><span class="journal-time">15 min</span></a></li><li><a class="journal-row" href="article-16.html" data-topic="1" data-cursor="Read">
-        <span class="journal-date">2026.05 · 16</span>
+        <span class="journal-title"><span class="static">Why Retrain Every Time a Model Breaks?</span><span class="marquee" aria-hidden="true"><span>Why Retrain Every Time a Model Breaks? —&nbsp;</span><span>Why Retrain Every Time a Model Breaks? —&nbsp;</span><span>Why Retrain Every Time a Model Breaks? —&nbsp;</span></span></span>
+        <span class="topic" data-topic="1">AI Engineering</span><span class="journal-time">13 min</span></a></li><li><a class="journal-row" href="article-04.html" data-topic="1" data-cursor="Read">
+        <span class="journal-date">2026.10 · 04</span>
+        <span class="journal-title"><span class="static">When the Exam Is Wrong: What Do AI Scores Measure?</span><span class="marquee" aria-hidden="true"><span>When the Exam Is Wrong: What Do AI Scores Measure? —&nbsp;</span><span>When the Exam Is Wrong: What Do AI Scores Measure? —&nbsp;</span><span>When the Exam Is Wrong: What Do AI Scores Measure? —&nbsp;</span></span></span>
+        <span class="topic" data-topic="1">AI Engineering</span><span class="journal-time">15 min</span></a></li><li><a class="journal-row" href="article-17.html" data-topic="1" data-cursor="Read">
+        <span class="journal-date">2026.05 · 17</span>
         <span class="journal-title"><span class="static">The Core of AI Engineering Is Not Making Models Omnipotent. It Is Defining Boundaries</span><span class="marquee" aria-hidden="true"><span>The Core of AI Engineering Is Not Making Models Omnipotent. It Is Defining Boundaries —&nbsp;</span><span>The Core of AI Engineering Is Not Making Models Omnipotent. It Is Defining Boundaries —&nbsp;</span><span>The Core of AI Engineering Is Not Making Models Omnipotent. It Is Defining Boundaries —&nbsp;</span></span></span>
         <span class="topic" data-topic="1">AI Engineering</span><span class="journal-time">8 min</span></a></li></ol></section>
     <nav class="pager" aria-label="More articles">
-        <a href="article-02.html" data-cursor="Prev"><span class="meta">← Previous</span><strong>The Model Fits. Why Is It Still Slow?</strong></a>
-        <a href="article-04.html" data-cursor="Next"><span class="meta">Next →</span><strong>When Data Centers Protect Themselves: A 3.8 GW Load Transfer</strong></a>
+        <a href="article-02.html" data-cursor="Prev"><span class="meta">← Previous</span><strong>Why Retrain Every Time a Model Breaks?</strong></a>
+        <a href="article-04.html" data-cursor="Next"><span class="meta">Next →</span><strong>When the Exam Is Wrong: What Do AI Scores Measure?</strong></a>
     </nav>
 </div>
 </main>

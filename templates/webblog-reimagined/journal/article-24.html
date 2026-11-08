@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Technical Debt Is Not Code Smell; It Is How an Organization Prices the Future — Eric</title>
-<meta name="description" content="Technical Debt Is Not Code Smell; It Is How an Organization Prices the Future">
+<title>How Would We Design Systems Without Starting From a Database? — Eric</title>
+<meta name="description" content="How Would We Design Systems Without Starting From a Database?">
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#ede8df">
 <script>(()=>{const r=document.documentElement;let t,m;try{t=localStorage.getItem('ink-theme');m=localStorage.getItem('ink-motion')}catch(e){}t=t||(matchMedia('(prefers-color-scheme: dark)').matches?'night':'day');if(matchMedia('(prefers-reduced-motion: reduce)').matches)m='off';r.dataset.theme=t;r.dataset.motion=m||'on'})()</script>
@@ -44,74 +44,67 @@
 <div class="page">
     <header class="article-head">
         <p class="meta"><a href="index.html">← Journal</a> &nbsp;/&nbsp; <span class="topic" data-topic="4">System Architecture</span></p>
-        <h1 data-split>Technical Debt Is Not Code Smell; It Is <em>How an Organization Prices the Future</em></h1>
+        <h1 data-split>How Would We Design Systems <em>Without Starting From a Database?</em></h1>
         <p class="lede rise"></p>
-        <div class="article-meta meta rise" style="--d:120ms"><span>2026.04.29</span><span>10 min</span><span>No. 24</span></div>
+        <div class="article-meta meta rise" style="--d:120ms"><span>2026.04.29</span><span>9 min</span><span>No. 24</span></div>
     </header>
     <div class="article-layout">
-        <nav class="toc" aria-label="Contents"><a href="#engineering">Technical debt first appears as an engineering problem</a><a href="#permission">The hard part is whether the organization lets you fix it</a><a href="#arbitrage">Technical debt is a form of time arbitrage</a><a href="#game">Why technical debt is closer to organizational game theory</a><a href="#behavior">Debt changes team behavior</a><a href="#ai-debt">In AI applications, debt becomes more hidden</a><a href="#takeaway">Final Thoughts</a></nav>
-        <div class="page-surface"><div class="prose"><section class="detail-section" id="engineering">
-            <h2 class="">Technical debt first appears as an engineering problem</h2>
-            <p class="">Technical debt first has very concrete engineering forms. In a backend system, the same permission checks may be scattered across many APIs, the same data transformation duplicated across services, and the same field reused with different meanings in different contexts. In a frontend system, page logic, API calls, cache state, interactions, and error handling may become tangled until components are hard to reuse, test, or understand.</p>
-            <p class="">AI applications create another class of debt: model call chains without observability, prompt versions without management, unclear vector index strategies, missing evaluation sets, and online quality that depends on human feeling. A demo may work early on, but in real business scenarios the system becomes unstable, hard to reproduce, hard to optimize, and hard to ship safely.</p>
-            <p class="">These are not engineering complaints. They are accumulated system complexity. Technical debt raises modification cost, reduces understandability, and expands regression risk. A system becomes dangerous not only when it has many bugs, but when the team no longer dares to change it.</p>
+        <nav class="toc" aria-label="Contents"><a href="#table-first">The database is not the problem; table-first thinking is</a><a href="#facts">Identify facts first, then decide how to persist them</a><a href="#state-rules">State should come from rules, not field assignment</a><a href="#views">Queries are views, not the system itself</a><a href="#consistency">Consistency needs protocols, not only transactions</a><a href="#takeaway">Final Thoughts: databases store data; they should not outsource thinking</a></nav>
+        <div class="page-surface"><div class="prose"><section class="detail-section" id="table-first">
+            <h2 class="">The database is not the problem; table-first thinking is</h2>
+            <p class="">Many business systems begin with the question “how many tables do we need?” and then follow the path from form, to API, to service, to ORM, to database table. This sequence is efficient and familiar, but it quietly compresses system design into table design.</p>
+            <p class="">The database itself is not the problem. It provides persistence, transactions, indexes, constraints, and query ability, and it remains essential for most business systems. The real problem is letting tables become the starting point of thought.</p>
+            <p class="">Once a system starts from tables, business behavior is easily compressed into CRUD, complex workflows into a few status fields, and system boundaries into table relationships. Developers may appear to be designing a system while they are mostly wrapping tables with APIs and pages.</p>
         </section>
 
-        <section class="detail-section" id="permission">
-            <h2 class="">The hard part is whether the organization lets you fix it</h2>
-            <p class="">Much technical debt does not exist because engineers do not know a better approach. They often know an API should not keep accumulating parameters, a module should be split, tests and monitoring are missing, and a temporary workaround will eventually cause trouble.</p>
-            <p class="">But knowing is not the same as being able to act. Engineering plans must fit business cadence, development schedules must follow release plans, and technical governance must compete for resources. A better solution can be technically feasible while organizationally infeasible.</p>
-            <p class="">The core difficulty is that the cost of technical debt is usually long-term, distributed, and delayed, while repayment cost is short-term, concentrated, and visible. Everyone can see a feature delayed by two weeks; it is much harder to prove that a refactor avoided three months of future maintenance cost.</p>
+        <section class="detail-section" id="facts">
+            <h2 class="">Identify facts first, then decide how to persist them</h2>
+            <p class="">Take an order system as an example. The fact that an order is paid only tells us what the system currently believes. It does not explain who initiated payment, whether the provider retried callbacks, whether the amount was verified, whether inventory was locked, or whether shipment notification succeeded.</p>
+            <p class="">If we begin from business facts, the system naturally discovers events such as order created, payment submitted, payment succeeded, inventory locked, and order shipped. They record not only a result at one moment, but why the system reached its current state.</p>
+            <p class="">Tables record what the system believes now. Events record why the system believes it. Complex systems need more than final state; they need a chain of facts that can explain how the state was formed.</p>
         </section>
 
-        <section class="detail-section" id="arbitrage">
-            <h2 class="">Technical debt is a form of time arbitrage</h2>
-            <p class="">Technical debt is a kind of organizational time arbitrage: the team buys current delivery speed with future maintenance cost.</p>
-            <p class="">This arbitrage can be reasonable in some stages. When a project is still validating a business model, a feature has no proven users, or an AI application is moving from demo to MVP, perfect architecture may be wasteful. Premature abstraction and overengineering can create another kind of debt.</p>
-            <p class="">The real question is not whether the organization takes on debt, but whether it knows the debt exists, understands its size, and defines repayment conditions. Many temporary solutions are eventually treated as “it runs, so keep it,” turning patches into architecture and detours into main roads.</p>
+        <section class="detail-section" id="state-rules">
+            <h2 class="">State should come from rules, not field assignment</h2>
+            <p class="">Many CRUD systems treat state as a field that can be directly changed. A few enum values look simple, but the field itself cannot explain why it may change or prevent illegal transitions.</p>
+            <p class="">An order moving from pending payment to paid should not be just one update statement. A better process checks that the order exists, is still pending, has a matching payment amount, has not already processed the callback, and has not timed out. Only then should the state advance.</p>
+            <p class="">At that point, state is no longer just a field. It is the result of rules being applied. The more complex a system becomes, the more state should be treated as a state machine instead of scattered enum values in tables.</p>
         </section>
 
-        <section class="detail-section" id="game">
-            <h2 class="">Why technical debt is closer to organizational game theory</h2>
-            <p class="">Technical debt is hard because it involves different goals across roles. Business wants market response, product wants features shipped, engineering wants maintainability, QA wants controlled quality, platform teams want stable deployment, and management wants measurable cost, schedule, and results.</p>
-            <p class="">All of these goals are reasonable, but they are not naturally aligned. So technical debt is no longer only a question of “how should we design this?” It becomes “who pays for long-term quality?”</p>
-            <p class="">The costs and benefits of long-term quality are unevenly distributed inside an organization. The people who create debt may not repay it. The people who compress schedules may not debug production at midnight. The team that enjoys short-term delivery gains may not maintain the system later. When benefits and costs are mismatched, debt grows naturally.</p>
+        <section class="detail-section" id="views">
+            <h2 class="">Queries are views, not the system itself</h2>
+            <p class="">Databases also become system centers because they often serve writes, reads, admin screens, operational reports, audit trails, and analytics at the same time. One table keeps accumulating display fields, statistics fields, redundant fields, flags, and compatibility fields.</p>
+            <p class="">From a modeling perspective, writes care whether business facts are valid, while reads care how different scenarios should see those facts. User order lists, merchant shipment views, finance reconciliation views, and risk analysis views can all come from the same facts without sharing one structure.</p>
+            <p class="">When queries are treated as scenario-specific views, the core table is no longer forced to satisfy every use case at once. The core model stays clearer, and read models can be built around real usage scenarios.</p>
         </section>
 
-        <section class="detail-section" id="behavior">
-            <h2 class="">Debt changes team behavior</h2>
-            <p class="">Technical debt affects not only code, but also team behavior. After debt reaches a certain level, engineers avoid core modules, product managers assume some requests are technically painful, QA relies on manual regression, new hires depend on oral explanations, and incidents are investigated through experience rather than systematic observability.</p>
-            <p class="">The more complex a system becomes, the harder it is to explain. The harder it is to explain, the harder it is to win governance resources. Without governance resources, the system keeps getting more complex. The team becomes busy and tired while its real engineering capability stops growing.</p>
-            <p class="">Technical debt eventually shapes engineering culture: not clarity, but workaround; not evolution, but avoiding incidents; not understanding the system, but surviving inside it.</p>
-        </section>
-
-        <section class="detail-section" id="ai-debt">
-            <h2 class="">In AI applications, debt becomes more hidden</h2>
-            <p class="">Traditional software debt usually settles into code, architecture, databases, and processes. In AI applications, it also settles into data, models, prompts, evaluation systems, toolchains, and human-AI workflows.</p>
-            <p class="">A RAG system may appear to answer questions while document chunking is messy, embedding model versions are unclear, retrieval and reranking lack metrics, knowledge updates have no workflow, and failures are not captured. In the short term, it is a demo. In the long term, it is an unverifiable, unoptimizable, and unexplainable black box.</p>
-            <p class="">AI systems can easily create the illusion that if the output looks good, the engineering foundation can wait. The opposite is true. The more uncertain an AI application is, the more it needs engineering governance; the less predictable model behavior is, the more it needs evaluation, observability, rollback, and version management.</p>
+        <section class="detail-section" id="consistency">
+            <h2 class="">Consistency needs protocols, not only transactions</h2>
+            <p class="">Database transactions solve local consistency, but real systems often involve payment callbacks, logistics, SMS notifications, asynchronous review, AI inference tasks, cross-service inventory locks, and external synchronization. These actions cannot all be wrapped by one database transaction.</p>
+            <p class="">The system then needs business protocols: idempotency so duplicate requests do not duplicate work, retry so failed tasks can be attempted safely, compensation for partial failure, state-machine rules for legal transitions, and reconciliation to find and repair mismatches.</p>
+            <p class="">A database transaction ensures that one write does not stop halfway. A business protocol ensures that the system can eventually return to an explainable, recoverable, and traceable state. The more complex the system, the less reliability can depend on transactions alone.</p>
         </section>
 
         <section class="detail-section" id="takeaway">
-            <h2 class="">Final Thoughts</h2>
-            <p class="">Technical debt appears as an engineering problem, is rooted in organizational games, and requires both engineering capability and organizational mechanisms to govern. More precisely, technical debt is how an organization prices the future.</p>
-            <p class="">When an organization chooses to ship quickly, it buys current speed with future maintenance cost. When it skips testing, it buys current progress with future risk. When it postpones refactoring, it buys current resources with future complexity. These choices are not always wrong, but they must be seen, recorded, managed, and repaid.</p>
-            <p class="">Technical debt is not the failure of one piece of code. It is the sediment of repeated organizational decisions. Code is only the carrier, architecture is only the shape, and the real size of the debt is determined by how the organization treats time, cost, risk, and the future.</p>
+            <h2 class="">Final Thoughts: databases store data; they should not outsource thinking</h2>
+            <p class="">Discussing “systems without databases” is not about rejecting databases. Most business systems should still use them because they are mature, stable, economical, and maintainable.</p>
+            <p class="">What deserves caution is reducing system design into table design. A better order is to understand business facts, analyze state transitions, define business rules, design collaboration processes, consider query views, and only then decide how data should be persisted.</p>
+            <p class="">Databases should carry data, but they should not carry the thinking. The starting point of system design is not tables, but facts, state, rules, and processes. When we can redesign a system under the assumption that the database is temporarily unavailable, we often return to the database with more clarity.</p>
         </section></div></div>
     </div>
-    <section class="related" aria-labelledby="related-title"><p class="kicker">Continue reading</p><h2 id="related-title">Related <em>writing</em></h2><ol class="journal-list" style="list-style:none"><li><a class="journal-row" href="article-04.html" data-topic="4" data-cursor="Read">
-        <span class="journal-date">2026.10 · 04</span>
-        <span class="journal-title"><span class="static">When Data Centers Protect Themselves: A 3.8 GW Load Transfer</span><span class="marquee" aria-hidden="true"><span>When Data Centers Protect Themselves: A 3.8 GW Load Transfer —&nbsp;</span><span>When Data Centers Protect Themselves: A 3.8 GW Load Transfer —&nbsp;</span><span>When Data Centers Protect Themselves: A 3.8 GW Load Transfer —&nbsp;</span></span></span>
-        <span class="topic" data-topic="4">System Architecture</span><span class="journal-time">16 min</span></a></li><li><a class="journal-row" href="article-05.html" data-topic="4" data-cursor="Read">
+    <section class="related" aria-labelledby="related-title"><p class="kicker">Continue reading</p><h2 id="related-title">Related <em>writing</em></h2><ol class="journal-list" style="list-style:none"><li><a class="journal-row" href="article-05.html" data-topic="4" data-cursor="Read">
         <span class="journal-date">2026.10 · 05</span>
+        <span class="journal-title"><span class="static">When Data Centers Protect Themselves: A 3.8 GW Load Transfer</span><span class="marquee" aria-hidden="true"><span>When Data Centers Protect Themselves: A 3.8 GW Load Transfer —&nbsp;</span><span>When Data Centers Protect Themselves: A 3.8 GW Load Transfer —&nbsp;</span><span>When Data Centers Protect Themselves: A 3.8 GW Load Transfer —&nbsp;</span></span></span>
+        <span class="topic" data-topic="4">System Architecture</span><span class="journal-time">16 min</span></a></li><li><a class="journal-row" href="article-06.html" data-topic="4" data-cursor="Read">
+        <span class="journal-date">2026.10 · 06</span>
         <span class="journal-title"><span class="static">Can You Search Inside Encrypted Data?</span><span class="marquee" aria-hidden="true"><span>Can You Search Inside Encrypted Data? —&nbsp;</span><span>Can You Search Inside Encrypted Data? —&nbsp;</span><span>Can You Search Inside Encrypted Data? —&nbsp;</span></span></span>
-        <span class="topic" data-topic="4">System Architecture</span><span class="journal-time">33 min</span></a></li><li><a class="journal-row" href="article-09.html" data-topic="4" data-cursor="Read">
-        <span class="journal-date">2026.07 · 09</span>
+        <span class="topic" data-topic="4">System Architecture</span><span class="journal-time">33 min</span></a></li><li><a class="journal-row" href="article-10.html" data-topic="4" data-cursor="Read">
+        <span class="journal-date">2026.07 · 10</span>
         <span class="journal-title"><span class="static">Mac Is Becoming the Ideal Runtime for Personal AI Apps</span><span class="marquee" aria-hidden="true"><span>Mac Is Becoming the Ideal Runtime for Personal AI Apps —&nbsp;</span><span>Mac Is Becoming the Ideal Runtime for Personal AI Apps —&nbsp;</span><span>Mac Is Becoming the Ideal Runtime for Personal AI Apps —&nbsp;</span></span></span>
         <span class="topic" data-topic="4">System Architecture</span><span class="journal-time">9 min</span></a></li></ol></section>
     <nav class="pager" aria-label="More articles">
-        <a href="article-23.html" data-cursor="Prev"><span class="meta">← Previous</span><strong>How Would We Design Systems Without Starting From a Database?</strong></a>
-        <a href="article-25.html" data-cursor="Next"><span class="meta">Next →</span><strong>Vision Algorithm Engineers: Do Not Become Process Operators</strong></a>
+        <a href="article-23.html" data-cursor="Prev"><span class="meta">← Previous</span><strong>AI Agents Are Reshaping System Architecture: From Feature Systems to Task Systems</strong></a>
+        <a href="article-25.html" data-cursor="Next"><span class="meta">Next →</span><strong>Technical Debt Is Not Code Smell; It Is How an Organization Prices the Future</strong></a>
     </nav>
 </div>
 </main>

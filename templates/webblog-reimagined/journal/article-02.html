@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>The Model Fits. Why Is It Still Slow? — Eric</title>
-<meta name="description" content="A 26% smaller cache buys a much smaller gain per decode step. GAAC exposes three different problems in local inference: capacity, latency, and concurrency.">
+<title>Why Retrain Every Time a Model Breaks? — Eric</title>
+<meta name="description" content="Qwen&#x27;s math score rose from 7.9% to 48.1% after edits to 0.016% of its weights. The interesting part is what the edit repaired, and how we could make that repair process repeatable.">
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#ede8df">
 <script>(()=>{const r=document.documentElement;let t,m;try{t=localStorage.getItem('ink-theme');m=localStorage.getItem('ink-motion')}catch(e){}t=t||(matchMedia('(prefers-color-scheme: dark)').matches?'night':'day');if(matchMedia('(prefers-reduced-motion: reduce)').matches)m='off';r.dataset.theme=t;r.dataset.motion=m||'on'})()</script>
@@ -44,191 +44,141 @@
 <div class="page">
     <header class="article-head">
         <p class="meta"><a href="index.html">← Journal</a> &nbsp;/&nbsp; <span class="topic" data-topic="1">AI Engineering</span></p>
-        <h1 data-split>The Model Fits. <em>Why Is It Still Slow?</em></h1>
-        <p class="lede rise">A 26% smaller cache buys a much smaller gain per decode step. GAAC exposes three different problems in local inference: capacity, latency, and concurrency.</p>
-        <div class="article-meta meta rise" style="--d:120ms"><span>2026.11.03</span><span>15 min</span><span>No. 02</span></div>
+        <h1 data-split>Why Retrain Every Time a <em>Model Breaks</em>?</h1>
+        <p class="lede rise">Qwen&#x27;s math score rose from 7.9% to 48.1% after edits to 0.016% of its weights. The interesting part is what the edit repaired, and how we could make that repair process repeatable.</p>
+        <div class="article-meta meta rise" style="--d:120ms"><span>2026.11.03</span><span>13 min</span><span>No. 02</span></div>
     </header>
     <div class="article-layout">
-        <nav class="toc" aria-label="Contents"><a href="#intro">Introduction</a><a href="#kv-capacity">The weights fit. Historical tokens still need memory.</a><a href="#fused-reconstruction">Where does the compressed cache get unpacked?</a><a href="#kernel-timing">More computation, less elapsed time</a><a href="#whole-step">A 1.22× kernel does not make the request 1.22× faster</a><a href="#concurrency">Does serving one more request count as faster?</a><a href="#fp8-comparison">What changes if the deployment already uses FP8?</a><a href="#deployment-limits">Integration is where the work starts</a><a href="#benchmark-plan">The comparisons I would run before deployment</a></nav>
+        <nav class="toc" aria-label="Contents"><a href="#intro">Introduction</a><a href="#loop-repair">It keeps thinking, but never delivers</a><a href="#gemma-control">Why did Gemma barely improve?</a><a href="#car-patch">This car needed to reverse first</a><a href="#reading-computation">Reading weights means finding computations</a><a href="#writing-networks">Compiling Breakout rules into matrices</a><a href="#debugging-cost">A 0.016% patch took about 20 hours</a><a href="#patch-and-regression">Model repair needs patches and a rollback button</a></nav>
         <div class="page-surface"><div class="prose"><section class="detail-section" id="intro">
-<p class="">Memory capacity is usually the first obstacle when running a large language model locally. If BF16 weights will not fit, try 8-bit, then 4-bit. Once the weights finally load, it is tempting to think the hard part is over.</p>
+<p class="">When a model struggles with math, we usually reach for more data, another training run, or a larger network. MIT CSAIL found a different diagnosis in one small model: it kept thinking and failed to deliver the answer.</p>
 
-<p class="">Yet generation can slow down again when we introduce long documents, a code repository, or several simultaneous tasks. The model has not run out of memory, and the GPU has substantial theoretical compute. Where is the time going?</p>
+<p class="">In the <a href="https://rikiyat.github.io/blog/weight-space-programming/" target="_blank" rel="noopener" class="">Weight-Space Programming study published on November 2</a>, GPT-6 Astra inspected and edited Qwen3.5-0.8B's weights directly. Mean accuracy on MATH-500 rose from 7.9% to 48.1%, after changes to roughly 0.016% of the weights, without backpropagation.</p>
 
-<p class="">Guo, George, and Joshi at Notre Dame offer a useful set of results in their October 28, 2026 preprint, <a href="https://arxiv.org/html/2610.38210v1" target="_blank" rel="noopener" class="">GAAC</a>: about 26% less resident KV memory, 1.19–1.27× faster attention kernels at 64K context on DGX Spark, 1.04–1.15× faster complete W4A16 decode steps, and 13%–29% higher aggregate throughput under fixed KV budgets.</p>
+<p class="">Another column matters more to the diagnosis: 93.0% of the original model's MATH-500 outputs exhausted the 32,768-token budget. After editing, that fell to 33.1%. Many failures involved repetitive thinking. Astra investigated that failure before changing the parameters.</p>
 
-<p class="">Getting the model into memory clears the first hurdle. What often limits speed next is moving data into the compute units at every step. GAAC is interesting because the same memory saving produces very different gains at the kernel, model, and serving levels.</p>
-
+<p class="">I would put this in the model-repair toolbox. A low score is a symptom. The model may lack an ability, or an internal failure may be obstructing an ability it already has. Retraining before separating those diagnoses spends compute while potentially leaving the fault in place.</p>
 </section>
-<section class="detail-section" id="kv-capacity">
-<h2 class="">The weights fit. Historical tokens still need memory.</h2>
-<p class="">Weights are only part of the resident data used during inference. A Transformer also retains historical keys and values so that generating the next token does not require recomputing previous K and V states. This KV cache grows with context length and the number of concurrent sequences.</p>
 
-<p class="">For a typical full-attention architecture, the theoretical storage for one sequence can be approximated as:</p>
+<section class="detail-section" id="loop-repair">
+<h2 class="">It keeps thinking, but never delivers</h2>
 
-<pre class=""><code class="language-text">KV bytes = 2 × layers × KV heads × head dim
-           × context tokens × bytes per element
-</code></pre>
+<p class="">The Qwen experiment gave Astra a Python environment for reading and writing weights, plus a limited forward-pass budget. Practice material included the GSM8K and MATH training sets. Final benchmarks were evaluated after the run, out of the editor's view. The <a href="https://github.com/RikiyaT/lm_understand-logs/blob/main/exp8_math/README.md" target="_blank" rel="noopener" class="">experiment logs</a> preserve the operations and subsequent evaluation.</p>
 
-<p class="">The initial 2 accounts for K and V. Take a hypothetical full-attention architecture: 32 layers, 8 KV heads, a head dimension of 128, and BF16 storage. Its KV takes 128 KiB per token, or 8 GiB at 65,536 tokens. Four equally long sequences without shared prefixes need 32 GiB for KV alone. Allocator overhead and temporary workspaces come on top.</p>
+<p class="">Astra compared productive and repetitive reasoning, inspected internal activations, and used interventions to narrow the search. The final patch targeted the MLP <code class="">down_proj</code> matrices in layers 15 and 19: 64 columns in each, reducing their contribution along a repetition-related direction. That involved 131,072 weight values.</p>
 
-<p class="">Weight quantization does not automatically shrink that cache. An 8B model has roughly 16 GB of raw BF16 weights or 4 GB at 4-bit, while its KV may remain BF16. Costs previously overshadowed by the weights become more prominent. GQA, MQA, sliding-window attention, and hybrid attention change that growth, so similarly sized models need not have similar KV requirements.</p>
+<p class="">The intervention concerned a feature direction and the columns writing it. Many parameters jointly produce a direction, and one parameter can contribute to several computations. Calling this the deletion of two bad neurons would obscure the most useful part of the diagnosis.</p>
 
-<p class="">Caching carries another bill. Each generated token in standard full attention accesses historical keys and combines their values. Previous computation is reused, but reading its results has to be paid for again at every step.</p>
+<p class="">The final run report lists several checks: varying intervention strength, isolating layers, and testing a norm-matched random direction. An activation appearing alongside repetition gives us a lead. Intervening at the proposed location and checking whether the failure recedes as predicted begins to address causation. A debugging tool should be able to organize those experiments.</p>
 
-<p class="">At that point, a high TFLOPS figure can sit idle. Prefill organizes many input tokens into large matrix operations. Small-batch, single-request decode repeatedly reads weights and historical KV. The arithmetic units wait for data while memory bandwidth is already busy.</p>
+<p class="">These are the reported Qwen results. Evaluation used Thinking mode, a 32,768-token output limit, and unchanged sampling settings before and after editing. MATH-500 used four samples per problem; GSM8K and IFEval used two. Scores are mean accuracy across samples.</p>
 
-<p class="">Suppose a path reads 8 GiB from device memory each step at an available decimal bandwidth of 1 TB/s. The ideal transfer floor is already about 8.6 ms. Cache hits, reuse, and bandwidth utilization change the bill, but reading still costs time. Long-context generation pays it repeatedly.</p>
+<div class="article-table-scroll" tabindex="0" role="region" aria-labelledby="bwsp_table_heading"><table class="">
+<thead id="bwsp_table_heading" class=""><tr class=""><th scope="col" class="">Run</th><th scope="col" class="">MATH-500</th><th scope="col" class="">GSM8K</th><th scope="col" class="">IFEval</th><th scope="col" class="">Hit token limit</th></tr></thead>
+<tbody class="">
+<tr class=""><th scope="row" class="">Original</th><td class="">7.9%</td><td class="">13.8%</td><td class="">21.0%</td><td class="">93.0%</td></tr>
+<tr class=""><th scope="row" class="">10-pass budget</th><td class="">12.3%</td><td class="">25.7%</td><td class="">49.0%</td><td class="">87.2%</td></tr>
+<tr class=""><th scope="row" class="">25-pass budget</th><td class="">14.1%</td><td class="">25.1%</td><td class="">39.9%</td><td class="">86.4%</td></tr>
+<tr class=""><th scope="row" class="">50-pass budget</th><td class="">48.1%</td><td class="">67.1%</td><td class="">62.3%</td><td class="">33.1%</td></tr>
+</tbody>
+</table></div>
 
+<p class="">Instruction following improved too, which fits a loop-repair explanation: a model that keeps repeating can also fail to finish a response or satisfy a format requirement. The run's <a href="https://github.com/RikiyaT/lm_understand-logs/blob/main/exp8_math/runs/p50c/final_answer.md" target="_blank" rel="noopener" class="">final practice confirmation</a> separates originally truncated outputs from originally completed ones. Most recoveries came from the truncated group, giving the score increase a traceable behavioral explanation.</p>
 </section>
-<section class="detail-section" id="fused-reconstruction">
-<h2 class="">Where does the compressed cache get unpacked?</h2>
-<p class=""><a href="https://arxiv.org/abs/2205.14135" target="_blank" rel="noopener" class="">FlashAttention</a> already demonstrated the value of reorganizing computation and memory access. GAAC turns to the KV representation itself: if historical states are read repeatedly, can we move fewer bytes without changing the values stored?</p>
 
-<p class="">BF16 consists of one sign bit, eight exponent bits, and seven mantissa bits. GAAC preserves the sign and mantissa and encodes only the exponent. Model-generated exponents are not uniformly distributed; frequently occurring exponents in many head-channels occupy short intervals. Calibration chooses high-coverage windows of length 8 and 16 for each head-channel of K and V in every layer. Encoding then stores offsets from those window bases.</p>
+<section class="detail-section" id="gemma-control">
+<h2 class="">Why did Gemma barely improve?</h2>
 
-<p class="">Eight elements share a 2-bit mode tag. A group uses 3-bit offsets if every element fits the narrow window, then tries 4-bit offsets, and falls back to raw 8-bit exponents if necessary. Outliers take the fallback path. Calibration mismatch costs compression efficiency while preserving the original values.</p>
+<p class="">The team also asked Astra to edit Gemma 3 270M. Its failures involved ordinary reasoning mistakes, including bad arithmetic and invalid algebraic steps. It rarely entered the long loops seen in Qwen, and the search for a local repair was much less productive.</p>
 
-<p class="">In the common 3-bit mode, each element takes <code class="">8 + 3 + 2/8 = 11.25 bits</code>. About 88%–90% of groups use it across five tested models, yielding complete encoded-size ratios of 1.405–1.407×. At 1.406, encoded storage falls by <code class="">1 - 1/1.406 ≈ 28.9%</code>. Fixed slots, block tables, and fallback consume some of that saving, leaving about 26% less resident KV memory. Weights and other runtime allocations keep their own costs.</p>
+<p class="">Gemma started at 6.8% on MATH-500 and reached 7.0% with a 50-pass budget, using its own sampling configuration and an 8,192-token limit. To me, the comparison suggests a better near-term target: a stable, localized failure, rather than the broad instruction to improve mathematical ability.</p>
 
-<p class="">Making KV smaller is not enough to make inference faster. A straightforward implementation reads the compressed data, decompresses the whole cache into device memory, and hands it to an ordinary attention kernel. That introduces a full-cache write followed by another read. The saved traffic can disappear in the unpacking process.</p>
+<p class="">The diagnoses call for different work. Repetitive output offers productive and looping contexts to compare, interventions to design, and behavioral changes to measure. Missing reasoning ability involves knowledge, representations, and computation across layers. Asking a local patch to supply all of that is often just moving the guesswork elsewhere.</p>
 
-<p class="">GAAC fuses reconstruction with attention. The kernel reads compressed tiles and metadata, reconstructs the BF16 values it currently needs, and immediately uses them for attention scores and weighted value sums. It never materializes a complete decompressed cache in external memory. New tokens first enter an incomplete BF16 tail block; a full block is compressed once, rather than repacked with every subsequent token. Blocks that exceed compressed-slot capacity remain in raw BF16.</p>
-
-<p class="">This scheduling determines whether compression belongs in the inference path. KV is appended, read, and released throughout a request, and historical blocks are consumed repeatedly by later tokens. GAAC preserves original KV bit patterns and reconstructs them where they are used. Integration then compares the floating-point kernel's numerical behavior and task quality against the baseline. That is a more useful target than a prettier compression ratio alone.</p>
-
+<p class="">I would start with failures where a model has useful ability but reliably fails to express it: repeated generation, a persistent formatting failure, or an abnormal action triggered by a particular state. The success criterion becomes concrete: remove that failure while retaining performance on tasks that already worked.</p>
 </section>
-<section class="detail-section" id="kernel-timing">
-<h2 class="">More computation, less elapsed time</h2>
-<p class=""><a href="https://arxiv.org/html/2610.38210v1#S4.T5" target="_blank" rel="noopener" class="">Table 5</a> breaks down a decode-attention kernel at 64K context. Times are in microseconds:</p>
 
-<div class="article-table-scroll" tabindex="0" role="region" aria-labelledby="bgkv_table_heading"><table class="">
-<thead id="bgkv_table_heading" class="">
-<tr class="">
-<th scope="col" class="">Component</th>
-<th align="right" scope="col" class="">BF16 / FA2</th>
-<th align="right" scope="col" class="">Decompress first</th>
-<th align="right" scope="col" class="">GAAC fused path</th>
-</tr>
-</thead>
-<tbody class=""><tr class="">
-<td class="">KV loading</td>
-<td align="right" class="">1117.8</td>
-<td align="right" class="">1117.8</td>
-<td align="right" class="">823.5</td>
-</tr>
-<tr class="">
-<td class="">Separate exponent decoding</td>
-<td align="right" class="">—</td>
-<td align="right" class="">930.8</td>
-<td align="right" class="">—</td>
-</tr>
-<tr class="">
-<td class="">Computation, including GAAC reconstruction</td>
-<td align="right" class="">241.5</td>
-<td align="right" class="">241.5</td>
-<td align="right" class="">290.7</td>
-</tr>
-<tr class="">
-<td class="">Total</td>
-<td align="right" class="">1359.3</td>
-<td align="right" class="">2290.1</td>
-<td align="right" class="">1114.2</td>
-</tr>
-</tbody></table></div>
+<section class="detail-section" id="car-patch">
+<h2 class="">This car needed to reverse first</h2>
 
-<p class="">GAAC saves 294.3 μs on KV loading and spends an extra 49.2 μs on computation, saving 245.1 μs overall. That is about a 1.22× kernel speedup, or 18% less elapsed time. Extra arithmetic buys a larger reduction in memory traffic.</p>
+<p class="">Another experiment looks much closer to patching a controller. A PPO network had to drive a car up a ramp, but repeatedly drove straight ahead and stalled. Given the weights, scene description, and one recorded episode, Astra added a path reading position and velocity: reverse to create a run-up, then accelerate forward.</p>
 
-<p class="">The decompress-first path takes 2290.1 μs, slower than the uncompressed baseline. The same compressed representation leads to opposite performance outcomes depending on where reconstruction happens and how the result is consumed.</p>
+<p class="">Once the car passed a particular position, the added path switched off and the trained network handled the rest. This <a href="https://github.com/RikiyaT/lm_understand-logs/blob/main/exp4_fix_car/README.md" target="_blank" rel="noopener" class="">one-shot edit</a> changed about 3.5% of the weights and succeeded in all 1,024 tests of that level. Its activation, action, and exit condition each correspond to an identifiable part of the task.</p>
 
-<p class="">The standalone codec ablation in Table 4 makes the tradeoff sharper. Adding a 2-bit mode improves the ratio from 1.406 to 1.439×, about 2.3%, while decoding latency jumps from 187.1 to 526.7 μs, roughly 2.8×. A small storage saving purchases a much larger reading cost.</p>
-
-<p class="">On a bandwidth-limited path, giving the GPU more arithmetic can be the route to better performance. The question is how much traffic it replaces and how reconstruction, access granularity, and layout fit together. Optimizing arithmetic and memory traffic in isolation makes it easy to save the wrong thing.</p>
-
+<p class="">That captures the appeal of repair. Much of the existing behavior was usable; a specific phase needed a different action. Keeping the learned behavior and correcting the failure point is a more targeted response than sending the entire policy back into training.</p>
 </section>
-<section class="detail-section" id="whole-step">
-<h2 class="">A 1.22× kernel does not make the request 1.22× faster</h2>
-<p class="">A decode step also includes linear layers, MLPs, normalization, weight access, and runtime overhead. Suppose attention originally consumes 40% of the total time and becomes 1.22× faster while everything else stays unchanged:</p>
 
-<pre class=""><code class="language-text">overall speedup = 1 / (0.6 + 0.4 / 1.22)
-                ≈ 1.078
-</code></pre>
+<section class="detail-section" id="reading-computation">
+<h2 class="">Reading weights means finding computations</h2>
 
-<p class="">Overall processing rate improves by only about 7.8%. Amdahl's law puts a number on the ceiling of a local optimization: the gain depends on its original share of execution time. Map the complete step before deciding how much engineering effort a kernel deserves.</p>
+<p class="">How did the researchers get to these repairs? They began with reading experiments. Astra identified the training game for four identically shaped, 17,253-parameter networks from their weights and input/output meanings. A later experiment removed the input and output layers of roughly 7.2-million-parameter character models, leaving only their middle Transformer blocks.</p>
 
-<p class="">GAAC measures this in its equal-batch experiment. On DGX Spark, attention at batch 1 and 64K context improves by 1.19–1.27×. Complete W4A16 decode steps improve by 1.04–1.15× across the tested model and context configurations. The two hybrid/MoE models use full attention in only about a quarter of their layers and gain around 1.04–1.06× for the complete step. Other layers and weight access still consume much of the time.</p>
+<p class="">Removing the outer layers takes away the direct character-to-vector and vector-to-character mappings, as well as the shortcut of running some text and inspecting the result. Astra could analyze the middle weights in Python, but could not feed any input through the network. That placed the task on the computational structure exposed by the matrices themselves.</p>
 
+<p class="">Astra distinguished networks trained on Python, English, and romanized Japanese, and identified induction heads that matched measured behavior. It combined weight matrices to find structures involved in reading earlier context, matching sequences, and copying what followed. <a href="https://transformer-circuits.pub/2022/in-context-learning-and-induction-heads/" target="_blank" rel="noopener" class="">Induction-head mechanisms</a> already have an established research history. What interests me here is a reasoning model selecting its own analysis steps to locate such computations.</p>
 
+<p class="">Analysis also has to survive differences in representation. Permuting hidden units while adjusting the surrounding connections can leave a network's function unchanged. The permutation symmetries studied in <a href="https://arxiv.org/abs/2209.04836" target="_blank" rel="noopener" class="">Git Re-Basin</a> illustrate why a numbered neuron makes a poor universal repair interface across models.</p>
 
-<p class="">For a long document, prefill must process the input first. GAAC's fused path primarily accelerates decode; prefill retains conventional attention and may temporarily expand cached context when necessary. A 64K input followed by a few dozen generated tokens can spend most of its time before the first token. Generating thousands of tokens over that context offers more opportunity for per-step savings to accumulate.</p>
-
-<p class="">Kernel ratios have their own shape. Qwen3-8B attention gains are 1.31, 1.27, and 1.25× at 32K, 64K, and 128K context. Complete-step gains follow a different curve as the share of KV access changes. Picking the largest multiplier for a headline is easy. Finding where the actual workload sits on those curves is useful.</p>
-
+<p class="">I want tools that describe stable computational relationships: which state is read, which transformations follow, and which direction receives the result. A description grounded in testable computation gives us a better chance of locating the mechanism again in another model or training seed. A layer number alone is a thin basis for a repair.</p>
 </section>
-<section class="detail-section" id="concurrency">
-<h2 class="">Does serving one more request count as faster?</h2>
-<p class="">A separate experiment fixes the KV-memory budget and increases concurrency to the maximum each system can hold. In <a href="https://arxiv.org/html/2610.38210v1#S4.T2" target="_blank" rel="noopener" class="">Table 2</a>, Qwen3-8B with 64K context and about a 20 GB KV budget fits two BF16 sequences at 19.0 aggregate tok/s. GAAC fits three and produces 22.8 tok/s, a 20% increase.</p>
 
-<p class="">Dividing the totals by active sequences gives about 9.5 tok/s per sequence in the first setup and 7.6 in the second. Concurrency changes from two to three: the device produces more tokens overall while the arithmetic share per sequence falls. Alongside aggregate throughput, I want measured per-request ITL and completion time to see what the extra capacity buys.</p>
+<section class="detail-section" id="writing-networks">
+<h2 class="">Compiling Breakout rules into matrices</h2>
 
-<p class="">For one person's chat assistant, room for another sequence has limited value. Consider three tasks with separate long contexts: admitting the third instead of queueing it can change group completion time. Comparing such task traces reveals how scheduling and dependencies affect the experience.</p>
+<p class="">Astra also wrote MinAtar game networks from scratch. It received the rules, environment source, and input/output definitions, then generated weights without playing the game to check them. For Breakout, it estimated where the ball would land and chose an action from the paddle position, expressing that algorithm through matrices and activation functions.</p>
 
-<p class="">One contrast in the paper is especially revealing: the hybrid and MoE models show relatively modest equal-batch gains but 27% and 29% higher throughput under fixed KV budgets. Much of that benefit comes from accommodating another concurrent sequence, not from making each computation step faster by the same percentage.</p>
+<p class="">Its mean score was 517.4, compared with 15.8 after 100 million PPO steps and 25.3 after 500 million. The interesting distinction is how the solutions were obtained: Astra designed a controller from explicit rules and compiled it into the specified network, while PPO learned through environment interaction and rewards. The network became a substrate for an algorithm the editor could describe.</p>
 
-<p class="">Online serving also has to account for queueing and tail latency. A larger batch can produce more tokens while leaving some users waiting longer. I would tie goodput directly to the product, for example counting only requests that meet both first-token and ongoing-generation latency targets. Chat needs responsiveness; offline document processing values batch completion. The product determines the target.</p>
+<p class="">The 9×9 Go experiment took this further. In a roughly 1.48-million-parameter network, Astra built layers for stones, liberties, endangered groups, and move scores. With limited game feedback, it then revised the computations behind losses. A constructed network could itself enter a debugging loop, joining algorithm design to experimental revision.</p>
 
+<p class="">That suggests a way to combine learning and construction. Explicit state machines, local control rules, and special-case behavior are candidates for direct construction; complex visual representations and language knowledge can still be learned from data. Engineers gain another way to combine capabilities: add an explainable, testable computation to what a model already does.</p>
 </section>
-<section class="detail-section" id="fp8-comparison">
-<h2 class="">What changes if the deployment already uses FP8?</h2>
-<p class=""><a href="https://arxiv.org/abs/2309.06180" target="_blank" rel="noopener" class="">PagedAttention</a> established the importance of cache management. Paged allocation and sharing reduce fragmentation and duplication; its vLLM evaluation reports 2–4× throughput against contemporary baselines on the tested models and workloads. GAAC moves into the representation itself and how attention consumes compressed data. Much of serving performance lives around the matrix operations.</p>
 
-<p class="">FP8 halves the KV storage width relative to BF16 and introduces numerical approximation. In <a href="https://vllm.ai/blog/2026-04-22-fp8-kvcache" target="_blank" rel="noopener" class="">vLLM's April 2026 report</a>, an H100 Llama-3.1-8B test with 150 requests, concurrency 8, and roughly 20K input/2K output tokens improves aggregate throughput from 450.3 to 517.5 tok/s, about 14.9%. The gpt-oss-20b variant that skips sliding-window layers gains about 4.8%. Architecture and execution determine how bit-width savings reach system throughput.</p>
+<section class="detail-section" id="debugging-cost">
+<h2 class="">A 0.016% patch took about 20 hours</h2>
 
-<p class="">The precision tradeoff differs too. GAAC adds 1.09–1.14× lossless compression to already quantized FP8 E4M3 and 1.25–1.30× to E5M2, preserving the quantized values. Task-quality tests still need to cover the initial FP8 approximation and the accumulation behavior of the consuming kernel.</p>
+<p class="">Direct weight intervention has a substantial research history. <a href="https://arxiv.org/abs/2202.05262" target="_blank" rel="noopener" class="">ROME</a> edits feed-forward weights to update factual associations, while mechanistic interpretability uses activation and parameter interventions to test internal computations. Weight-Space Programming asks a general-purpose reasoning model to organize the diagnosis, experimental choices, and edits.</p>
 
-<p class="">Start the comparison from the deployed baseline. A system with mature FP8 kernels measures the incremental benefit of further compression. A system that needs original BF16 KV measures the cost of preserving it. Align hardware, architecture, precision, batch size, and workload, then compare.</p>
+<p class="">It resembles the move from asking a coding model for a function to having an agent read a project, run tests, and revise its work from failures. The artifacts here are tensors and activations; the failures are behavioral.</p>
 
+<p class="">A small patch can still take a long time to find. The best Qwen run used 50 batched forward passes, 80 Python operations, and 158 turns. Wall-clock time was about 20.3 hours, including roughly 4.7 hours waiting for an unavailable service. A single forward-tool call could generate answers to as many as 512 practice problems or read internal states for 1,024 texts.</p>
+
+<p class="">The 10-, 25-, and 50-pass budgets in the table correspond to separate runs and different final patches. The 25-pass run disabled an attention head; the 50-pass run found the repetition-related direction in two MLPs. This is a search for a mechanism. More budget does not automatically buy a proportional improvement.</p>
+
+<p class="">I would compare sampling changes, external controls, fine-tuning, and internal editing against the same fault: data required, compute spent, repeatability, and ongoing maintenance. Avoiding backpropagation is useful. Diagnosis and validation still have to be paid for.</p>
 </section>
-<section class="detail-section" id="deployment-limits">
-<h2 class="">Integration is where the work starts</h2>
-<p class="">GAAC's exponent windows depend on calibration. In the positional-drift experiment in <a href="https://arxiv.org/html/2610.38210v1#A3" target="_blank" rel="noopener" class="">Appendix C</a>, a Qwen3-8B layer uses windows calibrated on prompts of at most 8K tokens to process 32K input. Overflow storage for later keys grows substantially; 32K calibration is more stable. RoPE can shift key-exponent distributions with position. Reconstruction remains lossless, but compression efficiency and fallback overhead change.</p>
 
-<p class="">Cross-task tests provide a useful starting point: windows selected on WikiText retain similar compression across several code, math, and knowledge tasks. Next, run longer contexts and sustained request traces while tracking slot waste, fallback rates, prefix sharing, and cache turnover. Production workloads keep changing shape; the cache has to handle that.</p>
+<section class="detail-section" id="patch-and-regression">
+<h2 class="">Model repair needs patches and a rollback button</h2>
 
-<p class="">On Apple M4, the authors implement compressed attention in Metal and compare it with a BF16-KV kernel of the same structure. At 64K context, gains are about 1.10× for one sequence and 1.25× for eight. The kernel has crossed a platform boundary. Putting it into a complete Mac inference framework and measuring first-token, ongoing-generation, and task-completion time is the next useful step.</p>
+<p class="">In a project, I would begin with a replay set for a stable failure. Save the triggering inputs, model version, sampling parameters, and runtime, alongside examples that already work. Each proposed internal mechanism should face a control experiment capable of disproving it before we decide which tensors to edit.</p>
 
-<p class="">Personal devices also have a thermal and battery budget. The paper provides memory and timing results; power and energy remain to be measured. Evaluating extra arithmetic against reduced traffic requires power traces, runtime, and sustained-load tests. Energy per token belongs in a local-deployment comparison too.</p>
+<p class="">For a vision task, the starting point could be persistent errors under a particular object pose or imaging condition, with activations compared against normal cases. The investment is in diagnosis: trace a recurring class of errors to an intervention, then test it. Blindly swapping models against a metric tends to accumulate a new collection of failures we still do not understand.</p>
 
-</section>
-<section class="detail-section" id="benchmark-plan">
-<h2 class="">The comparisons I would run before deployment</h2>
-<p class="">Fix a reproducible baseline: model and quantization versions, inference framework and kernel, context and output lengths, KV precision, batch size, and request arrivals. Account for weights, resident KV, and workspace separately so the bottleneck has somewhere to show up.</p>
+<p class="">A patch should be bound to the original checkpoint hash and record the changed tensors, indices, precision, and deltas, together with the experiment that produced it. Check the base before deployment and restore the original on regression. A change in unit ordering, model version, or quantization calls for checking whether the patch still affects the intended computation.</p>
 
-<p class="">Run two separate comparisons. Hold concurrency fixed and measure complete decode-step and request latency. Fix the memory budget, allow more concurrency, and measure aggregate throughput, queueing, and goodput. One asks how much faster the same user's request gets; the other asks how much more work the device can take.</p>
+<p class="">Sequential repairs also need composition tests. The second edit encounters representations already changed by the first, so individually useful patches may interfere. Keeping replay results for the original, patch A, patch B, and A followed by B gives us a basis for accepting the next edit or reopening the diagnosis.</p>
 
-<p class="">Latency reporting needs its own distinctions. <a href="https://docs.vllm.ai/en/latest/design/metrics/" target="_blank" rel="noopener" class="">vLLM's metrics documentation</a> separates time to first token (TTFT), inter-token latency (ITL), and average time per output token (TPOT). State whether queueing is included, how observations are aggregated, and which output-token denominator is used. An average tokens/s can conceal both a short request's wait and a long request's stalls. P50/P95/P99, task quality, sustained memory use, and energy measurements bring the comparison closer to actual use.</p>
+<p class="">Regression testing has to extend beyond the target score. A <a href="https://proceedings.neurips.cc/paper_files/paper/2024/hash/370fa2e691f57eb319bc263a07dad4a5-Abstract-Conference.html" target="_blank" rel="noopener" class="">NeurIPS 2024 evaluation of model editing</a> documented damage to general ability under sequential edits. A <a href="https://arxiv.org/abs/2601.17343" target="_blank" rel="noopener" class="">later study of edit locality</a> found that some common metrics were insufficiently sensitive to side effects. A small parameter change can have broad behavioral consequences; testing has to look for them.</p>
 
-<p class="">For agents, I would also save task traces containing tool waits and repeated prefill. If a task spends most of its duration waiting for external tools, improving decode by 10% will not cut the whole task by 10%. Finding where the time goes determines which layer is worth optimizing next.</p>
+<p class="">For a loop repair like Qwen's, I would measure answer quality, truncation, output length, format compliance, and tasks that previously completed normally. Measuring only earlier termination can turn loop repair into faster abandonment. Repeated independent diagnoses, replay cases held out from the search, and explicit rollback conditions help determine whether the tool deserves continued use.</p>
 
-<p class="">The easiest mistake in local inference is treating a model that fits as a job finished. Smaller weights leave historical caches, data movement, and scheduling with their own bills. GAAC trades extra arithmetic for less traffic, and the gains are realized differently along the execution path. The next time a result promises 20% more speed, I will look for the complete timing breakdown before deciding to integrate it.</p>
-
-
-
+<p class="">I want model development to take repair seriously. A checkpoint can retain what training produced while accepting local changes backed by records and tests. The next time a model fails consistently, start by asking where it gets stuck. Locate the fault, intervene, run regressions, and then decide whether the answer is a patch or another training run.</p>
 </section></div></div>
     </div>
-    <section class="related" aria-labelledby="related-title"><p class="kicker">Continue reading</p><h2 id="related-title">Related <em>writing</em></h2><ol class="journal-list" style="list-style:none"><li><a class="journal-row" href="article-01.html" data-topic="1" data-cursor="Read">
-        <span class="journal-date">2026.11 · 01</span>
-        <span class="journal-title"><span class="static">Why Retrain Every Time a Model Breaks?</span><span class="marquee" aria-hidden="true"><span>Why Retrain Every Time a Model Breaks? —&nbsp;</span><span>Why Retrain Every Time a Model Breaks? —&nbsp;</span><span>Why Retrain Every Time a Model Breaks? —&nbsp;</span></span></span>
-        <span class="topic" data-topic="1">AI Engineering</span><span class="journal-time">13 min</span></a></li><li><a class="journal-row" href="article-03.html" data-topic="1" data-cursor="Read">
-        <span class="journal-date">2026.10 · 03</span>
+    <section class="related" aria-labelledby="related-title"><p class="kicker">Continue reading</p><h2 id="related-title">Related <em>writing</em></h2><ol class="journal-list" style="list-style:none"><li><a class="journal-row" href="article-03.html" data-topic="1" data-cursor="Read">
+        <span class="journal-date">2026.11 · 03</span>
+        <span class="journal-title"><span class="static">The Model Fits. Why Is It Still Slow?</span><span class="marquee" aria-hidden="true"><span>The Model Fits. Why Is It Still Slow? —&nbsp;</span><span>The Model Fits. Why Is It Still Slow? —&nbsp;</span><span>The Model Fits. Why Is It Still Slow? —&nbsp;</span></span></span>
+        <span class="topic" data-topic="1">AI Engineering</span><span class="journal-time">15 min</span></a></li><li><a class="journal-row" href="article-04.html" data-topic="1" data-cursor="Read">
+        <span class="journal-date">2026.10 · 04</span>
         <span class="journal-title"><span class="static">When the Exam Is Wrong: What Do AI Scores Measure?</span><span class="marquee" aria-hidden="true"><span>When the Exam Is Wrong: What Do AI Scores Measure? —&nbsp;</span><span>When the Exam Is Wrong: What Do AI Scores Measure? —&nbsp;</span><span>When the Exam Is Wrong: What Do AI Scores Measure? —&nbsp;</span></span></span>
-        <span class="topic" data-topic="1">AI Engineering</span><span class="journal-time">15 min</span></a></li><li><a class="journal-row" href="article-16.html" data-topic="1" data-cursor="Read">
-        <span class="journal-date">2026.05 · 16</span>
+        <span class="topic" data-topic="1">AI Engineering</span><span class="journal-time">15 min</span></a></li><li><a class="journal-row" href="article-17.html" data-topic="1" data-cursor="Read">
+        <span class="journal-date">2026.05 · 17</span>
         <span class="journal-title"><span class="static">The Core of AI Engineering Is Not Making Models Omnipotent. It Is Defining Boundaries</span><span class="marquee" aria-hidden="true"><span>The Core of AI Engineering Is Not Making Models Omnipotent. It Is Defining Boundaries —&nbsp;</span><span>The Core of AI Engineering Is Not Making Models Omnipotent. It Is Defining Boundaries —&nbsp;</span><span>The Core of AI Engineering Is Not Making Models Omnipotent. It Is Defining Boundaries —&nbsp;</span></span></span>
         <span class="topic" data-topic="1">AI Engineering</span><span class="journal-time">8 min</span></a></li></ol></section>
     <nav class="pager" aria-label="More articles">
-        <a href="article-01.html" data-cursor="Prev"><span class="meta">← Previous</span><strong>Why Retrain Every Time a Model Breaks?</strong></a>
-        <a href="article-03.html" data-cursor="Next"><span class="meta">Next →</span><strong>When the Exam Is Wrong: What Do AI Scores Measure?</strong></a>
+        <a href="article-01.html" data-cursor="Prev"><span class="meta">← Previous</span><strong>The Props Are Fake: On Good Trip</strong></a>
+        <a href="article-03.html" data-cursor="Next"><span class="meta">Next →</span><strong>The Model Fits. Why Is It Still Slow?</strong></a>
     </nav>
 </div>
 </main>

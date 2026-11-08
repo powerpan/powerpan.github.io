@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>当考卷本身有错：我们在测量 AI 的什么？ — Eric</title>
-<meta name="description" content="等价公式拿了零分，修订题库后成绩大涨。先看清考卷和判卷过程，再判断模型究竟进步了多少。">
+<title>模型装得下，为什么还是跑不快？ — Eric</title>
+<meta name="description" content="缓存省了 26%，完整生成步骤却只快了一小截。GAAC 把本地推理里最容易被混淆的三件事摆在了一起：容量、延迟和并发。">
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#ede8df">
 <script>(()=>{const r=document.documentElement;let t,m;try{t=localStorage.getItem('ink-theme');m=localStorage.getItem('ink-motion')}catch(e){}t=t||(matchMedia('(prefers-color-scheme: dark)').matches?'night':'day');if(matchMedia('(prefers-reduced-motion: reduce)').matches)m='off';r.dataset.theme=t;r.dataset.motion=m||'on'})()</script>
@@ -44,128 +44,191 @@
 <div class="page">
     <header class="article-head">
         <p class="meta"><a href="index.html">← 文章</a> &nbsp;/&nbsp; <span class="topic" data-topic="1">AI 工程</span></p>
-        <h1 data-split>当考卷本身有错：<em>我们在测量 AI 的什么？</em></h1>
-        <p class="lede rise">等价公式拿了零分，修订题库后成绩大涨。先看清考卷和判卷过程，再判断模型究竟进步了多少。</p>
-        <div class="article-meta meta rise" style="--d:120ms"><span>2026.10.08</span><span>15 分钟</span><span>No. 03</span></div>
+        <h1 data-split>模型装得下，<em>为什么还是跑不快？</em></h1>
+        <p class="lede rise">缓存省了 26%，完整生成步骤却只快了一小截。GAAC 把本地推理里最容易被混淆的三件事摆在了一起：容量、延迟和并发。</p>
+        <div class="article-meta meta rise" style="--d:120ms"><span>2026.11.03</span><span>15 分钟</span><span>No. 03</span></div>
     </header>
     <div class="article-layout">
-        <nav class="toc" aria-label="目录"><a href="#intro">引言</a><a href="#audit-denominator">95.2% 的分母，是被判错的回答</a><a href="#repaired-tasks">从 61 分到 87 分，考卷也变了</a><a href="#attempt-metrics">97.96% 的背后，有四次作答机会</a><a href="#expert-audit">专家判卷，也要接受审计</a><a href="#coding-tests">测试认定了函数名，需求却没有</a><a href="#benchmark-versions">换新题以后，旧分数怎么比较</a><a href="#grader-regressions">把评分器当作软件来维护</a><a href="#research-boundary">能答物理题，离做研究还有多远？</a></nav>
+        <nav class="toc" aria-label="目录"><a href="#intro">引言</a><a href="#kv-capacity">权重放下了，历史 token 还在占内存</a><a href="#fused-reconstruction">压缩以后，在哪里解开？</a><a href="#kernel-timing">多做一点计算，反而少花了时间</a><a href="#whole-step">内核的 1.22 倍，传不到整个请求上</a><a href="#concurrency">多接一条请求，算不算更快？</a><a href="#fp8-comparison">已经用了 FP8，还能照搬这些收益吗？</a><a href="#deployment-limits">接进推理系统，才是费工夫的地方</a><a href="#benchmark-plan">真要部署，我会怎样做对照</a></nav>
         <div class="page-surface"><div class="prose"><section class="detail-section" id="intro">
-            <p class="">PHYBench 有一道绳索张力题，模型和参考答案给出了看起来不一样的式子。用普通的分母有理化，就能把它们写成同一个结果：</p>
-            <pre class=""><code class="language-text">T = P / (3 * sqrt(6))
-  = P * sqrt(6) / (3 * 6)
-  = sqrt(6) * P / 18
+<p class="">本地部署大模型时，显存容量往往是第一道门槛。BF16 放不下，就换成 8-bit，再不行就用 4-bit。等权重终于加载成功，我们很容易以为最困难的部分已经过去了。</p>
+
+<p class="">可一旦接入长文档、代码仓库，或者让几个任务同时运行，生成速度又可能慢下来。模型没有溢出内存，GPU 的理论算力也不低，时间究竟花在哪里？</p>
+
+<p class="">Notre Dame 的 Guo、George 和 Joshi 在 2026 年 10 月 28 日发布的预印本 <a href="https://arxiv.org/html/2610.38210v1" target="_blank" rel="noopener" class="">GAAC</a>提供了一组值得拆开读的结果：驻留 KV 内存减少约 26%，DGX Spark 上 64K 上下文的注意力内核加速 1.19–1.27 倍，完整 W4A16 decode step 加速 1.04–1.15 倍，固定 KV 预算下的聚合吞吐提高 13%–29%。</p>
+
+<p class="">把模型塞进内存，只解决了第一道门槛。接下来限制速度的，往往是数据每一步怎么被搬进计算单元。GAAC 最有意思的地方，就是同一份容量节省，到了内核、模型和服务三个层面，收益一路变样。</p>
+
+</section>
+<section class="detail-section" id="kv-capacity">
+<h2 class="">权重放下了，历史 token 还在占内存</h2>
+<p class="">权重只是推理时驻留数据的一部分。Transformer 还要保存历史 token 的 Key 和 Value，避免生成新 token 时重新计算历史 K、V。这份 KV Cache 随上下文增长，也会随并发序列数增加。</p>
+
+<p class="">对常见的全注意力结构，单条序列的理论存储量可以近似写成：</p>
+
+<pre class=""><code class="language-text">KV bytes = 2 × layers × KV heads × head dim
+           × context tokens × bytes per element
 </code></pre>
-            <p class="">Expression Edit Distance（EED）评分器却给了零分，二元判定也是错误。<a href="https://arxiv.org/html/2609.13009v1" target="_blank" rel="noopener" class="">2026 年 9 月 11 日的物理评测审计论文</a>图 3 记录了这次误判：模型做对了普通的代数变形，判卷程序把它算成了失败。</p>
-            <p class="">这篇《How Good Are Frontier Models at Physics?》由耶鲁大学等机构的研究者完成，审查了 UGPhysics、PHYBench、PRISM-Physics、HLE-Physics、CMT-Benchmark 和 CritPt 六套测试，范围是文字形式、具有可验证最终答案的封闭式物理题。修复后，一些成绩大幅上涨：GPT-5.6-Sol 在 CMT 的 mean@4 从 61.00% 升到 87.24%，在 HLE-Physics 从 47.28% 升到 78.66%。</p>
-            <p class="">我觉得这件事直接戳中了评测的软肋：我们花了大量力气追踪模型涨了几分，却常常把考卷和判卷程序当成天然正确的尺子。尺子出了问题，再精确的百分比也会把讨论带偏。先拆开判卷错误、题面修订和重复尝试，才看得清这次涨分究竟发生了什么。</p>
-        </section>
 
-        <section class="detail-section" id="audit-denominator">
-            <h2 class="">95.2% 的分母，是被判错的回答</h2>
-            <p class="">专家把审计案例分为模型错误、评分器错误和题库错误。第一类是题目与参考解都没问题，模型确实答错；第二类是模型答对，评分器拒绝；第三类则包括参考解错误、条件缺失或题目歧义。材料本身有问题时，论文优先把案例归入题库错误，而不是继续当作一场正常考试来判模型。</p>
-            <p class="">四套合并审计中，250 个被拒绝后送审的案例，最终分为 143 个题库错误、95 个评分器错误和 12 个模型错误。常被引用的 95.2%，分母就是这 250 个拒绝案例：审计把绝大部分失败追到了测量流程。CMT 与 CritPt 采用另一种审计覆盖方式，单独统计。</p>
-            <p class="">送去审的样本，本来就在回答“这些失败怎么来的”。沿着失败记录找问题，很容易挖出误拒绝。这样的审计首先改变的，是我们对这批失分的归因；要估计整套题库的缺陷率，还得另做覆盖全部题目的抽样。</p>
-            <p class="">而且，题库错误未必只是计算粗心。论文图 4 中，CritPt 的 Kitaev 蜂窝模型题要求计算基态能量，却没有明确哈密顿量采用泡利矩阵还是自旋算符。对自旋为 1/2 的系统，采用 <code class="">S = σ/2</code> 后，两体乘积会带来四倍的系数差异。修订题补上了哈密顿量和约定；不能用某位研究者习惯的约定，代替题面没写出来的条件。</p>
-            <p class="">题面缺条件，比评分器看不懂公式还麻烦。换一个更强的 LLM 裁判，也得先决定采用哪套物理约定。出题者该写清楚的东西，被留给答题者和裁判猜，这道题从一开始就失去了统一的判定依据。</p>
-        </section>
+<p class="">最前面的 2 代表 K 和 V。用一个假设的全注意力架构算一遍：32 层、8 个 KV head、head dimension 为 128，使用 BF16，每个 token 的 KV 就是 128 KiB。上下文达到 65,536 token，一条序列占 8 GiB；四条相同长度、没有共享前缀的序列，单是 KV 就要 32 GiB。分配器和临时工作区还得另算。</p>
 
-        <section class="detail-section" id="repaired-tasks">
-            <h2 class="">从 61 分到 87 分，考卷也变了</h2>
-            <p class="">CMT 原有 50 道题，专家发现 30 道材料有问题，修复 29 道、删掉一道，最终保留 49 道。HLE-Physics 从排除多模态后的 202 道文字题，剔除 86 道题库错误，留下 116 道。下面的数值来自论文表 1，对应 GPT-5.6-Sol High，在相应工具条件下的 mean@4。</p>
-            <div class="article-table-scroll" tabindex="0" role="region" aria-labelledby="bpbg_table_heading"><table class="">
-<thead id="bpbg_table_heading" class="">
+<p class="">权重量化不会自动缩小这份缓存。一个 8B 模型的纯权重，BF16 粗算约 16 GB，4-bit 约 4 GB，但 KV 可能仍用 BF16。原来被权重掩盖的成本，就会显得越来越突出。GQA、MQA、滑动窗口和混合注意力能改变增长方式，因此参数量相近的模型，也不一定需要相同的 KV 容量。</p>
+
+<p class="">缓存还藏着另一笔账。标准全注意力每生成一个 token，当前 Query 都要访问历史 Key，再结合 Value 得到输出。此前算好的东西保住了，读取这些东西的时间却要在每一步重新支付。</p>
+
+<p class="">这时，TFLOPS 再高也可能使不上劲。Prefill 能把许多输入 token 组织成较大的矩阵运算；单请求、小 batch 的 decode 则要反复读取权重和历史 KV。计算单元等着吃数据，内存带宽已经忙满了。</p>
+
+<p class="">假设一段路径每步都要从设备内存读取 8 GiB，可用带宽是十进制的 1 TB/s，理想传输下限就有约 8.6 ms。缓存命中、数据重用和实际带宽利用率会改变这笔账，但读取本身始终有成本。长上下文生成，要一遍遍付这笔钱。</p>
+
+</section>
+<section class="detail-section" id="fused-reconstruction">
+<h2 class="">压缩以后，在哪里解开？</h2>
+<p class=""><a href="https://arxiv.org/abs/2205.14135" target="_blank" rel="noopener" class="">FlashAttention</a>已经展示过重新组织计算与存储访问的价值。GAAC 把关注点进一步放到 KV 的表示上：既然历史缓存要被反复读取，能不能少搬一些字节，又不改变保存的数值？</p>
+
+<p class="">BF16 有 1 位符号、8 位指数和 7 位尾数。GAAC 保留符号和尾数，只编码指数。模型产生的指数并非均匀分布，很多 head-channel 的常见指数集中在短区间内。校准时，为每层 K、V 的各 head-channel 选出长度为 8 和 16 的高覆盖区间；实际编码保存相对区间基值的偏移。</p>
+
+<p class="">数据按 8 个元素组成一组，共享一个 2-bit 模式标签：全部落在较窄窗口，用 3-bit 偏移；否则尝试 4-bit；仍有越界值，整组就保存原始 8-bit 指数。异常值走回退路径，校准失配的代价由压缩率承担，原始数值照样留下。</p>
+
+<p class="">在常见的 3-bit 模式里，每个元素摊到 <code class="">8 + 3 + 2/8 = 11.25 bit</code>。五个测试模型中，约 88%–90% 的组采用这种模式，完整编码体积的压缩比为 1.405–1.407 倍。以 1.406 计算，编码体积节省 <code class="">1 - 1/1.406 ≈ 28.9%</code>；固定槽位、块表和回退又吃掉一部分，最后落到约 26% 的驻留 KV 节省。权重和其他运行时内存仍各算各的。</p>
+
+<p class="">不过，只把 KV 压小，还不足以让推理更快。最直接的实现是读取压缩数据，完整解压到设备内存，再交给普通注意力内核。这样多了一次完整缓存的写出，后续又要把它读回来，压缩省下的流量可能被重新花掉。</p>
+
+<p class="">GAAC 将重建融合进注意力内核。内核读取压缩 tile 和元数据，恢复当前要用的 BF16 数值，随即计算注意力分数和 Value 加权和，不在外部内存中物化一整份解压缓存。新 token 则先写入未满的 BF16 尾块，块满后只压缩一次；后续生成不反复重打包历史块。压缩块超出固定槽容量时，直接保留原始 BF16。</p>
+
+<p class="">这套调度决定了压缩能否进入实际推理。KV 在整个请求里不断追加、读取、释放，历史块还会被后续 token 反复消费。GAAC 保存原始 KV 位模式，把轻量重建放到消费现场；集成时，继续对照基线检查浮点内核的数值行为和任务质量。这比单独追一个更漂亮的压缩率扎实得多。</p>
+
+</section>
+<section class="detail-section" id="kernel-timing">
+<h2 class="">多做一点计算，反而少花了时间</h2>
+<p class=""><a href="https://arxiv.org/html/2610.38210v1#S4.T5" target="_blank" rel="noopener" class="">论文 Table 5</a>把 64K 上下文的 decode-attention 内核计时拆成了几项，单位为微秒：</p>
+
+<div class="article-table-scroll" tabindex="0" role="region" aria-labelledby="bgkv_table_heading"><table class="">
+<thead id="bgkv_table_heading" class="">
 <tr class="">
-<th scope="col" class="">评测</th>
-<th scope="col" class="">原题数 → 保留题数</th>
-<th scope="col" class="">修订前 → 修订后</th>
+<th scope="col" class="">耗时项目</th>
+<th align="right" scope="col" class="">BF16 / FA2</th>
+<th align="right" scope="col" class="">先解压再计算</th>
+<th align="right" scope="col" class="">GAAC 融合路径</th>
 </tr>
 </thead>
 <tbody class=""><tr class="">
-<td class="">CMT-Benchmark</td>
-<td class="">50 → 49</td>
-<td class="">61.00% → 87.24%</td>
+<td class="">KV 读取</td>
+<td align="right" class="">1117.8</td>
+<td align="right" class="">1117.8</td>
+<td align="right" class="">823.5</td>
 </tr>
 <tr class="">
-<td class="">HLE-Physics</td>
-<td class="">202 → 116</td>
-<td class="">47.28% → 78.66%</td>
+<td class="">独立指数解码</td>
+<td align="right" class="">—</td>
+<td align="right" class="">930.8</td>
+<td align="right" class="">—</td>
+</tr>
+<tr class="">
+<td class="">计算（GAAC 含融合重建）</td>
+<td align="right" class="">241.5</td>
+<td align="right" class="">241.5</td>
+<td align="right" class="">290.7</td>
+</tr>
+<tr class="">
+<td class="">总耗时</td>
+<td align="right" class="">1359.3</td>
+<td align="right" class="">2290.1</td>
+<td align="right" class="">1114.2</td>
 </tr>
 </tbody></table></div>
-            <p class="">CMT 的涨分主要来自评测材料修复。它的原生评分器未公开，研究在修订前后一直使用同一个 HLE-adapted evaluator，论文第 3.2.2 节交代了这一点。把错误归因到具体环节，比笼统说一句“旧评分器低估了模型”更有价值。</p>
-            <p class="">固定原题与模型输出，只改变评分，测的是判卷误差；修正参考解，改变的是判定依据；补充题目条件后重新作答，改变的是任务；删掉题目，还会改变分母和难度构成。每种操作都有正当用途，但不是同一场测量。</p>
-            <p class="">HLE 的处理尤其值得留痕。审计从被拒绝的回答查起，再剔除无效题，删除决定就和旧的失败记录联系在一起。报告应把删题清单、理由和保留题集一起交出来，让读者看到新考卷的组成，而不只看到更高的成绩。</p>
-            <p class="">我支持修掉坏题，也支持把修订过程当成实验的一部分公开。固定输出重新评分，修订题目后重新作答，两组结果分开报告。旧记录留下来，才能看见测量系统改进了多少、模型又进步了多少。一个漂亮的新百分比覆盖不了这段历史。</p>
-        </section>
 
-        <section class="detail-section" id="attempt-metrics">
-            <h2 class="">97.96% 的背后，有四次作答机会</h2>
-            <p class="">修复后的 CMT 中，GPT-5.6-Sol High 的 mean@4 为 87.24%，pass@4 为 97.96%。前者对每题四次尝试的正确情况取平均，后者只问四次里是否至少成功一次。</p>
-            <p class="">pass@4 计算的是四次尝试中至少成功一次的覆盖率。假设四个答案里一个正确、三个错误，用户还得选对那个答案。这份选择工作在产品里很难，却被一个接近 98% 的数字轻轻带过了。评测报告应同时给出单次表现和答案选择机制，才接得上实际使用。</p>
-            <p class="">49 道题的 pass@4，每一道就占约 2.04 个百分点。只差一两题的排名，应该把逐题差异摆出来。同一道题的四次作答仍围绕同一个问题，统计时也该按题组织不确定性。接近满分时，这些细节直接决定排名有多大分量。</p>
-            <p class="">这让我区分三件事：测量是否可重复，是否反映目标能力，以及不同版本能否比较。每次都稳定地拒绝一个等价公式，是可重复的错误，不是有效测量。题目再好，如果工具权限、推理预算或评分版本不停变化，历史分数也未必可比。</p>
-            <p class="">Bowman 和 Dahl 在 <a href="https://aclanthology.org/2021.naacl-main.385/" target="_blank" rel="noopener" class="">2021 年的评测方法论文</a>里已经讨论过题集设计、标注可靠性与规模。模型越接近满分，剩下几道坏题和误判就越有机会左右排名。到了这一步，该升级的也包括考卷本身。</p>
-        </section>
+<p class="">GAAC 少花了 294.3 μs 读取 KV，多花了 49.2 μs 计算，净省 245.1 μs。内核加速约 1.22 倍，对应耗时下降约 18%。它主动多做了一点计算，把更大的一笔访存开销换掉了。</p>
 
-        <section class="detail-section" id="expert-audit">
-            <h2 class="">专家判卷，也要接受审计</h2>
-            <p class="">专家审查也呈现了真实的分歧。196 个双人审查案例中，140 个最初一致，56 个交由第三次审查裁决；另有 54 个案例只收到一次审查。71.43% 记录的是双人案例的初始一致率。把分歧怎样被解决一起公开，专家判断才有复核的入口。</p>
-            <p class="">物理里的领域默认和题面缺失，有时只隔着审查者的一次判断。审查者又看过模型输出和 AI 的初步分析，这些信息会影响如何理解题目。把题目有效性检查前置、保留独立意见和裁决理由，能让这套程序少依赖某位专家的直觉。</p>
-            <p class="">我会尽量把题目有效性检查放在看模型输出之前，并保留争议理由。还要抽查被判正确的回答：只检查失败，更容易发现假阴性，也就是正确答案被拒绝；错误答案被接受的假阳性，同样会扭曲分数，而且方向相反。</p>
-            <p class="">Epoch AI 在<a href="https://epoch.ai/benchmarks/hle/review" target="_blank" rel="noopener" class="">2026 年 8 月对原版 HLE 的审查</a>中，从八个类别各随机取六题，共 48 题，确认 22 题有实质缺陷：12 题按题面无法明确作答，10 题可能误拒绝正确答案，其中五题还可能接受错误答案。这份等额分层样本把另一个问题摆了出来：评分错误会同时向两个方向发生。</p>
-            <p class="">因此，修评分器时得两边一起审。扩大等价答案的接受范围，可能找回失分，也可能放进错误答案。回归测试里应同时放入正确变形和貌似相近的错误表达，让修复经得起正反两组样本。</p>
-        </section>
+<p class="">先解压再计算的路径反而达到 2290.1 μs，比未压缩的基线更慢。相同的压缩数据，因为还原位置和后续访问方式不同，最后得到相反的性能结果。</p>
 
-        <section class="detail-section" id="coding-tests">
-            <h2 class="">测试认定了函数名，需求却没有</h2>
-            <p class="">编程评测也有同样的错位。OpenAI 的 <a href="https://openai.com/index/why-we-no-longer-evaluate-swe-bench-verified/" target="_blank" rel="noopener" class="">SWE-bench Verified 审查</a>集中检查了 138 个 o3 多次运行仍未能稳定解决的难题，其中 59.4% 有实质性的测试或描述问题。困难任务里有这么多失分来自测试契约本身，足够让我们重新检查“模型没通过测试”这句话。</p>
-            <p class="">一个 Pylint 任务尤其具体：测试直接导入新函数 <code class="">get_annotation</code>，但问题描述没有要求这个名字。补丁即使通过另一种内部实现满足需求，也可能在收集测试时因为导入失败被拒绝。此时测试把参考补丁的实现细节，写成了需求之外的条件。</p>
-            <p class="">物理题要求结果正确，软件需求规定行为。内部辅助函数的名字若要成为验收条件，就该出现在公开任务契约里。测试越过需求，偷偷把参考补丁的写法设成唯一解，测到的就会混入“猜中了出题者怎样实现”。</p>
-            <p class="">公开题目还有一道老问题：数据污染。修复补丁和讨论长期可见，模型训练有机会接触它们。OpenAI 在部分任务上观察到前沿模型复现人工参考补丁或题面细节，值得继续追查训练暴露和记忆对分数的贡献。</p>
-            <p class="">一套测试越频繁地用于训练反馈、模型选择和公开排名，开发过程就越会朝着这把尺子调整。评测维护要同时做两件事：修好判卷，再追踪题目暴露。否则，测量工具越熟悉，我们越容易把适应题库读成能力增长。</p>
-        </section>
+<p class="">Table 4 的独立 codec 消融更能说明取舍。加入 2-bit 模式，压缩比从 1.406 提高到 1.439 倍，约改善 2.3%；解码耗时却从 187.1 μs 涨到 526.7 μs，约为原来的 2.8 倍。省下那一点空间，换来了大得多的读取负担。</p>
 
-        <section class="detail-section" id="benchmark-versions">
-            <h2 class="">换新题以后，旧分数怎么比较</h2>
-            <p class=""><a href="https://github.com/LiveBench/LiveBench" target="_blank" rel="noopener" class="">LiveBench</a>持续引入新材料，并强调可验证的客观答案；<a href="https://livecodebench.github.io/" target="_blank" rel="noopener" class="">LiveCodeBench</a>持续收集竞赛题，用时间范围组织评测。这些办法能降低旧题长期暴露带来的风险，但“新”不自动等于“同样难”。</p>
-            <p class="">如果今年模型 A 在一组题上得 80 分，明年模型 B 在另一组题上得 85 分，涨了五分并不能单独证明 B 更强。子领域比例、题目难度和测试设置都可能变了。比较新旧模型，至少应尽量在同一个冻结版本、同一预算和工具条件下重跑，而不是把不同年份的榜单数字接成能力曲线。</p>
-            <p class="">我倾向于保留两个用途不同的集合：稳定且经过验证的题，用来观察回归和配置差异；持续更新、控制暴露时间的新题，用来检查对新任务的表现。已经饱和的旧题仍能检测退化，只是不适合再用来细排最强模型。</p>
-            <p class="">跨版本比较最该交代的是校准过程。共同题一旦被广泛记忆或接近全对，就失去了区分作用。把题型覆盖、工具配置、暴露时间和锚题表现一并报告，读者才知道那些年份不同的分数怎样接起来。</p>
-        </section>
+<p class="">在带宽受限的路径上，让 GPU 多干一点活，可能正是提速的方法。关键在于这些操作换掉了多少数据搬运，以及重建位置、访问粒度和布局能否配合。把计算量和访存量拆开优化，很容易省错地方。</p>
 
-        <section class="detail-section" id="grader-regressions">
-            <h2 class="">把评分器当作软件来维护</h2>
-            <p class="">落到工程上，我希望 Benchmark 不只保存一个数据集和最终排行榜，还保存产生分数的过程。题目、参考解、评分器、提示词、模型版本、推理预算与工具权限，都应能追溯。题目补一句条件，也要记录它是否改变了正确答案集合，而不是悄悄覆盖。</p>
-            <p class="">生成回答与评分应分离。先保存原始输出和运行配置，评分器修复后就能对同一输出重评；题面改变则另开一次实验。这样才能区别模型进步与测量变化，也方便解释某次排名为何翻转。</p>
-            <p class="">评分器还需要自己的回归样本。对公式，加入代数等价的正例，也加入近似但不等价、单位错误、遗漏条件的负例。分层使用符号计算、数值核验和专家判断；不能只围绕已经见过的误拒绝放宽规则。</p>
-            <p class="">数值代入尤其容易被用过头。有限几个点碰巧相等，不证明恒等；表达式的定义域、奇点和平方根分支都可能影响等价性。比如 <code class="">sqrt(x*x) = x</code> 只在额外条件下成立，对实数的一般表达应是 <code class="">abs(x)</code>。符号化简同样要携带假设，不能拿一个看起来合理的化简结果代替物理约束。</p>
-            <p class="">报告最后可以保留几组并列结果：原题原评分、固定输出校正评分、修订任务重新评测。每组列出题目数、模型与配置、审计范围，以及按题目组织的不确定性。它没有一个总准确率那么简洁，但读者至少能知道自己比较的是哪一次实验。</p>
-        </section>
+</section>
+<section class="detail-section" id="whole-step">
+<h2 class="">内核的 1.22 倍，传不到整个请求上</h2>
+<p class="">注意力之外，decode step 还包含线性层、MLP、归一化、权重访问以及运行时开销。假设注意力原本占总时间的 40%，把它加速到 1.22 倍，其余部分不变：</p>
 
-        <section class="detail-section" id="research-boundary">
-            <h2 class="">能答物理题，离做研究还有多远？</h2>
-            <p class="">这次审计最有力的发现很具体：前沿模型在一批有明确条件、可验证最终答案的文字物理题上，被旧流程低估了。坏考卷和坏评分器吞掉的成绩，应当还给模型。维护“AI 不懂物理”的直觉，不能成为拒绝修尺子的理由。</p>
-            <p class="">但物理题通常已经替解题者确定了研究对象、条件和要找的量。开放研究还要决定什么值得问、采用哪种表示、怎样区分解释、怎样根据证据修改假设。把封闭题的分数直接读成独立研究能力，会跳过这段差别。</p>
-            <p class="">论文作者 John Sous 在后续<a href="https://jsous.github.io/blogs/is-physics-dead/" target="_blank" rel="noopener" class="">《Is Physics Dead?》</a>中还谈到论文外的初步 Agent 尝试：面对开放理论物理问题，当时尚未自主完整解决任何一道。开放研究需要单独设计评测，把选题、推导、验证与修正的过程留下来，成绩单才有机会接近研究工作的全貌。</p>
-            <p class="">更难的题也不自动更有效。开放任务如果只让另一个模型给出模糊的“很有洞见”，同样可能失去复核依据。需要保存推导、验证过程、可检验的预测和人类评审理由，才能讨论研究进展，而不只是换一种打分语言。</p>
-            <p class="">我希望今后的排行榜把考卷、判卷程序和实验配置摆到分数旁边。错题要修，误判要纠，历史版本也要留下。模型值得一场公平的考试，读者则值得知道，这个分数究竟是怎样考出来的。</p>
+<pre class=""><code class="language-text">overall speedup = 1 / (0.6 + 0.4 / 1.22)
+                ≈ 1.078
+</code></pre>
+
+<p class="">整体速率只提高约 7.8%。Amdahl 定律把局部优化的上限写得很清楚：收益由这部分原本占了多少时间决定。先画出完整步骤的耗时分布，再谈内核提速，才知道工程资源该往哪里投。</p>
+
+<p class="">GAAC 的同 batch 实验把这件事测了出来。DGX Spark 上，batch 1、64K 上下文的注意力内核加速 1.19–1.27 倍；完整 W4A16 decode step 在所测模型和上下文配置中加速 1.04–1.15 倍。两个混合/MoE 模型只有约四分之一的层使用全注意力，完整步骤收益约 1.04–1.06 倍。其余层和权重访问仍占着大头。</p>
 
 
-        </section></div></div>
+
+<p class="">对长文档尤其如此。Prefill 要先处理输入，GAAC 的融合路径主要加速 decode，prefill 仍走常规注意力，必要时还需临时展开缓存。如果输入 64K token 后只生成几十个 token，大量等待可能已经发生在第一个 token 之前；若在这份上下文上持续输出几千个 token，逐步节省才更容易累计。</p>
+
+<p class="">内核倍率本身也有起伏。Qwen3-8B 在 32K、64K、128K 上下文的注意力加速分别为 1.31、1.27、1.25 倍；完整步骤则会随 KV 读取占比变化，呈现另一条收益曲线。选择一个最大的倍率做标题很容易，找出自己的工作负载落在哪段曲线上才有用。</p>
+
+</section>
+<section class="detail-section" id="concurrency">
+<h2 class="">多接一条请求，算不算更快？</h2>
+<p class="">另一组实验固定 KV 内存预算，再分别把并发数加到各自能容纳的上限。<a href="https://arxiv.org/html/2610.38210v1#S4.T2" target="_blank" rel="noopener" class="">Table 2</a>中，Qwen3-8B 在 64K 上下文、约 20 GB KV 预算下，BF16 能放 2 条序列，聚合吞吐 19.0 tok/s；GAAC 能放 3 条，达到 22.8 tok/s，增加 20%。</p>
+
+<p class="">把总量粗略摊给活跃序列，前者每条约 9.5 tok/s，后者约 7.6 tok/s。比较条件已经从两条并发换成三条：设备每秒吐出的 token 更多，摊到每条上的速率却更低。看聚合吞吐时，我会同时要逐请求的 ITL 和完成时间，弄清楚新增容量究竟换来了什么。</p>
+
+<p class="">对一个人的聊天助手，多放一条序列价值有限。换成三个各自维护长上下文的任务，第三个原本要排队，如今可以一起驻留，容量就可能改变整组任务的完成时间。拿这样的任务轨迹做对照，才看得出调度和依赖关系怎样影响用户体验。</p>
+
+<p class="">论文中有个很有说服力的反差：混合和 MoE 模型在相同 batch 下加速较小，固定 KV 预算后的吞吐收益却达到 27% 和 29%。更多收益来自容纳额外并发，而不是单个计算步骤突然快了同样的幅度。</p>
+
+<p class="">在线服务还得算排队和尾延迟。更大的 batch 可以让设备产出更多 token，也可以把部分用户晾得更久。我会把 goodput 直接绑到产品目标上：例如只统计同时满足首 token 和持续输出延迟要求的请求。聊天助手要及时回应，离线文档处理更看重批量完成；各自该优化什么，产品已经给出了答案。</p>
+
+</section>
+<section class="detail-section" id="fp8-comparison">
+<h2 class="">已经用了 FP8，还能照搬这些收益吗？</h2>
+<p class=""><a href="https://arxiv.org/abs/2309.06180" target="_blank" rel="noopener" class="">PagedAttention</a>已经证明过缓存管理的分量：分页分配与共享减少了碎片和重复占用，其论文中的 vLLM 在当时的基线、模型和负载下获得 2–4 倍吞吐。GAAC 又往里走了一层，处理数值怎么存、注意力怎样直接消费压缩数据。推理服务的提速，很多就藏在这些矩阵计算之外的地方。</p>
+
+<p class="">FP8 把 BF16 KV 的存储位宽减半，同时引入数值近似。<a href="https://vllm.ai/blog/2026-04-22-fp8-kvcache" target="_blank" rel="noopener" class="">vLLM 2026 年 4 月的报告</a>里，H100 上 Llama-3.1-8B 的 150 请求、并发 8、约 20K 输入/2K 输出测试，聚合吞吐从 450.3 提高到 517.5 tok/s，约 14.9%；跳过滑动窗口层的 gpt-oss-20b 约提高 4.8%。位宽节省怎样传到系统吞吐，仍由模型结构和执行路径决定。</p>
+
+<p class="">两条路线的精度账也不同。GAAC 在已经量化的 FP8 E4M3 上还能额外无损压缩 1.09–1.14 倍，在 E5M2 上为 1.25–1.30 倍，保存的是量化后的值。前一步 FP8 的误差、后续内核的累积行为，都应纳入具体任务的质量测试。</p>
+
+<p class="">选型就从自己的基线出发。已经用上成熟 FP8 内核的系统，测继续压缩的增量收益；需要保存原始 BF16 KV 的系统，测无损路径的成本。硬件、模型结构、精度、batch 和工作负载对齐之后，比较才真正开始。</p>
+
+</section>
+<section class="detail-section" id="deployment-limits">
+<h2 class="">接进推理系统，才是费工夫的地方</h2>
+<p class="">GAAC 的指数窗口依赖校准。<a href="https://arxiv.org/html/2610.38210v1#A3" target="_blank" rel="noopener" class="">附录 C</a>用 Qwen3-8B 的一层做位置漂移实验：短于或等于 8K 的校准窗口用于 32K 输入后，后段 Key 的溢出存储明显增多；用 32K 校准则较稳定。RoPE 会让 Key 的指数分布随位置变化。结果不会因此有损，但压缩率和回退开销会变。</p>
+
+<p class="">跨任务测试给了一个不错的起点：WikiText 上选的窗口，在若干代码、数学和知识测试上仍维持接近的压缩率。接下来该把上下文拉长、请求跑久，同时记录槽位浪费、回退比例、前缀共享和缓存周转。线上请求会不断换形状，缓存也得跟着经受折腾。</p>
+
+<p class="">Apple M4 上，作者用 Metal 实现压缩注意力，与同结构 BF16 KV 内核比较。64K 上下文单序列约加速 1.10 倍，8 条序列约 1.25 倍。这个内核已经跨过了平台门槛；再把它放进完整 Mac 推理框架，测首 token、连续生成和任务完成时间，才走到了本地应用真正关心的地方。</p>
+
+<p class="">个人设备还要算温度和电池这笔账。论文给出了内存和时间数据，功率与能耗留待测量。额外计算与减少搬运究竟怎样影响续航，需要功率曲线、运行时长和持续负载测试。把每 token 能耗也放进对照表，本地部署的判断才完整。</p>
+
+</section>
+<section class="detail-section" id="benchmark-plan">
+<h2 class="">真要部署，我会怎样做对照</h2>
+<p class="">先固定一条能复现的基线：模型及量化版本、推理框架和内核、上下文与输出长度、KV 精度、batch、请求到达方式。容量分别记录权重、驻留 KV 和工作区，瓶颈才有地方可找。</p>
+
+<p class="">然后分开跑两组对照：固定并发，测完整 decode step 和请求延迟；固定内存预算，放开并发，测聚合吞吐、排队与 goodput。前者回答同一个用户能快多少，后者回答同一台设备能多接多少活。</p>
+
+<p class="">延迟记录也要分层。<a href="https://docs.vllm.ai/en/latest/design/metrics/" target="_blank" rel="noopener" class="">vLLM 的指标文档</a>区分首 token 时间 TTFT、输出间隔 ITL 和每输出 token 的平均耗时 TPOT。报告时应写清是否包含排队、怎样聚合，以及输出 token 数的分母，避免平均 tokens/s 把短请求的等待和长请求的卡顿都遮住。再配合 P50/P95/P99、任务质量、持续运行的内存和能耗，才比较接近实际使用。</p>
+
+<p class="">对于 Agent，我还会保存包含工具等待和重新 prefill 的任务轨迹。若一次任务大部分时间在等外部工具，把 decode 改善 10% 并不会让任务总时长也缩短 10%。先确认时间花在哪里，才能判断下一个优化该落在哪一层。</p>
+
+<p class="">本地推理最容易省错的，就是以为模型装下便万事大吉。权重变小以后，历史缓存、数据搬运和并发调度会接着要账。GAAC 用额外计算换掉了部分访存，收益沿着整条执行路径逐层兑现。下一次看到“提速 20%”，我会先找那张完整的耗时表，再决定这个优化值不值得接。</p>
+
+
+
+</section></div></div>
     </div>
-    <section class="related" aria-labelledby="related-title"><p class="kicker">继续阅读</p><h2 id="related-title">相关<em>文章</em></h2><ol class="journal-list" style="list-style:none"><li><a class="journal-row" href="article-01.html" data-topic="1" data-cursor="阅读">
-        <span class="journal-date">2026.11 · 01</span>
-        <span class="journal-title"><span class="static">模型出错，为什么总想着重新训练？</span><span class="marquee" aria-hidden="true"><span>模型出错，为什么总想着重新训练？ —&nbsp;</span><span>模型出错，为什么总想着重新训练？ —&nbsp;</span><span>模型出错，为什么总想着重新训练？ —&nbsp;</span></span></span>
-        <span class="topic" data-topic="1">AI 工程</span><span class="journal-time">13 分钟</span></a></li><li><a class="journal-row" href="article-02.html" data-topic="1" data-cursor="阅读">
+    <section class="related" aria-labelledby="related-title"><p class="kicker">继续阅读</p><h2 id="related-title">相关<em>文章</em></h2><ol class="journal-list" style="list-style:none"><li><a class="journal-row" href="article-02.html" data-topic="1" data-cursor="阅读">
         <span class="journal-date">2026.11 · 02</span>
-        <span class="journal-title"><span class="static">模型装得下，为什么还是跑不快？</span><span class="marquee" aria-hidden="true"><span>模型装得下，为什么还是跑不快？ —&nbsp;</span><span>模型装得下，为什么还是跑不快？ —&nbsp;</span><span>模型装得下，为什么还是跑不快？ —&nbsp;</span></span></span>
-        <span class="topic" data-topic="1">AI 工程</span><span class="journal-time">15 分钟</span></a></li><li><a class="journal-row" href="article-16.html" data-topic="1" data-cursor="阅读">
-        <span class="journal-date">2026.05 · 16</span>
+        <span class="journal-title"><span class="static">模型出错，为什么总想着重新训练？</span><span class="marquee" aria-hidden="true"><span>模型出错，为什么总想着重新训练？ —&nbsp;</span><span>模型出错，为什么总想着重新训练？ —&nbsp;</span><span>模型出错，为什么总想着重新训练？ —&nbsp;</span></span></span>
+        <span class="topic" data-topic="1">AI 工程</span><span class="journal-time">13 分钟</span></a></li><li><a class="journal-row" href="article-04.html" data-topic="1" data-cursor="阅读">
+        <span class="journal-date">2026.10 · 04</span>
+        <span class="journal-title"><span class="static">当考卷本身有错：我们在测量 AI 的什么？</span><span class="marquee" aria-hidden="true"><span>当考卷本身有错：我们在测量 AI 的什么？ —&nbsp;</span><span>当考卷本身有错：我们在测量 AI 的什么？ —&nbsp;</span><span>当考卷本身有错：我们在测量 AI 的什么？ —&nbsp;</span></span></span>
+        <span class="topic" data-topic="1">AI 工程</span><span class="journal-time">15 分钟</span></a></li><li><a class="journal-row" href="article-17.html" data-topic="1" data-cursor="阅读">
+        <span class="journal-date">2026.05 · 17</span>
         <span class="journal-title"><span class="static">AI 工程的核心不是让模型万能，而是定义边界</span><span class="marquee" aria-hidden="true"><span>AI 工程的核心不是让模型万能，而是定义边界 —&nbsp;</span><span>AI 工程的核心不是让模型万能，而是定义边界 —&nbsp;</span><span>AI 工程的核心不是让模型万能，而是定义边界 —&nbsp;</span></span></span>
         <span class="topic" data-topic="1">AI 工程</span><span class="journal-time">8 分钟</span></a></li></ol></section>
     <nav class="pager" aria-label="更多文章">
-        <a href="article-02.html" data-cursor="上一篇"><span class="meta">← 上一篇</span><strong>模型装得下，为什么还是跑不快？</strong></a>
-        <a href="article-04.html" data-cursor="下一个"><span class="meta">下一篇 →</span><strong>当每个系统都在自保：3.8 GW 负载退出之后</strong></a>
+        <a href="article-02.html" data-cursor="上一篇"><span class="meta">← 上一篇</span><strong>模型出错，为什么总想着重新训练？</strong></a>
+        <a href="article-04.html" data-cursor="下一个"><span class="meta">下一篇 →</span><strong>当考卷本身有错：我们在测量 AI 的什么？</strong></a>
     </nav>
 </div>
 </main>

@@ -2,19 +2,19 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://erichz.site/zh/</loc>
-    <lastmod>2026-11-03</lastmod>
+    <lastmod>2026-11-08</lastmod>
   </url>
   <url>
     <loc>https://erichz.site/en/</loc>
-    <lastmod>2026-11-03</lastmod>
+    <lastmod>2026-11-08</lastmod>
   </url>
   <url>
     <loc>https://erichz.site/blog/</loc>
-    <lastmod>2026-11-03</lastmod>
+    <lastmod>2026-11-08</lastmod>
   </url>
   <url>
     <loc>https://erichz.site/en/blog/</loc>
-    <lastmod>2026-11-03</lastmod>
+    <lastmod>2026-11-08</lastmod>
   </url>
   <url>
     <loc>https://erichz.site/blog/topics/ai</loc>
@@ -58,11 +58,19 @@
   </url>
   <url>
     <loc>https://erichz.site/blog/topics/essay</loc>
-    <lastmod>2026-05-25</lastmod>
+    <lastmod>2026-11-08</lastmod>
   </url>
   <url>
     <loc>https://erichz.site/en/blog/topics/essay</loc>
-    <lastmod>2026-05-25</lastmod>
+    <lastmod>2026-11-08</lastmod>
+  </url>
+  <url>
+    <loc>https://erichz.site/blog/good-trip-film-essay</loc>
+    <lastmod>2026-11-08</lastmod>
+  </url>
+  <url>
+    <loc>https://erichz.site/en/blog/good-trip-film-essay</loc>
+    <lastmod>2026-11-08</lastmod>
   </url>
   <url>
     <loc>https://erichz.site/blog/weight-space-programming</loc>

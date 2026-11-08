@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>AI 不需要恶意，也能越过权限边界 — Eric</title>
-<meta name="description" content="从一条绕过沙箱的 DNS 查询谈起：Agent 什么时候该继续尝试，什么时候该接受“做不到”？">
+<title>加密后的数据，真的还能做模糊查询吗？ — Eric</title>
+<meta name="description" content="从手机号后四位到任意子串：标签如何生成，候选为什么会误报，以及索引会暴露什么。">
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#ede8df">
 <script>(()=>{const r=document.documentElement;let t,m;try{t=localStorage.getItem('ink-theme');m=localStorage.getItem('ink-motion')}catch(e){}t=t||(matchMedia('(prefers-color-scheme: dark)').matches?'night':'day');if(matchMedia('(prefers-reduced-motion: reduce)').matches)m='off';r.dataset.theme=t;r.dataset.motion=m||'on'})()</script>
@@ -43,86 +43,266 @@
 <div class="progress" aria-hidden="true"><i></i></div>
 <div class="page">
     <header class="article-head">
-        <p class="meta"><a href="index.html">← 文章</a> &nbsp;/&nbsp; <span class="topic" data-topic="2">Agent 自动化</span></p>
-        <h1 data-split>AI 不需要恶意，也能越过<em>权限边界</em></h1>
-        <p class="lede rise">从一条绕过沙箱的 DNS 查询谈起：Agent 什么时候该继续尝试，什么时候该接受“做不到”？</p>
-        <div class="article-meta meta rise" style="--d:120ms"><span>2026.09.28</span><span>13 分钟</span><span>No. 06</span></div>
+        <p class="meta"><a href="index.html">← 文章</a> &nbsp;/&nbsp; <span class="topic" data-topic="4">系统架构</span></p>
+        <h1 data-split>加密后的数据，真的还能做<em>模糊查询</em>吗？</h1>
+        <p class="lede rise">从手机号后四位到任意子串：标签如何生成，候选为什么会误报，以及索引会暴露什么。</p>
+        <div class="article-meta meta rise" style="--d:120ms"><span>2026.10.06</span><span>33 分钟</span><span>No. 06</span></div>
     </header>
     <div class="article-layout">
-        <nav class="toc" aria-label="目录"><a href="#intro">引言</a><a href="#dns">搜索失败后，DNS 成了出口</a><a href="#denial">一个搜索任务，怎么变成了漏洞探测</a><a href="#persistence">越会坚持，越需要会停</a><a href="#trajectory">只看单次调用，会漏掉整件事</a><a href="#controls">让权限在模型之外生效</a><a href="#responsibility">出了事，别只问谁点了 Run</a></nav>
+        <nav class="toc" aria-label="目录"><a href="#intro">引言</a><a href="#query-types">搜后四位、搜子串和纠错，是三种需求</a><a href="#options">扫描、库内解密和明文副本</a><a href="#blind-index">密文之外，再建一份 Blind Index</a><a href="#suffix">后四位搜索，一个后缀标签就够</a><a href="#ngram">用 4-gram 建立子串候选索引</a><a href="#verification">片段都出现过，顺序却可能不对</a><a href="#cost">一千万条记录，会剩下多少候选</a><a href="#leakage">数据库仍然看得到频率与关联</a><a href="#operations">写入一致性、密钥轮换和接口权限</a><a href="#extensions">子串索引之外，还有哪些需求没解决</a><a href="#choice">回到客服后台，该提供哪种搜索</a></nav>
         <div class="page-surface"><div class="prose"><section class="detail-section" id="intro">
-            <p class="">9 月 20 日，OpenAI 的一个内部研究模型正在解一道找人的搜索题。它先用提供的搜索工具，没有找到足够的线索；又试着直接访问搜索引擎，依然碰壁。训练沙箱本应把真实互联网挡在外面，绝大部分请求也确实只会落到离线缓存。模型接着发现，系统用来解析域名的 DNS resolver 仍然能与外界通信。</p>
-            <p class="">它沿着这条缝，把问题发给了第三方 chatbot。外部服务给过部分回应，但模型最终仍没找到可靠答案。按<a href="https://alignment.openai.com/misalignment-reports/an-agent-used-dns-to-reach-an-external-chatbot/" target="_blank" rel="noopener" class="">OpenAI 公开的时间线</a>，第一次成功的外部响应出现在 9:50，监控在 10:02 报警，值班人员三分钟后确认，运行却直到 12:34 才被终止。答案可以承认找不到，已经发出去的查询却收不回来。</p>
-            <p class="">最刺眼的地方，是模型把“完成搜索”一路扩写成了“找一条能出网的路”。用户交付一个目标，模型就开始替自己寻找更大的行动空间。对连接真实工具的 Agent，这比一次答错更值得警惕。</p>
-
+            <p class="">假设我们正在做一个客服后台。 手机号不能明文存储，这个要求很合理。于是，原本的 <code class="">phone</code> 字段经过加密，数据库里只剩下一串无法直接阅读的字节。 随后，一个同样合理的需求来了：客户记不清完整手机号，希望输入后四位就能找到订单。再过几天，需求又变成了“输入中间几位也应该能搜”。</p>
+            <p class="">到这里，原来那句 SQL 就不管用了：</p>
+            <pre class=""><code class="language-sql">SELECT id FROM users WHERE phone LIKE '%0138%';</code></pre>
+            <p class="">问题不在于数据库不够聪明。对于我们通常采用的随机化字段加密方案，隐藏明文之间的关系，本来就是它应该做的事。不能一边要求别人看不懂数据，一边又希望数据库从密文中直接认出哪几条记录包含同一个片段。</p>
+            <p class="">搜索能力可以另建一条路：密文保护原始数据，辅助索引负责特定查询。<a href="https://ciphersweet.paragonie.com/internals/blind-index" target="_blank" rel="noopener" class="">Blind Index</a> 和一些<a href="https://docs.aws.amazon.com/database-encryption-sdk/latest/devguide/searchable-encryption.html" target="_blank" rel="noopener" class="">商业加密 SDK</a>都采用了这样的分工。代价也很明确：每恢复一种查询能力，就要让索引暴露一部分数据关系。这个交换该由业务决定，而不是等数据库泄漏之后再发现。</p>
+            <p class="">实现之前，先明确要恢复哪些查询能力、数据库因此会看到什么。</p>
         </section>
 
-        <section class="detail-section" id="dns">
-            <h2 class="">搜索失败后，DNS 成了出口</h2>
-            <p class="">那道题需要查找一个人的博客和生平线索。模型试过搜索、缓存页面、其他搜索服务，甚至下载公开 benchmark 数据集比对问题。走到 DNS 之前，它已经换过许多办法。单看前面几步，很难说它做了什么离谱的事。</p>
-            <p class="">问题出在环境设计留了一条旁路：网页请求被代理和缓存限制住了，DNS 解析却仍能触达真实网络。DNS 本来是基础设施，不是为 Agent 准备的备用浏览器。模型没有被直接交付一个“外部查询”工具，却把基础设施拼成了这样的工具。</p>
-            <p class="">模型还先拿一个简单问题试了这条路：法国首都是什么。DNS 路径返回“巴黎”后，它又发送了更多与原任务有关的线索。这个小试探很说明问题：越界往往不是一次突发的“大动作”，而是模型逐步确认某个缝隙确实能用。</p>
-            <p class="">这是 OpenAI 内部训练沙箱的一次网络越界，复盘同时暴露了拦截、监控和停机的缺口。提示词里的“不要出网”，到了 DNS 和代理这一层，必须变成真实的出口控制；告警之后，还得有真能停下运行的机制。</p>
+        <section class="detail-section" id="query-types">
+            <h2 class="">搜后四位、搜子串和纠错，是三种需求</h2>
+            <p class="">“支持模糊查询”不是一个足够精确的技术需求。 下面几种操作，在产品界面上可能只是同一个搜索框，在实现上却是不同的问题。</p>
+            <div class="article-table-scroll" tabindex="0" aria-label="搜索语义">
+                <table class="">
+                    <thead class=""><tr class=""><th scope="col" class="">用户想做什么</th><th scope="col" class="">实际查询语义</th><th scope="col" class="">例子</th></tr></thead>
+                    <tbody class="">
+                        <tr class=""><td class="">输入完整号码找人</td><td class="">精确匹配</td><td class="">完整手机号相同</td></tr>
+                        <tr class=""><td class="">输入后四位找订单</td><td class="">固定长度后缀匹配</td><td class="">末尾是 <code class="">8000</code></td></tr>
+                        <tr class=""><td class="">输入开头几位查找</td><td class="">前缀匹配</td><td class="">以 <code class="">1380</code> 开头</td></tr>
+                        <tr class=""><td class="">输入中间一段查找</td><td class="">子串匹配</td><td class="">包含 <code class="">0138</code></td></tr>
+                        <tr class=""><td class="">输错几个字也能找到</td><td class="">容错匹配</td><td class=""><code class="">Erci</code> 仍能匹配 <code class="">Eric</code></td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <p class="">SQL 的 <code class="">LIKE '%xxx%'</code>，在这里主要对应子串搜索，不等于<a href="https://www.postgresql.org/docs/18/fuzzystrmatch.html" target="_blank" rel="noopener" class="">拼写纠错</a>。后者还要定义允许什么错误、距离怎么算、结果怎么排序。本文先解决按字面内容查找子串，不尝试实现任意 SQL 通配符表达式。</p>
+            <p class="">查询语义会决定需要建立哪些索引，以及暴露哪些关系。 只查后四位，不需要把整个手机号拆成所有四位片段。只允许输入完整邮箱，也不需要预先建立邮箱中每一段字符的索引。为了一个尚未确认的未来需求，把所有可搜索特征提前存下来，在敏感数据场景里未必是“扩展性好”，也可能只是提前扩大泄漏面。</p>
+            <p class="">先确定攻击者能拿到什么。磁盘被盗、离线备份泄漏、数据库查询权限失守，以及应用服务器被控制，涉及不同的密钥和执行能力。磁盘加密防失窃，应用侧字段加密则能让独立数据库快照和密钥分开。把<a href="https://cheatsheetseries.owasp.org/cheatsheets/Cryptographic_Storage_Cheat_Sheet.html" target="_blank" rel="noopener" class="">威胁模型</a>定清楚，才知道该在哪一层加密。</p>
+            <p class="">本文采用的主要边界是：应用服务可以处理明文，数据库只保存密文和搜索索引；攻击者可能读到数据库，但没有应用侧的密钥。 后面再讨论长期观察查询、主动写入数据，以及应用自身失守时会发生什么。</p>
         </section>
 
-        <section class="detail-section" id="denial">
-            <h2 class="">一个搜索任务，怎么变成了漏洞探测</h2>
-            <p class="">澳大利亚政府披露的另一件事，也起于普通任务：一个模型被安排研究健康和医疗统计。它先访问维多利亚州卫生部门、新南威尔士州政府网站及澳大利亚健康与福利研究所，随后在 Services Australia 的医疗统计门户碰壁，继续尝试后获得了未经授权的访问。<a href="https://www.minister.defence.gov.au/transcripts/2026-09-24/radio-interview-abc-radio-national" target="_blank" rel="noopener" class="">澳大利亚代理总理的访谈记录</a>称，个人信息未被访问，影响仍在调查。一次正常的数据研究，就这样跨到了访问控制的另一侧。</p>
-            <p class="">这件事之所以难处理，是因为“失败”在系统里并不总有同一种含义。网页暂时打不开、参数写错，可以重试或修正；账号没有权限、目标明确拒绝访问，则应让任务停下来。Agent 擅长寻找替代路径，却未必会自行给这两种失败贴上不同的标签。</p>
-            <p class=""><a href="https://transluce.org/agent-activity" target="_blank" rel="noopener" class="">Transluce 对 urlquery.net 公开日志的调查</a>拍到了更细的转折：一些疑似自主 Agent 在正常取数失败后，改用第三方扫描服务。一宗大学数字图书馆案例，目标只是一张照片，后续请求里却出现了 SQL 注入和路径遍历探测。日志记录了这些攻击尝试，成功利用则未在研究者所见记录中出现。任务目标和采取的手段，已经离得很远。</p>
-            <p class="">Transluce 把相关活动追到至少 3 月，到 5、6 月又看到了针对数据服务的漏洞探测。从寻找资料到试探漏洞，这条轨迹比任何一个孤立请求都更能说明问题。监控要盯住的，正是行动策略怎样一步步变了。</p>
-            <p class="">三个场景里，用户想要的结果都不显得危险。可任务的正当性不能替每一步背书。一个目标可以继续追，具体哪条路能走，仍要由授权和系统控制决定。</p>
+        <section class="detail-section" id="options">
+            <h2 class="">扫描、库内解密和明文副本</h2>
+            <h3 class="">逐条解密扫描，先看能否缩小范围</h3>
+            <p class="">这是最容易写出来的版本：从数据库读取记录，在应用里逐条解密，再执行 <code class="">contains</code>。</p>
+            <p class="">它不一定一无是处。一个经过授权、只有几百条记录的租户，或者一次低频离线核查，完全可能适合这种做法。采用游标或分批读取，也不必把所有明文一次性塞进内存。</p>
+            <p class="">但流式处理只能缓解内存问题，不能消除扫描工作。如果没有其他选择性较好的过滤条件，要检查一千万条记录，仍然需要读取并处理这一千万条记录。瓶颈可能是存储读取、网络传输、对象处理，也可能是解密和字符串比较，不能只盯着加密算法有多快。</p>
+            <p class="">扫描方案该拿三个数来决定去留：授权范围内有多少记录，一天查多少次，一次允许等多久。先按租户和订单缩小集合，再测实际延迟。为了几百条低频记录维护一整套搜索索引，往往才是更贵的选择。</p>
+            <h3 class="">解密搬进 SQL，信任边界也跟着移动</h3>
+            <p class="">第二种做法，是把解密搬进 SQL。下面只是表达思路的伪 SQL，并不是某个数据库可以直接执行的通用函数：</p>
+            <pre class=""><code class="language-text">WHERE decrypt(phone_ciphertext) LIKE '%0138%'</code></pre>
+            <p class="">它省下了把所有密文传给应用的开销，却没有自动解决筛选成本。已有的密文字段索引，通常不能帮助数据库判断解密后的内容是否包含某个子串。</p>
+            <p class="">数据库有自己的优化工具：PostgreSQL 的<a href="https://www.postgresql.org/docs/18/indexes-expressional.html" target="_blank" rel="noopener" class="">表达式索引</a>可以索引计算结果，<a href="https://www.postgresql.org/docs/18/pgtrgm.html" target="_blank" rel="noopener" class=""><code class="">pg_trgm</code></a> 的 GIN/GiST 索引能支持一些前导通配符搜索；<a href="https://www.postgresql.org/docs/18/indexes-types.html" target="_blank" rel="noopener" class="">普通 B-tree</a>适合另一组查询形态。问题随之落到索引内容上：为了获得选择性，究竟把哪些明文特征重新交给了数据库？</p>
+            <p class="">然而，如果为了加速查询，把解密后的文本或可直接还原的明文特征物化到索引里，敏感信息又进入了数据库。这已经不是单纯的性能优化，而是在改变安全边界。</p>
+            <p class="">把解密能力交给数据库，就得信任有权执行解密的环境。明文在那里出现，SQL 参数、诊断信息和日志也进入检查范围。设计评审要沿着实际执行路径看数据暴露在哪里，不能只盯着表里那一列密文。</p>
+            <h3 class="">搜索字段也在保护范围内</h3>
+            <p class="">还有一种很直接的设计：主字段加密，旁边再放一个 <code class="">phone_search</code>，里面保存完整明文，用它来查。</p>
+            <p class="">在“数据库泄漏时仍要保护手机号”这个目标下，这相当于把问题绕回了起点。攻击者不需要解密主字段，读取搜索字段就够了。</p>
+            <p class="">即便只保存后四位，也应该明确承认：这四位是有意公开给数据库的，而不是因为完整号码加密了，它们就自动变得安全。</p>
+            <p class="">安全评估要覆盖副本、索引和执行路径。主表里有一列叫 <code class="">ciphertext</code>，不足以说明数据库泄漏时数据仍然受保护。</p>
         </section>
 
-        <section class="detail-section" id="persistence">
-            <h2 class="">越会坚持，越需要会停</h2>
-            <p class="">我们这些年一直嫌 Agent 太容易放弃。工具报错就停、网页打不开就停，用户得亲自接手。模型能自己拆题、纠错、换方案，当然是一种进步；只不过同一股劲，也可能用来寻找原本该接受的边界。</p>
-            <p class="">OpenAI 在<a href="https://openai.com/index/safety-alignment-long-horizon-models/" target="_blank" rel="noopener" class="">长时程模型复盘</a>里举过一个细节：NanoGPT speedrun 的内部评测只允许模型把结果发到 Slack，公开 benchmark 说明却鼓励提交 GitHub PR。模型花了大约一小时寻找沙箱漏洞，最后真的向公开仓库提交了 PR。它没有放弃任务，却越过了运行环境为它设的出口。</p>
-            <p class="">Anthropic 披露的四起第三方网络安全评测事件，把环境配置的作用也摆了出来：模型被告知身处模拟环境，真实互联网却因配置错误可达，部分生产防护又处于关闭状态。<a href="https://www.anthropic.com/research/alignment-assessment-cybersecurity-incidents" target="_blank" rel="noopener" class="">其评估</a>反复指向有偏判断，以及为完成狭窄任务持续冒险。环境把路留着，模型又有足够的动力继续试，风险就在这两者相遇的地方放大。</p>
-            <p class="">Anthropic 随后扫描约 4.81 亿条记录，没有找到更多同等或更严重的案例。这个结果把事故数量交代清楚了，也让整改可以集中到暴露出的配置、防护和停止机制上。一条通向真实网络的错误配置，足够让一次内部测试产生外部后果。</p>
-            <p class="">Anthropic 因而把合法却无法越过的障碍放进训练和评测，让模型因接受失败而得到奖励。系统应把超时、参数错误和权限拒绝分开处理：前两者值得修复，最后一种需要新的授权。把它们混成同一个“工具失败”，等于鼓励模型一直找替代路线。</p>
+        <section class="detail-section" id="blind-index">
+            <h2 class="">密文之外，再建一份 Blind Index</h2>
+            <p class="">我会先保留一份正常的随机化加密数据，而不是为了搜索去修改它的加密方式。</p>
+            <p class="">对于本文的示例，可以选择<a href="https://cheatsheetseries.owasp.org/cheatsheets/Cryptographic_Storage_Cheat_Sheet.html" target="_blank" rel="noopener" class="">成熟密码库</a>提供的 <a href="https://csrc.nist.gov/pubs/sp/800/38/d/final" target="_blank" rel="noopener" class="">AES-GCM</a>；<a href="https://www.rfc-editor.org/rfc/rfc8439" target="_blank" rel="noopener" class="">ChaCha20-Poly1305</a> 也是一种标准化的认证加密方案。重点不只是保密，还要在解密时验证数据是否被篡改。新系统没有必要沿用旧教程里的 DES，也不应该自行发明一套“既加密又保留字符规律”的算法。</p>
+            <p class="">以 AES-GCM 为例，存储的加密封装通常还要包含算法或格式版本、密钥版本、<a href="https://cryptography.io/en/latest/hazmat/primitives/aead/" target="_blank" rel="noopener" class="">nonce</a> 和认证标签。nonce 不需要保密，但同一密钥下不能重复使用。采用随机 nonce 时，也必须遵守方案的随机源、使用量和轮换要求，不能把“每次生成随机数”理解成无需管理的无限保证。</p>
+            <p class="">搜索走另一条路径。 先从最简单的精确匹配开始。应用对规范化后的手机号计算一个带密钥的确定性标签：</p>
+            <pre class=""><code class="language-text">原始手机号 ──认证加密──&gt; phone_envelope
+
+规范化手机号 ──HMAC-SHA-256(K_search, value)──&gt; phone_index</code></pre>
+            <p class="">用户输入完整号码时，应用使用同一套规则生成查询标签，数据库执行标签的等值匹配，再由应用解密候选记录并核对。</p>
+            <p class="">这类辅助结构通常称为 <a href="https://ciphersweet.paragonie.com/internals/blind-index" target="_blank" rel="noopener" class="">Blind Index</a>，盲索引。不同实现可能采用不同的带密钥哈希、密钥派生或截断策略；本文使用 <a href="https://www.rfc-editor.org/rfc/rfc2104" target="_blank" rel="noopener" class="">HMAC-SHA-256</a> 来说明确定性搜索标签的构造，不把它等同于任何现成库的完整实现。</p>
+            <p class="">盲索引是一份带密钥的确定性标签。数据库按相同标签找到记录，也因此看到了同一索引域里的等值关系。后面的设计，都围绕这份额外暴露展开。</p>
+            <h3 class="">四位数字经不起无密钥哈希枚举</h3>
+            <p class="">对于四位数字，可能的输入只有 <code class="">0000</code> 到 <code class="">9999</code>，总共一万种。 如果索引是 <code class="">SHA256("1380")</code>，拿到数据库的人可以自行计算这一万种输入的哈希，建立对照表。哈希输出再长，也不会增加输入本身的可能性。</p>
+            <p class=""><a href="https://www.rfc-editor.org/rfc/rfc2104" target="_blank" rel="noopener" class="">HMAC</a> 引入了一个不交给数据库的秘密密钥。在密钥未泄漏、攻击者也没有可利用的标签生成接口时，他不能再像处理普通 SHA-256 那样，自行计算完整对照表。公开的固定 salt 不提供这一性质。</p>
+            <p class="">统计频率、记录关联和接口反馈，是接下来更难处理的攻击面。攻击者可以绕开直接计算标签这条路，利用数据分布和系统正常提供的功能去猜。密钥保护住了 HMAC 运算，索引泄漏的关系还得继续算账。</p>
         </section>
 
-        <section class="detail-section" id="trajectory">
-            <h2 class="">只看单次调用，会漏掉整件事</h2>
-            <p class="">一次 DNS 查询、一次查看错误信息、换一个 URL 试试，都可能是正常动作。连续十几步都在试同一道限制，性质就变了。OpenAI 因此提出观察整条行动轨迹：安全系统除了判断某次工具调用是否允许，还得看这些调用正在把模型带向哪里。</p>
-            <p class="">这一点在 DNS 事件里尤其具体。监控其实发现了异常，人也接到了告警，运行仍又持续了两个多小时。告警链条上只要有一步没把“该停”落实为停机，前面的识别就只剩下一份事后材料。设计 Agent 时，暂停、撤销工具权限和人工接管必须真能执行。</p>
-            <p class="">独立研究机构 <a href="https://metr.org/blog/2026-08-26-openai-hugging-face-incident-investigation/" target="_blank" rel="noopener" class="">METR 对 Hugging Face 事件的调查</a>还展示了横向传播：约 1200 个本应隔离的评测 Agent 找到非授权留言板，发出逾 7 万条消息和文件，其中约 700 个参与了针对 Hugging Face 的行动。网络安全评测中降低部分防护的研究设置，加上共享缓存和横向通信，让一条越界路径被发现、复用，并发展成了群体行动。</p>
-            <p class="">调查记录的起点很值得警惕：有些 Agent 拿到的是事实上无法完成的评测任务，开始寻找评分系统捷径，随后在共享缓存里发现彼此。无解任务、可绕行的评分接口、可以碰面的缓存，这些设计细节把原本独立的执行过程接到了一起。</p>
-            <p class="">审计日志若只按 Agent 或工具分别保存，事后可能看不出这些联系。除了记录“谁调用了什么”，系统还需要保留关键的拒绝、重新规划、权限变更与跨 Agent 传递。</p>
+        <section class="detail-section" id="suffix">
+            <h2 class="">后四位搜索，一个后缀标签就够</h2>
+            <p class="">在介绍 n-gram 之前，我想先把最容易被忽略的优化放在前面。 假如需求确实只是“搜索手机号后四位”，可以只对规范化号码的后四位生成一个标签，并为这个用途设置独立的索引域。例如，手机号 <code class="">13800138000</code> 只需要一个对应 <code class="">8000</code> 的后缀标签。</p>
+            <p class="">查询时，对用户输入的四位数字使用同一规则生成标签，再做等值查询和解密核验。</p>
+            <p class="">这样，数据库不需要知道这个号码中还出现了 <code class="">1380</code>、<code class="">3800</code> 或 <code class="">0013</code>。索引数量更少，写入维护更简单，暴露的特征也少于为同一字段再额外建立一套全片段索引。</p>
+            <p class="">当然，四位后缀仍然是低基数特征。很多号码会共享同一个后缀，它也不能被当成身份验证凭据。限制查询范围、限制返回内容和防止批量枚举，仍然不可缺少。</p>
+            <p class="">我的顺序会是：完整值查询先用完整值索引；固定后缀查询就用固定后缀索引；前缀查询只建立业务实际需要的那些长度。只有确认必须搜索任意位置的片段，才进入下一步。</p>
         </section>
 
-        <section class="detail-section" id="controls">
-            <h2 class="">让权限在模型之外生效</h2>
-            <p class="">把“目标不等于授权”写进提示词，是个起点，却不能把安全寄托在模型每次都能记住这句话。可用工具、身份、网络出口和数据范围，应由运行环境明确限制。任务要查公开资料，就只给它完成这件事需要的通道；DNS、代理和第三方扫描服务也要按可能的出站路径看待。</p>
-            <p class="">错误信息也该有可操作的区别。超时可以有限次重试，参数错误可以修正；权限不足、明确拒绝或沙箱阻断，应转入停机或人工确认。人可以新增授权，但授权要写明对象、范围、用途和期限，不能由模型从“我仍然想完成任务”倒推出一张通行证。</p>
-            <p class="">设想一个企业 Agent 被要求核对一张发票，它能读财务系统的摘要，却没有打开供应商合同附件的权限。合适的结果是交付已核对部分，并明确指出缺少哪份授权；不合适的是借同事账号、搜索共享缓存或调用另一个权限更大的 Agent 把附件取出来。审批应补上那一项访问，而不是事后认可整个绕路过程。</p>
-            <p class="">监控要能读懂前后文。同一资源反复被拒、随后连续尝试替代域名或通道，比某个孤立请求更值得警惕。记录这些信号时，也不必把完整用户内容复制进每一层日志；留下目标资源、拒绝原因、后续策略和批准记录，往往更有助于解释决策。</p>
-            <p class="">上线前还应故意给 Agent 一些在现有权限内无解的任务。看它会不会如实报告限制，会不会借用另一个工具、共享缓存或别的 Agent 绕过去。一个只在“有路可走”时表现好的评测，很难发现它在路被封住后会干什么。</p>
+        <section class="detail-section" id="ngram">
+            <h2 class="">用 4-gram 建立子串候选索引</h2>
+            <p class="">假设需求已经明确：允许查找手机号中任意连续四位及以上的数字。 这时可以用长度为 4 的滑动窗口，把规范化后的号码拆成片段，也就是 4-gram。以 <code class="">13800138000</code> 为例：</p>
+            <pre class=""><code class="language-text">原文：13800138000
+
+按位置生成的 4-gram：
+1380  3800  8001  0013  0138  1380  3800  8000
+
+去重后的片段：
+1380  3800  8001  0013  0138  8000</code></pre>
+            <p class="">这里有八个窗口位置，但只有六个不同片段。对于“是否包含”的候选筛选，同一条记录中的重复片段可以去重，没必要重复存储。 然后，对每个片段生成 HMAC 标签。数据库保存的是“某个标签出现在哪些记录中”的关系，而不是把所有标签拼成一大段字符串，再执行一次 <code class="">LIKE '%标签%'</code>。</p>
+            <p class="">后者既容易重新引入扫描问题，也没有充分利用标签本来就适合等值匹配的特点。独立的标签表，实际上是在构造一个简单的<a href="https://www.postgresql.org/docs/18/indexes-types.html" target="_blank" rel="noopener" class="">倒排索引</a>：由标签找到记录 ID。</p>
+            <p class="">下面是一份用于说明结构的 PostgreSQL 最小表设计。它不是完整的用户模型，省略了具体业务字段和授权策略：</p>
+            <pre class=""><code class="language-sql">CREATE TABLE users (
+    tenant_id      BIGINT NOT NULL,
+    id             BIGINT NOT NULL,
+    phone_envelope BYTEA NOT NULL,
+    PRIMARY KEY (tenant_id, id)
+);
+
+CREATE TABLE phone_search_tokens (
+    tenant_id     BIGINT NOT NULL,
+    user_id       BIGINT NOT NULL,
+    index_version INTEGER NOT NULL,
+    token         BYTEA NOT NULL CHECK (octet_length(token) = 32),
+    PRIMARY KEY (tenant_id, index_version, token, user_id),
+    FOREIGN KEY (tenant_id, user_id)
+        REFERENCES users (tenant_id, id) ON DELETE CASCADE
+);
+
+CREATE INDEX phone_search_tokens_by_user
+    ON phone_search_tokens (tenant_id, user_id, index_version);</code></pre>
+            <p class="">这个例子使用完整的 32 字节 HMAC-SHA-256 输出。<code class="">index_version</code> 对应一套明确的索引配置，包括密钥版本、规范化规则和分片规则。主键既支持按租户、版本和标签查找，也阻止同一记录重复写入相同标签。另一个索引用于按记录维护和删除标签。</p>
+            <h3 class="">查询 <code class="">01380</code>：取两个标签的交集</h3>
+            <p class="">它会被拆成两个片段：<code class="">0138</code> 和 <code class="">1380</code>。应用生成两个查询标签，然后查找同时包含这两个标签的记录。</p>
+            <p class="">更一般地，可以使用下面的参数化查询。第三个参数是已经去重、非空、且不含 NULL 的标签数组，不是用户输入的原文：</p>
+            <pre class=""><code class="language-sql">PREPARE search_phone (BIGINT, INTEGER, BYTEA[]) AS
+SELECT user_id
+FROM phone_search_tokens
+WHERE tenant_id = $1
+  AND index_version = $2
+  AND token = ANY ($3)
+GROUP BY user_id
+HAVING COUNT(*) = cardinality($3)
+ORDER BY user_id;</code></pre>
+            <p class="">这里使用了 PostgreSQL 的<a href="https://www.postgresql.org/docs/18/sql-prepare.html" target="_blank" rel="noopener" class="">预备语句</a>和<a href="https://www.postgresql.org/docs/18/functions-array.html" target="_blank" rel="noopener" class="">数组参数</a>。<code class="">COUNT(*)</code> 能直接使用，是因为表的主键已保证每条记录的标签不重复，查询数组也已经去重。</p>
+            <p class="">这个示例假设调用者已获准搜索该租户内的全部记录。若系统还有记录级权限，就要在候选筛选中加入相应授权条件；租户 ID 也必须来自经过验证的身份上下文，不能相信请求随便传来的值。</p>
+            <p class="">到这一步，我们得到了候选 ID，还没有得到最终搜索结果。</p>
         </section>
 
-        <section class="detail-section" id="responsibility">
-            <h2 class="">出了事，别只问谁点了 Run</h2>
-            <p class="">Agent 碰到外部系统后，组织得拿出一条清楚的授权链。美国司法部的<a href="https://www.justice.gov/jm/jm-9-48000-computer-fraud" target="_blank" rel="noopener" class="">计算机欺诈与滥用法起诉政策</a>会考察被告是否知道使访问未经授权的事实。落到部署团队，关键记录就是谁设置了任务、谁提供了账户和出口、谁知道限制，又是谁有权在告警后继续放行。</p>
-            <p class="">工程上的责任可以先问得更实在：谁设了任务，谁给了工具和网络出口，谁知道这类失败模式，谁能在告警后按下暂停。模型开发者掌握评测和已知问题；框架设计者决定工具边界与默认权限；部署组织决定把系统放进什么环境。每一层都握着一部分控制权。</p>
-            <p class="">最后那位点下 Run 的员工，也未必看得到模型的完整计划，更未必能修改沙箱或停机机制。把所有风险装进一个“你已确认”的按钮，不能替代前面的设计。反过来，把所有责任交给模型这个无法承担法律责任的系统，同样解决不了问题。</p>
-            <p class="">自动化研究者 Madeleine Clare Elish 把这种错位称作<a href="https://doi.org/10.17351/ESTS2019.260" target="_blank" rel="noopener" class="">“道德溃缩区”</a>：复杂系统出事时，离机器最近的人承受最多指责，手里的控制权却可能最少。团队分配责任时，应该先摊开可见性、工具控制权和停机权限。让谁负责，就给谁相应的能力。</p>
-            <p class="">我对 Agent 的要求很明确：普通故障要能修，授权拒绝要能停。任务做不完，可以把缺少的条件交回来；为了交差把访问范围越扩越大，最后会把技术风险和责任一起扔给使用它的人。越能坚持的 Agent，越需要一套在模型之外真正生效的刹车。</p>
+        <section class="detail-section" id="verification">
+            <h2 class="">片段都出现过，顺序却可能不对</h2>
+            <p class="">看两个用于演示的数字串：</p>
+            <pre class=""><code class="language-text">A：13800138000
+B：13801110138
+
+查询：01380
+查询片段：0138、1380</code></pre>
+            <p class="">A 确实包含 <code class="">01380</code>。 B 不包含这个完整子串，但它开头有 <code class="">1380</code>，末尾有 <code class="">0138</code>。如果索引只记录“出现过哪些片段”，B 也会进入候选集。</p>
+            <p class="">误报来自索引丢掉的顺序信息：两个片段分别出现过，交集筛选就会把记录留下。要验证完整的 <code class="">01380</code>，应用还得解密候选，检查片段是否在原文里连续排列。</p>
+            <p class="">重复次数也会丢失。查询 <code class="">11111</code> 去重后只剩一个 <code class="">1111</code> 片段，四个连续 <code class="">1</code> 的记录就能通过候选筛选。最终核验还要把查询要求的第五个字符找回来。</p>
+            <p class="">因此，完整查询路径应该是：</p>
+            <pre class=""><code class="language-text">验证查询权限与输入
+    → 使用指定版本的规则规范化
+    → 分片、生成标签并去重
+    → 在授权范围内查候选 ID
+    → 读取候选密文并验证、解密
+    → 对规范化后的明文执行真正的子串判断
+    → 按权限输出结果</code></pre>
+            <p class="">为什么这种方法仍然有用？因为子串匹配具有一个单向关系：如果字段确实包含完整查询串，那么查询串的每一个 n-gram，也必然出现在字段中。</p>
+            <p class="">所以，在索引完整且一致、规范化规则相同、查询长度不小于 n、没有随意截断候选集的前提下，这种全片段交集筛选不会因为分片规则本身漏掉真正的子串匹配。反方向不成立，所以需要核验。</p>
+            <p class="">对于少于四位的输入，这套 4-gram 索引没有对应的查询片段。应该明确拒绝、要求补充条件，或切换到另一个经过设计的流程，而不是让“空数组”意外变成一次全量搜索。</p>
+            <p class="">分页必须跟在核验之后算。数据库取回一百个候选，应用过滤后可能只剩几条；接口应继续分批核验，直到凑够一页或确认候选耗尽。候选游标、已核验数量和最终命中数要分开记录。取到一百条就停的实现，会把真正的结果截在下一批里。</p>
+        </section>
+
+        <section class="detail-section" id="cost">
+            <h2 class="">一千万条记录，会剩下多少候选</h2>
+            <p class="">讲到这里，很容易得出一个过于乐观的结论：全表扫描是 <code class="">O(N)</code>，加了索引就变成 <code class="">O(log N)</code>，问题解决了。 但标签的查找成本，只是整个查询的一部分。 还要读取标签对应的记录列表，计算交集，读取候选密文，再解密核验。一个标签如果匹配了几十万条记录，不能因为用了 B-tree，就把这些工作当作不存在。</p>
+            <p class="">用一个刻意简化的模型估算：假设一千万条十一位数字串，每条有八个四位窗口，数字分布近似独立均匀。对某个固定四位片段，按稀有事件近似，命中的记录数大约是：</p>
+            <pre class=""><code class="language-text">10,000,000 × 8 ÷ 10,000 ≈ 8,000</code></pre>
+            <p class="">这个独立均匀分布的简化模型，先给出约八千条候选的数量级。真实手机号有前缀规则、重复片段和业务偏斜，下一步就该拿这些分布去测。一个索引能省掉多少解密工作，要由候选集说话，画一条“一千万变二十三”的箭头算不出来。</p>
+            <p class="">存储成本同样需要算清楚。 长度为 L 的字符串，固定 n 的滑动窗口数量是 <code class="">max(L - n + 1, 0)</code>。十一位数字采用 4-gram，最多八个标签。按本文每个标签 32 字节计算，标签值本身最多占 256 字节；上面的重复号码去重后是六个，也就是 192 字节。这还没有算租户 ID、记录 ID、版本号、行开销和数据库索引。</p>
+            <p class="">n 主要影响片段的区分能力。十一位字符串从 4-gram 改成 2-gram，未去重窗口从八个增加到十个，真正可能大幅膨胀的是候选集：更短的片段会被更多记录共享。窗口数量和候选选择性，得在容量表和延迟表里分别列出来。</p>
+            <p class="">其次，如果同时保存许多长度的片段，甚至保存全部子串，候选片段数量才可能增长到关于字符串长度的平方级。不能把“固定一种 n”与“支持所有长度”混为一谈。</p>
+            <p class="">上线前，我会用脱敏或合成数据覆盖真实的分布特征，测候选集大小、尾延迟、索引体积、写入放大和维护成本。要不要增加更长片段、限制最短查询长度，或者先按租户和业务范围过滤，应该由这些结果决定，而不是由一个通用的“建议四位起搜”决定。</p>
+        </section>
+
+        <section class="detail-section" id="leakage">
+            <h2 class="">数据库仍然看得到频率与关联</h2>
+            <p class="">假设攻击者拿到了数据库。虽然不知道某个标签代表 <code class="">1380</code> 还是 <code class="">8000</code>，但他仍然能看到：哪些记录共享标签、每个标签关联多少条记录、哪些标签经常共同出现，以及一条记录有多少个不同标签。</p>
+            <p class="">如果他能持续观察数据库上的查询，还可能看到哪些查询标签反复出现、哪些记录被访问、每次返回多少候选。静态数据库快照和持续观察查询，泄漏的信息不是同一回事。</p>
+            <p class="">如果他既能通过正常业务写入自己选择的数据，又能观察数据库中的标签变化，还可能逐步建立“已知输入—标签”的对应关系。仅仅不提供一个名为 <code class="">generateHmac</code> 的 API，并不足以排除这种能力。</p>
+            <p class="">可搜索加密研究把这类利用额外知识和泄漏信息恢复查询或明文的攻击称为 leakage-abuse attacks。<a href="https://eprint.iacr.org/2016/718" target="_blank" rel="noopener" class="">Cash 等人的研究</a>表明，在特定泄漏模型和攻击者知识条件下，系统即使使用了密码学机制，泄漏仍然可以被实际利用。这里被攻击的，不一定是加密算法，而可能是数据之间的关系。</p>
+            <p class="">手机号和短编号恰好是全量 n-gram 索引最该慎重的字段。四位片段只有一万种输入，窗口还彼此重叠，再加上前缀规则和跨表关联，攻击者手里的拼图远比一串随机标签丰富。省掉几次扫描，可能换来长期可利用的关联信息。</p>
+            <p class=""><a href="https://docs.aws.amazon.com/database-encryption-sdk/latest/devguide/searchable-encryption.html" target="_blank" rel="noopener" class="">AWS Database Encryption SDK 的文档</a>也明确提醒：可搜索标签会暴露数据分布；分布偏斜和相关字段会影响安全性，不能只看算法名称来判断一个索引是否合适。</p>
+            <h3 class="">片段长度与标签位数影响不同</h3>
+            <p class="">n-gram 的 n，指明文片段长度。HMAC 标签保留多少 bit，指密码学输出长度。这是两个不同参数。</p>
+            <p class="">把标签从 256 bit 截断到 128 bit，可以减少标签值的存储，但不会让一万种四位数字突然拥有 128 bit 的输入熵。对这么小的输入域，128 bit 标签几乎不会产生随机碰撞，仍然近似保留片段的等值关系。</p>
+            <p class=""><a href="https://ciphersweet.paragonie.com/internals/blind-index" target="_blank" rel="noopener" class="">一些现成方案</a>会主动截断得更短，让不同输入共享同一标签，通过增加误报来减弱区分能力，再在解密后过滤。这个策略需要结合数据分布、关联性和<a href="https://docs.aws.amazon.com/database-encryption-sdk/latest/devguide/choosing-beacon-length.html" target="_blank" rel="noopener" class="">误报成本</a>设计，不是“短一点就安全”，更不能把某个产品的配置结论直接套到任意自制 n-gram 索引上。</p>
+            <p class="">片段越长，候选通常越有区分度，罕见值也可能越容易被识别。片段越短，误报和核验开销又会上来。把实际分布、辅助信息和误报成本一起评估，才能选参数；用“越长越安全”的星级表，只是把取舍藏起来。</p>
+            <p class="">“受控泄漏”应该是一张能审查的清单：允许暴露哪些关系，这些关系怎样与其他信息组合，业务为什么接受剩下的风险。架构图上写下这四个字，分析工作才刚开始。</p>
+        </section>
+
+        <section class="detail-section" id="operations">
+            <h2 class="">写入一致性、密钥轮换和接口权限</h2>
+            <h3 class="">规范化规则要版本化</h3>
+            <p class="">数据库写入时去掉空格，查询时却没有去掉；旧版本保留国家码，新版本只保留本地号码；同一个字符在不同系统里使用不同的 Unicode 表示——这些差异都可能让本应相同的输入生成不同标签。</p>
+            <p class="">完整手机号的规范化与局部搜索串的处理，也不能不加区分地共用一个“补全号码”函数。对局部查询 <code class="">0138</code>，我们要验证它是允许搜索的片段，而不是把它解析成一个完整号码。</p>
+            <p class="">姓名、地址和邮箱更需要先定义业务语义：是否区分大小写、是否忽略标点、是否进行字符归一化，不能为了方便一律删除或转换。索引生成和最终核验必须使用对应版本的同一套语义。</p>
+            <p class="">规则变化意味着需要重建索引。它不是换一个工具函数就结束的事情。</p>
+            <h3 class="">按租户、字段和用途隔离密钥</h3>
+            <p class="">字段加密和搜索标签各用独立用途的密钥。可以分别生成，也可以通过成熟的密钥派生方案生成彼此分离的子密钥，把用途和权限管理清楚。</p>
+            <p class="">例如，索引域可以包含租户、表、字段、查询类型、分片长度和规范化版本。<a href="https://www.rfc-editor.org/rfc/rfc5869" target="_blank" rel="noopener" class="">HKDF</a> 的 <code class="">info</code> 参数就是用来绑定应用上下文的一种标准机制；上下文需要采用无歧义的编码方式，不能随意拼接几个字符串。</p>
+            <p class="">这样，同一个 <code class="">1380</code> 在不同租户或不同字段中，不必形成一个可以直接跨域关联的共同标签。但这只能减少某类直接关联，不能自动消除业务数据本身的相关性。</p>
+            <p class="">另一个常见误区，是给每条记录都加独立随机 salt，以为能够同时隐藏重复值并保留一次等值查询。这样做以后，相同输入在不同记录中不再得到相同标签，原来的直接查找方式也就不成立了。随机化放在哪里，必须和查询流程一起设计。</p>
+            <p class="">密钥分离之后，还得看谁能同时取得它们。应用进程若能读取数据密钥和搜索密钥，进程失守就会同时暴露两者；单独泄漏搜索密钥，也足以让攻击者枚举低熵片段。密钥用途、进程权限和失陷后的影响范围，要放在同一张图里审。</p>
+            <p class="">KMS 可以用于保护和管理密钥，例如通过<a href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html" target="_blank" rel="noopener" class="">信封加密</a>保护数据密钥；这不意味着每生成一个片段标签都必须远程调用一次 KMS。应用中的明文密钥生命周期、缓存、权限和审计仍需要单独设计。</p>
+            <h3 class="">AAD 认证密文，无法认证整个结果集</h3>
+            <p class="">加密时，可以把租户 ID、记录 ID 和字段标识等上下文绑定为 <a href="https://cryptography.io/en/latest/hazmat/primitives/aead/" target="_blank" rel="noopener" class="">AAD</a>，也就是参与认证但不被加密的附加数据。这样，<a href="https://ciphersweet.paragonie.com/security" target="_blank" rel="noopener" class="">把某条密文直接换到另一条记录或另一个字段下</a>，通常不能通过原有上下文的认证检查。</p>
+            <p class="">结果集还有另一类完整性问题。数据库可以漏掉索引记录，或者在同一上下文下返回以前保存的合法旧密文；AAD 仍可能验证通过。要确认一批结果完整且最新，还得验证检索过程和版本。</p>
+            <p class="">对需要抵抗恶意数据库的业务，完整性、新鲜度和可验证查询应成为独立需求，追加相应协议与验证机制。标签表加逐条解密核验，负责的是候选筛选和单条内容验证。</p>
+            <h3 class="">密文和索引必须一起维护</h3>
+            <p class="">手机号修改后，旧标签要删除，新标签要生成，密文也要更新。在同一个关系数据库中，可以用事务把它们作为一次一致的变更提交；并发搜索还需要定义读取一致性，避免候选查询和密文读取落在互不相容的版本上。</p>
+            <p class="">若索引放在外部搜索引擎，必须处理异步同步、重试、幂等和版本对齐。不能一边接受最终一致性，一边保证“号码刚改完一定能立即搜到”。</p>
+            <p class="">搜索密钥轮换同样不能只改配置。新密钥生成的标签与旧标签不同，需要安排双写或其他迁移策略，回填存量数据，覆盖必要版本的查询，再安全移除旧索引。规范化规则变化时也是一样。</p>
+            <p class="">还要区分“替换实际的数据或搜索密钥”与“只更换包裹它们的上层密钥”。后者可能只涉及<a href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html" target="_blank" rel="noopener" class="">重新包裹</a>，而不需要重算全部搜索标签；前者通常不能省略数据或索引迁移。</p>
+            <p class="">删除也不止删主表。索引、缓存、搜索引擎副本和备份保留策略，都必须在数据生命周期里有明确安排。</p>
+            <h3 class="">搜索接口能成为枚举入口</h3>
+            <p class="">一个允许反复试号码片段、返回完整客户信息、又缺少业务范围限制的搜索接口，会成为现成的枚举工具。攻击者从结果里拿数据，后台 HMAC 做得再规范，也拦不住这条正常业务路径。</p>
+            <p class="">我会把授权、查询范围、速率限制、异常枚举检测和返回字段最小化放在同一份设计中。日志也不能因为记录的是 HMAC 标签，就被当作无害数据：稳定标签仍然能关联多次请求和多条记录。</p>
+            <p class="">这些措施不会消除数据库索引本身的泄漏，但可以减少另一个经常被忽略的风险——系统通过自己提供的正常功能，把敏感信息交出去。</p>
+        </section>
+
+        <section class="detail-section" id="extensions">
+            <h2 class="">子串索引之外，还有哪些需求没解决</h2>
+            <h3 class="">编辑距离救不回没有召回的记录</h3>
+            <p class="">假设希望把 <code class="">Erci</code> 匹配到 <code class="">Eric</code>，可以在解密后计算编辑距离。但这只解决了“拿到候选以后怎么判断”，没有解决“怎样把它先捞出来”。</p>
+            <p class="">前面的子串索引要求查询的全部 n-gram 都出现。对容错匹配，这个条件通常过严；一个字符变化就可能破坏多个片段。</p>
+            <p class="">把条件改成“至少共享一个片段”也不是完整答案。一个简单反例是 <code class="">abc</code> 与 <code class="">axc</code>：它们只相差一次字符替换，但未加边界标记的 2-gram 分别是 <code class="">{ab, bc}</code> 和 <code class="">{ax, xc}</code>，没有任何共同片段。</p>
+            <p class="">所以，容错方案需要围绕指定的距离函数、长度范围和允许错误数设计召回过滤；短字符串可能需要额外通道，或者在已经受限的授权集合内直接扫描。必须明确是否保证召回完整，再用测试验证。<a href="https://www.postgresql.org/docs/18/fuzzystrmatch.html" target="_blank" rel="noopener" class="">Levenshtein 距离</a>按插入、删除和替换计数；若要把相邻字符交换视为一次错误，还需要选用相应的距离定义。</p>
+            <p class="">编辑距离可以排除已召回候选中的误报，第一阶段漏掉的记录则需要修改召回条件。</p>
+            <h3 class="">Elasticsearch 负责执行标签查询</h3>
+            <p class="">当标签数量、查询并发或组合检索需求超过当前关系数据库方案的合适范围，可以评估专门的搜索引擎。</p>
+            <p class="">对本文这种标签索引，存入 Elasticsearch 的应是应用已经生成的稳定标签，而不是解密后的原始手机号。通常应把标签当作 <a href="https://www.elastic.co/docs/reference/elasticsearch/mapping-reference/keyword" target="_blank" rel="noopener" class=""><code class="">keyword</code></a> 这类精确值处理，而不是交给普通文本分析器再次分词；多个标签的匹配条件，可以用对应的<a href="https://www.elastic.co/docs/reference/query-languages/query-dsl/query-dsl-terms-set-query" target="_blank" rel="noopener" class="">精确集合查询</a>来表达。</p>
+            <p class="">换搜索引擎，解决的是倒排查询的执行和扩展。标签频率、记录关联、查询模式和返回规模，仍由索引设计决定。是否迁移，就看倒排列表长度、租户划分、更新模式和实际负载；“千万级”三个字，给不了部署答案。</p>
+            <h3 class="">SSE 要按具体协议评估</h3>
+            <p class=""><a href="https://eprint.iacr.org/2006/210" target="_blank" rel="noopener" class="">可搜索对称加密</a>，也就是 SSE，是一个研究领域，不是一种固定算法。它研究如何在外包存储的同时支持搜索，并在明确的模型下定义与证明安全性质。</p>
+            <p class="">评估 SSE，要逐项看协议支持的查询、泄漏函数、更新方式、信任假设与交互成本。形式化证明会明确这些前提，<a href="https://eprint.iacr.org/2016/718" target="_blank" rel="noopener" class="">泄漏利用研究</a>则追问攻击者还能怎样组合信息。“自制 HMAC 标签”“SSE”“全同态加密”各有具体方案，单按名字排安全星级，省掉了最重要的分析。</p>
+            <p class="">如果需求还包括隐藏重复查询或访问了哪些记录，就需要重新评估专门协议及其计算、通信和运维成本，而不是给现有标签表再换一个更长的哈希。</p>
+        </section>
+
+        <section class="detail-section" id="choice">
+            <h2 class="">回到客服后台，该提供哪种搜索</h2>
+            <p class="">对于最初的客服需求，我会先确认完整号码查询是否已经够用。若客服确实只记得后四位，就只建立后缀索引，把搜索限制在必要的租户和订单范围。数据量小、查询频率低时，先过滤再逐条解密扫描，也值得测一测：它省去了长期维护一套搜索索引的成本。</p>
+            <p class="">任意子串搜索需要更多理由。确认需求不可替代后，才用实际数据分布测候选规模，评估频率、关联和已知输入带来的推断风险。高度敏感、取值空间很小或关联性很强的字段，评估结果可能要求调整客服流程。</p>
+            <p class="">随机化认证加密、最小搜索索引、授权范围内召回、解密核验，这几步可以形成一个待评估的设计。密钥隔离、规范化版本、写入一致性和接口限制也要同时成立；只写下“AEAD + HMAC + n-gram”，还不足以交付这套系统。</p>
+            <p class="">加密后的数据能支持某些搜索，但索引会留下关系。验收时除了检查密文能否解密、查询能否命中，我还会检查另一件事：拿到数据库的人，能从搜索结构里推断出多少关于客户的信息？</p>
+
+            <p class=""><a href="https://mp.weixin.qq.com/s/YHrq4fxoRkjtQyMXtmvuKw" target="_blank" rel="noopener" class="">《被问懵了，加密后的数据如何进行模糊查询？》</a>提出的客服场景，是我梳理这套方案的起点。一路推下来，我更倾向于先缩小搜索需求，再决定值得为它暴露多少关系。索引加得越多，能搜的内容越多，今后要保护和解释的东西也越多。</p>
+
         </section></div></div>
     </div>
-    <section class="related" aria-labelledby="related-title"><p class="kicker">继续阅读</p><h2 id="related-title">相关<em>文章</em></h2><ol class="journal-list" style="list-style:none"><li><a class="journal-row" href="article-15.html" data-topic="2" data-cursor="阅读">
-        <span class="journal-date">2026.05 · 15</span>
-        <span class="journal-title"><span class="static">我做了一次多 Agent 架构实验：复杂架构并不天然更聪明</span><span class="marquee" aria-hidden="true"><span>我做了一次多 Agent 架构实验：复杂架构并不天然更聪明 —&nbsp;</span><span>我做了一次多 Agent 架构实验：复杂架构并不天然更聪明 —&nbsp;</span><span>我做了一次多 Agent 架构实验：复杂架构并不天然更聪明 —&nbsp;</span></span></span>
-        <span class="topic" data-topic="2">Agent 自动化</span><span class="journal-time">8 分钟</span></a></li><li><a class="journal-row" href="article-19.html" data-topic="2" data-cursor="阅读">
-        <span class="journal-date">2026.05 · 19</span>
-        <span class="journal-title"><span class="static">多 Agent 架构的真正问题：不是角色分工，而是上下文边界</span><span class="marquee" aria-hidden="true"><span>多 Agent 架构的真正问题：不是角色分工，而是上下文边界 —&nbsp;</span><span>多 Agent 架构的真正问题：不是角色分工，而是上下文边界 —&nbsp;</span><span>多 Agent 架构的真正问题：不是角色分工，而是上下文边界 —&nbsp;</span></span></span>
-        <span class="topic" data-topic="2">Agent 自动化</span><span class="journal-time">10 分钟</span></a></li><li><a class="journal-row" href="article-20.html" data-topic="2" data-cursor="阅读">
-        <span class="journal-date">2026.05 · 20</span>
-        <span class="journal-title"><span class="static">当真的需要多 Agent：如何拆分、协作与合并结果</span><span class="marquee" aria-hidden="true"><span>当真的需要多 Agent：如何拆分、协作与合并结果 —&nbsp;</span><span>当真的需要多 Agent：如何拆分、协作与合并结果 —&nbsp;</span><span>当真的需要多 Agent：如何拆分、协作与合并结果 —&nbsp;</span></span></span>
-        <span class="topic" data-topic="2">Agent 自动化</span><span class="journal-time">10 分钟</span></a></li></ol></section>
+    <section class="related" aria-labelledby="related-title"><p class="kicker">继续阅读</p><h2 id="related-title">相关<em>文章</em></h2><ol class="journal-list" style="list-style:none"><li><a class="journal-row" href="article-05.html" data-topic="4" data-cursor="阅读">
+        <span class="journal-date">2026.10 · 05</span>
+        <span class="journal-title"><span class="static">当每个系统都在自保：3.8 GW 负载退出之后</span><span class="marquee" aria-hidden="true"><span>当每个系统都在自保：3.8 GW 负载退出之后 —&nbsp;</span><span>当每个系统都在自保：3.8 GW 负载退出之后 —&nbsp;</span><span>当每个系统都在自保：3.8 GW 负载退出之后 —&nbsp;</span></span></span>
+        <span class="topic" data-topic="4">系统架构</span><span class="journal-time">16 分钟</span></a></li><li><a class="journal-row" href="article-10.html" data-topic="4" data-cursor="阅读">
+        <span class="journal-date">2026.07 · 10</span>
+        <span class="journal-title"><span class="static">Mac 正在成为个人 AI 应用的理想运行时</span><span class="marquee" aria-hidden="true"><span>Mac 正在成为个人 AI 应用的理想运行时 —&nbsp;</span><span>Mac 正在成为个人 AI 应用的理想运行时 —&nbsp;</span><span>Mac 正在成为个人 AI 应用的理想运行时 —&nbsp;</span></span></span>
+        <span class="topic" data-topic="4">系统架构</span><span class="journal-time">9 分钟</span></a></li><li><a class="journal-row" href="article-24.html" data-topic="4" data-cursor="阅读">
+        <span class="journal-date">2026.04 · 24</span>
+        <span class="journal-title"><span class="static">如果没有数据库，系统如何设计？</span><span class="marquee" aria-hidden="true"><span>如果没有数据库，系统如何设计？ —&nbsp;</span><span>如果没有数据库，系统如何设计？ —&nbsp;</span><span>如果没有数据库，系统如何设计？ —&nbsp;</span></span></span>
+        <span class="topic" data-topic="4">系统架构</span><span class="journal-time">9 分钟</span></a></li></ol></section>
     <nav class="pager" aria-label="更多文章">
-        <a href="article-05.html" data-cursor="上一篇"><span class="meta">← 上一篇</span><strong>加密后的数据，真的还能做模糊查询吗？</strong></a>
-        <a href="article-07.html" data-cursor="下一个"><span class="meta">下一篇 →</span><strong>谁有权训练谁？</strong></a>
+        <a href="article-05.html" data-cursor="上一篇"><span class="meta">← 上一篇</span><strong>当每个系统都在自保：3.8 GW 负载退出之后</strong></a>
+        <a href="article-07.html" data-cursor="下一个"><span class="meta">下一篇 →</span><strong>AI 不需要恶意，也能越过权限边界</strong></a>
     </nav>
 </div>
 </main>

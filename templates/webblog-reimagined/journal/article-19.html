@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>The Real Problem in Multi-Agent Architecture Is Context Boundaries, Not Roles — Eric</title>
-<meta name="description" content="The Real Problem in Multi-Agent Architecture Is Context Boundaries, Not Roles">
+<title>U-Net Did Not Lose to a Newer Model: In Industrial Vision, Define the Task Before Choosing the Model — Eric</title>
+<meta name="description" content="For single-class thin-region segmentation, model effectiveness often depends more on the fit between task structure and inductive bias than on release date, parameter count, or pretraining.">
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#ede8df">
 <script>(()=>{const r=document.documentElement;let t,m;try{t=localStorage.getItem('ink-theme');m=localStorage.getItem('ink-motion')}catch(e){}t=t||(matchMedia('(prefers-color-scheme: dark)').matches?'night':'day');if(matchMedia('(prefers-reduced-motion: reduce)').matches)m='off';r.dataset.theme=t;r.dataset.motion=m||'on'})()</script>
@@ -43,68 +43,89 @@
 <div class="progress" aria-hidden="true"><i></i></div>
 <div class="page">
     <header class="article-head">
-        <p class="meta"><a href="index.html">← Journal</a> &nbsp;/&nbsp; <span class="topic" data-topic="2">Agent Automation</span></p>
-        <h1 data-split>The Real Problem in Multi-Agent Architecture Is <em>Context Boundaries</em>, Not Roles</h1>
-        <p class="lede rise"></p>
-        <div class="article-meta meta rise" style="--d:120ms"><span>2026.05.01</span><span>10 min</span><span>No. 19</span></div>
+        <p class="meta"><a href="index.html">← Journal</a> &nbsp;/&nbsp; <span class="topic" data-topic="3">Vision & Multimodal</span></p>
+        <h1 data-split>U-Net Did Not Lose to a Newer Model: In Industrial Vision, <em>Define the Task</em> Before Choosing the Model</h1>
+        <p class="lede rise">For single-class thin-region segmentation, model effectiveness often depends more on the fit between task structure and inductive bias than on release date, parameter count, or pretraining.</p>
+        <div class="article-meta meta rise" style="--d:120ms"><span>2026.05.07</span><span>8 min</span><span>No. 19</span></div>
     </header>
     <div class="article-layout">
-        <nav class="toc" aria-label="Contents"><a href="#roles">Do not start with roles</a><a href="#failure">Why splitting often breaks the system</a><a href="#dependency">The real test is context dependency</a><a href="#patterns">Single Agent, Sub-Agent, and Agent Team</a><a href="#costs">The real cost of multi-agent systems</a><a href="#takeaway">Final Thoughts</a></nav>
-        <div class="page-surface"><div class="prose"><section class="detail-section" id="roles">
-            <h2 class="">Do not start with roles</h2>
-            <p class="">When people design multi-agent systems, the first instinct is often role assignment: planning Agent, retrieval Agent, writing Agent, review Agent, execution Agent. It looks like a complete team, but in practice more roles often create more disorder.</p>
-            <p class="">The real problem is usually not weak model capability. It is that the architecture cuts apart context that needs continuous understanding. Each Agent receives only local information, makes locally reasonable judgments, and the merged result loses the main thread.</p>
-            <p class="">The design unit of a multi-agent system should not be the role. It should be the context. Roles are surface labels; what matters is how information flows, how state is shared, and how conclusions are merged.</p>
+        <nav class="toc" aria-label="Contents"><a href="#baseline">This Is Not an Old-Model-Beats-New-Model Story</a><a href="#output">Start With the Output Form</a><a href="#structure">Thin Regions Depend Heavily on Spatial Localization</a><a href="#pretraining">Why Pretraining Did Not Become an Overwhelming Advantage</a><a href="#metrics">Do Not Trust Only Aggregate Metrics</a><a href="#system">Model Choice Is System Design</a></nav>
+        <div class="page-surface"><div class="prose"><section class="detail-section" id="baseline">
+            <h2 class="">This Is Not an Old-Model-Beats-New-Model Story</h2>
+            <p class="">I recently ran an experiment on thin-region segmentation. The task was not complex: in an industrial vision scene, given an image, output a stable mask for the target region. It was not open-world detection, multi-class instance segmentation, or a task that needed rich semantic understanding. The business needed pixel-level region extraction.</p>
+            <p class="">At first, I treated the 2015 U-Net as a classic baseline and expected it to define the lower bound. Intuitively, the newer YOLO26 family should have performed better, with a mature engineering ecosystem and commonly used pretrained weights.</p>
+            <p class="">The result was less linear than that. U-Net, trained from random initialization without pretrained weights, quickly reached a stable performance range. On this task, it did not clearly lose to the newer model using pretrained weights.</p>
+            <p class="">This is not a story about an old model defeating a new one. More accurately, it made me revisit a better question: in industrial vision, does practical effectiveness come from model release date, parameter scale, and pretraining aura, or from the match between task structure and model inductive bias?</p>
         </section>
 
-        <section class="detail-section" id="failure">
-            <h2 class="">Why splitting often breaks the system</h2>
-            <p class="">Complex tasks are not naturally divisible. Some tasks contain many steps but depend on one continuous thread, such as opinion writing, system architecture, complex bug analysis, and product planning.</p>
-            <p class="">Splitting too early creates three problems: the main thread is cut, information is lost in transfer, and collaboration creates noise. A sub-Agent may complete a local task without understanding the overall intent; after context is summarized twice, key constraints may already be gone.</p>
-            <p class="">Agent splitting is not a free upgrade. It reduces context pressure inside one Agent, but increases communication, synchronization, merging, and consistency costs.</p>
+        <section class="detail-section" id="output">
+            <h2 class="">Start With the Output Form</h2>
+            <p class="">Model selection is often pulled along by the framework. See YOLO and you think boxes, classes, confidence, and instances. See a new model and you assume it should beat an older one. But an industrial project should not start with “which model?” It should start with “what output does the business need?”</p>
+            <p class="">In this scene, the target region is sometimes continuous and sometimes appears split by occlusion or structural changes. But the business does not need to decide whether those parts are the same instance, nor assign independent identities. It only cares which pixels belong to the target region and which do not.</p>
+            <ul class="">
+                <li class=""><strong class="">If the output is boxes</strong>, detection is the natural choice.</li>
+                <li class=""><strong class="">If the output is pixel classes</strong>, semantic segmentation is more direct.</li>
+                <li class=""><strong class="">If each object needs an independent mask</strong>, instance segmentation is necessary.</li>
+                <li class=""><strong class="">If the final output is only an alarm</strong>, segmentation may be just an intermediate step.</li>
+            </ul>
+            <p class="">This task needs a single-class region mask, so it is first a semantic segmentation problem and only then a model selection problem.</p>
         </section>
 
-        <section class="detail-section" id="dependency">
-            <h2 class="">The real test is context dependency</h2>
-            <p class="">The key question is not whether the task is complex. It is whether the subtasks need shared context.</p>
-            <p class="">Low-context-dependency tasks are good candidates for splitting: summarizing separate articles, checking separate files, retrieving evidence from different sources, or producing independent judgments. They can run in isolation and return compressed conclusions.</p>
-            <p class="">High-context-dependency tasks cannot be split casually. System design, long-form writing, refactoring decisions, and multi-step diagnosis require continuous goals, constraints, and judgment criteria. If they are split, they need shared state, not simple dispatch and collection.</p>
+        <section class="detail-section" id="structure">
+            <h2 class="">Thin Regions Depend Heavily on Spatial Localization</h2>
+            <p class="">U-Net was stable here not because it is more advanced, but because its structural assumptions are close to the task shape. It extracts context through the encoder path, restores spatial resolution through the decoder path, and uses skip connections to bring shallow spatial details back into the segmentation output.</p>
+            <p class="">That matters for thin structures. Thin targets occupy little area, have a high boundary ratio, and can break under mild downsampling. Local boundary shifts, missing endpoints, or masks becoming slightly too thick or thin can all affect downstream decisions.</p>
+            <ul class="">
+                <li class=""><strong class="">Thin targets</strong> require not just detection, but shape preservation.</li>
+                <li class=""><strong class="">Shallow edge and texture information</strong> should not be discarded too early.</li>
+                <li class=""><strong class="">Small visible segments after occlusion</strong> often expose risk better than aggregate IoU.</li>
+                <li class=""><strong class="">Two visible pieces</strong> do not automatically mean two business instances.</li>
+            </ul>
+            <p class="">That is where U-Net fits. It does not need to wrap a pixel problem as an object problem or introduce extra instance abstraction. The optimization target is close to the output the business actually needs.</p>
         </section>
 
-        <section class="detail-section" id="patterns">
-            <h2 class="">Single Agent, Sub-Agent, and Agent Team</h2>
-            <p class="">A Single Agent fits tasks with a strong main thread and continuous context. If it can complete the task reliably, splitting only to look advanced is a mistake.</p>
-            <p class="">A Sub-Agent fits tasks that are isolated, parallelizable, and only need to return conclusions. The main Agent owns the goal and thread; the sub-Agent handles a bounded local job.</p>
-            <p class="">An Agent Team fits tasks that require shared state and ongoing collaboration. It is not just a group discussion. It is a more complex shared-context system with state synchronization, conflict handling, and final arbitration.</p>
+        <section class="detail-section" id="pretraining">
+            <h2 class="">Why Pretraining Did Not Become an Overwhelming Advantage</h2>
+            <p class="">The more interesting part of this experiment is that U-Net still performed well without pretrained weights. That does not mean pretraining is useless. It means the value of pretraining is conditional.</p>
+            <p class="">Pretraining usually provides general priors from the open visual world: edges, textures, shapes, object semantics, and complex background understanding. Those priors are valuable for open scenes, multiple classes, small datasets, and complex backgrounds. But industrial vision is often controlled: camera positions are fixed, backgrounds are limited, target shapes follow engineering constraints, and the main variation comes from occlusion, lighting, reflection, blur, dirt, and equipment state.</p>
+            <p class="">In a narrower distribution, the model may not need to understand the whole visual world. It only needs to learn the local textures, boundary shapes, and context patterns that correspond to the target region in this data distribution.</p>
+            <blockquote class="">Pretrained weights provide a better starting point, but they do not guarantee a better endpoint. When the task structure is clear and the data distribution is concentrated, a classic model with the right structure and capacity can quickly approach the effective ceiling of the current task.</blockquote>
         </section>
 
-        <section class="detail-section" id="costs">
-            <h2 class="">The real cost of multi-agent systems</h2>
-            <p class="">The hard part of multi-agent architecture is not making multiple Agents work at once. It is controlling the side effects between them.</p>
-            <p class="">Context transfer is not lossless. The main Agent cannot send everything to every sub-Agent, and a sub-Agent cannot return its entire reasoning process. The system must know what can be compressed and what must be preserved.</p>
-            <p class="">Collaboration can also create noise. If boundaries are vague, Agents repeat the same discussion, contradict one another, and produce many similar ideas. State inconsistency is worse: one Agent uses old constraints, another uses new constraints, and the system splits apart.</p>
+        <section class="detail-section" id="metrics">
+            <h2 class="">Do Not Trust Only Aggregate Metrics</h2>
+            <p class="">To make this observation solid, it is not enough to look only at Dice, IoU, or loss. For thin regions, aggregate metrics can hide critical errors: losing a short segment, missing an endpoint, or shifting a boundary may not reduce area much, but it can matter a lot for the business.</p>
+            <p class="">A better evaluation design should add business-risk-oriented metrics and scenario slices.</p>
+            <ul class="">
+                <li class=""><strong class="">Track boundary F-score, centerline distance, and endpoint error</strong>, not only overall IoU.</li>
+                <li class=""><strong class="">Slice occlusion, small targets, strong reflection, low light, blur</strong>, and two-segment visibility separately.</li>
+                <li class=""><strong class="">Inspect connected component count, missed-length ratio</strong>, and usability after post-processing.</li>
+                <li class=""><strong class="">Split data by video, vehicle, route, camera, and capture date</strong> to avoid adjacent-frame leakage.</li>
+            </ul>
+            <p class="">If U-Net is close only on aggregate metrics but clearly worse in extreme conditions, then the next step is still model or data improvement. If it is also stable in the key slices, its engineering value should not be dismissed as merely a baseline.</p>
         </section>
 
-        <section class="detail-section" id="takeaway">
-            <h2 class="">Final Thoughts</h2>
-            <p class="">The real problem in multi-agent architecture is not role division. It is context-boundary design.</p>
-            <p class="">Weak multi-agent design starts with roles: who plans, who writes, who reviews. Strong multi-agent design starts with context: what must remain continuous, what can be isolated, what state must be shared, and what result only needs summarizing.</p>
-            <p class="">The final question is not “how many Agents does this task need?” It is “how should this task context be shared, isolated, compressed, transferred, and merged?” That is the line between a toy multi-agent demo and an engineering system.</p>
+        <section class="detail-section" id="system">
+            <h2 class="">Model Choice Is System Design</h2>
+            <p class="">Industrial vision is ultimately not a model competition. It is system delivery. Beyond accuracy, the comparison should include training complexity, inference speed, memory use, deployment path, post-processing cost, debugging difficulty, and long-term maintenance.</p>
+            <p class="">Redundant model capability is not free. If a broader model makes output structure, tuning space, post-processing, and deployment more complex without clear gains on the current task’s key error types, it may not be the better engineering choice.</p>
+            <p class="">The valuable lesson here is not that a 2015 U-Net is still surprisingly strong. It is that once the task is defined clearly, many advanced-looking capabilities may not be necessary conditions.</p>
+            <blockquote class="">The best model is not necessarily the newest model. The best model is the one that completes the business loop with the least complexity and enough stability.</blockquote>
         </section></div></div>
     </div>
-    <section class="related" aria-labelledby="related-title"><p class="kicker">Continue reading</p><h2 id="related-title">Related <em>writing</em></h2><ol class="journal-list" style="list-style:none"><li><a class="journal-row" href="article-06.html" data-topic="2" data-cursor="Read">
-        <span class="journal-date">2026.09 · 06</span>
-        <span class="journal-title"><span class="static">AI Can Cross Permission Boundaries Without Malice</span><span class="marquee" aria-hidden="true"><span>AI Can Cross Permission Boundaries Without Malice —&nbsp;</span><span>AI Can Cross Permission Boundaries Without Malice —&nbsp;</span><span>AI Can Cross Permission Boundaries Without Malice —&nbsp;</span></span></span>
-        <span class="topic" data-topic="2">Agent Automation</span><span class="journal-time">13 min</span></a></li><li><a class="journal-row" href="article-15.html" data-topic="2" data-cursor="Read">
-        <span class="journal-date">2026.05 · 15</span>
-        <span class="journal-title"><span class="static">I Ran a Multi-Agent Architecture Experiment: Complex Systems Are Not Automatically Smarter</span><span class="marquee" aria-hidden="true"><span>I Ran a Multi-Agent Architecture Experiment: Complex Systems Are Not Automatically Smarter —&nbsp;</span><span>I Ran a Multi-Agent Architecture Experiment: Complex Systems Are Not Automatically Smarter —&nbsp;</span><span>I Ran a Multi-Agent Architecture Experiment: Complex Systems Are Not Automatically Smarter —&nbsp;</span></span></span>
-        <span class="topic" data-topic="2">Agent Automation</span><span class="journal-time">8 min</span></a></li><li><a class="journal-row" href="article-20.html" data-topic="2" data-cursor="Read">
-        <span class="journal-date">2026.05 · 20</span>
-        <span class="journal-title"><span class="static">When Multi-Agent Is Actually Needed: Splitting, Collaboration, and Result Merging</span><span class="marquee" aria-hidden="true"><span>When Multi-Agent Is Actually Needed: Splitting, Collaboration, and Result Merging —&nbsp;</span><span>When Multi-Agent Is Actually Needed: Splitting, Collaboration, and Result Merging —&nbsp;</span><span>When Multi-Agent Is Actually Needed: Splitting, Collaboration, and Result Merging —&nbsp;</span></span></span>
-        <span class="topic" data-topic="2">Agent Automation</span><span class="journal-time">10 min</span></a></li></ol></section>
+    <section class="related" aria-labelledby="related-title"><p class="kicker">Continue reading</p><h2 id="related-title">Related <em>writing</em></h2><ol class="journal-list" style="list-style:none"><li><a class="journal-row" href="article-26.html" data-topic="3" data-cursor="Read">
+        <span class="journal-date">2026.04 · 26</span>
+        <span class="journal-title"><span class="static">Vision Algorithm Engineers: Do Not Become Process Operators</span><span class="marquee" aria-hidden="true"><span>Vision Algorithm Engineers: Do Not Become Process Operators —&nbsp;</span><span>Vision Algorithm Engineers: Do Not Become Process Operators —&nbsp;</span><span>Vision Algorithm Engineers: Do Not Become Process Operators —&nbsp;</span></span></span>
+        <span class="topic" data-topic="3">Vision &amp; Multimodal</span><span class="journal-time">8 min</span></a></li><li><a class="journal-row" href="article-31.html" data-topic="3" data-cursor="Read">
+        <span class="journal-date">2026.04 · 31</span>
+        <span class="journal-title"><span class="static">After a Vision Model Ships: Do Not Let mAP Become the Only Answer</span><span class="marquee" aria-hidden="true"><span>After a Vision Model Ships: Do Not Let mAP Become the Only Answer —&nbsp;</span><span>After a Vision Model Ships: Do Not Let mAP Become the Only Answer —&nbsp;</span><span>After a Vision Model Ships: Do Not Let mAP Become the Only Answer —&nbsp;</span></span></span>
+        <span class="topic" data-topic="3">Vision &amp; Multimodal</span><span class="journal-time">9 min</span></a></li><li><a class="journal-row" href="article-37.html" data-topic="3" data-cursor="Read">
+        <span class="journal-date">2026.03 · 37</span>
+        <span class="journal-title"><span class="static">From DETR to YOLOv8: Transformer Evolution in Object Detection</span><span class="marquee" aria-hidden="true"><span>From DETR to YOLOv8: Transformer Evolution in Object Detection —&nbsp;</span><span>From DETR to YOLOv8: Transformer Evolution in Object Detection —&nbsp;</span><span>From DETR to YOLOv8: Transformer Evolution in Object Detection —&nbsp;</span></span></span>
+        <span class="topic" data-topic="3">Vision &amp; Multimodal</span><span class="journal-time">12 min</span></a></li></ol></section>
     <nav class="pager" aria-label="More articles">
-        <a href="article-18.html" data-cursor="Prev"><span class="meta">← Previous</span><strong>U-Net Did Not Lose to a Newer Model: In Industrial Vision, Define the Task Before Choosing the Model</strong></a>
-        <a href="article-20.html" data-cursor="Next"><span class="meta">Next →</span><strong>When Multi-Agent Is Actually Needed: Splitting, Collaboration, and Result Merging</strong></a>
+        <a href="article-18.html" data-cursor="Prev"><span class="meta">← Previous</span><strong>For Enterprise AI On-Prem, the First Step Is Not Buying GPUs. It Is Cleaning Data</strong></a>
+        <a href="article-20.html" data-cursor="Next"><span class="meta">Next →</span><strong>The Real Problem in Multi-Agent Architecture Is Context Boundaries, Not Roles</strong></a>
     </nav>
 </div>
 </main>

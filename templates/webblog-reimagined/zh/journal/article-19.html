@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>多 Agent 架构的真正问题：不是角色分工，而是上下文边界 — Eric</title>
-<meta name="description" content="多 Agent 架构的真正问题：不是角色分工，而是上下文边界">
+<title>U-Net 没有输给新模型：工业视觉里，先定义任务再选择模型 — Eric</title>
+<meta name="description" content="在单类细长区域分割任务里，模型有效性更多取决于任务结构与归纳偏置的匹配，而不是发布时间、参数规模或预训练光环。">
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#ede8df">
 <script>(()=>{const r=document.documentElement;let t,m;try{t=localStorage.getItem('ink-theme');m=localStorage.getItem('ink-motion')}catch(e){}t=t||(matchMedia('(prefers-color-scheme: dark)').matches?'night':'day');if(matchMedia('(prefers-reduced-motion: reduce)').matches)m='off';r.dataset.theme=t;r.dataset.motion=m||'on'})()</script>
@@ -43,68 +43,89 @@
 <div class="progress" aria-hidden="true"><i></i></div>
 <div class="page">
     <header class="article-head">
-        <p class="meta"><a href="index.html">← 文章</a> &nbsp;/&nbsp; <span class="topic" data-topic="2">Agent 自动化</span></p>
-        <h1 data-split>多 Agent 架构的真正问题：不是角色分工，而是<em>上下文边界</em></h1>
-        <p class="lede rise"></p>
-        <div class="article-meta meta rise" style="--d:120ms"><span>2026.05.01</span><span>10 分钟</span><span>No. 19</span></div>
+        <p class="meta"><a href="index.html">← 文章</a> &nbsp;/&nbsp; <span class="topic" data-topic="3">视觉多模态</span></p>
+        <h1 data-split>U-Net 没有输给新模型：工业视觉里，<em>先定义任务</em>再选择模型</h1>
+        <p class="lede rise">在单类细长区域分割任务里，模型有效性更多取决于任务结构与归纳偏置的匹配，而不是发布时间、参数规模或预训练光环。</p>
+        <div class="article-meta meta rise" style="--d:120ms"><span>2026.05.07</span><span>8 分钟</span><span>No. 19</span></div>
     </header>
     <div class="article-layout">
-        <nav class="toc" aria-label="目录"><a href="#roles">先别急着分角色</a><a href="#failure">为什么一拆就废</a><a href="#dependency">判断标准是上下文依赖</a><a href="#patterns">单 Agent、Sub-Agent 与 Agent Team</a><a href="#costs">多 Agent 的真实成本</a><a href="#takeaway">写在最后</a></nav>
-        <div class="page-surface"><div class="prose"><section class="detail-section" id="roles">
-            <h2 class="">先别急着分角色</h2>
-            <p class="">很多人设计多 Agent 系统时，第一反应是分角色：规划 Agent、检索 Agent、写作 Agent、审核 Agent、执行 Agent。看起来像一个完整团队，但很多时候，角色越多，系统越乱。</p>
-            <p class="">真正的问题不在于模型能力不够，而在于架构把本来需要连续理解的上下文切碎了。每个 Agent 只拿到局部信息，各自做出看似合理的判断，最后合并起来却失去主线。</p>
-            <p class="">多 Agent 的设计单位不应该是角色，而应该是上下文。角色只是表象，真正重要的是信息如何流动、状态如何共享、结论如何合并。</p>
+        <nav class="toc" aria-label="目录"><a href="#baseline">不是老模型战胜新模型</a><a href="#output">先判断输出形式</a><a href="#structure">细长区域更吃空间定位</a><a href="#pretraining">预训练优势为什么没有压倒性转化</a><a href="#metrics">不要只看总指标</a><a href="#system">模型选择是一种系统设计</a></nav>
+        <div class="page-surface"><div class="prose"><section class="detail-section" id="baseline">
+            <h2 class="">不是老模型战胜新模型</h2>
+            <p class="">最近做了一个细长区域分割实验。任务并不复杂：在一个工业视觉场景中，给定图像后稳定输出目标区域的 mask。它不是开放世界检测，也不是多类别实例分割，业务真正需要的是像素级区域提取。</p>
+            <p class="">一开始，我把 2015 年的 U-Net 当成经典 baseline，预期它能给出一个参考下限。真正表现更好的，直觉上应该是更新的 YOLO26 系列模型，毕竟后者工程生态成熟，也通常会搭配预训练权重。</p>
+            <p class="">但实验现象没有这么线性：U-Net 在没有预训练、从随机初始化训练的情况下，很快进入稳定表现区间；在当前任务上，它并没有明显输给使用预训练权重的新模型。</p>
+            <p class="">这不是“老模型战胜新模型”的故事。更准确地说，它提醒我重新看一个问题：工业视觉里的模型有效性，到底来自模型发布时间、参数规模和预训练光环，还是来自任务结构与模型归纳偏置之间的匹配？</p>
         </section>
 
-        <section class="detail-section" id="failure">
-            <h2 class="">为什么一拆就废</h2>
-            <p class="">复杂任务并不天然适合拆分。有些任务看起来步骤很多，但它们依赖同一条连续主线，比如观点写作、系统架构、复杂 Bug 分析和产品方案设计。</p>
-            <p class="">过早拆分会带来三个问题：主线被切断，信息在传递中损耗，协作产生噪音。子 Agent 可能完成了局部任务，但不一定理解整体意图；上下文被摘要两次之后，关键约束可能已经丢失。</p>
-            <p class="">Agent 拆分不是免费增强。它会减轻单个 Agent 的上下文压力，但会增加通信、同步、合并和一致性成本。</p>
+        <section class="detail-section" id="output">
+            <h2 class="">先判断输出形式</h2>
+            <p class="">很多模型选择一开始就被框架牵着走。看到 YOLO，就自然想到框、类别、置信度和实例；看到新模型，就默认它应该比老模型更强。但工业项目首先要问的不是“用哪个模型”，而是“业务到底需要什么输出”。</p>
+            <p class="">在这个场景里，目标区域有时是一整条，有时因为遮挡或结构状态变化，看起来像断成两段。但业务并不需要判断两段是不是同一个实例，也不需要给每一段分配独立身份。业务只关心一件事：哪些像素属于目标区域，哪些像素不属于目标区域。</p>
+            <ul class="">
+                <li class=""><strong class="">如果要的是框</strong>，检测模型是自然选择。</li>
+                <li class=""><strong class="">如果要的是每个像素的类别</strong>，语义分割更直接。</li>
+                <li class=""><strong class="">如果要区分每个对象的独立 mask</strong>，实例分割才是必要的。</li>
+                <li class=""><strong class="">如果最终只要报警结果</strong>，分割可能也只是中间环节。</li>
+            </ul>
+            <p class="">当前任务要的是单类区域 mask，所以它首先是一个语义分割问题，其次才是一个模型选择问题。</p>
         </section>
 
-        <section class="detail-section" id="dependency">
-            <h2 class="">判断标准是上下文依赖</h2>
-            <p class="">判断任务是否适合多 Agent，关键不是任务复杂不复杂，而是子任务之间是否需要共享上下文。</p>
-            <p class="">低上下文依赖任务适合拆。比如分别总结多篇文章、检查多个文件、从不同资料源检索证据、对同一问题做独立判断。这些任务可以隔离执行，最后返回压缩结论。</p>
-            <p class="">高上下文依赖任务不能简单拆。复杂系统设计、长文写作、代码重构决策、多步骤诊断都需要持续维护目标、约束和判断标准。如果确实要拆，就必须共享状态，而不是简单分发和回收。</p>
+        <section class="detail-section" id="structure">
+            <h2 class="">细长区域更吃空间定位</h2>
+            <p class="">U-Net 在这个任务上表现稳定，并不是因为它“更先进”，而是因为它的结构假设很贴近任务形态。它通过编码路径提取上下文，通过解码路径恢复空间分辨率，再用跳跃连接把浅层空间细节带回分割结果。</p>
+            <p class="">这对细长结构非常重要。细长目标面积占比小、边界占比高，轻微下采样就可能造成断裂；局部边界偏移、端点丢失、mask 变粗或变细，都可能影响后续业务判断。</p>
+            <ul class="">
+                <li class=""><strong class="">细长目标</strong>不只要求“识别存在”，还要求“保持形态”。</li>
+                <li class=""><strong class="">浅层边缘和纹理信息</strong>不能过早丢掉。</li>
+                <li class=""><strong class="">遮挡后的短小可见段</strong>，往往比整体 IoU 更能暴露风险。</li>
+                <li class=""><strong class="">视觉上断成两段</strong>，不代表业务上就是两个实例。</li>
+            </ul>
+            <p class="">U-Net 的价值恰好在这里：它不需要把像素问题包装成对象问题，也不需要引入额外实例抽象。模型优化的方向，和业务需要的输出形式之间几乎没有中间层。</p>
         </section>
 
-        <section class="detail-section" id="patterns">
-            <h2 class="">单 Agent、Sub-Agent 与 Agent Team</h2>
-            <p class="">单 Agent 适合主线强、上下文必须连续的任务。只要它能稳定完成，就不要为了架构看起来更先进而拆分。</p>
-            <p class="">Sub-Agent 适合可隔离、可并行、只需要返回结论的任务。主 Agent 负责目标和主线，子 Agent 处理边界清晰的局部任务。</p>
-            <p class="">Agent Team 适合必须共享状态、持续协作的任务。它不是多叫几个 Agent 来讨论，而是一种更复杂的共享上下文系统，需要状态同步、冲突解决和最终裁决。</p>
+        <section class="detail-section" id="pretraining">
+            <h2 class="">预训练优势为什么没有压倒性转化</h2>
+            <p class="">这次实验里更值得注意的是，U-Net 没有使用预训练权重，仍然表现不错。这不意味着预训练没用，而是说明预训练的价值是条件性的。</p>
+            <p class="">预训练通常提供的是开放视觉世界里的通用先验：边缘、纹理、形状、对象语义和复杂背景理解。对于开放场景、多类别、小数据、复杂背景任务，这些先验很有价值。但工业视觉常常是受控场景：相机位置固定，背景模式有限，目标形态有工程约束，主要变化来自遮挡、光照、反光、模糊、污渍和设备状态。</p>
+            <p class="">在这种分布相对窄的任务里，模型未必需要理解整个视觉世界。它只需要在当前数据分布中学会目标区域对应的局部纹理、边界形态和上下文组合。</p>
+            <blockquote class="">预训练权重提供的是更好的起点，但不保证更好的终点。当任务结构足够清晰、数据分布足够集中时，一个结构合适、容量适中的经典模型，也可能很快接近当前任务的有效上限。</blockquote>
         </section>
 
-        <section class="detail-section" id="costs">
-            <h2 class="">多 Agent 的真实成本</h2>
-            <p class="">多 Agent 架构真正困难的地方，不是让多个 Agent 同时工作，而是控制它们之间的副作用。</p>
-            <p class="">信息传递不是无损的。主 Agent 不可能把全部上下文交给每个子 Agent，子 Agent 也不可能把完整推理过程返回。系统必须知道哪些信息可以压缩，哪些信息必须保留。</p>
-            <p class="">协作也会制造噪音。如果边界不清，多个 Agent 会重复讨论、互相否定、输出大量相似观点。状态不一致更危险：一个 Agent 使用旧约束，另一个 Agent 使用新约束，最终系统就会分裂。</p>
+        <section class="detail-section" id="metrics">
+            <h2 class="">不要只看总指标</h2>
+            <p class="">如果要让这个观察更扎实，不能只看 Dice、IoU 或 loss。对于细长区域，总指标很容易掩盖关键错误：少一小段、断一个端点、边界偏一点，面积损失可能不大，但业务影响可能很明显。</p>
+            <p class="">更合理的评估方式，是围绕业务风险补充指标和分场景评估。</p>
+            <ul class="">
+                <li class=""><strong class="">看 boundary F-score、中心线距离、端点误差</strong>，而不是只看整体 IoU。</li>
+                <li class=""><strong class="">单独统计遮挡、小目标、强反光、暗光、模糊</strong>和两段可见目标。</li>
+                <li class=""><strong class="">检查连通区域数量、漏检长度比例</strong>和后处理后可用率。</li>
+                <li class=""><strong class="">按视频、车辆、线路、相机、采集日期划分数据</strong>，避免相邻帧泄漏。</li>
+            </ul>
+            <p class="">如果 U-Net 只是在总体指标上接近，但在极端工况下明显弱于新模型，那就应该继续改模型或补数据。如果它在关键子场景里也足够稳定，那它的工程价值就不能只被当作 baseline。</p>
         </section>
 
-        <section class="detail-section" id="takeaway">
-            <h2 class="">写在最后</h2>
-            <p class="">多 Agent 架构真正要解决的，不是角色分工问题，而是上下文边界问题。</p>
-            <p class="">低水平的多 Agent 设计先想角色：谁规划、谁写作、谁审核。高水平的多 Agent 设计先看上下文：哪些信息必须连续，哪些任务可以隔离，哪些状态必须共享，哪些结果只需要汇总。</p>
-            <p class="">最终，关键判断不是“这个任务需要几个 Agent”，而是“这个任务的上下文应该如何被共享、隔离、压缩、传递和合并”。这才是多 Agent 从玩具走向工程系统的分界线。</p>
+        <section class="detail-section" id="system">
+            <h2 class="">模型选择是一种系统设计</h2>
+            <p class="">工业视觉最终不是模型比赛，而是系统交付。除了精度，还要比较训练复杂度、推理速度、显存占用、部署链路、后处理成本、错误定位难度和长期维护成本。</p>
+            <p class="">模型能力冗余不是免费的。一个能力更广的新模型，如果把输出结构、调参空间、后处理和部署链路都变复杂，却没有在当前任务的关键错误类型上带来明确收益，就未必是更好的工程选择。</p>
+            <p class="">这次观察真正有价值的地方，不是“2015 年的 U-Net 还很能打”，而是：当任务被定义清楚之后，很多看似先进的复杂能力，可能并不是必要条件。</p>
+            <blockquote class="">最好的模型，不一定是最新的模型。最好的模型，是以最小复杂度稳定完成业务闭环的模型。</blockquote>
         </section></div></div>
     </div>
-    <section class="related" aria-labelledby="related-title"><p class="kicker">继续阅读</p><h2 id="related-title">相关<em>文章</em></h2><ol class="journal-list" style="list-style:none"><li><a class="journal-row" href="article-06.html" data-topic="2" data-cursor="阅读">
-        <span class="journal-date">2026.09 · 06</span>
-        <span class="journal-title"><span class="static">AI 不需要恶意，也能越过权限边界</span><span class="marquee" aria-hidden="true"><span>AI 不需要恶意，也能越过权限边界 —&nbsp;</span><span>AI 不需要恶意，也能越过权限边界 —&nbsp;</span><span>AI 不需要恶意，也能越过权限边界 —&nbsp;</span></span></span>
-        <span class="topic" data-topic="2">Agent 自动化</span><span class="journal-time">13 分钟</span></a></li><li><a class="journal-row" href="article-15.html" data-topic="2" data-cursor="阅读">
-        <span class="journal-date">2026.05 · 15</span>
-        <span class="journal-title"><span class="static">我做了一次多 Agent 架构实验：复杂架构并不天然更聪明</span><span class="marquee" aria-hidden="true"><span>我做了一次多 Agent 架构实验：复杂架构并不天然更聪明 —&nbsp;</span><span>我做了一次多 Agent 架构实验：复杂架构并不天然更聪明 —&nbsp;</span><span>我做了一次多 Agent 架构实验：复杂架构并不天然更聪明 —&nbsp;</span></span></span>
-        <span class="topic" data-topic="2">Agent 自动化</span><span class="journal-time">8 分钟</span></a></li><li><a class="journal-row" href="article-20.html" data-topic="2" data-cursor="阅读">
-        <span class="journal-date">2026.05 · 20</span>
-        <span class="journal-title"><span class="static">当真的需要多 Agent：如何拆分、协作与合并结果</span><span class="marquee" aria-hidden="true"><span>当真的需要多 Agent：如何拆分、协作与合并结果 —&nbsp;</span><span>当真的需要多 Agent：如何拆分、协作与合并结果 —&nbsp;</span><span>当真的需要多 Agent：如何拆分、协作与合并结果 —&nbsp;</span></span></span>
-        <span class="topic" data-topic="2">Agent 自动化</span><span class="journal-time">10 分钟</span></a></li></ol></section>
+    <section class="related" aria-labelledby="related-title"><p class="kicker">继续阅读</p><h2 id="related-title">相关<em>文章</em></h2><ol class="journal-list" style="list-style:none"><li><a class="journal-row" href="article-26.html" data-topic="3" data-cursor="阅读">
+        <span class="journal-date">2026.04 · 26</span>
+        <span class="journal-title"><span class="static">视觉算法工程师，别把自己做成 流程操作员</span><span class="marquee" aria-hidden="true"><span>视觉算法工程师，别把自己做成 流程操作员 —&nbsp;</span><span>视觉算法工程师，别把自己做成 流程操作员 —&nbsp;</span><span>视觉算法工程师，别把自己做成 流程操作员 —&nbsp;</span></span></span>
+        <span class="topic" data-topic="3">视觉多模态</span><span class="journal-time">8 分钟</span></a></li><li><a class="journal-row" href="article-31.html" data-topic="3" data-cursor="阅读">
+        <span class="journal-date">2026.04 · 31</span>
+        <span class="journal-title"><span class="static">视觉模型上线后：别让 mAP 变成唯一答案</span><span class="marquee" aria-hidden="true"><span>视觉模型上线后：别让 mAP 变成唯一答案 —&nbsp;</span><span>视觉模型上线后：别让 mAP 变成唯一答案 —&nbsp;</span><span>视觉模型上线后：别让 mAP 变成唯一答案 —&nbsp;</span></span></span>
+        <span class="topic" data-topic="3">视觉多模态</span><span class="journal-time">9 分钟</span></a></li><li><a class="journal-row" href="article-37.html" data-topic="3" data-cursor="阅读">
+        <span class="journal-date">2026.03 · 37</span>
+        <span class="journal-title"><span class="static">从 DETR 到 YOLOv8：Transformer 在目标检测中的演进与工程实践</span><span class="marquee" aria-hidden="true"><span>从 DETR 到 YOLOv8：Transformer 在目标检测中的演进与工程实践 —&nbsp;</span><span>从 DETR 到 YOLOv8：Transformer 在目标检测中的演进与工程实践 —&nbsp;</span><span>从 DETR 到 YOLOv8：Transformer 在目标检测中的演进与工程实践 —&nbsp;</span></span></span>
+        <span class="topic" data-topic="3">视觉多模态</span><span class="journal-time">12 分钟</span></a></li></ol></section>
     <nav class="pager" aria-label="更多文章">
-        <a href="article-18.html" data-cursor="上一篇"><span class="meta">← 上一篇</span><strong>U-Net 没有输给新模型：工业视觉里，先定义任务再选择模型</strong></a>
-        <a href="article-20.html" data-cursor="下一个"><span class="meta">下一篇 →</span><strong>当真的需要多 Agent：如何拆分、协作与合并结果</strong></a>
+        <a href="article-18.html" data-cursor="上一篇"><span class="meta">← 上一篇</span><strong>企业 AI 本地部署，第一步不是买 GPU，而是先洗数据</strong></a>
+        <a href="article-20.html" data-cursor="下一个"><span class="meta">下一篇 →</span><strong>多 Agent 架构的真正问题：不是角色分工，而是上下文边界</strong></a>
     </nav>
 </div>
 </main>

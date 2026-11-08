@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Mac Is Becoming the Ideal Runtime for Personal AI Apps — Eric</title>
-<meta name="description" content="Personal AI is not just about local models. It is about organizing context, model routing, tool execution, persistent state, and user control on one device.">
+<title>The Three Clocks of Robotics — Eric</title>
+<meta name="description" content="Unitree&#x27;s post-IPO repricing is a reminder that hardware, intelligence, and capital move at different speeds, while productivity can only be proven by reliable operation over time.">
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#ede8df">
 <script>(()=>{const r=document.documentElement;let t,m;try{t=localStorage.getItem('ink-theme');m=localStorage.getItem('ink-motion')}catch(e){}t=t||(matchMedia('(prefers-color-scheme: dark)').matches?'night':'day');if(matchMedia('(prefers-reduced-motion: reduce)').matches)m='off';r.dataset.theme=t;r.dataset.motion=m||'on'})()</script>
@@ -43,85 +43,88 @@
 <div class="progress" aria-hidden="true"><i></i></div>
 <div class="page">
     <header class="article-head">
-        <p class="meta"><a href="index.html">← Journal</a> &nbsp;/&nbsp; <span class="topic" data-topic="4">System Architecture</span></p>
-        <h1 data-split>Mac Is Becoming the <em>Ideal Runtime</em> for Personal AI Apps</h1>
-        <p class="lede rise">Personal AI is not just about local models. It is about organizing context, model routing, tool execution, persistent state, and user control on one device.</p>
-        <div class="article-meta meta rise" style="--d:120ms"><span>2026.07.20</span><span>9 min</span><span>No. 09</span></div>
+        <p class="meta"><a href="index.html">← Journal</a> &nbsp;/&nbsp; <span class="topic" data-topic="5">Tech Observation</span></p>
+        <h1 data-split>The <em>Three Clocks</em> of Robotics</h1>
+        <p class="lede rise">Unitree&#x27;s post-IPO repricing is a reminder that hardware, intelligence, and capital move at different speeds, while productivity can only be proven by reliable operation over time.</p>
+        <div class="article-meta meta rise" style="--d:120ms"><span>2026.08.23</span><span>8 min</span><span>No. 09</span></div>
     </header>
     <div class="article-layout">
-        <nav class="toc" aria-label="Contents"><a href="#intro">Introduction</a><a href="#runtime">Personal AI Needs a Runtime, Not Another Chat Entry Point</a><a href="#why-mac">Why Mac</a><a href="#routing">Models Are Resources; Context Is the Asset</a><a href="#workflow">AI Has to Enter the Workflow</a><a href="#control-plane">Mac as a Personal Intelligence Control Plane</a><a href="#governance">Memory and Autonomy Need Boundaries</a><a href="#limits">Mac Is Not a Perfect Answer</a><a href="#takeaway">Final Thoughts</a></nav>
+        <nav class="toc" aria-label="Contents"><a href="#intro">Introduction</a><a href="#scorecard">After the IPO, the Scorecard Changed</a><a href="#reliability">A Reliability Chasm Separates Demos From Production</a><a href="#clocks">Why the Three Clocks Fall Out of Sync</a><a href="#bottleneck">The Engineering Bottleneck Is Changing</a><a href="#metrics">Move From Shipments to Production KPIs</a><a href="#takeaway">Final Thoughts</a></nav>
         <div class="page-surface"><div class="prose"><section class="detail-section" id="intro">
-            <p class="">I recently started designing a macOS tool for learning professional English. The first idea was simple: enter a term, ask a model for an explanation, and save it locally. But the real questions quickly became harder: how does the app know the current course, preserve the source sentence, and decide what stays local or goes to the cloud?</p>
-            <p class="">I thought I was building an AI dictionary. What I actually needed was a learning context system. That changed how I see the Mac: not merely as a machine that can run local models, but as a potential runtime for personal AI applications.</p>
+            <p class="">In August 2026, Unitree's surge and pullback after its listing pulled humanoid robotics out of demo videos and into financial statements and valuation models. The offer price, first-day peak, and subsequent decline were dramatic, but price action is not a referendum on the future of robotics.</p>
+            <p class="">The more important change is the scorecard. The industry used to answer whether a robot could do something. A public company must also answer whether it can do it reliably, deploy it at scale, and earn sustainable returns. That shift exposes the different speeds of hardware, intelligence, and capital.</p>
+            <p class=""><em class="">Data and public disclosures were checked through the market close on August 21, 2026. This article discusses industry and engineering issues and is not investment advice.</em></p>
         </section>
 
-        <section class="detail-section" id="runtime">
-            <h2 class="">Personal AI Needs a Runtime, Not Another Chat Entry Point</h2>
-            <p class="">Most AI products still center on a chat window. They know the current prompt, uploaded files, and a small amount of history, but not which paper the user is reading, which course a term belongs to, or how today's question relates to a decision made months ago.</p>
-            <p class="">Models are becoming more general while valuable personal context remains scattered across files, repositories, PDFs, notes, calendars, and clipboards. The next step is not only a stronger model, but an environment that can sustain models, context, tools, state, and permissions together.</p>
-            <p class="">A mature personal AI runtime needs at least model routing, context management, tool execution, persistent state, and permission control. Without any one of them, it easily collapses back into a chatbot with more features.</p>
+        <section class="detail-section" id="scorecard">
+            <h2 class="">After the IPO, the Scorecard Changed</h2>
+            <p class="">Unitree has already shown that it is more than a concept company. Revenue reached about RMB 1.699 billion in 2025, and shipments exceeded 5,500 fully humanoid robots. High-dynamic robots can now be manufactured repeatedly and sold at meaningful scale.</p>
+            <p class="">Selling a robot and putting one to work are different achievements. Disclosures show that research and education still dominated humanoid revenue in the first three quarters of 2025, while industry applications remained a small share and included many enterprise-guidance deployments. Research platforms matter to an ecosystem, but they do not validate a production asset.</p>
+            <p class="">A listing forces the technology narrative to accept another set of constraints. Where orders come from, whether customers buy again, how R&amp;D converts into capability, and whether field deployments improve margins and cash flow now recur every quarter. Technology is not being dismissed; it must explain how it becomes productivity.</p>
         </section>
 
-        <section class="detail-section" id="why-mac">
-            <h2 class="">Why Mac</h2>
-            <p class="">Browsers distribute services well but stay distant from the local system. Phones are deeply personal but poorly suited to complex knowledge work. The cloud offers immense compute but often requires more context to be uploaded.</p>
-            <p class="">Mac sits between those environments. It is both a personal device and a full production environment; it can use cloud models and local models, connect files, apps, and command-line tools, and constrain risk through system permissions and human confirmation.</p>
-            <p class="">The advantage is not that Mac wins every individual benchmark. It is that data, context, models, tools, and control can form a closed loop on one personal device.</p>
+        <section class="detail-section" id="reliability">
+            <h2 class="">A Reliability Chasm Separates Demos From Production</h2>
+            <p class="">A demo asks whether a capability exists. A production system asks whether it persists. If a task has 20 critical steps and each succeeds 99% of the time, a deliberately simplified independent model gives the full task only an 81.8% chance of first-pass success. At 50 steps, it falls to about 60.5%.</p>
+            <p class="">Real systems can retry, inspect state, and replan, but the calculation exposes the core issue: long-horizon reliability cannot be replaced by the success rate of one polished action. A factory cares how often a hundred tasks fail, whether a person must intervene, whether small placement shifts break the process, and how many hours actually produce useful output.</p>
+            <p class="">A language model can regenerate a bad answer, and a software agent can roll back a failed tool call. A robot's bad action can damage a part, stop a line, or create a safety hazard. Robotics brings the unresolved reliability problem of long agent chains into a physical world where undo is limited.</p>
         </section>
 
-        <section class="detail-section" id="routing">
-            <h2 class="">Models Are Resources; Context Is the Asset</h2>
-            <p class="">Personal AI should not send every task to one model. Rules or small models can classify and deduplicate input, stronger cloud models can explain specialized concepts, and private indexing and filtering can stay local.</p>
-            <p class="">Local-first does not mean local-only. The important capability is routing work according to privacy, cost, latency, and task complexity.</p>
-            <p class="">Models will change, but years of files, notes, projects, courses, and decisions remain valuable. Complete data should stay local, while the context layer selects the minimum necessary information for the right model and writes the result back into the local system.</p>
+        <section class="detail-section" id="clocks">
+            <h2 class="">Why the Three Clocks Fall Out of Sync</h2>
+            <p class="">Embodied AI today can be understood as three clocks running in parallel:</p>
+            <ul class="">
+                <li class=""><strong class="">The hardware clock is moving quickly.</strong> Actuators, gearboxes, sensors, control algorithms, and China's supply chain keep improving, pushing motion, cost, and manufacturability across important thresholds.</li>
+                <li class=""><strong class="">The intelligence clock is slower.</strong> Perception, planning, manipulation, recovery, and cross-scene generalization remain constrained by physical data and long-tail environments. A mature body is not the same as an autonomous brain.</li>
+                <li class=""><strong class="">The capital clock is usually fastest.</strong> Markets must price the future early, so they trade assumptions about the eventual market, share, and profit pool of general-purpose embodied AI, not only the robots sold today.</li>
+            </ul>
+            <p class="">The clocks being out of sync does not mean the industry direction is wrong. A sound and enormous technology trend can still be priced too early, while a price correction does not prove the technology has no future. The question is whether technical and commercial delivery can gradually catch up with expectations.</p>
         </section>
 
-        <section class="detail-section" id="workflow">
-            <h2 class="">AI Has to Enter the Workflow</h2>
-            <p class="">Chatbots return text, but real tasks need a loop: understand, decide, act, record, and update state.</p>
-            <p class="">For an English learning tool, the natural workflow is not opening a chat. It is selecting a term in a PDF, pressing a shortcut, retrieving course context, classifying locally, calling a cloud model only when needed, then confirming the explanation and adding it to a review plan.</p>
-            <p class="">The user sees one action, while the system performs context extraction, model routing, structured generation, and data persistence. The chat box looks more like a universal AI debugging interface than the final shape of personal AI software.</p>
+        <section class="detail-section" id="bottleneck">
+            <h2 class="">The Engineering Bottleneck Is Changing</h2>
+            <p class="">Robot foundation models are advancing from isolated actions toward longer tasks, self-correction, and transfer across embodiments, yet reliability still varies sharply for complex manipulation. The deeper constraint is that robotics has no ready-made physical-world equivalent of Common Crawl.</p>
+            <p class="">High-quality robot data requires real hardware, sensors, staged environments, teleoperators, and time, and it is naturally tied to an embodiment and setting. Lighting, packaging, friction, occlusion, and unexpected human movement all create long tails. A model must decide what to do and then verify after every action that the world still matches its assumptions.</p>
+            <p class="">Even if robotics reaches a ChatGPT moment, its adoption curve will not mirror software. Every new site needs additional hardware, shipping, installation, maintenance, and support. Software intelligence can be copied across servers; physical intelligence must be replicated with a body and field engineering.</p>
+            <p class="">Humanoids also compete with mature automation. When a fixed task can be structured cheaply, a conventional line is usually faster, cheaper, and more reliable. Humanoids must prove that switching tasks costs less, sites need fewer modifications, adaptation is faster, and the total economics beat labor or conventional automation.</p>
         </section>
 
-        <section class="detail-section" id="control-plane">
-            <h2 class="">Mac as a Personal Intelligence Control Plane</h2>
-            <p class="">A mature architecture can be divided into five layers: the user's work environment, a local context layer, a model routing layer, a tool and action layer, and a control and audit layer.</p>
-            <p class="">Local data stores long-term assets, the context layer decides what models can see, routing selects the right intelligence, tools move work forward, and control manages permissions, confirmation, logs, and undo. Models can change while data and workflows remain.</p>
-            <p class="">That is the deeper value of the Mac. It is not just a model runner; it can become a control plane for personal intelligence.</p>
-        </section>
-
-        <section class="detail-section" id="governance">
-            <h2 class="">Memory and Autonomy Need Boundaries</h2>
-            <p class="">Knowing the user better should not mean collecting without limits. Low-quality and outdated memory pollutes retrieval, while sensitive personal data requires clear visibility into what is indexed, what leaves the device, and how memory can be corrected, deleted, or exported.</p>
-            <p class="">When AI can change files, calendars, and real-world state, autonomy should increase with risk and trust: advice first, then drafts, then confirmed execution, and only finally bounded automation.</p>
-            <p class="">Beyond entry, context, and execution rights, personal AI needs control. A mature system should be observable, constrained, correctable, and reversible.</p>
-        </section>
-
-        <section class="detail-section" id="limits">
-            <h2 class="">Mac Is Not a Perfect Answer</h2>
-            <p class="">Mac cannot replace a data center, and local memory limits model size. Apple's ecosystem can also create device lock-in and data portability concerns.</p>
-            <p class="">The goal is therefore not to run everything locally. Keep suitable work on-device, use stronger cloud reasoning when needed, trim sensitive context locally, require confirmation for risky actions, and preserve standard exports and replaceable model interfaces.</p>
+        <section class="detail-section" id="metrics">
+            <h2 class="">Move From Shipments to Production KPIs</h2>
+            <p class="">To move from demos to productivity, the industry needs to replace speed, degrees of freedom, parameter counts, and shipments with harder operating metrics:</p>
+            <ul class="">
+                <li class=""><strong class="">End-to-end task success:</strong> the probability that a complete production task finishes on the first pass, not the best result of one action.</li>
+                <li class=""><strong class="">Human intervention rate:</strong> how often a person must step in per 100 hours or 1,000 tasks.</li>
+                <li class=""><strong class="">Autonomous recovery rate:</strong> how many failed grasps, drops, or blocked paths the system resolves by itself.</li>
+                <li class=""><strong class="">MTBF and availability:</strong> how long the system runs between failures and how much time maintenance and downtime consume.</li>
+                <li class=""><strong class="">Effective work hours:</strong> the hours of measurable output produced within total powered-on time.</li>
+                <li class=""><strong class="">Task-switching cost and TCO:</strong> the data, tuning, engineering effort, deployment, maintenance, and intervention required before the economics pay back.</li>
+                <li class=""><strong class="">Repeat purchase and scaled deployment:</strong> whether a customer that trials one unit buys more for the same site or additional sites.</li>
+            </ul>
+            <p class="">The metric most worth publishing over time may be cumulative effective work hours without intervention. A shipment proves that a transaction happened. Hours of useful output at a customer site are much closer to real activity and productive capacity.</p>
         </section>
 
         <section class="detail-section" id="takeaway">
             <h2 class="">Final Thoughts</h2>
-            <p class="">The endpoint of personal AI is not a smaller ChatGPT inside a computer. It is a computer that increasingly understands context, routes intelligence, and participates in work.</p>
-            <blockquote class=""><strong class="">The cloud will still provide the strongest intelligence, but Mac can become the personal control plane that manages it.</strong></blockquote>
+            <p class="">Public demos optimize for the technical ceiling; factories depend on the engineering floor. A backflip lasts seconds in a cleared environment and can be recorded again. An industrial job faces endless variation in parts, floors, lighting, networks, batteries, and upstream processes.</p>
+            <p class="">Unitree's clearest strengths today are embodiment, motion control, supply chain execution, and scaled manufacturing. Its next test is whether deployed bodies can become real-world data, continuous intelligence gains, and customer productivity.</p>
+            <p class="">Capital markets can trade the day after tomorrow, founders must build tomorrow, and engineers still have to make today's failure rate, intervention rate, and effective work hours real one metric at a time.</p>
+            <blockquote class=""><strong class="">The real inflection point is not another spectacular move. It is when the hardware, intelligence, and capital clocks begin to run together again.</strong></blockquote>
         </section></div></div>
     </div>
-    <section class="related" aria-labelledby="related-title"><p class="kicker">Continue reading</p><h2 id="related-title">Related <em>writing</em></h2><ol class="journal-list" style="list-style:none"><li><a class="journal-row" href="article-04.html" data-topic="4" data-cursor="Read">
-        <span class="journal-date">2026.10 · 04</span>
-        <span class="journal-title"><span class="static">When Data Centers Protect Themselves: A 3.8 GW Load Transfer</span><span class="marquee" aria-hidden="true"><span>When Data Centers Protect Themselves: A 3.8 GW Load Transfer —&nbsp;</span><span>When Data Centers Protect Themselves: A 3.8 GW Load Transfer —&nbsp;</span><span>When Data Centers Protect Themselves: A 3.8 GW Load Transfer —&nbsp;</span></span></span>
-        <span class="topic" data-topic="4">System Architecture</span><span class="journal-time">16 min</span></a></li><li><a class="journal-row" href="article-05.html" data-topic="4" data-cursor="Read">
-        <span class="journal-date">2026.10 · 05</span>
-        <span class="journal-title"><span class="static">Can You Search Inside Encrypted Data?</span><span class="marquee" aria-hidden="true"><span>Can You Search Inside Encrypted Data? —&nbsp;</span><span>Can You Search Inside Encrypted Data? —&nbsp;</span><span>Can You Search Inside Encrypted Data? —&nbsp;</span></span></span>
-        <span class="topic" data-topic="4">System Architecture</span><span class="journal-time">33 min</span></a></li><li><a class="journal-row" href="article-23.html" data-topic="4" data-cursor="Read">
-        <span class="journal-date">2026.04 · 23</span>
-        <span class="journal-title"><span class="static">How Would We Design Systems Without Starting From a Database?</span><span class="marquee" aria-hidden="true"><span>How Would We Design Systems Without Starting From a Database? —&nbsp;</span><span>How Would We Design Systems Without Starting From a Database? —&nbsp;</span><span>How Would We Design Systems Without Starting From a Database? —&nbsp;</span></span></span>
-        <span class="topic" data-topic="4">System Architecture</span><span class="journal-time">9 min</span></a></li></ol></section>
+    <section class="related" aria-labelledby="related-title"><p class="kicker">Continue reading</p><h2 id="related-title">Related <em>writing</em></h2><ol class="journal-list" style="list-style:none"><li><a class="journal-row" href="article-08.html" data-topic="5" data-cursor="Read">
+        <span class="journal-date">2026.09 · 08</span>
+        <span class="journal-title"><span class="static">Who Gets to Train on Whom?</span><span class="marquee" aria-hidden="true"><span>Who Gets to Train on Whom? —&nbsp;</span><span>Who Gets to Train on Whom? —&nbsp;</span><span>Who Gets to Train on Whom? —&nbsp;</span></span></span>
+        <span class="topic" data-topic="5">Tech Observation</span><span class="journal-time">7 min</span></a></li><li><a class="journal-row" href="article-11.html" data-topic="5" data-cursor="Read">
+        <span class="journal-date">2026.05 · 11</span>
+        <span class="journal-title"><span class="static">When a Technology Roadmap Becomes a Law</span><span class="marquee" aria-hidden="true"><span>When a Technology Roadmap Becomes a Law —&nbsp;</span><span>When a Technology Roadmap Becomes a Law —&nbsp;</span><span>When a Technology Roadmap Becomes a Law —&nbsp;</span></span></span>
+        <span class="topic" data-topic="5">Tech Observation</span><span class="journal-time">6 min</span></a></li><li><a class="journal-row" href="article-12.html" data-topic="5" data-cursor="Read">
+        <span class="journal-date">2026.05 · 12</span>
+        <span class="journal-title"><span class="static">The Real Test for Embodied AI in China Is Not Acrobatics, but a Commercial Loop</span><span class="marquee" aria-hidden="true"><span>The Real Test for Embodied AI in China Is Not Acrobatics, but a Commercial Loop —&nbsp;</span><span>The Real Test for Embodied AI in China Is Not Acrobatics, but a Commercial Loop —&nbsp;</span><span>The Real Test for Embodied AI in China Is Not Acrobatics, but a Commercial Loop —&nbsp;</span></span></span>
+        <span class="topic" data-topic="5">Tech Observation</span><span class="journal-time">8 min</span></a></li></ol></section>
     <nav class="pager" aria-label="More articles">
-        <a href="article-08.html" data-cursor="Prev"><span class="meta">← Previous</span><strong>The Three Clocks of Robotics</strong></a>
-        <a href="article-10.html" data-cursor="Next"><span class="meta">Next →</span><strong>When a Technology Roadmap Becomes a Law</strong></a>
+        <a href="article-08.html" data-cursor="Prev"><span class="meta">← Previous</span><strong>Who Gets to Train on Whom?</strong></a>
+        <a href="article-10.html" data-cursor="Next"><span class="meta">Next →</span><strong>Mac Is Becoming the Ideal Runtime for Personal AI Apps</strong></a>
     </nav>
 </div>
 </main>

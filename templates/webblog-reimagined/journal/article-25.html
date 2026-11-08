@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Vision Algorithm Engineers: Do Not Become Process Operators — Eric</title>
-<meta name="description" content="Vision Algorithm Engineers: Do Not Become Process Operators">
+<title>Technical Debt Is Not Code Smell; It Is How an Organization Prices the Future — Eric</title>
+<meta name="description" content="Technical Debt Is Not Code Smell; It Is How an Organization Prices the Future">
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#ede8df">
 <script>(()=>{const r=document.documentElement;let t,m;try{t=localStorage.getItem('ink-theme');m=localStorage.getItem('ink-motion')}catch(e){}t=t||(matchMedia('(prefers-color-scheme: dark)').matches?'night':'day');if(matchMedia('(prefers-reduced-motion: reduce)').matches)m='off';r.dataset.theme=t;r.dataset.motion=m||'on'})()</script>
@@ -43,64 +43,75 @@
 <div class="progress" aria-hidden="true"><i></i></div>
 <div class="page">
     <header class="article-head">
-        <p class="meta"><a href="index.html">← Journal</a> &nbsp;/&nbsp; <span class="topic" data-topic="3">Vision & Multimodal</span></p>
-        <h1 data-split>Vision Algorithm Engineers: Do Not Become <em>Process Operators</em></h1>
+        <p class="meta"><a href="index.html">← Journal</a> &nbsp;/&nbsp; <span class="topic" data-topic="4">System Architecture</span></p>
+        <h1 data-split>Technical Debt Is Not Code Smell; It Is <em>How an Organization Prices the Future</em></h1>
         <p class="lede rise"></p>
-        <div class="article-meta meta rise" style="--d:120ms"><span>2026.04.28</span><span>8 min</span><span>No. 25</span></div>
+        <div class="article-meta meta rise" style="--d:120ms"><span>2026.04.29</span><span>10 min</span><span>No. 25</span></div>
     </header>
     <div class="article-layout">
-        <nav class="toc" aria-label="Contents"><a href="#operator">The role is being compressed into process work</a><a href="#modeling">Define the problem before choosing a model</a><a href="#data-loop">More data is not the answer; closed loops are</a><a href="#diagnosis">Starting training is not model diagnosis</a><a href="#delivery">Deployment is not conversion; it is trusted systems</a><a href="#assets">Turn capability into engineering assets</a></nav>
-        <div class="page-surface"><div class="prose"><section class="detail-section" id="operator">
-            <h2 class="">The role is being compressed into process work</h2>
-            <p class="">Many vision algorithm roles still carry the title of algorithm engineer, but the daily work increasingly looks like process operation: collect data, chase labels, edit configs, run training, watch metrics, convert models, and deploy endpoints. If one round fails, add more data, retrain, and deploy again. Over time, engineering value is compressed into data labeling, training launch, and model deployment.</p>
-            <p class="">These tasks are not unimportant. Without data, training, and deployment, a model has no business value. The problem is that if an engineer only stays at the level of these actions, the more mature open models, automated training platforms, and deployment tools become, the higher the replacement risk becomes.</p>
-            <p class="">The real value of a vision algorithm engineer is not making a model run. It is turning a visual problem into a system plan that can be verified, iterated, and delivered.</p>
+        <nav class="toc" aria-label="Contents"><a href="#engineering">Technical debt first appears as an engineering problem</a><a href="#permission">The hard part is whether the organization lets you fix it</a><a href="#arbitrage">Technical debt is a form of time arbitrage</a><a href="#game">Why technical debt is closer to organizational game theory</a><a href="#behavior">Debt changes team behavior</a><a href="#ai-debt">In AI applications, debt becomes more hidden</a><a href="#takeaway">Final Thoughts</a></nav>
+        <div class="page-surface"><div class="prose"><section class="detail-section" id="engineering">
+            <h2 class="">Technical debt first appears as an engineering problem</h2>
+            <p class="">Technical debt first has very concrete engineering forms. In a backend system, the same permission checks may be scattered across many APIs, the same data transformation duplicated across services, and the same field reused with different meanings in different contexts. In a frontend system, page logic, API calls, cache state, interactions, and error handling may become tangled until components are hard to reuse, test, or understand.</p>
+            <p class="">AI applications create another class of debt: model call chains without observability, prompt versions without management, unclear vector index strategies, missing evaluation sets, and online quality that depends on human feeling. A demo may work early on, but in real business scenarios the system becomes unstable, hard to reproduce, hard to optimize, and hard to ship safely.</p>
+            <p class="">These are not engineering complaints. They are accumulated system complexity. Technical debt raises modification cost, reduces understandability, and expands regression risk. A system becomes dangerous not only when it has many bugs, but when the team no longer dares to change it.</p>
         </section>
 
-        <section class="detail-section" id="modeling">
-            <h2 class="">Define the problem before choosing a model</h2>
-            <p class="">Many projects ask the wrong question from the start. A business team says it wants to detect a target, and the engineer immediately chooses YOLO, prepares data, and trains a model. But the real need may not be simple object detection. It may combine detection, classification, tracking, region rules, temporal analysis, and business logic.</p>
-            <p class="">For example, judging whether a worker violated a rule is not only detecting a person and a helmet. It may involve the relationship between a person and equipment, action duration, false-alarm tolerance, and alert strategy. A low-level executor asks “which model should we use”; a real vision algorithm engineer first asks “how should this problem be modeled”.</p>
+        <section class="detail-section" id="permission">
+            <h2 class="">The hard part is whether the organization lets you fix it</h2>
+            <p class="">Much technical debt does not exist because engineers do not know a better approach. They often know an API should not keep accumulating parameters, a module should be split, tests and monitoring are missing, and a temporary workaround will eventually cause trouble.</p>
+            <p class="">But knowing is not the same as being able to act. Engineering plans must fit business cadence, development schedules must follow release plans, and technical governance must compete for resources. A better solution can be technically feasible while organizationally infeasible.</p>
+            <p class="">The core difficulty is that the cost of technical debt is usually long-term, distributed, and delayed, while repayment cost is short-term, concentrated, and visible. Everyone can see a feature delayed by two weeks; it is much harder to prove that a refactor avoided three months of future maintenance cost.</p>
         </section>
 
-        <section class="detail-section" id="data-loop">
-            <h2 class="">More data is not the answer; closed loops are</h2>
-            <p class="">When model performance is poor, many teams instinctively label more data. But data is not better because there is more of it. It is better when it targets the failure. Where exactly is the model wrong? Small-object misses, occlusion false positives, class confusion, inconsistent labels, train-online distribution mismatch, or an unreliable validation set?</p>
-            <p class="">If these questions cannot be answered, adding data is just manual labor. The engineer should bring online failure samples back, analyze error types, add targeted data, and verify improvement through regression tests. Data should not only be training material. It should be fuel for continuous system evolution.</p>
+        <section class="detail-section" id="arbitrage">
+            <h2 class="">Technical debt is a form of time arbitrage</h2>
+            <p class="">Technical debt is a kind of organizational time arbitrage: the team buys current delivery speed with future maintenance cost.</p>
+            <p class="">This arbitrage can be reasonable in some stages. When a project is still validating a business model, a feature has no proven users, or an AI application is moving from demo to MVP, perfect architecture may be wasteful. Premature abstraction and overengineering can create another kind of debt.</p>
+            <p class="">The real question is not whether the organization takes on debt, but whether it knows the debt exists, understands its size, and defines repayment conditions. Many temporary solutions are eventually treated as “it runs, so keep it,” turning patches into architecture and detours into main roads.</p>
         </section>
 
-        <section class="detail-section" id="diagnosis">
-            <h2 class="">Starting training is not model diagnosis</h2>
-            <p class="">Running a training job is not hard anymore. The hard part is knowing why the model failed. Changing models when mAP is low, tuning the learning rate when loss stalls, or adding data when online performance is bad are all too rough.</p>
-            <p class="">A qualified vision algorithm engineer should judge whether a model is underfitting or overfitting, whether the split is valid, whether classes are long-tailed, whether input resolution fits object scale, whether NMS hurts dense targets, and whether online false positives come from model capability, data distribution, or business-rule design. Running a training script is not the same as training a model; reading logs is not the same as diagnosing a model.</p>
+        <section class="detail-section" id="game">
+            <h2 class="">Why technical debt is closer to organizational game theory</h2>
+            <p class="">Technical debt is hard because it involves different goals across roles. Business wants market response, product wants features shipped, engineering wants maintainability, QA wants controlled quality, platform teams want stable deployment, and management wants measurable cost, schedule, and results.</p>
+            <p class="">All of these goals are reasonable, but they are not naturally aligned. So technical debt is no longer only a question of “how should we design this?” It becomes “who pays for long-term quality?”</p>
+            <p class="">The costs and benefits of long-term quality are unevenly distributed inside an organization. The people who create debt may not repay it. The people who compress schedules may not debug production at midnight. The team that enjoys short-term delivery gains may not maintain the system later. When benefits and costs are mismatched, debt grows naturally.</p>
         </section>
 
-        <section class="detail-section" id="delivery">
-            <h2 class="">Deployment is not conversion; it is trusted systems</h2>
-            <p class="">Deployment is not converting .pt to .onnx, nor is it done after putting a model into TensorRT. Real vision systems face camera angles, lighting changes, frame-rate variance, device compute, network latency, false-alarm tolerance, human review, and online monitoring.</p>
-            <p class="">A deployer asks whether the model can run. A vision algorithm engineer asks whether the system can be trusted by the business for a long time. Many projects fail not because the model cannot recognize anything, but because the system is unstable, unreliable, or hard to explain. The fix is not just swapping models. It is temporal smoothing, confidence strategy, failure-sample feedback, monitoring, rule-layer design, and continuous iteration.</p>
+        <section class="detail-section" id="behavior">
+            <h2 class="">Debt changes team behavior</h2>
+            <p class="">Technical debt affects not only code, but also team behavior. After debt reaches a certain level, engineers avoid core modules, product managers assume some requests are technically painful, QA relies on manual regression, new hires depend on oral explanations, and incidents are investigated through experience rather than systematic observability.</p>
+            <p class="">The more complex a system becomes, the harder it is to explain. The harder it is to explain, the harder it is to win governance resources. Without governance resources, the system keeps getting more complex. The team becomes busy and tired while its real engineering capability stops growing.</p>
+            <p class="">Technical debt eventually shapes engineering culture: not clarity, but workaround; not evolution, but avoiding incidents; not understanding the system, but surviving inside it.</p>
         </section>
 
-        <section class="detail-section" id="assets">
-            <h2 class="">Turn capability into engineering assets</h2>
-            <p class="">Today it is YOLO, tomorrow RT-DETR, later SAM or multimodal models. Models change, frameworks change, and tools become automated. What remains is capability in problem definition, data loops, model diagnosis, system design, and engineering delivery.</p>
-            <p class="">Avoiding the process-operator trap does not mean rejecting labeling, training, or deployment. It means not only doing those things. During labeling, think about data distribution and failure modes. During training, think about experiment design and model diagnosis. During deployment, think about reliability and business feedback loops.</p>
-            <p class="">The scarce engineer ahead is not someone who can launch a training script. It is someone who can clarify the visual problem, embed model capability into a system, and turn online feedback into a continuous improvement mechanism. The destination of vision algorithm engineering is not getting a model to run. It is keeping a vision system effective in the real world.</p>
+        <section class="detail-section" id="ai-debt">
+            <h2 class="">In AI applications, debt becomes more hidden</h2>
+            <p class="">Traditional software debt usually settles into code, architecture, databases, and processes. In AI applications, it also settles into data, models, prompts, evaluation systems, toolchains, and human-AI workflows.</p>
+            <p class="">A RAG system may appear to answer questions while document chunking is messy, embedding model versions are unclear, retrieval and reranking lack metrics, knowledge updates have no workflow, and failures are not captured. In the short term, it is a demo. In the long term, it is an unverifiable, unoptimizable, and unexplainable black box.</p>
+            <p class="">AI systems can easily create the illusion that if the output looks good, the engineering foundation can wait. The opposite is true. The more uncertain an AI application is, the more it needs engineering governance; the less predictable model behavior is, the more it needs evaluation, observability, rollback, and version management.</p>
+        </section>
+
+        <section class="detail-section" id="takeaway">
+            <h2 class="">Final Thoughts</h2>
+            <p class="">Technical debt appears as an engineering problem, is rooted in organizational games, and requires both engineering capability and organizational mechanisms to govern. More precisely, technical debt is how an organization prices the future.</p>
+            <p class="">When an organization chooses to ship quickly, it buys current speed with future maintenance cost. When it skips testing, it buys current progress with future risk. When it postpones refactoring, it buys current resources with future complexity. These choices are not always wrong, but they must be seen, recorded, managed, and repaid.</p>
+            <p class="">Technical debt is not the failure of one piece of code. It is the sediment of repeated organizational decisions. Code is only the carrier, architecture is only the shape, and the real size of the debt is determined by how the organization treats time, cost, risk, and the future.</p>
         </section></div></div>
     </div>
-    <section class="related" aria-labelledby="related-title"><p class="kicker">Continue reading</p><h2 id="related-title">Related <em>writing</em></h2><ol class="journal-list" style="list-style:none"><li><a class="journal-row" href="article-18.html" data-topic="3" data-cursor="Read">
-        <span class="journal-date">2026.05 · 18</span>
-        <span class="journal-title"><span class="static">U-Net Did Not Lose to a Newer Model: In Industrial Vision, Define the Task Before Choosing the Model</span><span class="marquee" aria-hidden="true"><span>U-Net Did Not Lose to a Newer Model: In Industrial Vision, Define the Task Before Choosing the Model —&nbsp;</span><span>U-Net Did Not Lose to a Newer Model: In Industrial Vision, Define the Task Before Choosing the Model —&nbsp;</span><span>U-Net Did Not Lose to a Newer Model: In Industrial Vision, Define the Task Before Choosing the Model —&nbsp;</span></span></span>
-        <span class="topic" data-topic="3">Vision &amp; Multimodal</span><span class="journal-time">8 min</span></a></li><li><a class="journal-row" href="article-30.html" data-topic="3" data-cursor="Read">
-        <span class="journal-date">2026.04 · 30</span>
-        <span class="journal-title"><span class="static">After a Vision Model Ships: Do Not Let mAP Become the Only Answer</span><span class="marquee" aria-hidden="true"><span>After a Vision Model Ships: Do Not Let mAP Become the Only Answer —&nbsp;</span><span>After a Vision Model Ships: Do Not Let mAP Become the Only Answer —&nbsp;</span><span>After a Vision Model Ships: Do Not Let mAP Become the Only Answer —&nbsp;</span></span></span>
-        <span class="topic" data-topic="3">Vision &amp; Multimodal</span><span class="journal-time">9 min</span></a></li><li><a class="journal-row" href="article-36.html" data-topic="3" data-cursor="Read">
-        <span class="journal-date">2026.03 · 36</span>
-        <span class="journal-title"><span class="static">From DETR to YOLOv8: Transformer Evolution in Object Detection</span><span class="marquee" aria-hidden="true"><span>From DETR to YOLOv8: Transformer Evolution in Object Detection —&nbsp;</span><span>From DETR to YOLOv8: Transformer Evolution in Object Detection —&nbsp;</span><span>From DETR to YOLOv8: Transformer Evolution in Object Detection —&nbsp;</span></span></span>
-        <span class="topic" data-topic="3">Vision &amp; Multimodal</span><span class="journal-time">12 min</span></a></li></ol></section>
+    <section class="related" aria-labelledby="related-title"><p class="kicker">Continue reading</p><h2 id="related-title">Related <em>writing</em></h2><ol class="journal-list" style="list-style:none"><li><a class="journal-row" href="article-05.html" data-topic="4" data-cursor="Read">
+        <span class="journal-date">2026.10 · 05</span>
+        <span class="journal-title"><span class="static">When Data Centers Protect Themselves: A 3.8 GW Load Transfer</span><span class="marquee" aria-hidden="true"><span>When Data Centers Protect Themselves: A 3.8 GW Load Transfer —&nbsp;</span><span>When Data Centers Protect Themselves: A 3.8 GW Load Transfer —&nbsp;</span><span>When Data Centers Protect Themselves: A 3.8 GW Load Transfer —&nbsp;</span></span></span>
+        <span class="topic" data-topic="4">System Architecture</span><span class="journal-time">16 min</span></a></li><li><a class="journal-row" href="article-06.html" data-topic="4" data-cursor="Read">
+        <span class="journal-date">2026.10 · 06</span>
+        <span class="journal-title"><span class="static">Can You Search Inside Encrypted Data?</span><span class="marquee" aria-hidden="true"><span>Can You Search Inside Encrypted Data? —&nbsp;</span><span>Can You Search Inside Encrypted Data? —&nbsp;</span><span>Can You Search Inside Encrypted Data? —&nbsp;</span></span></span>
+        <span class="topic" data-topic="4">System Architecture</span><span class="journal-time">33 min</span></a></li><li><a class="journal-row" href="article-10.html" data-topic="4" data-cursor="Read">
+        <span class="journal-date">2026.07 · 10</span>
+        <span class="journal-title"><span class="static">Mac Is Becoming the Ideal Runtime for Personal AI Apps</span><span class="marquee" aria-hidden="true"><span>Mac Is Becoming the Ideal Runtime for Personal AI Apps —&nbsp;</span><span>Mac Is Becoming the Ideal Runtime for Personal AI Apps —&nbsp;</span><span>Mac Is Becoming the Ideal Runtime for Personal AI Apps —&nbsp;</span></span></span>
+        <span class="topic" data-topic="4">System Architecture</span><span class="journal-time">9 min</span></a></li></ol></section>
     <nav class="pager" aria-label="More articles">
-        <a href="article-24.html" data-cursor="Prev"><span class="meta">← Previous</span><strong>Technical Debt Is Not Code Smell; It Is How an Organization Prices the Future</strong></a>
-        <a href="article-26.html" data-cursor="Next"><span class="meta">Next →</span><strong>Stop Building Business Systems as CRUD Wrappers</strong></a>
+        <a href="article-24.html" data-cursor="Prev"><span class="meta">← Previous</span><strong>How Would We Design Systems Without Starting From a Database?</strong></a>
+        <a href="article-26.html" data-cursor="Next"><span class="meta">Next →</span><strong>Vision Algorithm Engineers: Do Not Become Process Operators</strong></a>
     </nav>
 </div>
 </main>

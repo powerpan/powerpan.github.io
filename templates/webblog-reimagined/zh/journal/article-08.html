@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>机器人的三个时钟 — Eric</title>
-<meta name="description" content="宇树上市后的价格重估提醒我们：硬件、智能与资本沿着不同速度前进，生产力只能由长期可靠运行来证明。">
+<title>谁有权训练谁？ — Eric</title>
+<meta name="description" content="模型公司争着划定谁能训练谁，用户的问题却已经沿着调用链流到了别处。这场争议里，我更关心谁替用户作了决定。">
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#ede8df">
 <script>(()=>{const r=document.documentElement;let t,m;try{t=localStorage.getItem('ink-theme');m=localStorage.getItem('ink-motion')}catch(e){}t=t||(matchMedia('(prefers-color-scheme: dark)').matches?'night':'day');if(matchMedia('(prefers-reduced-motion: reduce)').matches)m='off';r.dataset.theme=t;r.dataset.motion=m||'on'})()</script>
@@ -44,87 +44,79 @@
 <div class="page">
     <header class="article-head">
         <p class="meta"><a href="index.html">← 文章</a> &nbsp;/&nbsp; <span class="topic" data-topic="5">技术观察</span></p>
-        <h1 data-split>机器人的<em>三个时钟</em></h1>
-        <p class="lede rise">宇树上市后的价格重估提醒我们：硬件、智能与资本沿着不同速度前进，生产力只能由长期可靠运行来证明。</p>
-        <div class="article-meta meta rise" style="--d:120ms"><span>2026.08.23</span><span>8 分钟</span><span>No. 08</span></div>
+        <h1 data-split>谁有权<em>训练谁</em>？</h1>
+        <p class="lede rise">模型公司争着划定谁能训练谁，用户的问题却已经沿着调用链流到了别处。这场争议里，我更关心谁替用户作了决定。</p>
+        <div class="article-meta meta rise" style="--d:120ms"><span>2026.09.17</span><span>7 分钟</span><span>No. 08</span></div>
     </header>
     <div class="article-layout">
-        <nav class="toc" aria-label="目录"><a href="#intro">引言</a><a href="#scorecard">上市之后，评分表变了</a><a href="#reliability">Demo 与生产系统之间是可靠性鸿沟</a><a href="#clocks">三个时钟为什么不同步</a><a href="#bottleneck">具身智能的工程瓶颈正在改变</a><a href="#metrics">从出货量转向生产 KPI</a><a href="#takeaway">写在最后</a></nav>
+        <nav class="toc" aria-label="目录"><a href="#intro">引言</a><a href="#claims">30 万次转发，用户知道吗？</a><a href="#distillation">推理轨迹，比答案更值钱</a><a href="#contracts">输出归客户，合同又另设围墙</a><a href="#users">用户交来一个问题，产品转手交给谁？</a><a href="#framework">顺着调用链找责任</a><a href="#takeaway">别把用户从故事里删掉</a></nav>
         <div class="page-surface"><div class="prose"><section class="detail-section" id="intro">
-            <p class="">2026 年 8 月，宇树科技上市后的暴涨与回撤，把人形机器人从演示视频拉进了财报和估值体系。发行价、首日高点与随后回落都很醒目，但价格不是对机器人未来的一次公投。</p>
-            <p class="">更值得讨论的是评分表发生了变化。过去行业回答“机器人能不能做到”，上市公司必须继续回答“能不能稳定做到、规模部署并持续赚钱”。硬件、智能与资本也由此显露出不同速度。</p>
-            <p class=""><em class="">数据与公开信息核验截至 2026 年 8 月 21 日收盘。本文讨论产业与工程问题，不构成投资建议。</em></p>
+            <p class="">Anthropic 在 <a href="https://www.anthropic.com/threat-intelligence-report-september-2026" target="_blank" rel="noopener" class="">2026 年 9 月的威胁情报报告</a>中指控，Moonshot 把部分 Kimi 客户请求转发给 Claude，并保存部分交互，用来提取推理轨迹和训练模型。报告留下了一个很扎眼的空白：Anthropic 也不知道，这些用户是否被告知了请求的实际去向。</p>
+            <p class="">“Kimi 有没有偷 Claude”很抓眼球，但我觉得另一个问题更该摆到台前：用户向 Kimi 提问，凭什么就顺带进入了另一家模型公司的服务链？模型公司的资产保护有人替它发声，提交代码、文档和私人问题的用户，反而最容易从讨论里消失。</p>
+
         </section>
 
-        <section class="detail-section" id="scorecard">
-            <h2 class="">上市之后，评分表变了</h2>
-            <p class="">宇树已经证明自己不是只有概念的公司。2025 年营收约 16.99 亿元，纯人形机器人出货超过 5500 台，说明高动态机器人已经可以被重复制造并规模销售。</p>
-            <p class="">但卖出机器人和让机器人真正上班并不是同一件事。披露数据显示，2025 年前三季度人形机器人收入仍以科研教育为主，行业应用占比较低，其中相当一部分还是企业导览。科研平台有生态价值，却不能替代生产资料的验证。</p>
-            <p class="">上市的意义正在于，它迫使技术叙事接受另一套约束。订单来自哪里、客户是否复购、研发投入如何转化、现场部署是否改善毛利和现金流，这些问题会按季度出现。技术没有被否定，只是必须解释自己怎样变成生产力。</p>
+        <section class="detail-section" id="claims">
+            <h2 class="">30 万次转发，用户知道吗？</h2>
+            <p class="">报告统计了两组不同的活动：一个十天窗口内，约 30 万条客户请求被转发；2026 年 5 至 7 月，另有超过 2300 万次蒸馏交互被归因于 Moonshot。一组描述客户请求的转发规模，另一组描述蒸馏调用量。要解释这些调用，双方都得把账户、用途和数据流向交代出来。</p>
+            <p class="">Anthropic 提出了归因和指控，Moonshot 则需要回应调用与数据处理的具体过程。我关心的回应很简单：哪些用户请求去了 Claude，保存了什么，训练又用了什么。竞争对手之间互相指责可以继续，这几件事总该有能核对的记录。</p>
         </section>
 
-        <section class="detail-section" id="reliability">
-            <h2 class="">Demo 与生产系统之间是可靠性鸿沟</h2>
-            <p class="">一个 Demo 回答能力是否存在；生产系统回答能力能否持续。假设一个任务需要连续 20 个关键步骤，每一步成功率都是 99%，在极度简化的独立模型下，完整任务一次成功的概率也只有约 81.8%；50 步时只剩约 60.5%。</p>
-            <p class="">真实系统可以重试、检测状态和重新规划，但这个计算揭示了关键事实：长链路可靠性不能被一个漂亮动作的成功率代替。工业现场关心的是一百次任务失败几次、失败后是否要人来扶、零件偏移后能否继续，以及一天里真正产生了多少有效产出。</p>
-            <p class="">语言模型答错可以重新生成，软件 Agent 调用失败可以回滚。机器人一次错误动作却可能损坏零件、中断节拍，甚至带来安全风险。它把 Agent 尚未解决的长链路可靠性问题带进了一个不能随意撤销的物理世界。</p>
+        <section class="detail-section" id="distillation">
+            <h2 class="">推理轨迹，比答案更值钱</h2>
+            <p class="">知识蒸馏并不神秘：一个模型通过另一个模型给出的答案、解释或其他信号来学习。公司内部会用，获得授权的合作也会用。方法本身很常见，真正需要追问的是训练样本从哪里来，又被允许拿来做什么。</p>
+            <p class="">推理轨迹的价值在于，它把拆题、验证和修正的过程也变成了训练信号。学生模型得到的材料越丰富，源服务商越在意这些材料怎样被批量取得。争议因此落在采集过程和使用约定上，单说一句“模型互相学习很正常”，绕开了最关键的部分。</p>
+            <p class="">“Claude 可以学习互联网，Kimi 为什么不能学习 Claude？”我赞成用同一套问题追问两边：训练材料怎么取得，谁有权授权，最终用于什么。把自己的训练叫学习，把竞争者的训练叫偷窃，这套双重话术太方便了。数据来源和使用依据，应该一起摆到桌面上。</p>
         </section>
 
-        <section class="detail-section" id="clocks">
-            <h2 class="">三个时钟为什么不同步</h2>
-            <p class="">今天的具身智能可以理解为三个并行时钟：</p>
+        <section class="detail-section" id="contracts">
+            <h2 class="">输出归客户，合同又另设围墙</h2>
+            <p class="">Anthropic 的<a href="https://www.anthropic.com/legal/commercial-terms" target="_blank" rel="noopener" class="">商业条款</a>一边说客户在法律允许的范围内拥有输出，一边限制利用服务开发或训练竞争模型。所有权和合同用途被分成了两层。客户拿到答案后，服务商仍想通过签约关系控制其中一部分后续使用。</p>
+            <p class="">版权又是第三层。<a href="https://www.copyright.gov/newsnet/2025/1060.html" target="_blank" rel="noopener" class="">美国版权局关于 AI 输出的说明</a>区分人类创作与纯机器生成内容。具体输出中的人类表达、已有作品和机器生成部分，要分别分析；合同的效力则还要看缔约主体、版本与适用规则。这些依据各有作用，模型公司若要限制复用，就该说清自己主张的是哪一种权利。</p>
+            <p class="">比起抽象争论“回答到底属于谁”，更有用的问题是：谁接受了哪一版合同，输出通过什么账户和渠道取得，限制条款是否真的生效，相关行为又能不能归到具体主体头上。</p>
+        </section>
+
+        <section class="detail-section" id="users">
+            <h2 class="">用户交来一个问题，产品转手交给谁？</h2>
+            <p class="">即使源模型提供者明确允许蒸馏，真实用户的任务仍可能沿着另一条链路流动：</p>
+            <pre class=""><code class="">用户内容 → 前端 AI 产品 → 第三方模型 → 保存与整理 → 学生模型</code></pre>
+            <p class="">提示词里可能有个人信息、公司内部代码和第三方作品。用户把它交给产品，是为了完成眼前的任务。产品再把它转交第三方、长期保存、整理进训练集，每多走一步，都多出一项需要向用户交代的处理决定。一个输入框，承载不了产品方想当然的无限授权。</p>
+            <p class="">内容发给了谁、用于什么、保存多久、怎样限制或删除，都应该在产品里说得明白。<a href="https://en.spp.gov.cn/2021-12/29/c_948419.htm" target="_blank" rel="noopener" class="">个人信息保护法</a>对处理目的、告知和相关个人权利的要求，也得落实到这条调用链上。模型公司之间的合作谈得再顺，用户对自己数据的知情和选择仍有自己的位置。</p>
+        </section>
+
+        <section class="detail-section" id="framework">
+            <h2 class="">顺着调用链找责任</h2>
+            <p class="">要把争议查下去，就顺着调用链追这些具体动作：</p>
             <ul class="">
-                <li class=""><strong class="">硬件时钟走得很快。</strong>执行器、减速器、传感器、控制算法和中国供应链持续改善，机器人的运动性能、成本和量产能力已经跨过重要门槛。</li>
-                <li class=""><strong class="">智能时钟明显更慢。</strong>感知、规划、操作、故障恢复和跨场景泛化仍受真实数据与长尾环境约束。一副成熟的身体不等于一个能独立工作的“大脑”。</li>
-                <li class=""><strong class="">资本时钟通常最快。</strong>市场必须提前为未来定价，因此交易的是通用具身智能的远期市场、份额和利润，而不只是今天卖出的机器人。</li>
+                <li class=""><strong class="">调用从哪里来。</strong>公开观察、经许可调用、冒用身份和绕过控制，分别留下什么账户与访问记录？</li>
+                <li class=""><strong class="">输出去了哪里。</strong>展示、留存、评测、训练竞争模型，各自对应哪份用途约定？</li>
+                <li class=""><strong class="">这种复用带来了什么后果？</strong>研究、模型压缩、互操作和直接商业替代，对市场和原服务商的影响并不一样。</li>
+                <li class=""><strong class="">用户的数据怎么处理。</strong>谁决定转发，谁决定留存，谁向用户说明，谁负责响应删除请求？</li>
             </ul>
-            <p class="">三个时钟不同步并不等于产业方向错误。正确而巨大的技术趋势同样可能出现过早定价；价格回撤也不能反向证明技术没有未来。真正要判断的是技术和商业兑现速度能否逐步追上预期。</p>
-        </section>
-
-        <section class="detail-section" id="bottleneck">
-            <h2 class="">具身智能的工程瓶颈正在改变</h2>
-            <p class="">机器人基础模型正在从单步动作走向长任务、自我纠正和跨本体迁移，但复杂操作的稳定性仍然差异巨大。更根本的约束是，机器人没有一个现成的“物理世界 Common Crawl”。</p>
-            <p class="">高质量机器人数据需要真实本体、传感器、场景布置、遥操作人员和时间成本，而且数据天然绑定硬件与环境。光照、包装、摩擦、遮挡和人的突然介入都会制造长尾。模型不仅要判断该做什么，还要在每个动作后确认世界是否仍符合预期。</p>
-            <p class="">即使机器人的“ChatGPT 时刻”出现，扩散曲线也不会完全复制软件。每服务一个新现场，都要多一套硬件、运输、安装、维护和售后。软件能力可以在服务器上快速复制，物理智能必须连同身体和现场工程一起复制。</p>
-            <p class="">人形机器人还在与成熟自动化竞争。固定任务如果能低成本结构化，传统产线通常更快、更便宜、更可靠。人形机器人的价值必须体现在任务切换更便宜、现场改造更少、适应变化更快，而且总体经济账优于人工或传统自动化。</p>
-        </section>
-
-        <section class="detail-section" id="metrics">
-            <h2 class="">从出货量转向生产 KPI</h2>
-            <p class="">行业要从 Demo 时代进入生产力时代，评价体系也必须从速度、自由度、参数和出货量转向一组更硬的指标：</p>
-            <ul class="">
-                <li class=""><strong class="">端到端任务成功率：</strong>完整生产任务一次完成的概率，而不是单个动作的最佳成绩。</li>
-                <li class=""><strong class="">人工接管率：</strong>每 100 小时或每 1000 次任务需要多少次人工介入。</li>
-                <li class=""><strong class="">自主恢复率：</strong>抓取失败、掉落或路径受阻后，有多少异常可以自行恢复。</li>
-                <li class=""><strong class="">MTBF 与可用率：</strong>两次故障之间能稳定运行多久，停机和维护占用多少时间。</li>
-                <li class=""><strong class="">有效作业小时：</strong>开机时间里真正产生可计量工作产出的小时数。</li>
-                <li class=""><strong class="">任务切换成本与 TCO：</strong>换任务需要多少数据、调试与工程人员，采购、部署、维护和接管成本多久能够回收。</li>
-                <li class=""><strong class="">复购与规模部署：</strong>客户试用一台之后，是否愿意在同一现场或更多现场继续购买。</li>
-            </ul>
-            <p class="">其中最值得长期公开的是“累计无人干预有效作业小时”。卖出一台机器人证明一次交易发生了；机器人在客户现场连续创造了多少小时的有效产出，才接近真实活跃度和产能。</p>
+            <p class="">产品实现也该顺着这条链留下记录。调用第三方模型，给用户和企业管理员明确的供应商选择；后续训练，单独说明用途和处理安排；路由审计，记接收方、用途和授权状态。<a href="https://www.ftc.gov/policy/advocacy-research/tech-at-ftc/2024/01/ai-companies-uphold-your-privacy-confidentiality-commitments" target="_blank" rel="noopener" class="">FTC 对 AI 公司隐私与保密承诺的提醒</a>说到底很实在：产品承诺过怎样处理数据，就得把承诺兑现到实际链路里。</p>
         </section>
 
         <section class="detail-section" id="takeaway">
-            <h2 class="">写在最后</h2>
-            <p class="">公开视频追求技术上限，工厂要求工程下限。后空翻持续几秒，环境可以清空，失败可以重录；工业岗位却要面对零件批次、地面、光照、网络、电池和上游工序持续制造的异常。</p>
-            <p class="">宇树今天较清晰的优势来自本体、运动控制、供应链和规模制造。下一阶段要证明的是，能否把已经卖出的身体转化为真实场景数据、持续智能改进和客户生产力。</p>
-            <p class="">资本市场可以提前交易后天，创业者必须建设明天，工程师则要把今天的失败率、接管率和有效作业小时一项项做实。</p>
-            <blockquote class=""><strong class="">真正的拐点，不是机器人又完成一个惊艳动作，而是硬件、智能与资本三个时钟开始重新走在一起。</strong></blockquote>
+            <h2 class="">别把用户从故事里删掉</h2>
+            <p class="">我支持模型学习和市场竞争，也反感谁先做大、谁就能把后来的学习一概划进禁区。但公司之间争夺训练权利时，用户的数据应该有单独的账本。它是谁交来的，交来做什么，后来又被谁改了用途，都得有人回答。</p>
+            <p class="">这场争议里，我最在意的是用户被谁替代作了决定。模型公司可以继续争谁有权训练谁；提交问题的人，有权先看清自己的内容到底经过了谁的服务、进入了谁的训练流程。产品把这件事藏在后台，才是最该被追问的地方。</p>
+
+
         </section></div></div>
     </div>
-    <section class="related" aria-labelledby="related-title"><p class="kicker">继续阅读</p><h2 id="related-title">相关<em>文章</em></h2><ol class="journal-list" style="list-style:none"><li><a class="journal-row" href="article-07.html" data-topic="5" data-cursor="阅读">
-        <span class="journal-date">2026.09 · 07</span>
-        <span class="journal-title"><span class="static">谁有权训练谁？</span><span class="marquee" aria-hidden="true"><span>谁有权训练谁？ —&nbsp;</span><span>谁有权训练谁？ —&nbsp;</span><span>谁有权训练谁？ —&nbsp;</span></span></span>
-        <span class="topic" data-topic="5">技术观察</span><span class="journal-time">7 分钟</span></a></li><li><a class="journal-row" href="article-10.html" data-topic="5" data-cursor="阅读">
-        <span class="journal-date">2026.05 · 10</span>
-        <span class="journal-title"><span class="static">当技术路线被包装成定律</span><span class="marquee" aria-hidden="true"><span>当技术路线被包装成定律 —&nbsp;</span><span>当技术路线被包装成定律 —&nbsp;</span><span>当技术路线被包装成定律 —&nbsp;</span></span></span>
-        <span class="topic" data-topic="5">技术观察</span><span class="journal-time">6 分钟</span></a></li><li><a class="journal-row" href="article-11.html" data-topic="5" data-cursor="阅读">
+    <section class="related" aria-labelledby="related-title"><p class="kicker">继续阅读</p><h2 id="related-title">相关<em>文章</em></h2><ol class="journal-list" style="list-style:none"><li><a class="journal-row" href="article-09.html" data-topic="5" data-cursor="阅读">
+        <span class="journal-date">2026.08 · 09</span>
+        <span class="journal-title"><span class="static">机器人的三个时钟</span><span class="marquee" aria-hidden="true"><span>机器人的三个时钟 —&nbsp;</span><span>机器人的三个时钟 —&nbsp;</span><span>机器人的三个时钟 —&nbsp;</span></span></span>
+        <span class="topic" data-topic="5">技术观察</span><span class="journal-time">8 分钟</span></a></li><li><a class="journal-row" href="article-11.html" data-topic="5" data-cursor="阅读">
         <span class="journal-date">2026.05 · 11</span>
+        <span class="journal-title"><span class="static">当技术路线被包装成定律</span><span class="marquee" aria-hidden="true"><span>当技术路线被包装成定律 —&nbsp;</span><span>当技术路线被包装成定律 —&nbsp;</span><span>当技术路线被包装成定律 —&nbsp;</span></span></span>
+        <span class="topic" data-topic="5">技术观察</span><span class="journal-time">6 分钟</span></a></li><li><a class="journal-row" href="article-12.html" data-topic="5" data-cursor="阅读">
+        <span class="journal-date">2026.05 · 12</span>
         <span class="journal-title"><span class="static">中国具身智能的真正考验：不是翻跟头，而是商业闭环</span><span class="marquee" aria-hidden="true"><span>中国具身智能的真正考验：不是翻跟头，而是商业闭环 —&nbsp;</span><span>中国具身智能的真正考验：不是翻跟头，而是商业闭环 —&nbsp;</span><span>中国具身智能的真正考验：不是翻跟头，而是商业闭环 —&nbsp;</span></span></span>
         <span class="topic" data-topic="5">技术观察</span><span class="journal-time">8 分钟</span></a></li></ol></section>
     <nav class="pager" aria-label="更多文章">
-        <a href="article-07.html" data-cursor="上一篇"><span class="meta">← 上一篇</span><strong>谁有权训练谁？</strong></a>
-        <a href="article-09.html" data-cursor="下一个"><span class="meta">下一篇 →</span><strong>Mac 正在成为个人 AI 应用的理想运行时</strong></a>
+        <a href="article-07.html" data-cursor="上一篇"><span class="meta">← 上一篇</span><strong>AI 不需要恶意，也能越过权限边界</strong></a>
+        <a href="article-09.html" data-cursor="下一个"><span class="meta">下一篇 →</span><strong>机器人的三个时钟</strong></a>
     </nav>
 </div>
 </main>
