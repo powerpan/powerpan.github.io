@@ -5,7 +5,15 @@
     <link>https://erichz.site/blog/</link>
     <description>Eric 的 AI 工程、计算机视觉、Agent 架构与系统设计技术博客。</description>
     <language>zh-CN</language>
-    <lastBuildDate>Sun, 08 Nov 2026 00:00:00 GMT</lastBuildDate>
+    <lastBuildDate>Tue, 17 Nov 2026 00:00:00 GMT</lastBuildDate>
+    <item>
+      <title>AI投资再增7000亿美元，全球经济为什么只快了0.1个百分点？</title>
+      <link>https://erichz.site/blog/ai-investment-global-growth</link>
+      <guid isPermaLink="false">https://erichz.site/blog/ai-investment-global-growth.html</guid>
+      <pubDate>Tue, 17 Nov 2026 00:00:00 GMT</pubDate>
+      <category>技术观察</category>
+      <description>从数据中心建设、折旧和企业流程，追问AI投资如何持续变成经济产出。</description>
+    </item>
     <item>
       <title>道具是假的——看《我阿爹想旅行》</title>
       <link>https://erichz.site/blog/good-trip-film-essay</link>
@@ -157,14 +165,6 @@
       <pubDate>Thu, 07 May 2026 00:00:00 GMT</pubDate>
       <category>视觉多模态</category>
       <description>在单类细长区域分割任务里，模型有效性更多取决于任务结构与归纳偏置的匹配，而不是发布时间或预训练光环。</description>
-    </item>
-    <item>
-      <title>多 Agent 架构的真正问题：不是角色分工，而是上下文边界</title>
-      <link>https://erichz.site/blog/multi-agent-context-boundaries</link>
-      <guid isPermaLink="false">https://erichz.site/blog/multi-agent-context-boundaries.html</guid>
-      <pubDate>Fri, 01 May 2026 00:00:00 GMT</pubDate>
-      <category>Agent 自动化</category>
-      <description>多 Agent 的关键不是设计多少角色，而是判断上下文如何共享、隔离、压缩、传递和合并。</description>
     </item>
   </channel>
 </rss>

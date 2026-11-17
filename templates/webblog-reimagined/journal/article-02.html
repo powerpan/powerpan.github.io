@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Why Retrain Every Time a Model Breaks? — Eric</title>
-<meta name="description" content="Qwen&#x27;s math score rose from 7.9% to 48.1% after edits to 0.016% of its weights. The interesting part is what the edit repaired, and how we could make that repair process repeatable.">
+<title>The Props Are Fake: On Good Trip — Eric</title>
+<meta name="description" content="The props are fake. The tears an actor sheds in front of them are real.">
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#ede8df">
 <script>(()=>{const r=document.documentElement;let t,m;try{t=localStorage.getItem('ink-theme');m=localStorage.getItem('ink-motion')}catch(e){}t=t||(matchMedia('(prefers-color-scheme: dark)').matches?'night':'day');if(matchMedia('(prefers-reduced-motion: reduce)').matches)m='off';r.dataset.theme=t;r.dataset.motion=m||'on'})()</script>
@@ -43,142 +43,74 @@
 <div class="progress" aria-hidden="true"><i></i></div>
 <div class="page">
     <header class="article-head">
-        <p class="meta"><a href="index.html">← Journal</a> &nbsp;/&nbsp; <span class="topic" data-topic="1">AI Engineering</span></p>
-        <h1 data-split>Why Retrain Every Time a <em>Model Breaks</em>?</h1>
-        <p class="lede rise">Qwen&#x27;s math score rose from 7.9% to 48.1% after edits to 0.016% of its weights. The interesting part is what the edit repaired, and how we could make that repair process repeatable.</p>
-        <div class="article-meta meta rise" style="--d:120ms"><span>2026.11.03</span><span>13 min</span><span>No. 02</span></div>
+        <p class="meta"><a href="index.html">← Journal</a> &nbsp;/&nbsp; <span class="topic" data-topic="6">Social Essays</span></p>
+        <h1 data-split>The Props Are Fake: On <em>Good Trip</em></h1>
+        <p class="lede rise">The props are fake. The tears an actor sheds in front of them are real.</p>
+        <div class="article-meta meta rise" style="--d:120ms"><span>2026.11.08</span><span>6 min</span><span>No. 02</span></div>
     </header>
     <div class="article-layout">
-        <nav class="toc" aria-label="Contents"><a href="#intro">Introduction</a><a href="#loop-repair">It keeps thinking, but never delivers</a><a href="#gemma-control">Why did Gemma barely improve?</a><a href="#car-patch">This car needed to reverse first</a><a href="#reading-computation">Reading weights means finding computations</a><a href="#writing-networks">Compiling Breakout rules into matrices</a><a href="#debugging-cost">A 0.016% patch took about 20 hours</a><a href="#patch-and-regression">Model repair needs patches and a rollback button</a></nav>
+        <nav class="toc" aria-label="Contents"><a href="#intro">Introduction</a><a href="#prop-room">The Word Xiang</a><a href="#old-stories">After Sammo Hung Turns Up</a><a href="#remembering">Remembering</a><a href="#okinawa">Okinawa, One More Time</a><a href="#coda">Coda</a></nav>
         <div class="page-surface"><div class="prose"><section class="detail-section" id="intro">
-<p class="">When a model struggles with math, we usually reach for more data, another training run, or a larger network. MIT CSAIL found a different diagnosis in one small model: it kept thinking and failed to deliver the answer.</p>
-
-<p class="">In the <a href="https://rikiyat.github.io/blog/weight-space-programming/" target="_blank" rel="noopener" class="">Weight-Space Programming study published on November 2</a>, GPT-6 Astra inspected and edited Qwen3.5-0.8B's weights directly. Mean accuracy on MATH-500 rose from 7.9% to 48.1%, after changes to roughly 0.016% of the weights, without backpropagation.</p>
-
-<p class="">Another column matters more to the diagnosis: 93.0% of the original model's MATH-500 outputs exhausted the 32,768-token budget. After editing, that fell to 33.1%. Many failures involved repetitive thinking. Astra investigated that failure before changing the parameters.</p>
-
-<p class="">I would put this in the model-repair toolbox. A low score is a symptom. The model may lack an ability, or an internal failure may be obstructing an ability it already has. Retraining before separating those diagnoses spends compute while potentially leaving the fault in place.</p>
+    <div class=""><p class="">A daughter keeps watch at a hospital bedside. Suddenly the film crew calls: could she fetch a big soup bowl from the prop room?</p></div>
+    <p class="">That's the little errand that starts <a href="https://usercontent.hkiff.org.hk/Press/HKIPM2026/WIP/W03_bilingual_Good_Trip_re_final_FTP.pdf" target="_blank" rel="noopener" class=""><em class="">Good Trip</em></a>. Shan works in a film art department, going back and forth between the set and the hospital all day. She means to stay with her father, but he insists on coming with her. They slip out of the hospital at night and get the bowl. Then Dad hits the gas and drives to Macau to settle a score with an old friend who once got him into trouble. Next they fly to Okinawa, where he wants to propose all over again to his wife, who runs a travel agency there.</p>
+    <p class="">By now you know something is off. How can a man with terminal cancer, who can't even get out of bed, just get up and go?</p>
+    <p class="">But the film never meant for you to believe it in the first place.</p>
 </section>
 
-<section class="detail-section" id="loop-repair">
-<h2 class="">It keeps thinking, but never delivers</h2>
-
-<p class="">The Qwen experiment gave Astra a Python environment for reading and writing weights, plus a limited forward-pass budget. Practice material included the GSM8K and MATH training sets. Final benchmarks were evaluated after the run, out of the editor's view. The <a href="https://github.com/RikiyaT/lm_understand-logs/blob/main/exp8_math/README.md" target="_blank" rel="noopener" class="">experiment logs</a> preserve the operations and subsequent evaluation.</p>
-
-<p class="">Astra compared productive and repetitive reasoning, inspected internal activations, and used interventions to narrow the search. The final patch targeted the MLP <code class="">down_proj</code> matrices in layers 15 and 19: 64 columns in each, reducing their contribution along a repetition-related direction. That involved 131,072 weight values.</p>
-
-<p class="">The intervention concerned a feature direction and the columns writing it. Many parameters jointly produce a direction, and one parameter can contribute to several computations. Calling this the deletion of two bad neurons would obscure the most useful part of the diagnosis.</p>
-
-<p class="">The final run report lists several checks: varying intervention strength, isolating layers, and testing a norm-matched random direction. An activation appearing alongside repetition gives us a lead. Intervening at the proposed location and checking whether the failure recedes as predicted begins to address causation. A debugging tool should be able to organize those experiments.</p>
-
-<p class="">These are the reported Qwen results. Evaluation used Thinking mode, a 32,768-token output limit, and unchanged sampling settings before and after editing. MATH-500 used four samples per problem; GSM8K and IFEval used two. Scores are mean accuracy across samples.</p>
-
-<div class="article-table-scroll" tabindex="0" role="region" aria-labelledby="bwsp_table_heading"><table class="">
-<thead id="bwsp_table_heading" class=""><tr class=""><th scope="col" class="">Run</th><th scope="col" class="">MATH-500</th><th scope="col" class="">GSM8K</th><th scope="col" class="">IFEval</th><th scope="col" class="">Hit token limit</th></tr></thead>
-<tbody class="">
-<tr class=""><th scope="row" class="">Original</th><td class="">7.9%</td><td class="">13.8%</td><td class="">21.0%</td><td class="">93.0%</td></tr>
-<tr class=""><th scope="row" class="">10-pass budget</th><td class="">12.3%</td><td class="">25.7%</td><td class="">49.0%</td><td class="">87.2%</td></tr>
-<tr class=""><th scope="row" class="">25-pass budget</th><td class="">14.1%</td><td class="">25.1%</td><td class="">39.9%</td><td class="">86.4%</td></tr>
-<tr class=""><th scope="row" class="">50-pass budget</th><td class="">48.1%</td><td class="">67.1%</td><td class="">62.3%</td><td class="">33.1%</td></tr>
-</tbody>
-</table></div>
-
-<p class="">Instruction following improved too, which fits a loop-repair explanation: a model that keeps repeating can also fail to finish a response or satisfy a format requirement. The run's <a href="https://github.com/RikiyaT/lm_understand-logs/blob/main/exp8_math/runs/p50c/final_answer.md" target="_blank" rel="noopener" class="">final practice confirmation</a> separates originally truncated outputs from originally completed ones. Most recoveries came from the truncated group, giving the score increase a traceable behavioral explanation.</p>
+<section class="detail-section" id="prop-room">
+    <h2 hidden="" class="">The Word Xiang</h2>
+    <p class="">The word that matters most in the Chinese title is xiang.</p>
+    <p class="">It can mean wanting to take a trip, or imagining you've already taken it. The director borrows a Tang-dynasty tale, The Disembodied Soul: the body stays in the hospital bed while the soul slips away. The trip feels real and unreal at once. There are period costumes, echoes of old Hong Kong movies, and the absurd moment when Nick Cheung suddenly speaks fluent Japanese.</p>
+    <p class="">And the daughter happens to work in film art. Her job is to make things that aren't there look real. Everything in the prop room is fake: fake bowls, fake walls, fake antiques. But a film art assistant knows better than anyone that the props are fake and the tears an actor sheds in front of them are real.</p>
+    <p class="">The trip is like that, too. The route is made up, but the wishes her father gets to fulfil and the time the two of them rarely get to spend together are real.</p>
 </section>
 
-<section class="detail-section" id="gemma-control">
-<h2 class="">Why did Gemma barely improve?</h2>
-
-<p class="">The team also asked Astra to edit Gemma 3 270M. Its failures involved ordinary reasoning mistakes, including bad arithmetic and invalid algebraic steps. It rarely entered the long loops seen in Qwen, and the search for a local repair was much less productive.</p>
-
-<p class="">Gemma started at 6.8% on MATH-500 and reached 7.0% with a 50-pass budget, using its own sampling configuration and an 8,192-token limit. To me, the comparison suggests a better near-term target: a stable, localized failure, rather than the broad instruction to improve mathematical ability.</p>
-
-<p class="">The diagnoses call for different work. Repetitive output offers productive and looping contexts to compare, interventions to design, and behavioral changes to measure. Missing reasoning ability involves knowledge, representations, and computation across layers. Asking a local patch to supply all of that is often just moving the guesswork elsewhere.</p>
-
-<p class="">I would start with failures where a model has useful ability but reliably fails to express it: repeated generation, a persistent formatting failure, or an abnormal action triggered by a particular state. The success criterion becomes concrete: remove that failure while retaining performance on tasks that already worked.</p>
+<section class="detail-section" id="old-stories">
+    <h2 hidden="" class="">After Sammo Hung Turns Up</h2>
+    <p class="">Kueng isn't the sort of father who commands respect. He tells terrible food puns, speaks his mind and often embarrasses his daughter. He even combs the few strands on top of his head into a barcode. He keeps saying he'll leave his old car to his children, as though it were some grand inheritance.</p>
+    <p class="">He likes to boast, too. His daughter has always taken his stories with a grain of salt.</p>
+    <p class="">It's only after her father dies, when she meets Sammo Hung, that she discovers one of his stories really was true.</p>
+    <p class="">It's a quiet moment, and one of the heaviest in the film. Her father is gone. He can't prove anything now, and he won't do anything new. But in that second, the father she carries in her head changes. She thought she'd heard it all, thought she had him figured out. There was still a part of him she'd never seen.</p>
+    <p class="">Director Norris Wong said something in an <a href="https://www.stheadline.com/film-drama/3623418" target="_blank" rel="noopener" class="">interview</a> that explains this scene rather well: "It's not that we don't love each other. We just don't know how to get to know each other."</p>
+    <p class="">That's probably as close as it gets to how things are between a lot of parents and children. You know his catchphrases. You know he'll suddenly go quiet when he's angry. You can even guess what he'll say next. But what kind of person was he when he was young? What did he wrestle with before making a particular choice? You don't really know. Even if he told you, you took it for bragging back then.</p>
 </section>
 
-<section class="detail-section" id="car-patch">
-<h2 class="">This car needed to reverse first</h2>
-
-<p class="">Another experiment looks much closer to patching a controller. A PPO network had to drive a car up a ramp, but repeatedly drove straight ahead and stalled. Given the weights, scene description, and one recorded episode, Astra added a path reading position and velocity: reverse to create a run-up, then accelerate forward.</p>
-
-<p class="">Once the car passed a particular position, the added path switched off and the trained network handled the rest. This <a href="https://github.com/RikiyaT/lm_understand-logs/blob/main/exp4_fix_car/README.md" target="_blank" rel="noopener" class="">one-shot edit</a> changed about 3.5% of the weights and succeeded in all 1,024 tests of that level. Its activation, action, and exit condition each correspond to an identifiable part of the task.</p>
-
-<p class="">That captures the appeal of repair. Much of the existing behavior was usable; a specific phase needed a different action. Keeping the learned behavior and correcting the failure point is a more targeted response than sending the entire policy back into training.</p>
+<section class="detail-section" id="remembering">
+    <h2 hidden="" class="">Remembering</h2>
+    <p class="">But there's another danger after someone dies.</p>
+    <p class="">When we miss someone, it's easy to keep only the good parts. We forgive their faults and polish up their more ridiculous stories. Given enough time, the person in our head becomes gentler, always in the right, perfect. And less and less like the person they were.</p>
+    <p class="">The film doesn't do that. The Sammo Hung story being true doesn't make every word Dad ever said believable. And the old car probably isn't worth much. In the end he's still the dad who tells terrible jokes and makes you laugh when you're angry with him. Shan gets to know him again. What she finds isn't a perfect father; it's that she hasn't finished getting to know him.</p>
+    <p class="">That moves me more than turning him into a saint ever could.</p>
 </section>
 
-<section class="detail-section" id="reading-computation">
-<h2 class="">Reading weights means finding computations</h2>
-
-<p class="">How did the researchers get to these repairs? They began with reading experiments. Astra identified the training game for four identically shaped, 17,253-parameter networks from their weights and input/output meanings. A later experiment removed the input and output layers of roughly 7.2-million-parameter character models, leaving only their middle Transformer blocks.</p>
-
-<p class="">Removing the outer layers takes away the direct character-to-vector and vector-to-character mappings, as well as the shortcut of running some text and inspecting the result. Astra could analyze the middle weights in Python, but could not feed any input through the network. That placed the task on the computational structure exposed by the matrices themselves.</p>
-
-<p class="">Astra distinguished networks trained on Python, English, and romanized Japanese, and identified induction heads that matched measured behavior. It combined weight matrices to find structures involved in reading earlier context, matching sequences, and copying what followed. <a href="https://transformer-circuits.pub/2022/in-context-learning-and-induction-heads/" target="_blank" rel="noopener" class="">Induction-head mechanisms</a> already have an established research history. What interests me here is a reasoning model selecting its own analysis steps to locate such computations.</p>
-
-<p class="">Analysis also has to survive differences in representation. Permuting hidden units while adjusting the surrounding connections can leave a network's function unchanged. The permutation symmetries studied in <a href="https://arxiv.org/abs/2209.04836" target="_blank" rel="noopener" class="">Git Re-Basin</a> illustrate why a numbered neuron makes a poor universal repair interface across models.</p>
-
-<p class="">I want tools that describe stable computational relationships: which state is read, which transformations follow, and which direction receives the result. A description grounded in testable computation gives us a better chance of locating the mechanism again in another model or training seed. A layer number alone is a thin basis for a repair.</p>
+<section class="detail-section" id="okinawa">
+    <h2 hidden="" class="">Okinawa, One More Time</h2>
+    <p class="">When I read up on the film later, I found there was another daughter outside it.</p>
+    <p class=""><a href="https://www.stheadline.com/film-drama/3623418" target="_blank" rel="noopener" class="">Norris Wong</a>'s father was the only one in the family who supported her making films. Her mother kept urging her to take a civil service exam or become a teacher. After his cancer returned, he still came to the set of My Prince Edward on a walking stick. By post-production he was bedridden, but he still told her to keep making films. He'd also done some work as an extra without her knowing. The last trip they took together was to Okinawa.</p>
+    <p class="">As it turns out, there's some of Norris Wong herself in Shan. A daughter who works in film, after losing her father, uses the things she knows best: building sets, finding props, making things that aren't there look real. She puts together a trip for him.</p>
+    <p class="">It makes me think the relationship doesn't stop when someone dies. You can't eat or talk together again, and there won't be any new memories you both share. But the person still here goes on living. Perhaps ten years later something happens and you understand why he did what he did. Perhaps someone mentions him one day and you learn he had another side. Or perhaps, like Norris Wong, you put him in a film and let him put on a suit one more time, tell another terrible joke and go back to Okinawa.</p>
+    <p class="">That isn't rewriting the past. It's finally being able to see a part of it you didn't understand at the time.</p>
 </section>
 
-<section class="detail-section" id="writing-networks">
-<h2 class="">Compiling Breakout rules into matrices</h2>
-
-<p class="">Astra also wrote MinAtar game networks from scratch. It received the rules, environment source, and input/output definitions, then generated weights without playing the game to check them. For Breakout, it estimated where the ball would land and chose an action from the paddle position, expressing that algorithm through matrices and activation functions.</p>
-
-<p class="">Its mean score was 517.4, compared with 15.8 after 100 million PPO steps and 25.3 after 500 million. The interesting distinction is how the solutions were obtained: Astra designed a controller from explicit rules and compiled it into the specified network, while PPO learned through environment interaction and rewards. The network became a substrate for an algorithm the editor could describe.</p>
-
-<p class="">The 9×9 Go experiment took this further. In a roughly 1.48-million-parameter network, Astra built layers for stones, liberties, endangered groups, and move scores. With limited game feedback, it then revised the computations behind losses. A constructed network could itself enter a debugging loop, joining algorithm design to experimental revision.</p>
-
-<p class="">That suggests a way to combine learning and construction. Explicit state machines, local control rules, and special-case behavior are candidates for direct construction; complex visual representations and language knowledge can still be learned from data. Engineers gain another way to combine capabilities: add an explainable, testable computation to what a model already does.</p>
-</section>
-
-<section class="detail-section" id="debugging-cost">
-<h2 class="">A 0.016% patch took about 20 hours</h2>
-
-<p class="">Direct weight intervention has a substantial research history. <a href="https://arxiv.org/abs/2202.05262" target="_blank" rel="noopener" class="">ROME</a> edits feed-forward weights to update factual associations, while mechanistic interpretability uses activation and parameter interventions to test internal computations. Weight-Space Programming asks a general-purpose reasoning model to organize the diagnosis, experimental choices, and edits.</p>
-
-<p class="">It resembles the move from asking a coding model for a function to having an agent read a project, run tests, and revise its work from failures. The artifacts here are tensors and activations; the failures are behavioral.</p>
-
-<p class="">A small patch can still take a long time to find. The best Qwen run used 50 batched forward passes, 80 Python operations, and 158 turns. Wall-clock time was about 20.3 hours, including roughly 4.7 hours waiting for an unavailable service. A single forward-tool call could generate answers to as many as 512 practice problems or read internal states for 1,024 texts.</p>
-
-<p class="">The 10-, 25-, and 50-pass budgets in the table correspond to separate runs and different final patches. The 25-pass run disabled an attention head; the 50-pass run found the repetition-related direction in two MLPs. This is a search for a mechanism. More budget does not automatically buy a proportional improvement.</p>
-
-<p class="">I would compare sampling changes, external controls, fine-tuning, and internal editing against the same fault: data required, compute spent, repeatability, and ongoing maintenance. Avoiding backpropagation is useful. Diagnosis and validation still have to be paid for.</p>
-</section>
-
-<section class="detail-section" id="patch-and-regression">
-<h2 class="">Model repair needs patches and a rollback button</h2>
-
-<p class="">In a project, I would begin with a replay set for a stable failure. Save the triggering inputs, model version, sampling parameters, and runtime, alongside examples that already work. Each proposed internal mechanism should face a control experiment capable of disproving it before we decide which tensors to edit.</p>
-
-<p class="">For a vision task, the starting point could be persistent errors under a particular object pose or imaging condition, with activations compared against normal cases. The investment is in diagnosis: trace a recurring class of errors to an intervention, then test it. Blindly swapping models against a metric tends to accumulate a new collection of failures we still do not understand.</p>
-
-<p class="">A patch should be bound to the original checkpoint hash and record the changed tensors, indices, precision, and deltas, together with the experiment that produced it. Check the base before deployment and restore the original on regression. A change in unit ordering, model version, or quantization calls for checking whether the patch still affects the intended computation.</p>
-
-<p class="">Sequential repairs also need composition tests. The second edit encounters representations already changed by the first, so individually useful patches may interfere. Keeping replay results for the original, patch A, patch B, and A followed by B gives us a basis for accepting the next edit or reopening the diagnosis.</p>
-
-<p class="">Regression testing has to extend beyond the target score. A <a href="https://proceedings.neurips.cc/paper_files/paper/2024/hash/370fa2e691f57eb319bc263a07dad4a5-Abstract-Conference.html" target="_blank" rel="noopener" class="">NeurIPS 2024 evaluation of model editing</a> documented damage to general ability under sequential edits. A <a href="https://arxiv.org/abs/2601.17343" target="_blank" rel="noopener" class="">later study of edit locality</a> found that some common metrics were insufficiently sensitive to side effects. A small parameter change can have broad behavioral consequences; testing has to look for them.</p>
-
-<p class="">For a loop repair like Qwen's, I would measure answer quality, truncation, output length, format compliance, and tasks that previously completed normally. Measuring only earlier termination can turn loop repair into faster abandonment. Repeated independent diagnoses, replay cases held out from the search, and explicit rollback conditions help determine whether the tool deserves continued use.</p>
-
-<p class="">I want model development to take repair seriously. A checkpoint can retain what training produced while accepting local changes backed by records and tests. The next time a model fails consistently, start by asking where it gets stuck. Locate the fault, intervene, run regressions, and then decide whether the answer is a patch or another training run.</p>
+<section class="detail-section" id="coda">
+    <h2 hidden="" class="">Coda</h2>
+    <p class="">Dad wanted to travel, but he couldn't go anymore.</p>
+    <p class="">So his daughter took that word, xiang, and made a film out of it for him.</p>
 </section></div></div>
     </div>
-    <section class="related" aria-labelledby="related-title"><p class="kicker">Continue reading</p><h2 id="related-title">Related <em>writing</em></h2><ol class="journal-list" style="list-style:none"><li><a class="journal-row" href="article-03.html" data-topic="1" data-cursor="Read">
-        <span class="journal-date">2026.11 · 03</span>
-        <span class="journal-title"><span class="static">The Model Fits. Why Is It Still Slow?</span><span class="marquee" aria-hidden="true"><span>The Model Fits. Why Is It Still Slow? —&nbsp;</span><span>The Model Fits. Why Is It Still Slow? —&nbsp;</span><span>The Model Fits. Why Is It Still Slow? —&nbsp;</span></span></span>
-        <span class="topic" data-topic="1">AI Engineering</span><span class="journal-time">15 min</span></a></li><li><a class="journal-row" href="article-04.html" data-topic="1" data-cursor="Read">
-        <span class="journal-date">2026.10 · 04</span>
-        <span class="journal-title"><span class="static">When the Exam Is Wrong: What Do AI Scores Measure?</span><span class="marquee" aria-hidden="true"><span>When the Exam Is Wrong: What Do AI Scores Measure? —&nbsp;</span><span>When the Exam Is Wrong: What Do AI Scores Measure? —&nbsp;</span><span>When the Exam Is Wrong: What Do AI Scores Measure? —&nbsp;</span></span></span>
-        <span class="topic" data-topic="1">AI Engineering</span><span class="journal-time">15 min</span></a></li><li><a class="journal-row" href="article-17.html" data-topic="1" data-cursor="Read">
-        <span class="journal-date">2026.05 · 17</span>
-        <span class="journal-title"><span class="static">The Core of AI Engineering Is Not Making Models Omnipotent. It Is Defining Boundaries</span><span class="marquee" aria-hidden="true"><span>The Core of AI Engineering Is Not Making Models Omnipotent. It Is Defining Boundaries —&nbsp;</span><span>The Core of AI Engineering Is Not Making Models Omnipotent. It Is Defining Boundaries —&nbsp;</span><span>The Core of AI Engineering Is Not Making Models Omnipotent. It Is Defining Boundaries —&nbsp;</span></span></span>
-        <span class="topic" data-topic="1">AI Engineering</span><span class="journal-time">8 min</span></a></li></ol></section>
+    <section class="related" aria-labelledby="related-title"><p class="kicker">Continue reading</p><h2 id="related-title">Related <em>writing</em></h2><ol class="journal-list" style="list-style:none"><li><a class="journal-row" href="article-14.html" data-topic="6" data-cursor="Read">
+        <span class="journal-date">2026.05 · 14</span>
+        <span class="journal-title"><span class="static">Treat the Family as a System: The Risk Architecture Behind Middle-Class Decline</span><span class="marquee" aria-hidden="true"><span>Treat the Family as a System: The Risk Architecture Behind Middle-Class Decline —&nbsp;</span><span>Treat the Family as a System: The Risk Architecture Behind Middle-Class Decline —&nbsp;</span><span>Treat the Family as a System: The Risk Architecture Behind Middle-Class Decline —&nbsp;</span></span></span>
+        <span class="topic" data-topic="6">Social Essays</span><span class="journal-time">7 min</span></a></li><li><a class="journal-row" href="article-41.html" data-topic="6" data-cursor="Read">
+        <span class="journal-date">2025.10 · 41</span>
+        <span class="journal-title"><span class="static">How to Objectively View Modern Feminism</span><span class="marquee" aria-hidden="true"><span>How to Objectively View Modern Feminism —&nbsp;</span><span>How to Objectively View Modern Feminism —&nbsp;</span><span>How to Objectively View Modern Feminism —&nbsp;</span></span></span>
+        <span class="topic" data-topic="6">Social Essays</span><span class="journal-time">10 min</span></a></li><li><a class="journal-row" href="article-43.html" data-topic="6" data-cursor="Read">
+        <span class="journal-date">2025.08 · 43</span>
+        <span class="journal-title"><span class="static">&quot;Involution&quot; vs &quot;Lying Flat&quot;: Anxiety and Breakthrough of a Generation</span><span class="marquee" aria-hidden="true"><span>&quot;Involution&quot; vs &quot;Lying Flat&quot;: Anxiety and Breakthrough of a Generation —&nbsp;</span><span>&quot;Involution&quot; vs &quot;Lying Flat&quot;: Anxiety and Breakthrough of a Generation —&nbsp;</span><span>&quot;Involution&quot; vs &quot;Lying Flat&quot;: Anxiety and Breakthrough of a Generation —&nbsp;</span></span></span>
+        <span class="topic" data-topic="6">Social Essays</span><span class="journal-time">10 min</span></a></li></ol></section>
     <nav class="pager" aria-label="More articles">
-        <a href="article-01.html" data-cursor="Prev"><span class="meta">← Previous</span><strong>The Props Are Fake: On Good Trip</strong></a>
-        <a href="article-03.html" data-cursor="Next"><span class="meta">Next →</span><strong>The Model Fits. Why Is It Still Slow?</strong></a>
+        <a href="article-01.html" data-cursor="Prev"><span class="meta">← Previous</span><strong>AI Investment Is Set to Rise by $700 Billion. Why Is Global Growth Only 0.1 Percentage Point Faster?</strong></a>
+        <a href="article-03.html" data-cursor="Next"><span class="meta">Next →</span><strong>Why Retrain Every Time a Model Breaks?</strong></a>
     </nav>
 </div>
 </main>

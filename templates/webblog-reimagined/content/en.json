@@ -436,7 +436,7 @@
       "num": 5,
       "slug": "observation",
       "label": "Tech Observation",
-      "desc": "Topic Archive — 9 articles"
+      "desc": "Topic Archive — 10 articles"
     },
     {
       "num": 6,
@@ -1703,8 +1703,56 @@
   "articles": [
     {
       "num": 1,
-      "source_slug": "good-trip-film-essay",
+      "source_slug": "ai-investment-global-growth",
       "slug": "article-01.html",
+      "title": "AI Investment Is Set to Rise by $700 Billion. Why Is Global Growth Only 0.1 Percentage Point Faster?",
+      "title_html": "AI Investment Is Set to Rise by $700 Billion. <em>Why Is Global Growth Only 0.1 Percentage Point Faster?</em>",
+      "topic": 5,
+      "lede": "From data center construction and depreciation to how companies work, what turns AI investment into lasting economic output?",
+      "date": "2026.11.17",
+      "readtime": "13 min",
+      "author": "Eric Pan",
+      "body": "<section class=\"detail-section\" id=\"intro\">\n            <div class=\"\"><p class=\"\">When I read Goldman Sachs' 2027 global economic outlook, published on November 13, two sets of forecasts made me pause.</p></div>\n            <p class=\"\">The first was nominal global AI investment: from $1.1 trillion in 2026 to $1.8 trillion in 2027. That's another $700 billion in a year, an increase of more than 60%.</p>\n            <p class=\"\">The second was global economic growth: from 2.7% to 2.8%, just 0.1 percentage point faster. (<a href=\"https://www.goldmansachs.com/insights/articles/the-global-economy-is-forecast-to-grow-2-point-8-percent-in-2027-as-oil-prices-decline\" target=\"_blank\" rel=\"noopener\" class=\"\">Goldman Sachs</a>)</p>\n            <p class=\"\">Side by side, the numbers make for a striking contrast. The tech industry is talking about another astonishing expansion, while the global outlook points to another year of unremarkable growth.</p>\n            <p class=\"\">As I read on, the question I wanted to ask began to change. AI investment already counts toward economic growth. What will keep that investment generating returns? When data center construction slows, can the value created by using those data centers catch up in time?</p>\n        </section>\n\n        <section class=\"detail-section\" id=\"growth-baseline\">\n            <h2 class=\"\">Growth starts from where last year left off</h2>\n            <p class=\"\">To make sense of the two numbers, it helps to put last year back in the accounts.</p>\n            <p class=\"\">Growth in 2026 already includes activity such as building data centers and buying equipment. Spend the same amount in 2027 and you more or less maintain the scale of that activity. It's the increase in real investment over the previous year that adds to the year's output.</p>\n            <p class=\"\">Take a simple example. At constant prices, suppose an industry invests 10 billion, 16 billion, and 20 billion yuan over three consecutive years.</p>\n            <p class=\"\">Investment is highest in the third year, and construction sites might be busier than ever. But investment rose by 6 billion yuan in the second year and by only 4 billion in the third. With other economic activity held constant, this investment contributes a smaller year-over-year increase in GDP.</p>\n            <p class=\"\">An industry can therefore keep setting investment records even as its contribution to economic growth tapers off.</p>\n            <p class=\"\">That is part of what Goldman Sachs is forecasting. It estimates that AI investment will contribute about 0.4 percentage point to global GDP growth in 2027. It also expects the year-over-year increase in AI investment's share of GDP to peak in the first half of 2027. (<a href=\"https://www.goldmansachs.com/insights/articles/the-global-economy-is-forecast-to-grow-2-point-8-percent-in-2027-as-oil-prices-decline\" target=\"_blank\" rel=\"noopener\" class=\"\">Goldman Sachs</a>)</p>\n            <p class=\"\">The 0.4 percentage point measures how much AI investment adds to growth that year. The 0.1 percentage point in the title measures how much faster the whole economy grows than it did the year before. That second number takes in the boost that was already there last year as well as changes elsewhere in the economy this year.</p>\n            <p class=\"\">That gives me another way to read a headline about record investment. Sustaining a high level of spending can sustain a great deal of activity. Keeping the economy accelerating takes ever more additional output. The higher the starting point, the harder that gets.</p>\n            <p class=\"\">And spending on a company's books has to go through several adjustments before it shows up in real GDP. When equipment spending rises, you have to separate higher prices from higher quantities. You also have to avoid counting chips, servers, and the finished equipment more than once along the supply chain. The accounts track real production and the value each stage adds. (<a href=\"https://www.bea.gov/help/faq/79?utm_source=chatgpt.com\" target=\"_blank\" rel=\"noopener\" class=\"\">U.S. Bureau of Economic Analysis</a>)</p>\n            <p class=\"\">Put another way, when a company spends more on equipment, what you know for sure is that it spent more. How much more the economy produced, and how much more the company can earn later, are questions that take more work to answer.</p>\n        </section>\n\n        <section class=\"detail-section\" id=\"global-economy\">\n            <h2 class=\"\">AI is expanding. The world economy has other bills to reckon with.</h2>\n            <p class=\"\">Goldman Sachs' 2027 outlook is the result of forces pulling in opposite directions. Falling energy prices and rising AI investment support growth, while tighter financial conditions and a weaker fiscal impulse hold it back. (<a href=\"https://www.goldmansachs.com/insights/articles/the-global-economy-is-forecast-to-grow-2-point-8-percent-in-2027-as-oil-prices-decline\" target=\"_blank\" rel=\"noopener\" class=\"\">Goldman Sachs</a>)</p>\n            <p class=\"\">That reminded me how easy it is to get a skewed view of the economy.</p>\n            <p class=\"\">If you read tech news every day, you see chip orders, demand for compute, and large projects. It's easy to feel as though the whole economy is accelerating along with AI. But a restaurant thinking about opening another location, or a factory looking to replace its machines, still starts with borrowing costs and customer demand. Its expansion plans can have very little to do with how many points a model gained on a benchmark.</p>\n            <p class=\"\">What a 60% rise in AI-related investment means for the economy depends on how large a share it had to begin with and what's happening everywhere else. A fast-growing sector might just be making up for weaker growth elsewhere.</p>\n            <p class=\"\">So when I read that global growth is broadly steady, I wonder whether something more interesting than a clear acceleration is going on. The headline number looks much the same, but what's supporting it is changing.</p>\n            <p class=\"\">If more new orders are tied to the same build-out, the economy becomes more sensitive to swings in that cycle. Chip suppliers, data center builders, and power equipment makers may all be looking at expansion plans from the same customers. When those customers change their budgets, the effects can reach all three at once.</p>\n            <p class=\"\">In discussing U.S. interest rates, Goldman Sachs already cites America's exposure to a downturn in the AI investment cycle as one reason policy could turn out more dovish. (<a href=\"https://www.goldmansachs.com/insights/articles/the-global-economy-is-forecast-to-grow-2-point-8-percent-in-2027-as-oil-prices-decline\" target=\"_blank\" rel=\"noopener\" class=\"\">Goldman Sachs</a>)</p>\n            <p class=\"\">Here the weight of AI capital spending becomes tangible. It's large enough to figure in analysis of central bank policy. A few companies' decisions to build more or fewer facilities next year can have consequences well outside tech.</p>\n        </section>\n\n        <section class=\"detail-section\" id=\"orders-and-costs\">\n            <h2 class=\"\">Orders come early. Costs stick around.</h2>\n            <p class=\"\">Further down the investment chain, there's one timing gap I think matters in particular.</p>\n            <p class=\"\">Once equipment is delivered, its supplier can recognize sales revenue and earn a profit on the sale. The buyer puts it on the balance sheet, depreciates it over the years it's in use, and pays for electricity, maintenance, and operations. Whether that equipment earns back its purchase cost depends on how the business performs from then on.</p>\n            <p class=\"\">The same build-out brings revenue to the supplier first and leaves the user with costs for years to come.</p>\n            <p class=\"\">Goldman Sachs' September analysis of S&amp;P 500 earnings points to just this problem. Capital spending growth is expected to slow, while the equipment big cloud providers have already bought keeps adding to their depreciation expenses. That weakens the boost AI investment gives to earnings growth. (<a href=\"https://www.goldmansachs.com/insights/articles/can-ai-investment-drive-s-and-p-500-earnings-even-higher\" target=\"_blank\" rel=\"noopener\" class=\"\">Goldman Sachs</a>)</p>\n            <p class=\"\">You can already see the size of the bill in financial reports. Microsoft's company-wide depreciation expense reached $34.3 billion in fiscal 2026, up from $15.2 billion in fiscal 2024. Its annual report also identifies investment in AI infrastructure and rising use of AI products as reasons for a decline in its cloud gross margin percentage. (<a href=\"https://www.microsoft.com/investor/reports/ar26/\" target=\"_blank\" rel=\"noopener\" class=\"\">Microsoft</a>)</p>\n            <p class=\"\">To me, that says more about the pressure in the next phase than the capital spending total alone.</p>\n            <p class=\"\">The more equipment a company buys, the more costs it has to cover through its future operations. Even when it slows expansion, the machines already in use keep depreciating and the data centers still have to run. Costs left over from one round of investment carry into the next period of operations.</p>\n            <p class=\"\">If revenue from customers grows fast enough, these facilities can become valuable productive capacity. If revenue from applications takes longer to materialize, two things can happen at once: new orders slow on the supplier side, while the user's costs haven't come down.</p>\n            <p class=\"\">That's why I increasingly watch the gap between how quickly AI infrastructure goes up and how quickly it earns a return.</p>\n            <p class=\"\">This goes all the way to the word \"gross\" in GDP. GDP includes production used to replace old equipment and doesn't deduct consumption of fixed capital. Make that deduction and you get net domestic product. (<a href=\"https://www.bea.gov/sites/default/files/methodologies/nipa_primer.pdf\" target=\"_blank\" rel=\"noopener\" class=\"\">U.S. Bureau of Economic Analysis</a>)</p>\n            <p class=\"\">For the compute build-out, that means looking beyond how much gets spent each year. How much of the spending expands the services that can be sustained, and how much goes toward maintaining or replacing existing capacity? The cost of continually renewing infrastructure and the net returns it can keep generating are two accounts worth reading together.</p>\n        </section>\n\n        <section class=\"detail-section\" id=\"time-savings\">\n            <h2 class=\"\">Where did the time savings go?</h2>\n            <p class=\"\">At this point, it's natural to ask why companies would keep paying these bills.</p>\n            <p class=\"\">It ultimately comes down to the users. How much more work AI helps them do, how much it lowers costs, and how much new business it brings in determine what they're willing to pay.</p>\n            <p class=\"\">For individual tasks, there's already fairly clear evidence. A 2025 study in The Quarterly Journal of Economics, \"Generative AI at Work,\" followed 5,172 customer support workers as they gained access to an AI assistant in stages. Workers resolved 15% more issues per hour on average, with less experienced staff benefiting especially. (<a href=\"https://oup.silverchair-cdn.com/article-minimal/7990658\" target=\"_blank\" rel=\"noopener\" class=\"\">Oxford University Press</a>)</p>\n            <p class=\"\">I like this measure because it captures a result of the work: more problems solved in the same hour.</p>\n            <p class=\"\">Zoom out and the picture isn't as tidy. Another 2025 study linked a survey on AI use from about 25,000 Danish workers to administrative records through the end of 2024. The researchers saw changes in which tasks people performed but found no statistically significant average effects of AI adoption on earnings or recorded hours. (<a href=\"https://bfi.uchicago.edu/wp-content/uploads/2025/04/BFI_WP_2025-56-4.pdf\" target=\"_blank\" rel=\"noopener\" class=\"\">Becker Friedman Institute</a>)</p>\n            <p class=\"\">One study counts tasks completed per hour; the other tracks earnings and hours. The distance between those measures is what I'd like to understand better.</p>\n            <p class=\"\">I find it easiest to think about this in terms of software development.</p>\n            <p class=\"\">Suppose AI brings the time to draft a feature down from half a day to an hour. That's real time saved. But the code still has to be tested, reviewed, deployed, and put to use. If the team is held up mainly by shifting requirements, review queues, or integration, faster code generation may just give it more code waiting to be dealt with.</p>\n            <p class=\"\">For the whole project to ship faster, the team has to work through the remaining bottlenecks. Who checks the generated code? Are the tests sufficient? How do you track down problems when they come up? Does the division of work need to change? The answers all affect how much the team gains.</p>\n            <p class=\"\">Even if delivery really does speed up, the company still needs a use for the extra capacity. A backlog lets it build more product, and new customers let it take on more business. When the workload stays the same, the time saved might go into learning, checking work, or taking a break.</p>\n            <p class=\"\">Seen this way, speeding up a task is just the start. What it ultimately adds to a company's output, profits, and income depends on what happens afterward.</p>\n            <p class=\"\">That's what I look for when I hear about productivity gains: across a complete piece of work, how many resources went in, and how many usable results came out? Faster model outputs only turn into lasting economic gains when they're connected to the rest of that process.</p>\n        </section>\n\n        <section class=\"detail-section\" id=\"invisible-investment\">\n            <h2 class=\"\">Companies still have to make the invisible investment</h2>\n            <p class=\"\">Goldman Sachs describes two phases of the transition to an AI-enabled economy. At first, an investment boom drives growth with relatively limited productivity gains. Later, changes to how firms organize their work matter more and bring bigger productivity gains. (<a href=\"https://www.goldmansachs.com/insights/articles/the-global-economy-is-forecast-to-grow-2-point-8-percent-in-2027-as-oil-prices-decline\" target=\"_blank\" rel=\"noopener\" class=\"\">Goldman Sachs</a>)</p>\n            <p class=\"\">I think there's an investment behind that transition that's easy to underestimate.</p>\n            <p class=\"\">When a company adopts AI, it can see the subscription fees and the compute bill. It's harder to count the time employees spend preparing data, rewriting rules, setting up evaluations, training colleagues, and adjusting processes after experiments fail.</p>\n            <p class=\"\">That work takes resources and may build up capabilities the company can use again and again. Unlike servers, though, those capabilities don't come with purchase orders and asset tags.</p>\n            <p class=\"\">Brynjolfsson, Rock, and Syverson examined those complementary investments in their research on the productivity J-curve. General-purpose technologies need new processes, organizational knowledge, and human capital to deliver their full benefits. Much of that investment takes the form of intangible assets that are easy to miss in the statistics. The spending happens early, while the capabilities it builds aren't fully recorded. Measured productivity improves when those capabilities start producing visible results. (<a href=\"https://www.aeaweb.org/articles?id=10.1257%2Fmac.20180386&amp;utm_source=chatgpt.com\" target=\"_blank\" rel=\"noopener\" class=\"\">American Economic Association</a>)</p>\n            <p class=\"\">That helps me see why so much small, practical work lies between buying a tool and changing the way a company operates.</p>\n            <p class=\"\">You can give a team AI accounts in short order. Deciding which steps to hand off to machines and which people should still own takes trial and error, one step at a time. Judgments that used to depend on experienced staff have to become rules people can follow and check. And when a process used to work because you could ask a particular person what went wrong, you have to work out who is responsible now.</p>\n            <p class=\"\">Get those changes right and AI can go from making one person's work easier to giving the whole organization a new capability.</p>\n            <p class=\"\">Take two teams using the same code generation tool. One just helps each developer write a little faster. The other also improves testing, review, and delivery, so that writing code faster consistently translates into shipping product changes faster. They might have bought the same tool, but they can get very different returns.</p>\n            <p class=\"\">I think a lot of the AI industry's next phase will be spent on work like this.</p>\n            <p class=\"\">Expanding a data center comes with relatively clear engineering targets: when it will be ready and how much capacity it will provide. Redesigning how a company works has to be figured out one business and one operation at a time. Concentrated spending can scale the first quickly. The second requires getting to know many different workplaces up close.</p>\n            <p class=\"\">So infrastructure and adoption move at different speeds.</p>\n            <p class=\"\">Equipment costs are already hitting the books while companies are still adjusting to new ways of working. Getting investment to pay off across that gap depends on doing the less visible work that goes with it.</p>\n        </section>\n\n        <section class=\"detail-section\" id=\"lasting-demand\">\n            <h2 class=\"\">The next round of growth needs customers who will keep paying</h2>\n            <p class=\"\">By this point in Goldman Sachs' forecast, whether capital spending can set another record in a given year is no longer what interests me most.</p>\n            <p class=\"\">I'd rather know whether the facilities we've built can give more customers a reason to keep paying.</p>\n            <p class=\"\">For infrastructure companies, that means looking at utilization, service revenue, and what's left after operating costs and depreciation. For companies using AI, the question is whether a whole operation really runs better and costs less once you include procurement, integration, human review, and rework.</p>\n            <p class=\"\">When the numbers work for both sides, the next round of investment has a firmer basis in demand.</p>\n            <p class=\"\">There could be another interesting change here: as AI becomes cheaper and easier to use, some of the gains move from suppliers to users.</p>\n            <p class=\"\">Suppose competition and better technology bring down the price of a service. The supplier's revenue may grow more slowly, while customers get to use more of it at a lower cost. That's one way the gains concentrated in a handful of companies during the build-out could spread to many more businesses and consumers.</p>\n            <p class=\"\">That's the next stage I'd like to see. Bigger investment numbers are one thing; I'd rather see more ordinary companies show what they got out of it: more usable products from the same team, better service for the same budget, and work that used to be too expensive becoming affordable.</p>\n            <p class=\"\">That's how AI's economic impact can reach beyond the companies building it.</p>\n            <p class=\"\">Construction will continue, of course, and adoption is already underway. The two will overlap for a long time. What I'll be watching is whether the capacity already in use can keep creating new output as the boost from new construction wears off.</p>\n            <p class=\"\">Coming back to the $700 billion and the 0.1 percentage point, I'm more interested now in what happens between those numbers.</p>\n            <p class=\"\">An investment becomes a piece of equipment, the equipment provides a service, and the service becomes part of how another company works every day. At every step, someone has to turn technical capability into something people can use and pay for, and that businesses can keep delivering. How much the world economy gets from AI in the long run depends in large part on how far that process goes.</p>\n            <p class=\"\">Over the past few years, AI has supported the economy through the work of building itself. To keep that growth going, it will have to create more value by changing how other industries work.</p>\n        </section>",
+      "sections": [
+        {
+          "id": "intro",
+          "title": "Introduction"
+        },
+        {
+          "id": "growth-baseline",
+          "title": "Growth starts from where last year left off"
+        },
+        {
+          "id": "global-economy",
+          "title": "AI is expanding. The world economy has other bills to reckon with."
+        },
+        {
+          "id": "orders-and-costs",
+          "title": "Orders come early. Costs stick around."
+        },
+        {
+          "id": "time-savings",
+          "title": "Where did the time savings go?"
+        },
+        {
+          "id": "invisible-investment",
+          "title": "Companies still have to make the invisible investment"
+        },
+        {
+          "id": "lasting-demand",
+          "title": "The next round of growth needs customers who will keep paying"
+        }
+      ],
+      "related": [
+        9,
+        10,
+        12
+      ]
+    },
+    {
+      "num": 2,
+      "source_slug": "good-trip-film-essay",
+      "slug": "article-02.html",
       "title": "The Props Are Fake: On Good Trip",
       "title_html": "The Props Are Fake: On <em>Good Trip</em>",
       "topic": 6,
@@ -1740,15 +1788,15 @@
         }
       ],
       "related": [
-        13,
-        40,
-        42
+        14,
+        41,
+        43
       ]
     },
     {
-      "num": 2,
+      "num": 3,
       "source_slug": "weight-space-programming",
-      "slug": "article-02.html",
+      "slug": "article-03.html",
       "title": "Why Retrain Every Time a Model Breaks?",
       "title_html": "Why Retrain Every Time a <em>Model Breaks</em>?",
       "topic": 1,
@@ -1792,15 +1840,15 @@
         }
       ],
       "related": [
-        3,
         4,
-        17
+        5,
+        18
       ]
     },
     {
-      "num": 3,
+      "num": 4,
       "source_slug": "gaac-kv-cache-bandwidth",
-      "slug": "article-03.html",
+      "slug": "article-04.html",
       "title": "The Model Fits. Why Is It Still Slow?",
       "title_html": "The Model Fits. <em>Why Is It Still Slow?</em>",
       "topic": 1,
@@ -1848,15 +1896,15 @@
         }
       ],
       "related": [
-        2,
-        4,
-        17
+        3,
+        5,
+        18
       ]
     },
     {
-      "num": 4,
+      "num": 5,
       "source_slug": "physics-benchmark-grading",
-      "slug": "article-04.html",
+      "slug": "article-05.html",
       "title": "When the Exam Is Wrong: What Do AI Scores Measure?",
       "title_html": "When the Exam Is Wrong: <em>What Do AI Scores Measure?</em>",
       "topic": 1,
@@ -1904,15 +1952,15 @@
         }
       ],
       "related": [
-        2,
         3,
-        17
+        4,
+        18
       ]
     },
     {
-      "num": 5,
+      "num": 6,
       "source_slug": "data-center-grid-protection",
-      "slug": "article-05.html",
+      "slug": "article-06.html",
       "title": "When Data Centers Protect Themselves: A 3.8 GW Load Transfer",
       "title_html": "When Data Centers Protect Themselves: <em>A <span class=\"power-quantity\">3.8 GW</em> Load Transfer</span>",
       "topic": 4,
@@ -1960,15 +2008,15 @@
         }
       ],
       "related": [
-        6,
-        10,
-        24
+        7,
+        11,
+        25
       ]
     },
     {
-      "num": 6,
+      "num": 7,
       "source_slug": "encrypted-substring-search",
-      "slug": "article-06.html",
+      "slug": "article-07.html",
       "title": "Can You Search Inside Encrypted Data?",
       "title_html": "Can You Search Inside <em>Encrypted Data</em>?",
       "topic": 4,
@@ -2028,15 +2076,15 @@
         }
       ],
       "related": [
-        5,
-        10,
-        24
+        6,
+        11,
+        25
       ]
     },
     {
-      "num": 7,
+      "num": 8,
       "source_slug": "agent-goals-permission-boundaries",
-      "slug": "article-07.html",
+      "slug": "article-08.html",
       "title": "AI Can Cross Permission Boundaries Without Malice",
       "title_html": "AI Can Cross <em>Permission Boundaries</em> Without Malice",
       "topic": 2,
@@ -2076,15 +2124,15 @@
         }
       ],
       "related": [
-        16,
-        20,
-        21
+        17,
+        21,
+        22
       ]
     },
     {
-      "num": 8,
+      "num": 9,
       "source_slug": "kimi-claude-distillation-rights",
-      "slug": "article-08.html",
+      "slug": "article-09.html",
       "title": "Who Gets to Train on Whom?",
       "title_html": "Who Gets to <em>Train on Whom</em>?",
       "topic": 5,
@@ -2124,15 +2172,15 @@
         }
       ],
       "related": [
-        9,
-        11,
+        1,
+        10,
         12
       ]
     },
     {
-      "num": 9,
+      "num": 10,
       "source_slug": "robot-three-clocks",
-      "slug": "article-09.html",
+      "slug": "article-10.html",
       "title": "The Three Clocks of Robotics",
       "title_html": "The <em>Three Clocks</em> of Robotics",
       "topic": 5,
@@ -2172,15 +2220,15 @@
         }
       ],
       "related": [
-        8,
-        11,
+        1,
+        9,
         12
       ]
     },
     {
-      "num": 10,
+      "num": 11,
       "source_slug": "mac-personal-ai-runtime",
-      "slug": "article-10.html",
+      "slug": "article-11.html",
       "title": "Mac Is Becoming the Ideal Runtime for Personal AI Apps",
       "title_html": "Mac Is Becoming the <em>Ideal Runtime</em> for Personal AI Apps",
       "topic": 4,
@@ -2228,15 +2276,15 @@
         }
       ],
       "related": [
-        5,
         6,
-        24
+        7,
+        25
       ]
     },
     {
-      "num": 11,
+      "num": 12,
       "source_slug": "huawei-tau-law-media-narrative",
-      "slug": "article-11.html",
+      "slug": "article-12.html",
       "title": "When a Technology Roadmap Becomes a Law",
       "title_html": "When a Technology Roadmap Becomes a <em>Law</em>",
       "topic": 5,
@@ -2276,15 +2324,15 @@
         }
       ],
       "related": [
-        8,
+        1,
         9,
-        12
+        10
       ]
     },
     {
-      "num": 12,
+      "num": 13,
       "source_slug": "embodied-ai-commercial-loop",
-      "slug": "article-12.html",
+      "slug": "article-13.html",
       "title": "The Real Test for Embodied AI in China Is Not Acrobatics, but a Commercial Loop",
       "title_html": "The Real Test for Embodied AI in China Is Not Acrobatics, but a <em>Commercial Loop</em>",
       "topic": 5,
@@ -2324,15 +2372,15 @@
         }
       ],
       "related": [
-        8,
+        1,
         9,
-        11
+        10
       ]
     },
     {
-      "num": 13,
+      "num": 14,
       "source_slug": "family-risk-architecture",
-      "slug": "article-13.html",
+      "slug": "article-14.html",
       "title": "Treat the Family as a System: The Risk Architecture Behind Middle-Class Decline",
       "title_html": "Treat the Family as a System: The <em>Risk Architecture</em> Behind Middle-Class Decline",
       "topic": 6,
@@ -2372,15 +2420,15 @@
         }
       ],
       "related": [
-        1,
-        40,
-        42
+        2,
+        41,
+        43
       ]
     },
     {
-      "num": 14,
+      "num": 15,
       "source_slug": "ai-white-collar-false-security",
-      "slug": "article-14.html",
+      "slug": "article-15.html",
       "title": "AI Will Not Erase White-Collar Workers, but It Will Erase Their False Security",
       "title_html": "AI Will Not Erase White-Collar Workers, but It Will Erase Their <em>False Security</em>",
       "topic": 5,
@@ -2420,15 +2468,15 @@
         }
       ],
       "related": [
-        8,
+        1,
         9,
-        11
+        10
       ]
     },
     {
-      "num": 15,
+      "num": 16,
       "source_slug": "google-io-ai-workflow-control",
-      "slug": "article-15.html",
+      "slug": "article-16.html",
       "title": "After Google I/O, AI Competition Is Shifting Toward Workflow Control",
       "title_html": "After Google I/O, AI Competition Is Shifting Toward <em>Workflow Control</em>",
       "topic": 5,
@@ -2468,15 +2516,15 @@
         }
       ],
       "related": [
-        8,
+        1,
         9,
-        11
+        10
       ]
     },
     {
-      "num": 16,
+      "num": 17,
       "source_slug": "multi-agent-architecture-lab",
-      "slug": "article-16.html",
+      "slug": "article-17.html",
       "title": "I Ran a Multi-Agent Architecture Experiment: Complex Systems Are Not Automatically Smarter",
       "title_html": "I Ran a Multi-Agent Architecture Experiment: Complex Systems Are Not Automatically <em>Smarter</em>",
       "topic": 2,
@@ -2520,15 +2568,15 @@
         }
       ],
       "related": [
-        7,
-        20,
-        21
+        8,
+        21,
+        22
       ]
     },
     {
-      "num": 17,
+      "num": 18,
       "source_slug": "ai-engineering-boundaries",
-      "slug": "article-17.html",
+      "slug": "article-18.html",
       "title": "The Core of AI Engineering Is Not Making Models Omnipotent. It Is Defining Boundaries",
       "title_html": "The Core of AI Engineering Is Not Making Models Omnipotent. It Is <em>Defining Boundaries</em>",
       "topic": 1,
@@ -2568,15 +2616,15 @@
         }
       ],
       "related": [
-        2,
         3,
-        4
+        4,
+        5
       ]
     },
     {
-      "num": 18,
+      "num": 19,
       "source_slug": "enterprise-ai-data-readiness",
-      "slug": "article-18.html",
+      "slug": "article-19.html",
       "title": "For Enterprise AI On-Prem, the First Step Is Not Buying GPUs. It Is Cleaning Data",
       "title_html": "For Enterprise AI On-Prem, the First Step Is Not Buying GPUs. It Is <em>Cleaning Data</em>",
       "topic": 1,
@@ -2612,15 +2660,15 @@
         }
       ],
       "related": [
-        2,
         3,
-        4
+        4,
+        5
       ]
     },
     {
-      "num": 19,
+      "num": 20,
       "source_slug": "unet-industrial-segmentation",
-      "slug": "article-19.html",
+      "slug": "article-20.html",
       "title": "U-Net Did Not Lose to a Newer Model: In Industrial Vision, Define the Task Before Choosing the Model",
       "title_html": "U-Net Did Not Lose to a Newer Model: In Industrial Vision, <em>Define the Task</em> Before Choosing the Model",
       "topic": 3,
@@ -2656,15 +2704,15 @@
         }
       ],
       "related": [
-        26,
-        31,
-        37
+        27,
+        32,
+        38
       ]
     },
     {
-      "num": 20,
+      "num": 21,
       "source_slug": "multi-agent-context-boundaries",
-      "slug": "article-20.html",
+      "slug": "article-21.html",
       "title": "The Real Problem in Multi-Agent Architecture Is Context Boundaries, Not Roles",
       "title_html": "The Real Problem in Multi-Agent Architecture Is <em>Context Boundaries</em>, Not Roles",
       "topic": 2,
@@ -2700,15 +2748,15 @@
         }
       ],
       "related": [
-        7,
-        16,
-        21
+        8,
+        17,
+        22
       ]
     },
     {
-      "num": 21,
+      "num": 22,
       "source_slug": "multi-agent-collaboration-results",
-      "slug": "article-21.html",
+      "slug": "article-22.html",
       "title": "When Multi-Agent Is Actually Needed: Splitting, Collaboration, and Result Merging",
       "title_html": "When Multi-Agent Is Actually Needed: Splitting, Collaboration, and <em>Result Merging</em>",
       "topic": 2,
@@ -2744,15 +2792,15 @@
         }
       ],
       "related": [
-        7,
-        16,
-        20
+        8,
+        17,
+        21
       ]
     },
     {
-      "num": 22,
+      "num": 23,
       "source_slug": "engineer-abstraction-layers",
-      "slug": "article-22.html",
+      "slug": "article-23.html",
       "title": "The Essence of Engineering Growth Is Moving Up Abstraction Layers",
       "title_html": "The Essence of Engineering Growth Is <em>Moving Up Abstraction Layers</em>",
       "topic": 5,
@@ -2788,15 +2836,15 @@
         }
       ],
       "related": [
-        8,
+        1,
         9,
-        11
+        10
       ]
     },
     {
-      "num": 23,
+      "num": 24,
       "source_slug": "agent-task-system-architecture",
-      "slug": "article-23.html",
+      "slug": "article-24.html",
       "title": "AI Agents Are Reshaping System Architecture: From Feature Systems to Task Systems",
       "title_html": "AI Agents Are Reshaping System Architecture: From <em>Feature Systems</em> to Task Systems",
       "topic": 2,
@@ -2836,15 +2884,15 @@
         }
       ],
       "related": [
-        7,
-        16,
-        20
+        8,
+        17,
+        21
       ]
     },
     {
-      "num": 24,
+      "num": 25,
       "source_slug": "database-not-system-center",
-      "slug": "article-24.html",
+      "slug": "article-25.html",
       "title": "How Would We Design Systems Without Starting From a Database?",
       "title_html": "How Would We Design Systems <em>Without Starting From a Database?</em>",
       "topic": 4,
@@ -2880,15 +2928,15 @@
         }
       ],
       "related": [
-        5,
         6,
-        10
+        7,
+        11
       ]
     },
     {
-      "num": 25,
+      "num": 26,
       "source_slug": "technical-debt-org-game",
-      "slug": "article-25.html",
+      "slug": "article-26.html",
       "title": "Technical Debt Is Not Code Smell; It Is How an Organization Prices the Future",
       "title_html": "Technical Debt Is Not Code Smell; It Is <em>How an Organization Prices the Future</em>",
       "topic": 4,
@@ -2928,15 +2976,15 @@
         }
       ],
       "related": [
-        5,
         6,
-        10
+        7,
+        11
       ]
     },
     {
-      "num": 26,
+      "num": 27,
       "source_slug": "vision-engineer-not-operator",
-      "slug": "article-26.html",
+      "slug": "article-27.html",
       "title": "Vision Algorithm Engineers: Do Not Become Process Operators",
       "title_html": "Vision Algorithm Engineers: Do Not Become <em>Process Operators</em>",
       "topic": 3,
@@ -2972,15 +3020,15 @@
         }
       ],
       "related": [
-        19,
-        31,
-        37
+        20,
+        32,
+        38
       ]
     },
     {
-      "num": 27,
+      "num": 28,
       "source_slug": "agentic-business-systems",
-      "slug": "article-27.html",
+      "slug": "article-28.html",
       "title": "Stop Building Business Systems as CRUD Wrappers",
       "title_html": "Stop Building Business Systems as <em>CRUD Wrappers</em>",
       "topic": 4,
@@ -3016,15 +3064,15 @@
         }
       ],
       "related": [
-        5,
         6,
-        10
+        7,
+        11
       ]
     },
     {
-      "num": 28,
+      "num": 29,
       "source_slug": "ai-agent-architecture",
-      "slug": "article-28.html",
+      "slug": "article-29.html",
       "title": "AI Agent Architecture: From Chatting to Executing",
       "title_html": "AI Agent Architecture: From Chatting to <em>Executing</em>",
       "topic": 2,
@@ -3064,15 +3112,15 @@
         }
       ],
       "related": [
-        7,
-        16,
-        20
+        8,
+        17,
+        21
       ]
     },
     {
-      "num": 29,
+      "num": 30,
       "source_slug": "ai-workflow-agent-blog",
-      "slug": "article-29.html",
+      "slug": "article-30.html",
       "title": "The AI Workflow Battle: Why the Real Endgame Is Not Tools but the Work Agent Layer",
       "title_html": "The AI Workflow Battle: Why the Real Endgame Is Not Tools but the Work Agent Layer",
       "topic": 2,
@@ -3116,15 +3164,15 @@
         }
       ],
       "related": [
-        7,
-        16,
-        20
+        8,
+        17,
+        21
       ]
     },
     {
-      "num": 30,
+      "num": 31,
       "source_slug": "ai-weekly-agent-platform",
-      "slug": "article-30.html",
+      "slug": "article-31.html",
       "title": "AI Weekly: Agent Platforms Scale Up, Models Keep Advancing, and AI Hardware Moves Toward the Edge",
       "title_html": "AI Weekly: Agent Platforms Scale Up, Models Keep Advancing, and AI Hardware Moves Toward the Edge",
       "topic": 5,
@@ -3164,15 +3212,15 @@
         }
       ],
       "related": [
-        8,
+        1,
         9,
-        11
+        10
       ]
     },
     {
-      "num": 31,
+      "num": 32,
       "source_slug": "vision-rollout-metrics",
-      "slug": "article-31.html",
+      "slug": "article-32.html",
       "title": "After a Vision Model Ships: Do Not Let mAP Become the Only Answer",
       "title_html": "After a Vision Model Ships: Do Not Let <em>mAP</em> Become the Only Answer",
       "topic": 3,
@@ -3208,15 +3256,15 @@
         }
       ],
       "related": [
-        19,
-        26,
-        37
+        20,
+        27,
+        38
       ]
     },
     {
-      "num": 32,
+      "num": 33,
       "source_slug": "code-review-debt",
-      "slug": "article-32.html",
+      "slug": "article-33.html",
       "title": "Code Review Debt in the Age of AI Coding",
       "title_html": "Code Review Debt in the Age of AI Coding",
       "topic": 1,
@@ -3248,15 +3296,15 @@
         }
       ],
       "related": [
-        2,
         3,
-        4
+        4,
+        5
       ]
     },
     {
-      "num": 33,
+      "num": 34,
       "source_slug": "context-rot",
-      "slug": "article-33.html",
+      "slug": "article-34.html",
       "title": "Context Rot: Why LLMs Get \"Dumber\" the Longer You Talk",
       "title_html": "Context Rot: Why LLMs Get \"Dumber\" the Longer You Talk",
       "topic": 1,
@@ -3292,15 +3340,15 @@
         }
       ],
       "related": [
-        2,
         3,
-        4
+        4,
+        5
       ]
     },
     {
-      "num": 34,
+      "num": 35,
       "source_slug": "token-economy",
-      "slug": "article-34.html",
+      "slug": "article-35.html",
       "title": "Token Economics: When the \"Raw Material\" of the AI Era Keeps Getting Pricier",
       "title_html": "Token Economics: When the \"Raw Material\" of the AI Era Keeps Getting Pricier",
       "topic": 1,
@@ -3336,15 +3384,15 @@
         }
       ],
       "related": [
-        2,
         3,
-        4
+        4,
+        5
       ]
     },
     {
-      "num": 35,
+      "num": 36,
       "source_slug": "ai-agent-thoughts",
-      "slug": "article-35.html",
+      "slug": "article-36.html",
       "title": "AI Agents: Reshaping Workflows or the Next Bubble?",
       "title_html": "AI Agents: Reshaping Workflows or the Next Bubble?",
       "topic": 2,
@@ -3376,15 +3424,15 @@
         }
       ],
       "related": [
-        7,
-        16,
-        20
+        8,
+        17,
+        21
       ]
     },
     {
-      "num": 36,
+      "num": 37,
       "source_slug": "open-source-hype",
-      "slug": "article-36.html",
+      "slug": "article-37.html",
       "title": "The \"Three-Month Law\" of Open Source: From Hype to Abandonment",
       "title_html": "The \"Three-Month Law\" of Open Source: From Hype to Abandonment",
       "topic": 5,
@@ -3420,15 +3468,15 @@
         }
       ],
       "related": [
-        8,
+        1,
         9,
-        11
+        10
       ]
     },
     {
-      "num": 37,
+      "num": 38,
       "source_slug": "transformer-detection",
-      "slug": "article-37.html",
+      "slug": "article-38.html",
       "title": "From DETR to YOLOv8: Transformer Evolution in Object Detection",
       "title_html": "From DETR to YOLOv8: Transformer Evolution in Object Detection",
       "topic": 3,
@@ -3472,15 +3520,15 @@
         }
       ],
       "related": [
-        19,
-        26,
-        31
+        20,
+        27,
+        32
       ]
     },
     {
-      "num": 38,
+      "num": 39,
       "source_slug": "turborepo-trpc",
-      "slug": "article-38.html",
+      "slug": "article-39.html",
       "title": "Real-Time Data Processing: Flink + Kafka Best Practices",
       "title_html": "Real-Time Data Processing: Flink + Kafka Best Practices",
       "topic": 4,
@@ -3528,15 +3576,15 @@
         }
       ],
       "related": [
-        5,
         6,
-        10
+        7,
+        11
       ]
     },
     {
-      "num": 39,
+      "num": 40,
       "source_slug": "webgpu-dl",
-      "slug": "article-39.html",
+      "slug": "article-40.html",
       "title": "WebGPU: Running Deep Learning Inference in the Browser",
       "title_html": "WebGPU: Running Deep Learning Inference in the Browser",
       "topic": 1,
@@ -3580,15 +3628,15 @@
         }
       ],
       "related": [
-        2,
         3,
-        4
+        4,
+        5
       ]
     },
     {
-      "num": 40,
+      "num": 41,
       "source_slug": "feminism-thoughts",
-      "slug": "article-40.html",
+      "slug": "article-41.html",
       "title": "How to Objectively View Modern Feminism",
       "title_html": "How to Objectively View Modern Feminism",
       "topic": 6,
@@ -3620,15 +3668,15 @@
         }
       ],
       "related": [
-        1,
-        13,
-        42
+        2,
+        14,
+        43
       ]
     },
     {
-      "num": 41,
+      "num": 42,
       "source_slug": "image-pipeline",
-      "slug": "article-41.html",
+      "slug": "article-42.html",
       "title": "Scalable Image Processing Pipeline: From Python to Kubernetes",
       "title_html": "Scalable Image Processing Pipeline: From Python to Kubernetes",
       "topic": 3,
@@ -3672,15 +3720,15 @@
         }
       ],
       "related": [
-        19,
-        26,
-        31
+        20,
+        27,
+        32
       ]
     },
     {
-      "num": 42,
+      "num": 43,
       "source_slug": "involution-choice",
-      "slug": "article-42.html",
+      "slug": "article-43.html",
       "title": "\"Involution\" vs \"Lying Flat\": Anxiety and Breakthrough of a Generation",
       "title_html": "\"Involution\" vs \"Lying Flat\": Anxiety and Breakthrough of a Generation",
       "topic": 6,
@@ -3716,15 +3764,15 @@
         }
       ],
       "related": [
-        1,
-        13,
-        40
+        2,
+        14,
+        41
       ]
     },
     {
-      "num": 43,
+      "num": 44,
       "source_slug": "sam2-inspection",
-      "slug": "article-43.html",
+      "slug": "article-44.html",
       "title": "SAM 2 in Industrial Inspection: From Prompt Engineering to Production",
       "title_html": "SAM 2 in Industrial Inspection: From Prompt Engineering to Production",
       "topic": 3,
@@ -3772,9 +3820,9 @@
         }
       ],
       "related": [
-        19,
-        26,
-        31
+        20,
+        27,
+        32
       ]
     }
   ]
