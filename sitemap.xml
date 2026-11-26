@@ -2,19 +2,19 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://erichz.site/zh/</loc>
-    <lastmod>2026-11-17</lastmod>
+    <lastmod>2026-11-26</lastmod>
   </url>
   <url>
     <loc>https://erichz.site/en/</loc>
-    <lastmod>2026-11-17</lastmod>
+    <lastmod>2026-11-26</lastmod>
   </url>
   <url>
     <loc>https://erichz.site/blog/</loc>
-    <lastmod>2026-11-17</lastmod>
+    <lastmod>2026-11-26</lastmod>
   </url>
   <url>
     <loc>https://erichz.site/en/blog/</loc>
-    <lastmod>2026-11-17</lastmod>
+    <lastmod>2026-11-26</lastmod>
   </url>
   <url>
     <loc>https://erichz.site/blog/topics/ai</loc>
@@ -58,11 +58,19 @@
   </url>
   <url>
     <loc>https://erichz.site/blog/topics/essay</loc>
-    <lastmod>2026-11-08</lastmod>
+    <lastmod>2026-11-26</lastmod>
   </url>
   <url>
     <loc>https://erichz.site/en/blog/topics/essay</loc>
-    <lastmod>2026-11-08</lastmod>
+    <lastmod>2026-11-26</lastmod>
+  </url>
+  <url>
+    <loc>https://erichz.site/blog/shenzhen-asynchronous-modernity</loc>
+    <lastmod>2026-11-26</lastmod>
+  </url>
+  <url>
+    <loc>https://erichz.site/en/blog/shenzhen-asynchronous-modernity</loc>
+    <lastmod>2026-11-26</lastmod>
   </url>
   <url>
     <loc>https://erichz.site/blog/ai-investment-global-growth</loc>

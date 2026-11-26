@@ -442,7 +442,7 @@
       "num": 6,
       "slug": "essay",
       "label": "Social Essays",
-      "desc": "Topic Archive — 4 articles"
+      "desc": "Topic Archive — 5 articles"
     }
   ],
   "projects": [
@@ -1703,8 +1703,48 @@
   "articles": [
     {
       "num": 1,
-      "source_slug": "ai-investment-global-growth",
+      "source_slug": "shenzhen-asynchronous-modernity",
       "slug": "article-01.html",
+      "title": "When the Future Outruns People: The BBC Shenzhen Dispute and Asynchronous Modernity",
+      "title_html": "<em>When the Future Outruns People</em>: The BBC Shenzhen Dispute and Asynchronous Modernity",
+      "topic": 6,
+      "lede": "A nine-minute report from Shenzhen reveals how technology, industry, and human lives run on different clocks.",
+      "date": "2026.11.26",
+      "readtime": "18 min",
+      "author": "Eric Pan",
+      "body": "<section class=\"detail-section\" id=\"beyond-the-filter\">\n            <h2 class=\"\">I. Beyond the fight over cameras and filters</h2>\n            <p class=\"\">In mid-November 2026, the day before the APEC Economic Leaders' Meeting in Shenzhen, the BBC released a nine-minute, eleven-second video report on the city. A familiar uproar soon erupted across the Chinese internet and overseas social platforms. On one side were bystanders' videos of clear blue skies and warm smiles in Shenzhen Talent Park; on the other, accusations of a \"gloomy filter,\" \"selective smearing,\" and the familiar \"but at what cost?\" State-media commentaries quickly demanded an apology. Clips and screenshots flew back and forth in the comments, and the whole affair slid into a confrontation everyone already knew by heart.</p>\n            <p class=\"\">But close the comments for a moment and patiently watch the full nine-minute <a href=\"http://www.youtube.com/watch?v=n6EGnueJmt4\" target=\"_blank\" rel=\"noopener\" class=\"\">original BBC video</a>. Something may surprise you: the \"gloomy filter\" condemned over and over in the uproar isn't actually there in the original.</p>\n            <p class=\"\">The first four minutes and more are bright and restrained, even openly admiring. The camera moves through sunlit Shenzhen Talent Park, records the everyday ease of ordering a drone-delivered coffee for a few yuan, and enters a brightly lit humanoid robotics lab. The film doesn't deliberately darken its colors to make the city look ugly. When its second half turns to urban villages, day-labor recruitment streets, and food stalls at night, the images and interviews retain the straightforward quality of ordinary documentary reporting. It fabricates no figures and neither glorifies its interviewees nor puts words in their mouths.</p>\n            <p class=\"\">Precisely because the original isn't so obviously malicious, the uproar deserves a closer look. How did it flare up out of thin air?</p>\n            <p class=\"\">The most immediate answer has to do with today's media environment. In an ecosystem dominated by short clips and screenshots, very few people will spend nine minutes watching an entire report. This film naturally divides into a bright first half and a somber second half, making it easy to split into two disconnected sets of visual specimens. Some share sunny footage of passersby and mock foreign media for \"leaving the gray filter back in London.\" Others fixate on the headline's promise of \"what they won't see,\" reinforcing whatever they already believed. The two sides shouting past each other are no longer looking at the same work. Each is looking at a secondhand substitute cut to its own purposes.</p>\n            <p class=\"\">At a deeper level lies the unavoidable question of standing in international public debate. On the eve of a global summit, a long-established Western broadcaster turns its camera toward job insecurity and falling incomes in the host city. That is bound to put audiences on guard. Even when the facts on screen hold up, criticism from an outside voice long accused of double standards can immediately shift the question from \"Is this true?\" to \"What gives you the right to judge us?\" A record of ordinary workers' circumstances becomes a struggle over dignity, bias, and who gets to tell the story.</p>\n            <p class=\"\">Yet this apparently fierce dispute has stumbled into a kind of tacit agreement.</p>\n            <p class=\"\">When everyone focuses on the reporter's motives, the color temperature, foreign-media double standards, and whether an apology is due, what everyone is really arguing about is the camera. Is its color distorted? What is the person holding it up to? The greatest convenience of arguing about the camera is that it gives everyone a respectable reason not to look closely at the reality it is pointing at.</p>\n        </section>\n\n        <section class=\"detail-section\" id=\"two-faces\">\n            <h2 class=\"\">II. Two faces within the same square kilometer</h2>\n            <p class=\"\">Try asking the BBC to leave the room, shutting out Global Times and the noisy comments as well, and looking only at the people who actually appear in those nine minutes. The images are much quieter than the media war, and much heavier.</p>\n            <p class=\"\">Two equally real, equally sincere faces stand before the camera.</p>\n            <p class=\"\">One belongs to the young AI robotics engineer Huang Shihua. In a clean, brightly lit laboratory, he stands beside a humanoid robot being tested, speaking with confidence and pride. To him, this is where the world's fastest hardware iteration meets its most ambitious technological imagination. As he warms to his subject, he blurts out: \"Today's Shenzhen is the new America.\" His excitement at being at the forefront of an era doesn't look performed. It seems more like an everyday feeling among some of the city's best engineers.</p>\n            <p class=\"\">The other face belongs to Ms Lu, a woman around fifty. She once ran a circuit-board business in Shenzhen, catching the years when the city charged ahead on the strength of manufacturing. Now that business has closed, she works as an in-building courier, taking lunches from food-delivery riders up fifty or sixty stories and earning a small fee for each order's final hundred meters. She barely complains to the camera. She simply does the sums: a day's work used to bring in three or four hundred yuan; now it brings in two or three hundred.</p>\n            <p class=\"\">Look a little farther down the street, and the picture becomes more complicated, harder to reduce to \"misery\" or \"hardship.\" On Longhua's recruitment streets, factory hiring boards advertise hourly wages of twenty-five or twenty-six yuan. The labor agent Li Xiaohe tells the camera something outsiders often overlook. Many workers turn to day-paid gigs not simply because they can't get factory jobs, but because signing a formal factory contract means deductions for income tax and social insurance, leaving less cash in hand. Faced with immediate survival, many have done their own sums: trade long-term institutional protection for cash they can hold today.</p>\n            <p class=\"\">That clear-eyed calculation breaks with the usual one-dimensional image of workers at the bottom. They aren't passive. Within a limited set of choices, they know exactly what they are doing. But when more and more people have to shrink their planning horizon from \"protection ten years from now\" to \"next month's rent,\" that alone says a great deal.</p>\n            <p class=\"\">Place these two groups of people against Shenzhen's macroeconomic figures and the contrast becomes more striking. Open the city's 2025 Statistical Communiqué on National Economic and Social Development and you'll find some compelling numbers. Year-end permanent residents exceeded eighteen million for the first time, reaching 18.2485 million. Annual per capita GDP reached 213,800 yuan, with the tertiary sector accounting for 62.5% of the economy and the secondary sector 37.4%. By any of these measures, the city remains one of China's most attractive growth engines, with one of its most advanced industrial structures.</p>\n            <p class=\"\">But the same communiqué contains other figures worth noticing. About two-thirds of those 18.24 million permanent residents still lack local household registration. Over the same period, enrollment in basic medical insurance for urban employees fell slightly, by 0.4%, to 14.1937 million, while enrollment in basic medical insurance for urban and rural residents rose 5.4%, to 3.2726 million. Set against roughly two hundred million people in flexible employment nationwide, some subtle movement becomes apparent. Growth at the macro level and tightening circumstances at the micro level don't cancel each other out. They happen in the same city, in the same annual report.</p>\n            <p class=\"\">If both sides are real, why is seeing them together in a single nine-minute video still so jarring, even producing a sense of rupture that is hard to put into words?</p>\n        </section>\n\n        <section class=\"detail-section\" id=\"three-clocks\">\n            <h2 class=\"\">III. Asynchronous modernity: when three clocks fall out of step</h2>\n            <p class=\"\">Before going further, we need to sort out one question of cause and effect, or we risk laying all the blame at technology's door.</p>\n            <p class=\"\">It wasn't the humanoid robot just learning to walk in Huang Shihua's laboratory that forced Ms Lu to close her circuit-board business. Nor was it the delivery drone over Talent Park that drove down her fee for taking food upstairs. As the interviewees themselves point out, the pressures ordinary workers feel come directly from a combination of more mundane, heavier forces: a slow recovery in consumption after the pandemic, spillovers from a deep property-market adjustment, widespread price wars, and the inevitable movement of low-margin manufacturing inland or to Southeast Asia as land and labor costs rise in megacities.</p>\n            <p class=\"\">Humanoid robots are still nowhere near replacing workers on electronics assembly lines at scale. So why does cutting between a frontier AI lab and a fifty-year-old delivery woman remain so jarring?</p>\n            <p class=\"\">Because even if technology isn't directly dismantling the old steps, it shows us, with extraordinary visual force, just how high the new steps sit. As traditional manufacturing retreats and lower-end jobs come under pressure, the new opportunities growing in the city—embodied AI, the low-altitude economy, large-model research, and capital-intensive hard technology—set sharply higher thresholds for knowledge, age, and capital. Old ways of making a living are narrowing, while the new ones are being built on floors most middle-aged industrial workers cannot reach.</p>\n            <p class=\"\">So the distance between Huang Shihua and Ms Lu may be more than a gap in income or class. It is also a dislocation in time.</p>\n            <p class=\"\">Open up a modern city running at extraordinary speed and you will find three clocks ticking at very different rates.</p>\n            <p class=\"\">The first is the clock of technology and capital, measured in spans of two to five years. In Shenzhen's science parks, hardware designs, algorithm architectures, and business opportunities are reshuffled almost every two or three years. On this clock, discarding the old isn't a tragedy. It is proof of vitality.</p>\n            <p class=\"\">The second is the clock of industry and supply chains, measured in roughly ten to fifteen years. From the early export-processing model known as \"three forms of processing and compensation trade,\" through Huaqiangbei's white-label ecosystem and smartphone supply chains, to electric vehicles and smart hardware, Shenzhen's industrial base undergoes a major replacement about once a decade. An economic niche that once fed a family and sustained a small factory can lose its comparative advantage within half a generation.</p>\n            <p class=\"\">The third is the clock of human lives and social institutions. Its ticks are much longer, measured in generational cycles of thirty or forty years. An ordinary person learning a trade, saving to start a business, settling a family, raising children, and planning for old age relies not on agile iteration every three years, but on a long, stable contract with time. You believe that the skills you learn at twenty-five will at least carry you with dignity to fifty-five. Institutional infrastructure such as household registration, portable social insurance, and vocational retraining moves just as slowly. It tends to follow upheaval with patches, always half a step behind.</p>\n            <p class=\"\">In the 1930s, observing a turbulent modern society, the German philosopher Ernst Bloch proposed the idea of \"the non-simultaneity of the simultaneous,\" or Ungleichzeitigkeit. People share the same year on the calendar but live in different eras in their modes of production, historical experience, and inner lives. Nearly a century later, the scene is playing out again in Shenzhen, with a more science-fiction cast. In physical space, the skyscrapers Ms Lu enters each day carrying lunch boxes are precisely the buildings encoding the future. On a timeline, however, the engineers inside have already stepped into the intelligent civilization of 2035, while she emerges from the elevator carrying the aftershocks of industrialization's first receding wave.</p>\n            <p class=\"\">In Social Acceleration, the sociologist Hartmut Rosa explains this dislocation further through lived experience. When social change outpaces the natural span of a generation, people encounter a \"contraction of the present.\" Accumulated experience can no longer reliably predict the future, and the stable window in which a person can build a life grows ever thinner. In traditional agricultural society, a father's craft could serve three generations. In classical industrial society, learning a trade could at least offer steady work until retirement. In today's high-speed society, a person's working life often lasts longer than a single industry's life cycle. Ms Lu hasn't fallen behind through laziness or bad judgment. She worked diligently by the previous generation's rules, only to discover halfway through life that the city's operating system had skipped two major versions and no longer offered backward compatibility.</p>\n            <p class=\"\">Interestingly, people like Huang Shihua aren't secure winners in this accelerating system either. Rosa uses \"dynamic stabilization\" to describe a basic paradox of modern society: cities and individuals alike must keep running faster and innovating just to hold their position. The young engineer in the laboratory spotlight is bound just as tightly to that two-to-five-year technology clock. Frameworks become obsolete, windfalls peak, and energy declines. Everyone is on the same ever-accelerating treadmill. Ms Lu's generation has simply reached the edge first, where the centrifugal force throws people off.</p>\n            <p class=\"\">Looking back on the upheaval of Britain's Industrial Revolution in The Great Transformation, the economic historian Karl Polanyi offered a sober judgment. Later arguments often become too absorbed in whether modernization is moving in the right direction and neglect a variable that can matter even more: the rate of change. If the speed of change stays within the limits that let society and individuals put down roots again, the pain can be absorbed as a cost of transition. But once it breaks through the limits of human adaptation and institutional cushioning, even progress whose overall direction is beyond reproach will produce fractures in individual lives that are hard to heal.</p>\n            <p class=\"\">What tears apart these nine minutes isn't someone deliberately smearing progress. It is the acceleration of progress itself, approaching the limits of what ordinary human bodies can bear.</p>\n        </section>\n\n        <section class=\"detail-section\" id=\"compressed-modernity\">\n            <h2 class=\"\">IV. Forty-six years and a hundred and fifty: compressed modernity as a global experiment</h2>\n            <p class=\"\">Once a report like this enters international debate, the discussion can easily slide into a kind of exceptionalism. Critics habitually blame pressure on ordinary workers on a particular political system; defenders shut down the conversation with \"Which country doesn't have problems?\" But step away from the fight over \"China or the West\" and look into the depth of modern industrial history. Shenzhen isn't an isolated case. It is a global experiment pushed to an extreme in the dimension of time.</p>\n            <p class=\"\">Look back at modernization in the established industrial economies of Europe and North America. From early textiles and workshop manufacturing, through heavy industry, to the postwar consumer society and the postindustrial information age, the sequence stretched over roughly a hundred and fifty years and four or five generations. Even with that much room to adjust, each industrial shift brought severe social wounds: deprivation in nineteenth-century Manchester's working-class neighborhoods, the long decline of Detroit and America's Rust Belt in the latter half of the twentieth century. Those wounds are still reshaping Western politics.</p>\n            <p class=\"\">But slow history carries at least an unspoken mercy. The generation that built \"industrial civilization 1.0\" had often naturally reached the end of its working life before \"civilization 3.0\" tore down the old factories. Much of the shock of structural change was diluted through generational replacement. Parents retired from assembly lines; their children moved into new cities and industries through expanded access to education.</p>\n            <p class=\"\">Shenzhen had no such dividend of time.</p>\n            <p class=\"\">From its designation as a Special Economic Zone in 1980 to 2026, the city has lived through just forty-six short years. This means that the builders who came south with bags on their backs in their twenties, soldered circuit boards, raised skyscrapers, and sustained \"Shenzhen 1.0\" are now only in their forties or fifties, still far from retirement and still carrying mortgages, their parents' medical bills, and their children's tuition. Yet just past the noon of their lives, \"Shenzhen 3.0\"—AI, low-altitude logistics, and embodied robots—is already roaring into being above their heads.</p>\n            <p class=\"\">Studying the extraordinarily rapid modernization of Seoul and other East Asian cities, the South Korean sociologist Chang Kyung-sup used the term \"compressed modernity.\" Historical stages that unfolded one after another in Europe and North America are forcibly folded and stacked into a single space and a single generation's lifetime in East Asia. Premodern rural ties, industrial assembly-line logic, and postmodern algorithmic capital are no longer successive runners in a relay. They collide head-on in the same street.</p>\n            <p class=\"\">The economist Joseph Schumpeter described the engine of technological and commercial innovation as \"creative destruction.\" Later business narratives love to linger over the first word. \"Creative\" means new species of companies, high valuations, and ever-changing skylines. They often, deliberately or otherwise, turn down the weight of the second word. Destruction is never just a line of depreciation in an abstract set of accounts. It lands on a particular shuttered factory, a suddenly devalued skill, and a middle-aged person's résumé that no longer fits anywhere. Modern society's hardest question has never been how to ignite creation; markets and capital have proved extraordinarily good at that. It is who clears away destruction's rubble when renewal moves faster than a generation's life cycle.</p>\n            <p class=\"\">Even across the Pacific, in the America Huang Shihua holds up as a reference, similar folds in time are everywhere. In the San Francisco Bay Area, only a few miles from AI laboratories worth hundreds of billions of dollars and driverless taxis roaming the streets, service workers struggle with high rents, drivers shuttle between gig platforms, and middle-aged employees are cast out by industry cycles.</p>\n            <p class=\"\">I bring up Manchester, Detroit, and San Francisco not to excuse Shenzhen by comparing it with somewhere worse, but to see a more concrete fact. Fast-moving technological capital creates sharp differences in lived time wherever it lands, whatever the culture or institutions. Shenzhen commands attention not because it is an aberration, but because it is so young, efficient, and dense that it has become the twenty-first century's highest-resolution \"laboratory of time.\" The anxiety of adaptation playing out at high speed in Shenzhen today will soon become everyday life across the world's major economies as AI compresses technology cycles further.</p>\n        </section>\n\n        <section class=\"detail-section\" id=\"slow-variables\">\n            <h2 class=\"\">V. After praising speed, where do the slow variables belong?</h2>\n            <p class=\"\">Looking back now at the November 2026 uproar over those nine minutes, a great deal becomes clearer.</p>\n            <p class=\"\">People are so eager to argue about foreign media's \"gloomy filters,\" reporters' double standards, and whether the host city's hospitality was betrayed for a simple reason: a media shouting match costs very little emotionally and requires very little thought. Pick a side, share a clip lasting a few seconds, vent your indignation, and turn off the screen. You've earned a cheap sense of righteousness.</p>\n            <p class=\"\">Facing the actual problems behind the camera is much heavier work, and there are no model answers.</p>\n            <p class=\"\">How do we build a genuinely accessible, portable social safety net for the country's two hundred million flexibly employed workers, so that young and middle-aged workers on Longhua's streets no longer have to trade medical care and pensions ten years from now for next month's rent? How do we ensure that the non-locally registered residents who make up two-thirds of Shenzhen's permanent population don't lose their foothold overnight when an industry moves away, after giving the city twenty years of work? And how do we offer people changing livelihoods in their forties and fifties, whose physical capacities and knowledge are already established, a more dignified transition than carrying meals upstairs or searching for day labor?</p>\n            <p class=\"\">The answers aren't in any media outlet's apology, nor in grand slogans.</p>\n            <p class=\"\">Seeing these fractures doesn't mean opposing technology or denying the value of speed itself. Over the past forty-plus years, \"Shenzhen speed\" has transformed the fortunes of tens of millions of ordinary people and produced one of the world's most dynamic innovation ecosystems on what was once a tidal flat. Seeing Ms Lu's exhaustion as she carries food up a sixty-story building gives us no reason to question the value of Huang Shihua's humanoid robotics research. Nor should admiring the delivery drones above Talent Park mean demanding that cameras avoid the figures in urban villages at dusk.</p>\n            <p class=\"\">What really makes us lose our bearings is treating \"fast variables\" as the whole of reality. Algorithms can iterate monthly, supply chains can migrate yearly, and capital can move by the second. Yet beneath all those exponentially accelerating curves, human beings remain a set of \"slow variables.\" Bodies age. Families need stable expectations. Skills take a long time to learn. Dignity needs the security of not being casually discarded. You can push a city's compute and logistics into the future, but you can't expect its ordinary residents to uninstall their past and painlessly recompile their lives every three years like software.</p>\n            <p class=\"\">Technology and capital excel at bringing the future closer. But the true measure of a city has never been only how fast its front-runners can run. It is also how it makes room for the people who built yesterday with their own hands and haven't yet had time to catch up with tomorrow.</p>\n            <p class=\"\">Return to the original nine-minute film and two images remain most clearly: the blue sky above Talent Park at the beginning, and the slightly solitary figures of ordinary workers at dusk at the end. They don't cancel each other out, and neither is a filter imposed on the other. If anything is worth keeping from this uproar, perhaps it is the recognition that both images belong to the same city. We needn't doubt the light in the first because we see the exhaustion in the second. Nor should we pretend not to see the people left behind by speed simply to protect that light.</p>\n        </section>",
+      "sections": [
+        {
+          "id": "beyond-the-filter",
+          "title": "I. Beyond the fight over cameras and filters"
+        },
+        {
+          "id": "two-faces",
+          "title": "II. Two faces within the same square kilometer"
+        },
+        {
+          "id": "three-clocks",
+          "title": "III. Asynchronous modernity: when three clocks fall out of step"
+        },
+        {
+          "id": "compressed-modernity",
+          "title": "IV. Forty-six years and a hundred and fifty: compressed modernity as a global experiment"
+        },
+        {
+          "id": "slow-variables",
+          "title": "V. After praising speed, where do the slow variables belong?"
+        }
+      ],
+      "related": [
+        3,
+        15,
+        42
+      ]
+    },
+    {
+      "num": 2,
+      "source_slug": "ai-investment-global-growth",
+      "slug": "article-02.html",
       "title": "AI Investment Is Set to Rise by $700 Billion. Why Is Global Growth Only 0.1 Percentage Point Faster?",
       "title_html": "AI Investment Is Set to Rise by $700 Billion. <em>Why Is Global Growth Only 0.1 Percentage Point Faster?</em>",
       "topic": 5,
@@ -1744,15 +1784,15 @@
         }
       ],
       "related": [
-        9,
         10,
-        12
+        11,
+        13
       ]
     },
     {
-      "num": 2,
+      "num": 3,
       "source_slug": "good-trip-film-essay",
-      "slug": "article-02.html",
+      "slug": "article-03.html",
       "title": "The Props Are Fake: On Good Trip",
       "title_html": "The Props Are Fake: On <em>Good Trip</em>",
       "topic": 6,
@@ -1788,15 +1828,15 @@
         }
       ],
       "related": [
-        14,
-        41,
-        43
+        1,
+        15,
+        42
       ]
     },
     {
-      "num": 3,
+      "num": 4,
       "source_slug": "weight-space-programming",
-      "slug": "article-03.html",
+      "slug": "article-04.html",
       "title": "Why Retrain Every Time a Model Breaks?",
       "title_html": "Why Retrain Every Time a <em>Model Breaks</em>?",
       "topic": 1,
@@ -1840,15 +1880,15 @@
         }
       ],
       "related": [
-        4,
         5,
-        18
+        6,
+        19
       ]
     },
     {
-      "num": 4,
+      "num": 5,
       "source_slug": "gaac-kv-cache-bandwidth",
-      "slug": "article-04.html",
+      "slug": "article-05.html",
       "title": "The Model Fits. Why Is It Still Slow?",
       "title_html": "The Model Fits. <em>Why Is It Still Slow?</em>",
       "topic": 1,
@@ -1896,15 +1936,15 @@
         }
       ],
       "related": [
-        3,
-        5,
-        18
+        4,
+        6,
+        19
       ]
     },
     {
-      "num": 5,
+      "num": 6,
       "source_slug": "physics-benchmark-grading",
-      "slug": "article-05.html",
+      "slug": "article-06.html",
       "title": "When the Exam Is Wrong: What Do AI Scores Measure?",
       "title_html": "When the Exam Is Wrong: <em>What Do AI Scores Measure?</em>",
       "topic": 1,
@@ -1952,15 +1992,15 @@
         }
       ],
       "related": [
-        3,
         4,
-        18
+        5,
+        19
       ]
     },
     {
-      "num": 6,
+      "num": 7,
       "source_slug": "data-center-grid-protection",
-      "slug": "article-06.html",
+      "slug": "article-07.html",
       "title": "When Data Centers Protect Themselves: A 3.8 GW Load Transfer",
       "title_html": "When Data Centers Protect Themselves: <em>A <span class=\"power-quantity\">3.8 GW</em> Load Transfer</span>",
       "topic": 4,
@@ -2008,15 +2048,15 @@
         }
       ],
       "related": [
-        7,
-        11,
-        25
+        8,
+        12,
+        26
       ]
     },
     {
-      "num": 7,
+      "num": 8,
       "source_slug": "encrypted-substring-search",
-      "slug": "article-07.html",
+      "slug": "article-08.html",
       "title": "Can You Search Inside Encrypted Data?",
       "title_html": "Can You Search Inside <em>Encrypted Data</em>?",
       "topic": 4,
@@ -2076,15 +2116,15 @@
         }
       ],
       "related": [
-        6,
-        11,
-        25
+        7,
+        12,
+        26
       ]
     },
     {
-      "num": 8,
+      "num": 9,
       "source_slug": "agent-goals-permission-boundaries",
-      "slug": "article-08.html",
+      "slug": "article-09.html",
       "title": "AI Can Cross Permission Boundaries Without Malice",
       "title_html": "AI Can Cross <em>Permission Boundaries</em> Without Malice",
       "topic": 2,
@@ -2124,15 +2164,15 @@
         }
       ],
       "related": [
-        17,
-        21,
-        22
+        18,
+        22,
+        23
       ]
     },
     {
-      "num": 9,
+      "num": 10,
       "source_slug": "kimi-claude-distillation-rights",
-      "slug": "article-09.html",
+      "slug": "article-10.html",
       "title": "Who Gets to Train on Whom?",
       "title_html": "Who Gets to <em>Train on Whom</em>?",
       "topic": 5,
@@ -2172,15 +2212,15 @@
         }
       ],
       "related": [
-        1,
-        10,
-        12
+        2,
+        11,
+        13
       ]
     },
     {
-      "num": 10,
+      "num": 11,
       "source_slug": "robot-three-clocks",
-      "slug": "article-10.html",
+      "slug": "article-11.html",
       "title": "The Three Clocks of Robotics",
       "title_html": "The <em>Three Clocks</em> of Robotics",
       "topic": 5,
@@ -2220,15 +2260,15 @@
         }
       ],
       "related": [
-        1,
-        9,
-        12
+        2,
+        10,
+        13
       ]
     },
     {
-      "num": 11,
+      "num": 12,
       "source_slug": "mac-personal-ai-runtime",
-      "slug": "article-11.html",
+      "slug": "article-12.html",
       "title": "Mac Is Becoming the Ideal Runtime for Personal AI Apps",
       "title_html": "Mac Is Becoming the <em>Ideal Runtime</em> for Personal AI Apps",
       "topic": 4,
@@ -2276,15 +2316,15 @@
         }
       ],
       "related": [
-        6,
         7,
-        25
+        8,
+        26
       ]
     },
     {
-      "num": 12,
+      "num": 13,
       "source_slug": "huawei-tau-law-media-narrative",
-      "slug": "article-12.html",
+      "slug": "article-13.html",
       "title": "When a Technology Roadmap Becomes a Law",
       "title_html": "When a Technology Roadmap Becomes a <em>Law</em>",
       "topic": 5,
@@ -2324,15 +2364,15 @@
         }
       ],
       "related": [
-        1,
-        9,
-        10
+        2,
+        10,
+        11
       ]
     },
     {
-      "num": 13,
+      "num": 14,
       "source_slug": "embodied-ai-commercial-loop",
-      "slug": "article-13.html",
+      "slug": "article-14.html",
       "title": "The Real Test for Embodied AI in China Is Not Acrobatics, but a Commercial Loop",
       "title_html": "The Real Test for Embodied AI in China Is Not Acrobatics, but a <em>Commercial Loop</em>",
       "topic": 5,
@@ -2372,15 +2412,15 @@
         }
       ],
       "related": [
-        1,
-        9,
-        10
+        2,
+        10,
+        11
       ]
     },
     {
-      "num": 14,
+      "num": 15,
       "source_slug": "family-risk-architecture",
-      "slug": "article-14.html",
+      "slug": "article-15.html",
       "title": "Treat the Family as a System: The Risk Architecture Behind Middle-Class Decline",
       "title_html": "Treat the Family as a System: The <em>Risk Architecture</em> Behind Middle-Class Decline",
       "topic": 6,
@@ -2420,15 +2460,15 @@
         }
       ],
       "related": [
-        2,
-        41,
-        43
+        1,
+        3,
+        42
       ]
     },
     {
-      "num": 15,
+      "num": 16,
       "source_slug": "ai-white-collar-false-security",
-      "slug": "article-15.html",
+      "slug": "article-16.html",
       "title": "AI Will Not Erase White-Collar Workers, but It Will Erase Their False Security",
       "title_html": "AI Will Not Erase White-Collar Workers, but It Will Erase Their <em>False Security</em>",
       "topic": 5,
@@ -2468,15 +2508,15 @@
         }
       ],
       "related": [
-        1,
-        9,
-        10
+        2,
+        10,
+        11
       ]
     },
     {
-      "num": 16,
+      "num": 17,
       "source_slug": "google-io-ai-workflow-control",
-      "slug": "article-16.html",
+      "slug": "article-17.html",
       "title": "After Google I/O, AI Competition Is Shifting Toward Workflow Control",
       "title_html": "After Google I/O, AI Competition Is Shifting Toward <em>Workflow Control</em>",
       "topic": 5,
@@ -2516,15 +2556,15 @@
         }
       ],
       "related": [
-        1,
-        9,
-        10
+        2,
+        10,
+        11
       ]
     },
     {
-      "num": 17,
+      "num": 18,
       "source_slug": "multi-agent-architecture-lab",
-      "slug": "article-17.html",
+      "slug": "article-18.html",
       "title": "I Ran a Multi-Agent Architecture Experiment: Complex Systems Are Not Automatically Smarter",
       "title_html": "I Ran a Multi-Agent Architecture Experiment: Complex Systems Are Not Automatically <em>Smarter</em>",
       "topic": 2,
@@ -2568,15 +2608,15 @@
         }
       ],
       "related": [
-        8,
-        21,
-        22
+        9,
+        22,
+        23
       ]
     },
     {
-      "num": 18,
+      "num": 19,
       "source_slug": "ai-engineering-boundaries",
-      "slug": "article-18.html",
+      "slug": "article-19.html",
       "title": "The Core of AI Engineering Is Not Making Models Omnipotent. It Is Defining Boundaries",
       "title_html": "The Core of AI Engineering Is Not Making Models Omnipotent. It Is <em>Defining Boundaries</em>",
       "topic": 1,
@@ -2616,15 +2656,15 @@
         }
       ],
       "related": [
-        3,
         4,
-        5
+        5,
+        6
       ]
     },
     {
-      "num": 19,
+      "num": 20,
       "source_slug": "enterprise-ai-data-readiness",
-      "slug": "article-19.html",
+      "slug": "article-20.html",
       "title": "For Enterprise AI On-Prem, the First Step Is Not Buying GPUs. It Is Cleaning Data",
       "title_html": "For Enterprise AI On-Prem, the First Step Is Not Buying GPUs. It Is <em>Cleaning Data</em>",
       "topic": 1,
@@ -2660,15 +2700,15 @@
         }
       ],
       "related": [
-        3,
         4,
-        5
+        5,
+        6
       ]
     },
     {
-      "num": 20,
+      "num": 21,
       "source_slug": "unet-industrial-segmentation",
-      "slug": "article-20.html",
+      "slug": "article-21.html",
       "title": "U-Net Did Not Lose to a Newer Model: In Industrial Vision, Define the Task Before Choosing the Model",
       "title_html": "U-Net Did Not Lose to a Newer Model: In Industrial Vision, <em>Define the Task</em> Before Choosing the Model",
       "topic": 3,
@@ -2704,15 +2744,15 @@
         }
       ],
       "related": [
-        27,
-        32,
-        38
+        28,
+        33,
+        39
       ]
     },
     {
-      "num": 21,
+      "num": 22,
       "source_slug": "multi-agent-context-boundaries",
-      "slug": "article-21.html",
+      "slug": "article-22.html",
       "title": "The Real Problem in Multi-Agent Architecture Is Context Boundaries, Not Roles",
       "title_html": "The Real Problem in Multi-Agent Architecture Is <em>Context Boundaries</em>, Not Roles",
       "topic": 2,
@@ -2748,15 +2788,15 @@
         }
       ],
       "related": [
-        8,
-        17,
-        22
+        9,
+        18,
+        23
       ]
     },
     {
-      "num": 22,
+      "num": 23,
       "source_slug": "multi-agent-collaboration-results",
-      "slug": "article-22.html",
+      "slug": "article-23.html",
       "title": "When Multi-Agent Is Actually Needed: Splitting, Collaboration, and Result Merging",
       "title_html": "When Multi-Agent Is Actually Needed: Splitting, Collaboration, and <em>Result Merging</em>",
       "topic": 2,
@@ -2792,15 +2832,15 @@
         }
       ],
       "related": [
-        8,
-        17,
-        21
+        9,
+        18,
+        22
       ]
     },
     {
-      "num": 23,
+      "num": 24,
       "source_slug": "engineer-abstraction-layers",
-      "slug": "article-23.html",
+      "slug": "article-24.html",
       "title": "The Essence of Engineering Growth Is Moving Up Abstraction Layers",
       "title_html": "The Essence of Engineering Growth Is <em>Moving Up Abstraction Layers</em>",
       "topic": 5,
@@ -2836,15 +2876,15 @@
         }
       ],
       "related": [
-        1,
-        9,
-        10
+        2,
+        10,
+        11
       ]
     },
     {
-      "num": 24,
+      "num": 25,
       "source_slug": "agent-task-system-architecture",
-      "slug": "article-24.html",
+      "slug": "article-25.html",
       "title": "AI Agents Are Reshaping System Architecture: From Feature Systems to Task Systems",
       "title_html": "AI Agents Are Reshaping System Architecture: From <em>Feature Systems</em> to Task Systems",
       "topic": 2,
@@ -2884,15 +2924,15 @@
         }
       ],
       "related": [
-        8,
-        17,
-        21
+        9,
+        18,
+        22
       ]
     },
     {
-      "num": 25,
+      "num": 26,
       "source_slug": "database-not-system-center",
-      "slug": "article-25.html",
+      "slug": "article-26.html",
       "title": "How Would We Design Systems Without Starting From a Database?",
       "title_html": "How Would We Design Systems <em>Without Starting From a Database?</em>",
       "topic": 4,
@@ -2928,15 +2968,15 @@
         }
       ],
       "related": [
-        6,
         7,
-        11
+        8,
+        12
       ]
     },
     {
-      "num": 26,
+      "num": 27,
       "source_slug": "technical-debt-org-game",
-      "slug": "article-26.html",
+      "slug": "article-27.html",
       "title": "Technical Debt Is Not Code Smell; It Is How an Organization Prices the Future",
       "title_html": "Technical Debt Is Not Code Smell; It Is <em>How an Organization Prices the Future</em>",
       "topic": 4,
@@ -2976,15 +3016,15 @@
         }
       ],
       "related": [
-        6,
         7,
-        11
+        8,
+        12
       ]
     },
     {
-      "num": 27,
+      "num": 28,
       "source_slug": "vision-engineer-not-operator",
-      "slug": "article-27.html",
+      "slug": "article-28.html",
       "title": "Vision Algorithm Engineers: Do Not Become Process Operators",
       "title_html": "Vision Algorithm Engineers: Do Not Become <em>Process Operators</em>",
       "topic": 3,
@@ -3020,15 +3060,15 @@
         }
       ],
       "related": [
-        20,
-        32,
-        38
+        21,
+        33,
+        39
       ]
     },
     {
-      "num": 28,
+      "num": 29,
       "source_slug": "agentic-business-systems",
-      "slug": "article-28.html",
+      "slug": "article-29.html",
       "title": "Stop Building Business Systems as CRUD Wrappers",
       "title_html": "Stop Building Business Systems as <em>CRUD Wrappers</em>",
       "topic": 4,
@@ -3064,15 +3104,15 @@
         }
       ],
       "related": [
-        6,
         7,
-        11
+        8,
+        12
       ]
     },
     {
-      "num": 29,
+      "num": 30,
       "source_slug": "ai-agent-architecture",
-      "slug": "article-29.html",
+      "slug": "article-30.html",
       "title": "AI Agent Architecture: From Chatting to Executing",
       "title_html": "AI Agent Architecture: From Chatting to <em>Executing</em>",
       "topic": 2,
@@ -3112,15 +3152,15 @@
         }
       ],
       "related": [
-        8,
-        17,
-        21
+        9,
+        18,
+        22
       ]
     },
     {
-      "num": 30,
+      "num": 31,
       "source_slug": "ai-workflow-agent-blog",
-      "slug": "article-30.html",
+      "slug": "article-31.html",
       "title": "The AI Workflow Battle: Why the Real Endgame Is Not Tools but the Work Agent Layer",
       "title_html": "The AI Workflow Battle: Why the Real Endgame Is Not Tools but the Work Agent Layer",
       "topic": 2,
@@ -3164,15 +3204,15 @@
         }
       ],
       "related": [
-        8,
-        17,
-        21
+        9,
+        18,
+        22
       ]
     },
     {
-      "num": 31,
+      "num": 32,
       "source_slug": "ai-weekly-agent-platform",
-      "slug": "article-31.html",
+      "slug": "article-32.html",
       "title": "AI Weekly: Agent Platforms Scale Up, Models Keep Advancing, and AI Hardware Moves Toward the Edge",
       "title_html": "AI Weekly: Agent Platforms Scale Up, Models Keep Advancing, and AI Hardware Moves Toward the Edge",
       "topic": 5,
@@ -3212,15 +3252,15 @@
         }
       ],
       "related": [
-        1,
-        9,
-        10
+        2,
+        10,
+        11
       ]
     },
     {
-      "num": 32,
+      "num": 33,
       "source_slug": "vision-rollout-metrics",
-      "slug": "article-32.html",
+      "slug": "article-33.html",
       "title": "After a Vision Model Ships: Do Not Let mAP Become the Only Answer",
       "title_html": "After a Vision Model Ships: Do Not Let <em>mAP</em> Become the Only Answer",
       "topic": 3,
@@ -3256,15 +3296,15 @@
         }
       ],
       "related": [
-        20,
-        27,
-        38
+        21,
+        28,
+        39
       ]
     },
     {
-      "num": 33,
+      "num": 34,
       "source_slug": "code-review-debt",
-      "slug": "article-33.html",
+      "slug": "article-34.html",
       "title": "Code Review Debt in the Age of AI Coding",
       "title_html": "Code Review Debt in the Age of AI Coding",
       "topic": 1,
@@ -3296,15 +3336,15 @@
         }
       ],
       "related": [
-        3,
         4,
-        5
+        5,
+        6
       ]
     },
     {
-      "num": 34,
+      "num": 35,
       "source_slug": "context-rot",
-      "slug": "article-34.html",
+      "slug": "article-35.html",
       "title": "Context Rot: Why LLMs Get \"Dumber\" the Longer You Talk",
       "title_html": "Context Rot: Why LLMs Get \"Dumber\" the Longer You Talk",
       "topic": 1,
@@ -3340,15 +3380,15 @@
         }
       ],
       "related": [
-        3,
         4,
-        5
+        5,
+        6
       ]
     },
     {
-      "num": 35,
+      "num": 36,
       "source_slug": "token-economy",
-      "slug": "article-35.html",
+      "slug": "article-36.html",
       "title": "Token Economics: When the \"Raw Material\" of the AI Era Keeps Getting Pricier",
       "title_html": "Token Economics: When the \"Raw Material\" of the AI Era Keeps Getting Pricier",
       "topic": 1,
@@ -3384,15 +3424,15 @@
         }
       ],
       "related": [
-        3,
         4,
-        5
+        5,
+        6
       ]
     },
     {
-      "num": 36,
+      "num": 37,
       "source_slug": "ai-agent-thoughts",
-      "slug": "article-36.html",
+      "slug": "article-37.html",
       "title": "AI Agents: Reshaping Workflows or the Next Bubble?",
       "title_html": "AI Agents: Reshaping Workflows or the Next Bubble?",
       "topic": 2,
@@ -3424,15 +3464,15 @@
         }
       ],
       "related": [
-        8,
-        17,
-        21
+        9,
+        18,
+        22
       ]
     },
     {
-      "num": 37,
+      "num": 38,
       "source_slug": "open-source-hype",
-      "slug": "article-37.html",
+      "slug": "article-38.html",
       "title": "The \"Three-Month Law\" of Open Source: From Hype to Abandonment",
       "title_html": "The \"Three-Month Law\" of Open Source: From Hype to Abandonment",
       "topic": 5,
@@ -3468,15 +3508,15 @@
         }
       ],
       "related": [
-        1,
-        9,
-        10
+        2,
+        10,
+        11
       ]
     },
     {
-      "num": 38,
+      "num": 39,
       "source_slug": "transformer-detection",
-      "slug": "article-38.html",
+      "slug": "article-39.html",
       "title": "From DETR to YOLOv8: Transformer Evolution in Object Detection",
       "title_html": "From DETR to YOLOv8: Transformer Evolution in Object Detection",
       "topic": 3,
@@ -3520,15 +3560,15 @@
         }
       ],
       "related": [
-        20,
-        27,
-        32
+        21,
+        28,
+        33
       ]
     },
     {
-      "num": 39,
+      "num": 40,
       "source_slug": "turborepo-trpc",
-      "slug": "article-39.html",
+      "slug": "article-40.html",
       "title": "Real-Time Data Processing: Flink + Kafka Best Practices",
       "title_html": "Real-Time Data Processing: Flink + Kafka Best Practices",
       "topic": 4,
@@ -3576,15 +3616,15 @@
         }
       ],
       "related": [
-        6,
         7,
-        11
+        8,
+        12
       ]
     },
     {
-      "num": 40,
+      "num": 41,
       "source_slug": "webgpu-dl",
-      "slug": "article-40.html",
+      "slug": "article-41.html",
       "title": "WebGPU: Running Deep Learning Inference in the Browser",
       "title_html": "WebGPU: Running Deep Learning Inference in the Browser",
       "topic": 1,
@@ -3628,15 +3668,15 @@
         }
       ],
       "related": [
-        3,
         4,
-        5
+        5,
+        6
       ]
     },
     {
-      "num": 41,
+      "num": 42,
       "source_slug": "feminism-thoughts",
-      "slug": "article-41.html",
+      "slug": "article-42.html",
       "title": "How to Objectively View Modern Feminism",
       "title_html": "How to Objectively View Modern Feminism",
       "topic": 6,
@@ -3668,15 +3708,15 @@
         }
       ],
       "related": [
-        2,
-        14,
-        43
+        1,
+        3,
+        15
       ]
     },
     {
-      "num": 42,
+      "num": 43,
       "source_slug": "image-pipeline",
-      "slug": "article-42.html",
+      "slug": "article-43.html",
       "title": "Scalable Image Processing Pipeline: From Python to Kubernetes",
       "title_html": "Scalable Image Processing Pipeline: From Python to Kubernetes",
       "topic": 3,
@@ -3720,15 +3760,15 @@
         }
       ],
       "related": [
-        20,
-        27,
-        32
+        21,
+        28,
+        33
       ]
     },
     {
-      "num": 43,
+      "num": 44,
       "source_slug": "involution-choice",
-      "slug": "article-43.html",
+      "slug": "article-44.html",
       "title": "\"Involution\" vs \"Lying Flat\": Anxiety and Breakthrough of a Generation",
       "title_html": "\"Involution\" vs \"Lying Flat\": Anxiety and Breakthrough of a Generation",
       "topic": 6,
@@ -3764,15 +3804,15 @@
         }
       ],
       "related": [
-        2,
-        14,
-        41
+        1,
+        3,
+        15
       ]
     },
     {
-      "num": 44,
+      "num": 45,
       "source_slug": "sam2-inspection",
-      "slug": "article-44.html",
+      "slug": "article-45.html",
       "title": "SAM 2 in Industrial Inspection: From Prompt Engineering to Production",
       "title_html": "SAM 2 in Industrial Inspection: From Prompt Engineering to Production",
       "topic": 3,
@@ -3820,9 +3860,9 @@
         }
       ],
       "related": [
-        20,
-        27,
-        32
+        21,
+        28,
+        33
       ]
     }
   ]

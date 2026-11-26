@@ -5,7 +5,15 @@
     <link>https://erichz.site/blog/</link>
     <description>Eric 的 AI 工程、计算机视觉、Agent 架构与系统设计技术博客。</description>
     <language>zh-CN</language>
-    <lastBuildDate>Tue, 17 Nov 2026 00:00:00 GMT</lastBuildDate>
+    <lastBuildDate>Thu, 26 Nov 2026 00:00:00 GMT</lastBuildDate>
+    <item>
+      <title>当未来跑得比人快：从BBC深圳报道争议看“非同步现代性”</title>
+      <link>https://erichz.site/blog/shenzhen-asynchronous-modernity</link>
+      <guid isPermaLink="false">https://erichz.site/blog/shenzhen-asynchronous-modernity.html</guid>
+      <pubDate>Thu, 26 Nov 2026 00:00:00 GMT</pubDate>
+      <category>社会随笔</category>
+      <description>从一段九分钟的深圳报道，看技术、产业与人的生活为何跑在不同的时间里。</description>
+    </item>
     <item>
       <title>AI投资再增7000亿美元，全球经济为什么只快了0.1个百分点？</title>
       <link>https://erichz.site/blog/ai-investment-global-growth</link>
@@ -157,14 +165,6 @@
       <pubDate>Sun, 10 May 2026 00:00:00 GMT</pubDate>
       <category>AI 工程</category>
       <description>企业 AI 真正的起点不是模型和算力，而是内部数据是否具备可检索、可引用、可追溯和可回答的知识质量。</description>
-    </item>
-    <item>
-      <title>U-Net 没有输给新模型：工业视觉里，先定义任务再选择模型</title>
-      <link>https://erichz.site/blog/unet-industrial-segmentation</link>
-      <guid isPermaLink="false">https://erichz.site/blog/unet-industrial-segmentation.html</guid>
-      <pubDate>Thu, 07 May 2026 00:00:00 GMT</pubDate>
-      <category>视觉多模态</category>
-      <description>在单类细长区域分割任务里，模型有效性更多取决于任务结构与归纳偏置的匹配，而不是发布时间或预训练光环。</description>
     </item>
   </channel>
 </rss>

@@ -86,7 +86,7 @@ window.registerI18nChunk({
     "blog_card11_desc": "Context Rot 的两种机制——注意力稀释与上下文中毒，以及行业正在给出的不同答案。为什么「清空重开」目前仍然是最有效的解法？",
     "blog_back": "← 返回首页",
     "blog_list_title": "// 全部文章",
-    "blog_list_sub": "All Posts — 44 articles and counting",
+    "blog_list_sub": "All Posts — 45 articles and counting",
     "blog_filter_kicker": "SIGNAL ROUTER",
     "blog_filter_title": "按主题轨道切换阅读流",
     "blog_filter_sub": "把文章列表切成不同信道，快速定位 AI 工程、Agent、视觉多模态、系统架构、技术观察和社会随笔内容。",
@@ -152,7 +152,10 @@ window.registerI18nChunk({
     "blog_card43_desc": "從道具倉的一隻大湯碗寫起：一趟走不了的旅行，讓女兒在父親離開後還能重新認識他。",
     "blog44_title": "AI投资再增7000亿美元，全球经济为什么只快了0.1个百分点？",
     "blog_card44_title": "AI投资再增7000亿美元，全球经济为什么只快了0.1个百分点？",
-    "blog_card44_desc": "从数据中心建设、折旧和企业流程，追问AI投资如何持续变成经济产出。"
+    "blog_card44_desc": "从数据中心建设、折旧和企业流程，追问AI投资如何持续变成经济产出。",
+    "blog45_title": "当未来跑得比人快：从BBC深圳报道争议看“非同步现代性”",
+    "blog_card45_title": "当未来跑得比人快：从BBC深圳报道争议看“非同步现代性”",
+    "blog_card45_desc": "从一段九分钟的深圳报道，看技术、产业与人的生活为何跑在不同的时间里。"
   },
   "en": {
     "blog38_title": "Can You Search Inside Encrypted Data?",
@@ -241,7 +244,7 @@ window.registerI18nChunk({
     "blog_card11_desc": "Two mechanisms behind Context Rot — attention dilution and context poisoning — and the different answers the industry is giving. Why is \"starting fresh\" still the most effective fix?",
     "blog_back": "← Back to Home",
     "blog_list_title": "// All Posts",
-    "blog_list_sub": "All Posts — 44 articles and counting",
+    "blog_list_sub": "All Posts — 45 articles and counting",
     "blog_filter_kicker": "SIGNAL ROUTER",
     "blog_filter_title": "Switch Reading Lanes by Topic",
     "blog_filter_sub": "Slice the archive into AI engineering, Agent automation, vision and multimodal work, system architecture, technical observation, and social essays.",
@@ -307,6 +310,9 @@ window.registerI18nChunk({
     "blog_card43_desc": "It starts with a soup bowl in a prop room. An impossible trip gives a daughter another chance to get to know her father after he is gone.",
     "blog44_title": "AI Investment Is Set to Rise by $700 Billion. Why Is Global Growth Only 0.1 Percentage Point Faster?",
     "blog_card44_title": "AI Investment Is Set to Rise by $700 Billion. Why Is Global Growth Only 0.1 Percentage Point Faster?",
-    "blog_card44_desc": "From data center construction and depreciation to how companies work, what turns AI investment into lasting economic output?"
+    "blog_card44_desc": "From data center construction and depreciation to how companies work, what turns AI investment into lasting economic output?",
+    "blog45_title": "When the Future Outruns People: The BBC Shenzhen Dispute and Asynchronous Modernity",
+    "blog_card45_title": "When the Future Outruns People: The BBC Shenzhen Dispute and Asynchronous Modernity",
+    "blog_card45_desc": "A nine-minute report from Shenzhen reveals how technology, industry, and human lives run on different clocks."
   }
 });
